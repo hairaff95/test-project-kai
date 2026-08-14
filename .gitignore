@@ -1,0 +1,80 @@
+###########################
+# Laravel
+###########################
+*.log
+.env
+.env.backup
+.env.production
+.env.staging
+.env.testing
+.phpactor.json
+.phpunit.result.cache
+/.codex
+/.phpunit.cache
+/auth.json
+/node_modules
+/public/build
+/public/fonts-manifest.dev.json
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+_ide_helper.php
+_ide_helper_models.php
+.php-cs-fixer.cache
+Homestead.json
+Homestead.yaml
+
+###########################
+# Database
+###########################
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+###########################
+# NPM / Node
+###########################
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+###########################
+# OS files
+###########################
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+###########################
+# IDEs & Editors
+###########################
+/.cursor/
+/.idea
+/.nova
+/.vscode
+/.zed
+*.swp
+*.swo
+*~
+
+###########################
+# Build artifacts
+###########################
+/public/css/
+/public/js/
+/public/mix-manifest.json
