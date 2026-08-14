@@ -119,8 +119,8 @@
                 <span class="material-symbols-outlined text-xl">map</span>
             </a>
             <a class="bg-glass-surface text-on-surface-variant hover:bg-surface-variant/50 rounded-full p-3 flex items-center justify-center w-12 h-12 hover:scale-105 transition-all duration-300 ease-out"
-                href="{{ route('assets.index') }}" title="Katalog">
-                <span class="material-symbols-outlined text-xl">grid_view</span>
+                href="{{ route('assets.manage') }}" title="Kelola Aset">
+                <span class="material-symbols-outlined text-xl">add_circle</span>
             </a>
             <a class="bg-glass-surface text-on-surface-variant hover:bg-surface-variant/50 rounded-full p-3 flex items-center justify-center w-12 h-12 hover:scale-105 transition-all duration-300 ease-out"
                 href="#" title="Laporan">

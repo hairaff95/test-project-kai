@@ -141,9 +141,9 @@
                 class="bg-primary text-on-primary rounded-full p-2.5 md:p-3 shadow-md scale-105 md:scale-110 flex items-center justify-center">
                 <span class="material-symbols-outlined text-lg md:text-2xl">map</span>
             </a>
-            <a href="{{ route('assets.index') }}" title="Katalog Daftar"
+            <a href="{{ route('assets.manage') }}" title="Kelola Aset"
                 class="text-on-surface-variant hover:bg-surface-variant/50 rounded-full p-2.5 md:p-3 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-lg md:text-2xl">grid_view</span>
+                <span class="material-symbols-outlined text-lg md:text-2xl">add_circle</span>
             </a>
             <a href="#" title="Riwayat Pengajuan"
                 class="text-on-surface-variant hover:bg-surface-variant/50 rounded-full p-2.5 md:p-3 transition flex items-center justify-center">

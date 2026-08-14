@@ -87,4 +87,9 @@ class AssetController extends Controller
 
         return view('asset-detail', compact('asset'));
     }
+
+    public function manage()
+    {
+        return view('manage-assets');
+    }
 }
