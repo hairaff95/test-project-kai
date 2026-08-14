@@ -109,38 +109,58 @@
     <div class="fixed inset-0 z-0 bg-map-layer opacity-40 mix-blend-multiply"></div>
     <div class="fixed inset-0 z-0 bg-gradient-to-br from-bg-gradient-start/80 to-bg-gradient-end/80 pointer-events-none"></div>
 
-    <nav class="fixed left-4 top-1/2 -translate-y-1/2 w-20 flex-col items-center py-8 rounded-full h-[90vh] bg-glass-surface backdrop-blur-3xl border border-glass-border shadow-2xl z-50 shadow-[0_0_20px_rgba(255,255,255,0.3)] hidden md:flex">
-        <div class="mb-8 flex items-center justify-center w-12 h-12 rounded-full bg-surface-container">
-            <span class="material-symbols-outlined text-primary text-2xl">train</span>
+    <aside class="fixed left-4 top-1/2 -translate-y-1/2 w-16 hidden md:flex flex-col items-center py-5 rounded-full
+                  h-[88vh] max-h-[760px] bg-white/95 backdrop-blur-2xl border border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.07)] z-50">
+
+        <!-- Home -->
+        <a href="{{ route('assets.index') }}"
+           title="Beranda"
+           class="mb-3 p-2.5 rounded-full text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] transition flex items-center justify-center">
+            <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">home</span>
+        </a>
+
+        <div class="w-8 h-px bg-[#e8eee9] mb-3"></div>
+
+        <!-- Nav Items -->
+        <div class="flex flex-col gap-2 items-center flex-1 w-full px-2">
+            <a href="{{ route('assets.manage') }}"
+               title="Kelola Aset"
+               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24">inventory_2</span>
+            </a>
+            <a href="#"
+               title="Kalender"
+               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">calendar_today</span>
+            </a>
+            <a href="#"
+               title="Laporan"
+               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">description</span>
+            </a>
+            <a href="#"
+               title="Statistik"
+               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">bar_chart</span>
+            </a>
         </div>
-        <div class="flex flex-col gap-3 items-center h-full w-full px-2">
-            <a class="bg-primary-container text-on-primary-container rounded-full p-3 shadow-lg scale-110 flex items-center justify-center w-12 h-12 hover:scale-105 transition-all duration-300 ease-out active:scale-95"
-                href="{{ route('assets.index') }}" title="Peta Aset">
-                <span class="material-symbols-outlined text-xl">map</span>
+
+        <div class="w-8 h-px bg-[#e8eee9] mt-3 mb-3"></div>
+
+        <!-- Bottom Nav -->
+        <div class="flex flex-col gap-2 items-center">
+            <a href="#"
+               title="Bantuan"
+               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">help</span>
             </a>
-            <a class="bg-glass-surface text-on-surface-variant hover:bg-surface-variant/50 rounded-full p-3 flex items-center justify-center w-12 h-12 hover:scale-105 transition-all duration-300 ease-out"
-                href="{{ route('assets.manage') }}" title="Kelola Aset">
-                <span class="material-symbols-outlined text-xl">add_circle</span>
-            </a>
-            <a class="bg-glass-surface text-on-surface-variant hover:bg-surface-variant/50 rounded-full p-3 flex items-center justify-center w-12 h-12 hover:scale-105 transition-all duration-300 ease-out"
-                href="#" title="Laporan">
-                <span class="material-symbols-outlined text-xl">description</span>
-            </a>
-            <a class="bg-glass-surface text-on-surface-variant hover:bg-surface-variant/50 rounded-full p-3 flex items-center justify-center w-12 h-12 hover:scale-105 transition-all duration-300 ease-out mt-auto"
-                href="#" title="Pengaturan">
-                <span class="material-symbols-outlined text-xl">settings</span>
-            </a>
-            <div class="w-8 h-px bg-glass-border my-2"></div>
-            <a class="bg-glass-surface text-on-surface-variant hover:bg-surface-variant/50 rounded-full p-3 flex items-center justify-center w-12 h-12 hover:scale-105 transition-all duration-300 ease-out"
-                href="#" title="Bantuan">
-                <span class="material-symbols-outlined text-xl">help</span>
-            </a>
-            <a class="bg-glass-surface text-on-surface-variant hover:bg-surface-variant/50 rounded-full p-3 flex items-center justify-center w-12 h-12 hover:scale-105 transition-all duration-300 ease-out"
-                href="#" title="Profil">
-                <span class="material-symbols-outlined text-xl">account_circle</span>
+            <a href="#"
+               title="Profil"
+               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
+                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">account_circle</span>
             </a>
         </div>
-    </nav>
+    </aside>
 
     <main class="relative z-10 md:ml-28 lg:ml-32 min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col gap-4 md:gap-6">
         <div class="flex items-center gap-3">
