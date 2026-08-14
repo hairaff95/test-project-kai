@@ -90,57 +90,7 @@
 
 <body class="bg-background text-on-surface min-h-screen overflow-x-hidden antialiased">
 
-    <!-- ===== LEFT FLOATING DOCK SIDEBAR ===== -->
-    <aside class="fixed left-4 top-1/2 -translate-y-1/2 w-16 hidden sm:flex flex-col items-center py-5 rounded-full
-                  h-[88vh] max-h-[760px] bg-white/95 backdrop-blur-2xl border border-white/60 shadow-dock z-30">
-
-        <a href="{{ route('assets.index') }}"
-           data-tooltip="Beranda"
-           class="mb-3 p-2.5 rounded-full text-on-surface-variant hover:text-primary hover:bg-primary-light transition flex items-center justify-center">
-            <span class="material-symbols-outlined text-[22px]">home</span>
-        </a>
-
-        <div class="w-8 h-px bg-border-subtle mb-3"></div>
-
-        <div class="flex flex-col gap-2 items-center flex-1 w-full px-2">
-            <a href="{{ route('assets.manage') }}"
-               data-tooltip="Kelola Aset"
-               class="text-on-surface-variant hover:text-primary hover:bg-primary-light rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined ms-filled text-[22px]">inventory_2</span>
-            </a>
-            <a href="#"
-               data-tooltip="Kalender"
-               class="text-on-surface-variant hover:text-primary hover:bg-primary-light rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]">calendar_today</span>
-            </a>
-            <a href="#"
-               data-tooltip="Laporan"
-               class="text-on-surface-variant hover:text-primary hover:bg-primary-light rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]">description</span>
-            </a>
-            <a href="#"
-               data-tooltip="Statistik"
-               class="text-on-surface-variant hover:text-primary hover:bg-primary-light rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]">bar_chart</span>
-            </a>
-        </div>
-
-        <div class="w-8 h-px bg-border-subtle mt-3 mb-3"></div>
-
-        <div class="flex flex-col gap-2 items-center">
-            <!-- Active: Bantuan -->
-            <a href="{{ route('faq') }}"
-               data-tooltip="Bantuan"
-               class="bg-primary text-white rounded-full p-3 shadow-md flex items-center justify-center">
-                <span class="material-symbols-outlined ms-filled text-[22px]">help</span>
-            </a>
-            <a href="#"
-               data-tooltip="Profil"
-               class="text-on-surface-variant hover:text-primary hover:bg-primary-light rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]">account_circle</span>
-            </a>
-        </div>
-    </aside>
+    <x-sidebar />
 
     <!-- ===== MAIN CONTENT ===== -->
     <main class="pl-4 pr-4 sm:pl-28 sm:pr-6 md:pl-32 md:pr-8 pt-6 pb-16 min-h-screen">

@@ -2,99 +2,106 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asset;
+use App\Models\Favorite;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AssetController extends Controller
 {
-    private function getAssets()
-    {
-        return [
-            [
-                'id' => 1,
-                'title' => 'Eks Gudang Logistik Kaligawe',
-                'address' => 'Jl. Raya Kaligawe Km 5, Genuk, Semarang',
-                'lat' => -6.955300,
-                'lng' => 110.456100,
-                'land_area' => '2,500 m²',
-                'building_area' => '1,800 m²',
-                'road_access' => 'Kontainer 40ft',
-                'price' => 'Rp 12.5 M',
-                'status' => 'TERSEDIA',
-                'electricity' => '105,000 VA',
-                'water' => 'PDAM / Sumur',
-                'security' => '24 Jam',
-                'description' => 'Gudang logistik premium yang berlokasi strategis di kawasan industri Kaligawe. Memiliki akses langsung ke jalan raya utama yang dapat dilalui oleh kontainer 40ft. Kondisi bangunan sangat terawat dengan spesifikasi lantai heavy-duty, cocok untuk pusat distribusi, penyimpanan barang berat, atau manufaktur ringan. Dekat dengan Pelabuhan Tanjung Emas dan pintu tol Kaligawe.',
-                'image' => 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80',
-            ],
-            [
-                'id' => 2,
-                'title' => 'Eks Rumah Dinas Candisari',
-                'address' => 'Jl. Papandayan Raya No. 4A, Candisari, Semarang',
-                'lat' => -7.005144,
-                'lng' => 110.418423,
-                'land_area' => '240 m²',
-                'building_area' => '180 m²',
-                'road_access' => 'Mobil 2 Arah',
-                'price' => 'Rp 1.45 M',
-                'status' => 'TERSEDIA',
-                'electricity' => '3,500 VA',
-                'water' => 'PDAM',
-                'security' => 'One Gate System',
-                'description' => 'Bangunan eks rumah dinas berarsitektur kokoh di kawasan prestisius Candisari Semarang Atas. Udara sejuk dan lingkungan tenang, sangat cocok untuk dijadikan kantor representatif, café/resto tematik, atau guest house.',
-                'image' => 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80',
-            ],
-            [
-                'id' => 3,
-                'title' => 'Lahan Komersial Stasiun Poncol',
-                'address' => 'Jl. Imam Bonjol, Semarang Utara, Semarang',
-                'lat' => -6.972350,
-                'lng' => 110.414920,
-                'land_area' => '650 m²',
-                'building_area' => '0 m²',
-                'road_access' => 'Akses Utama Kota',
-                'price' => 'Rp 2.8 M',
-                'status' => 'TERSEDIA',
-                'electricity' => 'Tersedia Jaringan',
-                'water' => 'PDAM',
-                'security' => 'Pengamanan Area Stasiun',
-                'description' => 'Lahan kosong siap bangun yang berdampingan langsung dengan kawasan Stasiun Semarang Poncol. Traffic pejalan kaki dan penumpang sangat padat setiap hari. Sangat ideal untuk minimarket, pool travel/shuttle, ruko, atau food court modern.',
-                'image' => 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
-            ]
-        ];
-    }
-
     public function index()
     {
+        $assets = Asset::with('images')->get();
+
         $kpi = [
-            'total_assets' => 3,
-            'total_valuation' => 'Rp 16.75 M',
-            'average_age' => '12Y',
+            'total_assets'    => $assets->count(),
+            'total_valuation' => $this->formatPrice($assets->sum('price')),
+            'average_age'     => '12Y',
         ];
 
-        $assets = $this->getAssets();
+        $assetsForMap = $assets->map(fn($a) => [
+            'id'            => $a->id,
+            'title'         => $a->name,
+            'address'       => $a->full_address,
+            'lat'           => (float) $a->latitude,
+            'lng'           => (float) $a->longitude,
+            'land_area'     => number_format($a->land_area, 0, ',', '.') . ' m²',
+            'building_area' => number_format($a->building_area, 0, ',', '.') . ' m²',
+            'road_access'   => $a->road_access,
+            'price'         => $a->price_formatted,
+            'status'        => $a->status_label,
+            'status_color'  => $a->status_color,
+            'image'         => $a->primary_image_url,
+        ]);
 
-        return view('asset-explorer', compact('kpi', 'assets'));
+        return view('assets.explorer', compact('kpi', 'assetsForMap'));
     }
 
-    public function show($id)
+    public function catalog(Request $request)
     {
-        $assets = collect($this->getAssets());
-        $asset = $assets->firstWhere('id', (int)$id);
+        $query = Asset::with('images');
 
-        if (!$asset) {
-            abort(404, 'Aset tidak ditemukan');
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('full_address', 'like', "%{$search}%")
+                  ->orWhere('district_area', 'like', "%{$search}%");
+            });
         }
 
-        return view('asset-detail', compact('asset'));
+        if ($request->filled('district')) {
+            $query->where('district_area', 'like', '%' . $request->district . '%');
+        }
+
+        if ($request->filled('status')) {
+            $query->byStatus($request->status);
+        }
+
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->price_max);
+        }
+
+        $assets = $query->latest()->get();
+        $districts = Asset::select('district_area')->distinct()->pluck('district_area');
+        $favoriteIds = $this->getFavoriteIds();
+
+        return view('assets.catalog', compact('assets', 'districts', 'favoriteIds'));
+    }
+
+    public function show(int $id)
+    {
+        $asset = Asset::with('images')->findOrFail($id);
+        $favoriteIds = $this->getFavoriteIds();
+        $isFavorited = in_array($asset->id, $favoriteIds);
+
+        return view('assets.show', compact('asset', 'isFavorited'));
     }
 
     public function manage()
     {
-        return view('manage-assets');
+        return redirect()->route('admin.assets.index');
     }
 
     public function faq()
     {
-        return view('faq');
+        $role = Auth::check() ? Auth::user()->role : 'user';
+        return view('faq.index', compact('role'));
+    }
+
+    private function formatPrice(float $total): string
+    {
+        if ($total >= 1_000_000_000) {
+            return 'Rp ' . number_format($total / 1_000_000_000, 2) . ' M';
+        }
+        return 'Rp ' . number_format($total / 1_000_000, 2) . ' Jt';
+    }
+
+    private function getFavoriteIds(): array
+    {
+        if (Auth::check()) {
+            return Favorite::where('user_id', Auth::id())->pluck('asset_id')->toArray();
+        }
+        return session('favorite_ids', []);
     }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Asset Detail - {{ $asset['title'] }}</title>
+    <title>Detail Aset - {{ $asset->name }} — KAI Daop 4 Semarang</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Inter:wght@400;500&display=swap"
@@ -109,58 +109,7 @@
     <div class="fixed inset-0 z-0 bg-map-layer opacity-40 mix-blend-multiply"></div>
     <div class="fixed inset-0 z-0 bg-gradient-to-br from-bg-gradient-start/80 to-bg-gradient-end/80 pointer-events-none"></div>
 
-    <aside class="fixed left-4 top-1/2 -translate-y-1/2 w-16 hidden md:flex flex-col items-center py-5 rounded-full
-                  h-[88vh] max-h-[760px] bg-white/95 backdrop-blur-2xl border border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.07)] z-50">
-
-        <!-- Home -->
-        <a href="{{ route('assets.index') }}"
-           title="Beranda"
-           class="mb-3 p-2.5 rounded-full text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] transition flex items-center justify-center">
-            <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">home</span>
-        </a>
-
-        <div class="w-8 h-px bg-[#e8eee9] mb-3"></div>
-
-        <!-- Nav Items -->
-        <div class="flex flex-col gap-2 items-center flex-1 w-full px-2">
-            <a href="{{ route('assets.manage') }}"
-               title="Kelola Aset"
-               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24">inventory_2</span>
-            </a>
-            <a href="#"
-               title="Kalender"
-               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">calendar_today</span>
-            </a>
-            <a href="#"
-               title="Laporan"
-               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">description</span>
-            </a>
-            <a href="#"
-               title="Statistik"
-               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">bar_chart</span>
-            </a>
-        </div>
-
-        <div class="w-8 h-px bg-[#e8eee9] mt-3 mb-3"></div>
-
-        <!-- Bottom Nav -->
-        <div class="flex flex-col gap-2 items-center">
-            <a href="{{ route('faq') }}"
-               title="Bantuan"
-               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">help</span>
-            </a>
-            <a href="#"
-               title="Profil"
-               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">account_circle</span>
-            </a>
-        </div>
-    </aside>
+    <x-sidebar />
 
     <main class="relative z-10 md:ml-28 lg:ml-32 min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col gap-4 md:gap-6">
         <div class="flex items-center gap-3">
@@ -173,7 +122,7 @@
                 <span class="material-symbols-outlined text-[14px] md:text-[16px]">chevron_right</span>
                 <span>Properti KAI</span>
                 <span class="material-symbols-outlined text-[14px] md:text-[16px]">chevron_right</span>
-                <span class="text-on-surface font-semibold truncate max-w-[200px] sm:max-w-none">{{ $asset['title'] }}</span>
+                <span class="text-on-surface font-semibold truncate max-w-[200px] sm:max-w-none">{{ $asset->name }}</span>
             </div>
         </div>
 
@@ -185,11 +134,11 @@
                 <div class="flex flex-col gap-3">
                     <div class="relative w-full h-56 sm:h-72 md:h-96 rounded-xl md:rounded-2xl overflow-hidden border border-glass-border shadow-inner group">
                         <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            src="{{ $asset['image'] }}" alt="{{ $asset['title'] }}" />
+                            src="{{ $asset->primary_image_url }}" alt="{{ $asset->name }}" />
                         <div class="absolute top-3 left-3 md:top-4 md:left-4">
                             <span class="bg-primary/90 text-on-primary text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md shadow-md flex items-center gap-1.5">
                                 <span class="w-2 h-2 rounded-full bg-primary-fixed animate-pulse"></span>
-                                {{ $asset['status'] }}
+                                {{ $asset->status_label }}
                             </span>
                         </div>
                     </div>
@@ -197,15 +146,19 @@
 
                 <div class="flex justify-between items-start pt-3 md:pt-4 border-t border-glass-border">
                     <div>
-                        <h1 class="font-geist font-bold text-xl sm:text-2xl md:text-3xl text-on-surface mb-1 md:mb-2">{{ $asset['title'] }}</h1>
+                        <h1 class="font-geist font-bold text-xl sm:text-2xl md:text-3xl text-on-surface mb-1 md:mb-2">{{ $asset->name }}</h1>
                         <p class="text-xs sm:text-sm font-medium text-on-surface-variant flex items-center gap-1">
                             <span class="material-symbols-outlined text-[16px] md:text-[18px]">location_on</span>
-                            {{ $asset['address'] }}
+                            {{ $asset->full_address }}
                         </p>
                     </div>
-                    <button class="bg-surface-container hover:bg-error-container text-on-surface-variant hover:text-error rounded-full p-2.5 md:p-3 transition-colors duration-200">
-                        <span class="material-symbols-outlined text-lg md:text-xl">favorite</span>
-                    </button>
+                    <form method="POST" action="{{ route('favorites.toggle') }}">
+                        @csrf
+                        <input type="hidden" name="asset_id" value="{{ $asset->id }}" />
+                        <button type="submit" class="bg-surface-container hover:bg-error-container text-on-surface-variant hover:text-error rounded-full p-2.5 md:p-3 transition-colors duration-200">
+                            <span class="material-symbols-outlined text-lg md:text-xl {{ $isFavorited ? 'ms-filled text-red-500' : '' }}">favorite</span>
+                        </button>
+                    </form>
                 </div>
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 md:gap-4 mt-1 md:mt-2">
@@ -214,49 +167,49 @@
                             <span class="material-symbols-outlined text-[18px] md:text-[20px]">architecture</span>
                             <span class="text-[10px] md:text-xs font-semibold tracking-wider">LUAS TANAH</span>
                         </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ $asset['land_area'] }}</div>
+                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ number_format($asset->land_area,0,',','.') }} m²</div>
                     </div>
                     <div class="bg-surface/60 rounded-xl p-3 md:p-4 border border-glass-border">
                         <div class="text-on-surface-variant mb-1 flex items-center gap-1.5 md:gap-2">
                             <span class="material-symbols-outlined text-[18px] md:text-[20px]">foundation</span>
                             <span class="text-[10px] md:text-xs font-semibold tracking-wider">LUAS BANGUNAN</span>
                         </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ $asset['building_area'] }}</div>
+                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ number_format($asset->building_area,0,',','.') }} m²</div>
                     </div>
                     <div class="bg-surface/60 rounded-xl p-3 md:p-4 border border-glass-border">
                         <div class="text-on-surface-variant mb-1 flex items-center gap-1.5 md:gap-2">
                             <span class="material-symbols-outlined text-[18px] md:text-[20px]">local_shipping</span>
                             <span class="text-[10px] md:text-xs font-semibold tracking-wider">AKSES JALAN</span>
                         </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface truncate">{{ $asset['road_access'] }}</div>
+                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface truncate">{{ $asset->road_access }}</div>
                     </div>
                     <div class="bg-surface/60 rounded-xl p-3 md:p-4 border border-glass-border">
                         <div class="text-on-surface-variant mb-1 flex items-center gap-1.5 md:gap-2">
                             <span class="material-symbols-outlined text-[18px] md:text-[20px]">bolt</span>
                             <span class="text-[10px] md:text-xs font-semibold tracking-wider">LISTRIK</span>
                         </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ $asset['electricity'] ?? '105,000 VA' }}</div>
+                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ $asset->electricity ?? 'N/A' }}</div>
                     </div>
                     <div class="bg-surface/60 rounded-xl p-3 md:p-4 border border-glass-border">
                         <div class="text-on-surface-variant mb-1 flex items-center gap-1.5 md:gap-2">
                             <span class="material-symbols-outlined text-[18px] md:text-[20px]">water_drop</span>
                             <span class="text-[10px] md:text-xs font-semibold tracking-wider">AIR</span>
                         </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ $asset['water'] ?? 'PDAM / Sumur' }}</div>
+                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ $asset->water_supply ?? 'N/A' }}</div>
                     </div>
                     <div class="bg-surface/60 rounded-xl p-3 md:p-4 border border-glass-border">
                         <div class="text-on-surface-variant mb-1 flex items-center gap-1.5 md:gap-2">
                             <span class="material-symbols-outlined text-[18px] md:text-[20px]">security</span>
                             <span class="text-[10px] md:text-xs font-semibold tracking-wider">KEAMANAN</span>
                         </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface text-primary">{{ $asset['security'] ?? '24 Jam' }}</div>
+                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface text-primary">{{ $asset->security ?? 'N/A' }}</div>
                     </div>
                 </div>
 
                 <div class="mt-2 md:mt-4">
                     <h3 class="font-geist font-semibold text-base md:text-xl text-on-surface mb-2">Deskripsi Aset</h3>
                     <p class="text-xs sm:text-sm md:text-base text-on-surface-variant leading-relaxed">
-                        {{ $asset['description'] ?? 'Aset strategis milik PT Kereta Api Indonesia (Persero) Daop 4 Semarang. Berlokasi di titik prima dengan aksesibilitas tinggi menuju jalur logistik, stasiun, dan pusat bisnis kota. Sangat potensial untuk pengembangan komersial, pergudangan, maupun hunian.' }}
+                        {{ $asset->description ?? 'Aset strategis milik PT Kereta Api Indonesia (Persero) Daop 4 Semarang.' }}
                     </p>
                 </div>
             </div>
@@ -266,7 +219,7 @@
                     <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
                     <div>
                         <span class="text-[10px] md:text-xs font-semibold tracking-wider text-primary-fixed opacity-90 block mb-1">HARGA PENAWARAN</span>
-                        <div class="font-geist font-bold text-2xl sm:text-3xl md:text-4xl tracking-tight">{{ $asset['price'] }}</div>
+                        <div class="font-geist font-bold text-2xl sm:text-3xl md:text-4xl tracking-tight">{{ $asset->price_formatted }}</div>
                         <div class="text-xs md:text-sm opacity-80 mt-1">Negotiable • Direct Owner (PT KAI)</div>
                     </div>
                     <button class="w-full bg-on-primary-container text-primary-container font-semibold py-3 md:py-3.5 rounded-full mt-1 hover:bg-white transition-colors duration-300 flex items-center justify-center gap-2 group shadow-lg text-sm md:text-base">
@@ -282,11 +235,11 @@
                 <div class="bg-surface/60 rounded-xl p-4 border border-glass-border flex flex-col gap-2.5 md:gap-3">
                     <div class="flex items-center justify-between">
                         <h4 class="font-geist font-semibold text-sm md:text-base text-on-surface">Koordinat Lokasi</h4>
-                        <a href="https://maps.google.com/?q={{ $asset['lat'] }},{{ $asset['lng'] }}" target="_blank"
-                            class="text-primary text-xs md:text-sm font-medium hover:underline">Google Maps</a>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ $asset->latitude }},{{ $asset->longitude }}" target="_blank"
+                            class="text-primary text-xs md:text-sm font-medium hover:underline">Google Maps ↗</a>
                     </div>
                     <div class="font-geist text-xs md:text-sm text-on-surface-variant opacity-80">
-                        Lat: {{ $asset['lat'] }} • Lng: {{ $asset['lng'] }}
+                        Lat: {{ $asset->latitude }} • Lng: {{ $asset->longitude }}
                     </div>
                 </div>
 

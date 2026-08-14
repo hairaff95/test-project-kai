@@ -7,22 +7,15 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    /**
-     * Tampilkan halaman login.
-     */
     public function showLogin()
     {
-        // Jika sudah login, redirect ke kelola-aset
         if (Auth::check()) {
-            return redirect()->route('assets.manage');
+            return redirect()->route('admin.assets.index');
         }
 
-        return view('login');
+        return view('auth.login');
     }
 
-    /**
-     * Proses login admin.
-     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -39,7 +32,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('assets.manage'));
+            return redirect()->intended(route('admin.assets.index'));
         }
 
         return back()
@@ -47,9 +40,6 @@ class AuthController extends Controller
             ->with('error', 'Email atau password salah. Silakan coba lagi.');
     }
 
-    /**
-     * Logout admin.
-     */
     public function logout(Request $request)
     {
         Auth::logout();
