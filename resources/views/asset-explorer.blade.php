@@ -172,7 +172,7 @@
 
         <!-- Bottom Nav -->
         <div class="flex flex-col gap-2 items-center">
-            <a href="#"
+            <a href="{{ route('faq') }}"
                title="Bantuan"
                class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
                 <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">help</span>

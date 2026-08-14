@@ -92,4 +92,9 @@ class AssetController extends Controller
     {
         return view('manage-assets');
     }
+
+    public function faq()
+    {
+        return view('faq');
+    }
 }

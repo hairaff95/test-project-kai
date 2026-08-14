@@ -141,7 +141,7 @@
 
         <!-- Bottom Nav -->
         <div class="flex flex-col gap-2 items-center">
-            <a href="#"
+            <a href="{{ route('faq') }}"
                data-tooltip="Bantuan"
                class="text-on-surface-variant hover:text-primary hover:bg-primary-light rounded-full p-2.5 transition flex items-center justify-center">
                 <span class="material-symbols-outlined text-[22px]">help</span>
