@@ -120,21 +120,6 @@
                class="bg-primary text-white rounded-full p-3 shadow-md flex items-center justify-center">
                 <span class="material-symbols-outlined ms-filled text-[22px]">inventory_2</span>
             </a>
-            <a href="#"
-               data-tooltip="Kalender"
-               class="text-on-surface-variant hover:text-primary hover:bg-primary-light rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]">calendar_today</span>
-            </a>
-            <a href="#"
-               data-tooltip="Laporan"
-               class="text-on-surface-variant hover:text-primary hover:bg-primary-light rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]">description</span>
-            </a>
-            <a href="#"
-               data-tooltip="Statistik"
-               class="text-on-surface-variant hover:text-primary hover:bg-primary-light rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]">bar_chart</span>
-            </a>
         </div>
 
         <div class="w-8 h-px bg-border-subtle mt-3 mb-3"></div>
@@ -146,10 +131,10 @@
                class="text-on-surface-variant hover:text-primary hover:bg-primary-light rounded-full p-2.5 transition flex items-center justify-center">
                 <span class="material-symbols-outlined text-[22px]">help</span>
             </a>
-            <a href="#"
-               data-tooltip="Profil"
-               class="text-on-surface-variant hover:text-primary hover:bg-primary-light rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]">account_circle</span>
+            <a href="{{ route('logout') }}"
+               data-tooltip="Keluar"
+               class="text-on-surface-variant hover:text-red-600 hover:bg-red-50 rounded-full p-2.5 transition flex items-center justify-center">
+                <span class="material-symbols-outlined text-[22px]">logout</span>
             </a>
         </div>
     </aside>
