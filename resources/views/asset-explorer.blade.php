@@ -97,22 +97,133 @@
 
     <div class="fixed top-3 left-3 right-3 md:top-4 md:left-28 md:right-4 z-20 flex flex-col items-center gap-3 pointer-events-none">
         <div class="flex flex-wrap items-center justify-between md:justify-start gap-2 md:gap-4 bg-glass-surface backdrop-blur-2xl border border-glass-border shadow-md rounded-2xl md:rounded-full py-2 px-3 md:px-4 pointer-events-auto w-full md:w-auto max-w-full overflow-x-auto">
+            <!-- Search -->
             <div class="flex items-center gap-2 bg-surface-container-low rounded-full px-3 py-1.5 md:px-4 md:py-2 flex-1 md:w-80 min-w-[180px]">
                 <span class="material-symbols-outlined text-outline text-lg md:text-2xl">search</span>
-                <input class="bg-transparent border-none focus:ring-0 text-xs md:text-sm font-medium w-full placeholder:text-outline-variant outline-none"
+                <input id="map-search" class="bg-transparent border-none focus:ring-0 text-xs md:text-sm font-medium w-full placeholder:text-outline-variant outline-none"
                     placeholder="Cari aset di Semarang..." type="text" />
             </div>
+
             <div class="hidden sm:block h-6 w-px bg-outline-variant"></div>
-            <div class="flex items-center gap-1 sm:gap-2 overflow-x-auto">
-                <button class="flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition-colors text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
-                    Tipe <span class="material-symbols-outlined text-xs md:text-sm">arrow_drop_down</span>
+
+            <!-- Filter Buttons -->
+            <div class="flex items-center gap-1 sm:gap-2 overflow-x-auto relative">
+
+                <!-- TIPE -->
+                <div class="relative" id="dd-tipe-wrap">
+                    <button onclick="toggleDropdown('dd-tipe')"
+                        id="btn-tipe"
+                        class="filter-btn flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition-colors text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
+                        <span id="label-tipe">Tipe</span>
+                        <span class="material-symbols-outlined text-xs md:text-sm transition-transform duration-200" id="icon-tipe">arrow_drop_down</span>
+                    </button>
+                    <div id="dd-tipe"
+                        class="dropdown-panel hidden absolute top-full left-0 mt-2 w-52 bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/60 backdrop-blur-xl overflow-hidden z-50">
+                        <div class="p-2">
+                            <p class="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest px-3 py-2">Jenis Aset</p>
+                            <button onclick="selectFilter('tipe', '', 'Tipe', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface font-medium">
+                                <span class="material-symbols-outlined text-[16px] text-outline">select_all</span>
+                                Semua Tipe
+                            </button>
+                            <button onclick="selectFilter('tipe', 'gudang', 'Gudang', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[16px] text-outline">warehouse</span>
+                                Gudang
+                            </button>
+                            <button onclick="selectFilter('tipe', 'kantor', 'Kantor', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[16px] text-outline">business</span>
+                                Kantor
+                            </button>
+                            <button onclick="selectFilter('tipe', 'rumah-dinas', 'Rumah Dinas', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[16px] text-outline">home</span>
+                                Rumah Dinas
+                            </button>
+                            <button onclick="selectFilter('tipe', 'lahan', 'Lahan', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[16px] text-outline">landscape</span>
+                                Lahan
+                            </button>
+                            <button onclick="selectFilter('tipe', 'komersial', 'Komersial', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[16px] text-outline">storefront</span>
+                                Komersial
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATUS -->
+                <div class="relative" id="dd-status-wrap">
+                    <button onclick="toggleDropdown('dd-status')"
+                        id="btn-status"
+                        class="filter-btn flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition-colors text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
+                        <span id="label-status">Status</span>
+                        <span class="material-symbols-outlined text-xs md:text-sm transition-transform duration-200" id="icon-status">arrow_drop_down</span>
+                    </button>
+                    <div id="dd-status"
+                        class="dropdown-panel hidden absolute top-full left-0 mt-2 w-52 bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/60 backdrop-blur-xl overflow-hidden z-50">
+                        <div class="p-2">
+                            <p class="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest px-3 py-2">Status Aset</p>
+                            <button onclick="selectFilter('status', '', 'Status', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface font-medium">
+                                <span class="w-2 h-2 rounded-full bg-outline inline-block"></span>
+                                Semua Status
+                            </button>
+                            <button onclick="selectFilter('status', 'tersedia', 'Tersedia', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="w-2 h-2 rounded-full bg-[#006948] inline-block"></span>
+                                Tersedia
+                            </button>
+                            <button onclick="selectFilter('status', 'dalam-proses', 'Dalam Proses', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="w-2 h-2 rounded-full bg-amber-500 inline-block animate-pulse"></span>
+                                Dalam Proses
+                            </button>
+                            <button onclick="selectFilter('status', 'terjual', 'Terjual', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="w-2 h-2 rounded-full bg-gray-400 inline-block"></span>
+                                Terjual
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HARGA -->
+                <div class="relative" id="dd-harga-wrap">
+                    <button onclick="toggleDropdown('dd-harga')"
+                        id="btn-harga"
+                        class="filter-btn flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition-colors text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
+                        <span id="label-harga">Harga</span>
+                        <span class="material-symbols-outlined text-xs md:text-sm transition-transform duration-200" id="icon-harga">arrow_drop_down</span>
+                    </button>
+                    <div id="dd-harga"
+                        class="dropdown-panel hidden absolute top-full left-0 mt-2 w-60 bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/60 backdrop-blur-xl overflow-hidden z-50">
+                        <div class="p-2">
+                            <p class="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest px-3 py-2">Rentang Harga</p>
+                            <button onclick="selectFilter('harga', '', 'Harga', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface font-medium">
+                                <span class="material-symbols-outlined text-[16px] text-outline">currency_exchange</span>
+                                Semua Harga
+                            </button>
+                            <button onclick="selectFilter('harga', '0-5m', '< Rp 5 M', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[16px] text-outline">arrow_downward</span>
+                                Di bawah Rp 5 M
+                            </button>
+                            <button onclick="selectFilter('harga', '5m-20m', 'Rp 5–20 M', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[16px] text-outline">horizontal_rule</span>
+                                Rp 5 M – Rp 20 M
+                            </button>
+                            <button onclick="selectFilter('harga', '20m-50m', 'Rp 20–50 M', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[16px] text-outline">horizontal_rule</span>
+                                Rp 20 M – Rp 50 M
+                            </button>
+                            <button onclick="selectFilter('harga', '50m-up', '> Rp 50 M', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[16px] text-outline">arrow_upward</span>
+                                Di atas Rp 50 M
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reset filter -->
+                <button id="btn-reset" onclick="resetFilters()"
+                    class="hidden items-center gap-1 px-3 py-1.5 rounded-full bg-[#006948] text-white text-xs md:text-sm font-medium whitespace-nowrap transition hover:bg-[#005137]">
+                    <span class="material-symbols-outlined text-xs md:text-sm">close</span>
+                    Reset
                 </button>
-                <button class="flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition-colors text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
-                    Status <span class="material-symbols-outlined text-xs md:text-sm">arrow_drop_down</span>
-                </button>
-                <button class="flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition-colors text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
-                    Harga <span class="material-symbols-outlined text-xs md:text-sm">arrow_drop_down</span>
-                </button>
+
             </div>
         </div>
 
@@ -150,21 +261,6 @@
                title="Kelola Aset"
                class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
                 <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24">inventory_2</span>
-            </a>
-            <a href="#"
-               title="Kalender"
-               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">calendar_today</span>
-            </a>
-            <a href="#"
-               title="Laporan"
-               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">description</span>
-            </a>
-            <a href="#"
-               title="Statistik"
-               class="text-[#637369] hover:text-[#006948] hover:bg-[#e6f4ee] rounded-full p-2.5 transition flex items-center justify-center">
-                <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24">bar_chart</span>
             </a>
         </div>
 
@@ -288,6 +384,114 @@
                     imgEl.style.opacity = '1';
                 }, 150);
             });
+        });
+    </script>
+
+    <script>
+        /* ============================================================
+           DROPDOWN FILTER
+        ============================================================ */
+        const activeFilters = { tipe: '', status: '', harga: '' };
+
+        function toggleDropdown(id) {
+            const panel = document.getElementById(id);
+            const isOpen = !panel.classList.contains('hidden');
+
+            // close all panels first
+            document.querySelectorAll('.dropdown-panel').forEach(p => {
+                p.classList.add('hidden');
+            });
+            document.querySelectorAll('[id^="icon-"]').forEach(ic => {
+                ic.style.transform = '';
+            });
+
+            if (!isOpen) {
+                panel.classList.remove('hidden');
+                const key = id.replace('dd-', '');
+                const icon = document.getElementById('icon-' + key);
+                if (icon) icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function selectFilter(key, value, label, btn) {
+            activeFilters[key] = value;
+
+            // update button label
+            const labelEl = document.getElementById('label-' + key);
+            labelEl.textContent = label || (key.charAt(0).toUpperCase() + key.slice(1));
+
+            // highlight active btn label
+            if (value) {
+                document.getElementById('btn-' + key).classList.add('bg-[#006948]', 'text-white');
+                document.getElementById('btn-' + key).classList.remove('text-on-surface-variant');
+                document.getElementById('icon-' + key).classList.add('text-white');
+            } else {
+                document.getElementById('btn-' + key).classList.remove('bg-[#006948]', 'text-white');
+                document.getElementById('btn-' + key).classList.add('text-on-surface-variant');
+                document.getElementById('icon-' + key).classList.remove('text-white');
+            }
+
+            // highlight selected item inside panel
+            const panelId = 'dd-' + key;
+            document.querySelectorAll(`#${panelId} .dd-item`).forEach(b => {
+                b.classList.remove('bg-[#e6f4ee]', 'text-[#006948]', 'font-semibold');
+            });
+            btn.classList.add('bg-[#e6f4ee]', 'text-[#006948]', 'font-semibold');
+
+            // close panel
+            document.getElementById(panelId).classList.add('hidden');
+            document.getElementById('icon-' + key).style.transform = '';
+
+            // show/hide reset button
+            const hasFilter = Object.values(activeFilters).some(v => v !== '');
+            const resetBtn = document.getElementById('btn-reset');
+            if (hasFilter) {
+                resetBtn.classList.remove('hidden');
+                resetBtn.classList.add('flex');
+            } else {
+                resetBtn.classList.add('hidden');
+                resetBtn.classList.remove('flex');
+            }
+
+            applyFilters();
+        }
+
+        function resetFilters() {
+            activeFilters.tipe = '';
+            activeFilters.status = '';
+            activeFilters.harga = '';
+
+            ['tipe', 'status', 'harga'].forEach(key => {
+                const labels = { tipe: 'Tipe', status: 'Status', harga: 'Harga' };
+                document.getElementById('label-' + key).textContent = labels[key];
+                document.getElementById('btn-' + key).classList.remove('bg-[#006948]', 'text-white');
+                document.getElementById('btn-' + key).classList.add('text-on-surface-variant');
+                document.getElementById('icon-' + key).classList.remove('text-white');
+                document.querySelectorAll(`#dd-${key} .dd-item`).forEach(b => {
+                    b.classList.remove('bg-[#e6f4ee]', 'text-[#006948]', 'font-semibold');
+                });
+                // re-highlight "semua" option
+                document.querySelector(`#dd-${key} .dd-item`).classList.add('font-medium');
+            });
+
+            document.getElementById('btn-reset').classList.add('hidden');
+            document.getElementById('btn-reset').classList.remove('flex');
+            applyFilters();
+        }
+
+        function applyFilters() {
+            // For now: log active filters. When backend is wired, send as query params.
+            console.log('Active filters:', activeFilters);
+            // TODO: filter markers on map based on activeFilters
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function (e) {
+            const insideAny = e.target.closest('#dd-tipe-wrap, #dd-status-wrap, #dd-harga-wrap');
+            if (!insideAny) {
+                document.querySelectorAll('.dropdown-panel').forEach(p => p.classList.add('hidden'));
+                document.querySelectorAll('[id^="icon-"]').forEach(ic => ic.style.transform = '');
+            }
         });
     </script>
 </body>
