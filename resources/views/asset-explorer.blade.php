@@ -89,6 +89,42 @@
             font-size: 9px;
             opacity: 0.6;
         }
+
+        /* ---- Dropdown panels ---- */
+        .dropdown-panel {
+            opacity: 0;
+            transform: translateY(-6px) scale(0.97);
+            pointer-events: none;
+            transition: opacity 0.18s ease, transform 0.18s ease;
+        }
+        .dropdown-panel.open {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .dd-item {
+            transition: background 0.12s, color 0.12s;
+        }
+        .dd-item.selected {
+            background: rgba(0, 105, 72, 0.10);
+            color: #006948;
+            font-weight: 600;
+        }
+        .filter-btn.active {
+            background: #006948;
+            color: #ffffff;
+        }
+        .filter-btn.active .filter-icon {
+            color: #ffffff;
+        }
+        /* arrow rotate */
+        .filter-icon {
+            transition: transform 0.2s ease;
+            color: #6d7a72;
+        }
+        .filter-btn.active .filter-icon {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 
@@ -113,36 +149,48 @@
                 <div class="relative" id="dd-tipe-wrap">
                     <button onclick="toggleDropdown('dd-tipe')"
                         id="btn-tipe"
-                        class="filter-btn flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition-colors text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
+                        class="filter-btn flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
                         <span id="label-tipe">Tipe</span>
-                        <span class="material-symbols-outlined text-xs md:text-sm transition-transform duration-200" id="icon-tipe">arrow_drop_down</span>
+                        <span class="material-symbols-outlined filter-icon text-[16px]">expand_more</span>
                     </button>
                     <div id="dd-tipe"
-                        class="dropdown-panel hidden absolute top-full left-0 mt-2 w-52 bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/60 backdrop-blur-xl overflow-hidden z-50">
-                        <div class="p-2">
-                            <p class="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest px-3 py-2">Jenis Aset</p>
-                            <button onclick="selectFilter('tipe', '', 'Tipe', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface font-medium">
-                                <span class="material-symbols-outlined text-[16px] text-outline">select_all</span>
+                        class="dropdown-panel absolute top-[calc(100%+10px)] left-0 w-56
+                               bg-white/90 backdrop-blur-2xl
+                               rounded-2xl border border-white/70
+                               shadow-[0_12px_40px_rgba(0,0,0,0.15)]
+                               overflow-hidden z-50">
+                        <div class="px-3 pt-3 pb-1">
+                            <p class="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-widest">Jenis Aset</p>
+                        </div>
+                        <div class="px-2 pb-2 flex flex-col gap-0.5">
+                            <button onclick="selectFilter('tipe','','Tipe',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface selected">
+                                <span class="material-symbols-outlined text-[17px] text-outline shrink-0">select_all</span>
                                 Semua Tipe
                             </button>
-                            <button onclick="selectFilter('tipe', 'gudang', 'Gudang', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="material-symbols-outlined text-[16px] text-outline">warehouse</span>
+                            <button onclick="selectFilter('tipe','gudang','Gudang',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[17px] text-outline shrink-0">warehouse</span>
                                 Gudang
                             </button>
-                            <button onclick="selectFilter('tipe', 'kantor', 'Kantor', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="material-symbols-outlined text-[16px] text-outline">business</span>
+                            <button onclick="selectFilter('tipe','kantor','Kantor',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[17px] text-outline shrink-0">business</span>
                                 Kantor
                             </button>
-                            <button onclick="selectFilter('tipe', 'rumah-dinas', 'Rumah Dinas', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="material-symbols-outlined text-[16px] text-outline">home</span>
+                            <button onclick="selectFilter('tipe','rumah-dinas','Rumah Dinas',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[17px] text-outline shrink-0">home</span>
                                 Rumah Dinas
                             </button>
-                            <button onclick="selectFilter('tipe', 'lahan', 'Lahan', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="material-symbols-outlined text-[16px] text-outline">landscape</span>
+                            <button onclick="selectFilter('tipe','lahan','Lahan',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[17px] text-outline shrink-0">landscape</span>
                                 Lahan
                             </button>
-                            <button onclick="selectFilter('tipe', 'komersial', 'Komersial', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="material-symbols-outlined text-[16px] text-outline">storefront</span>
+                            <button onclick="selectFilter('tipe','komersial','Komersial',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[17px] text-outline shrink-0">storefront</span>
                                 Komersial
                             </button>
                         </div>
@@ -153,28 +201,38 @@
                 <div class="relative" id="dd-status-wrap">
                     <button onclick="toggleDropdown('dd-status')"
                         id="btn-status"
-                        class="filter-btn flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition-colors text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
+                        class="filter-btn flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
                         <span id="label-status">Status</span>
-                        <span class="material-symbols-outlined text-xs md:text-sm transition-transform duration-200" id="icon-status">arrow_drop_down</span>
+                        <span class="material-symbols-outlined filter-icon text-[16px]">expand_more</span>
                     </button>
                     <div id="dd-status"
-                        class="dropdown-panel hidden absolute top-full left-0 mt-2 w-52 bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/60 backdrop-blur-xl overflow-hidden z-50">
-                        <div class="p-2">
-                            <p class="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest px-3 py-2">Status Aset</p>
-                            <button onclick="selectFilter('status', '', 'Status', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface font-medium">
-                                <span class="w-2 h-2 rounded-full bg-outline inline-block"></span>
+                        class="dropdown-panel absolute top-[calc(100%+10px)] left-0 w-52
+                               bg-white/90 backdrop-blur-2xl
+                               rounded-2xl border border-white/70
+                               shadow-[0_12px_40px_rgba(0,0,0,0.15)]
+                               overflow-hidden z-50">
+                        <div class="px-3 pt-3 pb-1">
+                            <p class="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-widest">Status Aset</p>
+                        </div>
+                        <div class="px-2 pb-2 flex flex-col gap-0.5">
+                            <button onclick="selectFilter('status','','Status',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface selected">
+                                <span class="w-2 h-2 rounded-full bg-outline-variant shrink-0"></span>
                                 Semua Status
                             </button>
-                            <button onclick="selectFilter('status', 'tersedia', 'Tersedia', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="w-2 h-2 rounded-full bg-[#006948] inline-block"></span>
+                            <button onclick="selectFilter('status','tersedia','Tersedia',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="w-2 h-2 rounded-full bg-[#006948] shrink-0"></span>
                                 Tersedia
                             </button>
-                            <button onclick="selectFilter('status', 'dalam-proses', 'Dalam Proses', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="w-2 h-2 rounded-full bg-amber-500 inline-block animate-pulse"></span>
+                            <button onclick="selectFilter('status','dalam-proses','Dalam Proses',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
                                 Dalam Proses
                             </button>
-                            <button onclick="selectFilter('status', 'terjual', 'Terjual', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="w-2 h-2 rounded-full bg-gray-400 inline-block"></span>
+                            <button onclick="selectFilter('status','terjual','Terjual',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="w-2 h-2 rounded-full bg-gray-400 shrink-0"></span>
                                 Terjual
                             </button>
                         </div>
@@ -185,42 +243,55 @@
                 <div class="relative" id="dd-harga-wrap">
                     <button onclick="toggleDropdown('dd-harga')"
                         id="btn-harga"
-                        class="filter-btn flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition-colors text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
+                        class="filter-btn flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-surface-variant/50 transition text-xs md:text-sm font-medium text-on-surface-variant whitespace-nowrap">
                         <span id="label-harga">Harga</span>
-                        <span class="material-symbols-outlined text-xs md:text-sm transition-transform duration-200" id="icon-harga">arrow_drop_down</span>
+                        <span class="material-symbols-outlined filter-icon text-[16px]">expand_more</span>
                     </button>
                     <div id="dd-harga"
-                        class="dropdown-panel hidden absolute top-full left-0 mt-2 w-60 bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/60 backdrop-blur-xl overflow-hidden z-50">
-                        <div class="p-2">
-                            <p class="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest px-3 py-2">Rentang Harga</p>
-                            <button onclick="selectFilter('harga', '', 'Harga', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface font-medium">
-                                <span class="material-symbols-outlined text-[16px] text-outline">currency_exchange</span>
+                        class="dropdown-panel absolute top-[calc(100%+10px)] left-0 w-60
+                               bg-white/90 backdrop-blur-2xl
+                               rounded-2xl border border-white/70
+                               shadow-[0_12px_40px_rgba(0,0,0,0.15)]
+                               overflow-hidden z-50">
+                        <div class="px-3 pt-3 pb-1">
+                            <p class="text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-widest">Rentang Harga</p>
+                        </div>
+                        <div class="px-2 pb-2 flex flex-col gap-0.5">
+                            <button onclick="selectFilter('harga','','Harga',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface selected">
+                                <span class="material-symbols-outlined text-[17px] text-outline shrink-0">currency_exchange</span>
                                 Semua Harga
                             </button>
-                            <button onclick="selectFilter('harga', '0-5m', '< Rp 5 M', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="material-symbols-outlined text-[16px] text-outline">arrow_downward</span>
+                            <button onclick="selectFilter('harga','0-5m','&lt; Rp 5 M',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[17px] text-outline shrink-0">south</span>
                                 Di bawah Rp 5 M
                             </button>
-                            <button onclick="selectFilter('harga', '5m-20m', 'Rp 5–20 M', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="material-symbols-outlined text-[16px] text-outline">horizontal_rule</span>
+                            <button onclick="selectFilter('harga','5m-20m','Rp 5–20 M',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="text-xs font-bold text-outline w-[17px] text-center shrink-0">5M</span>
                                 Rp 5 M – Rp 20 M
                             </button>
-                            <button onclick="selectFilter('harga', '20m-50m', 'Rp 20–50 M', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="material-symbols-outlined text-[16px] text-outline">horizontal_rule</span>
+                            <button onclick="selectFilter('harga','20m-50m','Rp 20–50 M',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="text-xs font-bold text-outline w-[17px] text-center shrink-0">50M</span>
                                 Rp 20 M – Rp 50 M
                             </button>
-                            <button onclick="selectFilter('harga', '50m-up', '> Rp 50 M', this)" class="dd-item w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-surface-container-low transition text-sm text-on-surface">
-                                <span class="material-symbols-outlined text-[16px] text-outline">arrow_upward</span>
+                            <button onclick="selectFilter('harga','50m-up','&gt; Rp 50 M',this)"
+                                class="dd-item w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-on-surface">
+                                <span class="material-symbols-outlined text-[17px] text-outline shrink-0">north</span>
                                 Di atas Rp 50 M
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Reset filter -->
+                <!-- Reset -->
                 <button id="btn-reset" onclick="resetFilters()"
-                    class="hidden items-center gap-1 px-3 py-1.5 rounded-full bg-[#006948] text-white text-xs md:text-sm font-medium whitespace-nowrap transition hover:bg-[#005137]">
-                    <span class="material-symbols-outlined text-xs md:text-sm">close</span>
+                    class="hidden items-center gap-1 pl-2.5 pr-3.5 py-1.5 rounded-full
+                           bg-[#006948] text-white text-xs md:text-sm font-medium whitespace-nowrap
+                           hover:bg-[#005137] transition">
+                    <span class="material-symbols-outlined text-[15px]">close</span>
                     Reset
                 </button>
 
@@ -395,102 +466,85 @@
 
         function toggleDropdown(id) {
             const panel = document.getElementById(id);
-            const isOpen = !panel.classList.contains('hidden');
+            const key   = id.replace('dd-', '');
+            const btn   = document.getElementById('btn-' + key);
+            const isOpen = panel.classList.contains('open');
 
-            // close all panels first
-            document.querySelectorAll('.dropdown-panel').forEach(p => {
-                p.classList.add('hidden');
-            });
-            document.querySelectorAll('[id^="icon-"]').forEach(ic => {
-                ic.style.transform = '';
-            });
+            // close all
+            closeAllDropdowns();
 
             if (!isOpen) {
-                panel.classList.remove('hidden');
-                const key = id.replace('dd-', '');
-                const icon = document.getElementById('icon-' + key);
-                if (icon) icon.style.transform = 'rotate(180deg)';
+                panel.classList.add('open');
+                btn.classList.add('bg-surface-variant/60');
             }
+        }
+
+        function closeAllDropdowns() {
+            document.querySelectorAll('.dropdown-panel').forEach(p => p.classList.remove('open'));
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('bg-surface-variant/60'));
         }
 
         function selectFilter(key, value, label, btn) {
             activeFilters[key] = value;
 
-            // update button label
-            const labelEl = document.getElementById('label-' + key);
-            labelEl.textContent = label || (key.charAt(0).toUpperCase() + key.slice(1));
+            // label on button
+            document.getElementById('label-' + key).textContent = label;
 
-            // highlight active btn label
+            // button active state
+            const filterBtn = document.getElementById('btn-' + key);
             if (value) {
-                document.getElementById('btn-' + key).classList.add('bg-[#006948]', 'text-white');
-                document.getElementById('btn-' + key).classList.remove('text-on-surface-variant');
-                document.getElementById('icon-' + key).classList.add('text-white');
+                filterBtn.classList.add('active');
             } else {
-                document.getElementById('btn-' + key).classList.remove('bg-[#006948]', 'text-white');
-                document.getElementById('btn-' + key).classList.add('text-on-surface-variant');
-                document.getElementById('icon-' + key).classList.remove('text-white');
+                filterBtn.classList.remove('active');
             }
 
-            // highlight selected item inside panel
+            // highlight item in panel
             const panelId = 'dd-' + key;
-            document.querySelectorAll(`#${panelId} .dd-item`).forEach(b => {
-                b.classList.remove('bg-[#e6f4ee]', 'text-[#006948]', 'font-semibold');
-            });
-            btn.classList.add('bg-[#e6f4ee]', 'text-[#006948]', 'font-semibold');
+            document.querySelectorAll(`#${panelId} .dd-item`).forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
 
             // close panel
-            document.getElementById(panelId).classList.add('hidden');
-            document.getElementById('icon-' + key).style.transform = '';
+            document.getElementById(panelId).classList.remove('open');
 
-            // show/hide reset button
+            // reset button visibility
             const hasFilter = Object.values(activeFilters).some(v => v !== '');
-            const resetBtn = document.getElementById('btn-reset');
-            if (hasFilter) {
-                resetBtn.classList.remove('hidden');
-                resetBtn.classList.add('flex');
-            } else {
-                resetBtn.classList.add('hidden');
-                resetBtn.classList.remove('flex');
-            }
+            const resetBtn  = document.getElementById('btn-reset');
+            resetBtn.classList.toggle('hidden', !hasFilter);
+            resetBtn.classList.toggle('flex', hasFilter);
 
             applyFilters();
         }
 
         function resetFilters() {
-            activeFilters.tipe = '';
-            activeFilters.status = '';
-            activeFilters.harga = '';
+            activeFilters.tipe = activeFilters.status = activeFilters.harga = '';
 
             ['tipe', 'status', 'harga'].forEach(key => {
                 const labels = { tipe: 'Tipe', status: 'Status', harga: 'Harga' };
                 document.getElementById('label-' + key).textContent = labels[key];
-                document.getElementById('btn-' + key).classList.remove('bg-[#006948]', 'text-white');
-                document.getElementById('btn-' + key).classList.add('text-on-surface-variant');
-                document.getElementById('icon-' + key).classList.remove('text-white');
-                document.querySelectorAll(`#dd-${key} .dd-item`).forEach(b => {
-                    b.classList.remove('bg-[#e6f4ee]', 'text-[#006948]', 'font-semibold');
-                });
-                // re-highlight "semua" option
-                document.querySelector(`#dd-${key} .dd-item`).classList.add('font-medium');
+                document.getElementById('btn-' + key).classList.remove('active');
+
+                // restore "semua" as selected
+                const items = document.querySelectorAll(`#dd-${key} .dd-item`);
+                items.forEach(b => b.classList.remove('selected'));
+                if (items[0]) items[0].classList.add('selected');
             });
 
-            document.getElementById('btn-reset').classList.add('hidden');
-            document.getElementById('btn-reset').classList.remove('flex');
+            const resetBtn = document.getElementById('btn-reset');
+            resetBtn.classList.add('hidden');
+            resetBtn.classList.remove('flex');
+
             applyFilters();
         }
 
         function applyFilters() {
-            // For now: log active filters. When backend is wired, send as query params.
             console.log('Active filters:', activeFilters);
-            // TODO: filter markers on map based on activeFilters
+            // TODO: filter map markers
         }
 
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function (e) {
-            const insideAny = e.target.closest('#dd-tipe-wrap, #dd-status-wrap, #dd-harga-wrap');
-            if (!insideAny) {
-                document.querySelectorAll('.dropdown-panel').forEach(p => p.classList.add('hidden'));
-                document.querySelectorAll('[id^="icon-"]').forEach(ic => ic.style.transform = '');
+        // Close on outside click
+        document.addEventListener('click', e => {
+            if (!e.target.closest('#dd-tipe-wrap, #dd-status-wrap, #dd-harga-wrap')) {
+                closeAllDropdowns();
             }
         });
     </script>
