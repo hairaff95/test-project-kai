@@ -98,7 +98,7 @@
     </style>
 </head>
 
-<body class="bg-background text-on-surface min-h-screen flex antialiased">
+<body class="bg-background text-on-surface min-h-screen overflow-x-hidden antialiased">
 
     <!-- ===== LEFT FLOATING DOCK SIDEBAR ===== -->
     <aside class="fixed left-4 top-1/2 -translate-y-1/2 w-16 hidden sm:flex flex-col items-center py-5 rounded-full
@@ -155,7 +155,7 @@
     </aside>
 
     <!-- ===== MAIN CONTENT ===== -->
-    <main class="flex-1 sm:ml-24 p-4 sm:p-8 md:p-10 max-w-7xl mx-auto w-full">
+    <main class="pl-4 pr-4 sm:pl-28 sm:pr-6 md:pl-32 md:pr-8 pt-6 pb-10 min-h-screen">
 
         <!-- Breadcrumb -->
         <nav class="flex items-center gap-1.5 text-xs text-on-surface-variant mb-6" aria-label="breadcrumb">
@@ -196,7 +196,7 @@
         </div>
 
         <!-- ===== SUMMARY CARDS ===== -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
 
             <!-- Total Aset -->
             <div class="bg-white rounded-2xl p-5 shadow-card border border-border-subtle flex items-start gap-4">
@@ -238,7 +238,7 @@
             </div>
 
             <!-- Nilai Total -->
-            <div class="bg-gradient-to-br from-primary to-primary-dark rounded-2xl p-5 shadow-card flex items-start gap-4 col-span-2 lg:col-span-1">
+            <div class="bg-gradient-to-br from-primary to-primary-dark rounded-2xl p-5 shadow-card flex items-start gap-4 col-span-2 xl:col-span-1">
                 <div class="bg-white/20 rounded-xl p-2.5 shrink-0">
                     <span class="material-symbols-outlined ms-filled text-white text-[22px]">payments</span>
                 </div>
@@ -315,8 +315,8 @@
             </div>
 
             <!-- Table -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-left" id="asset-table">
+            <div class="overflow-x-auto min-w-0">
+                <table class="w-full min-w-[700px] text-left" id="asset-table">
                     <thead>
                         <tr class="text-[11px] font-semibold text-on-surface-variant/70 uppercase tracking-wide bg-background/60 border-b border-border-subtle">
                             <th class="py-3.5 pl-6 pr-3 w-10">
