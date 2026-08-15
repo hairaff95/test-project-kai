@@ -1,164 +1,319 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manajemen Aset — Admin KAI Daop 4</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <script>
-        tailwind.config = { theme: { extend: {
-            colors: { "primary":"#006948","primary-dark":"#005137","primary-light":"#e6f4ee","background":"#f4f8f5","surface":"#ffffff","on-surface":"#1a201c","on-surface-variant":"#637369","border-subtle":"#e8eee9","danger":"#dc2626","danger-light":"#fee2e2" },
-            fontFamily: { "jakarta":["Plus Jakarta Sans","sans-serif"] }
-        }}}
-    </script>
-    <style>
-        body { font-family:"Plus Jakarta Sans",sans-serif; }
-        .material-symbols-outlined { font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24; line-height:1; }
-    </style>
-</head>
-<body class="bg-background text-on-surface min-h-screen">
+@extends('layout.app')
 
-<x-sidebar />
+@section('title', 'Manajemen Aset — Admin KAI Daop 4')
 
-<main class="pl-4 pr-4 sm:pl-28 sm:pr-6 md:pl-32 md:pr-8 pt-8 pb-16 min-h-screen max-w-[1400px] mx-auto">
+@section('content')
+    <div class="w-full px-6 py-8 pb-32 sm:pb-12 space-y-8">
 
-    {{-- Header --}}
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <div>
-            <p class="text-xs font-bold uppercase tracking-widest text-primary mb-1">Panel Admin · KAI Daop 4</p>
-            <h1 class="text-2xl md:text-3xl font-bold">Manajemen Aset</h1>
+        {{-- Header --}}
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-200">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-xs font-bold uppercase tracking-wider text-primary">Panel Administrator</span>
+                </div>
+                <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-950 tracking-tight">
+                    Kelola Aset Properti
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                    Inventarisasi aset PT Kereta Api Indonesia (Persero) Daerah Operasi 4 Semarang
+                </p>
+            </div>
+
+            <a href="{{ route('admin.assets.create') }}"
+                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs sm:text-sm font-semibold transition self-start sm:self-auto min-h-[44px]">
+                <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                <span>Tambah Aset Baru</span>
+            </a>
         </div>
-        <a href="{{ route('admin.assets.create') }}"
-            class="inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-primary-dark transition shadow-md">
-            <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1">add_circle</span>
-            Tambah Aset Baru
-        </a>
-    </div>
 
-    {{-- Alerts --}}
-    @if(session('success'))
-    <div class="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl px-4 py-3 text-sm flex items-center gap-2">
-        <span class="material-symbols-outlined text-base">check_circle</span>{{ session('success') }}
-    </div>
-    @endif
-    @if(session('error'))
-    <div class="mb-4 bg-danger-light border border-red-200 text-danger rounded-xl px-4 py-3 text-sm flex items-center gap-2">
-        <span class="material-symbols-outlined text-base">error</span>{{ session('error') }}
-    </div>
-    @endif
+        {{-- Stats --}}
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="p-4 sm:p-5 rounded-xl bg-white border border-gray-200 space-y-1">
+                <div class="flex items-center justify-between text-slate-500">
+                    <span class="text-xs font-semibold">Total Aset</span>
+                    <i data-lucide="building" class="w-4 h-4 text-primary"></i>
+                </div>
+                <div class="text-xl sm:text-2xl font-bold text-gray-900">{{ $stats['total'] }}</div>
+                <p class="text-[11px] text-gray-400">Terdata di Daop 4</p>
+            </div>
 
-    {{-- KPI Cards --}}
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        @foreach([['Total Aset','inventory_2',$stats['total'],'bg-primary/10 text-primary'],['Tersedia','check_circle',$stats['available'],'bg-emerald-100 text-emerald-700'],['Dalam Proses','schedule',$stats['reserved'],'bg-amber-100 text-amber-700'],['Terjual','sell',$stats['sold'],'bg-gray-100 text-gray-600']] as [$label,$icon,$count,$colors])
-        <div class="bg-white rounded-2xl border border-border-subtle p-4 shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl {{ $colors }} flex items-center justify-center">
-                    <span class="material-symbols-outlined text-xl">{{ $icon }}</span>
+            <div class="p-4 sm:p-5 rounded-xl bg-white border border-gray-200 space-y-1">
+                <div class="flex items-center justify-between text-slate-500">
+                    <span class="text-xs font-semibold">Tersedia</span>
+                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
                 </div>
-                <div>
-                    <p class="text-2xl font-bold text-on-surface">{{ $count }}</p>
-                    <p class="text-xs text-on-surface-variant font-medium">{{ $label }}</p>
+                <div class="text-xl sm:text-2xl font-bold text-emerald-600">{{ $stats['available'] }}</div>
+                <p class="text-[11px] text-gray-400">Siap dikerjasamakan</p>
+            </div>
+
+            <div class="p-4 sm:p-5 rounded-xl bg-white border border-gray-200 space-y-1">
+                <div class="flex items-center justify-between text-slate-500">
+                    <span class="text-xs font-semibold">Dalam Proses</span>
+                    <i data-lucide="clock" class="w-4 h-4 text-amber-500"></i>
                 </div>
+                <div class="text-xl sm:text-2xl font-bold text-amber-500">{{ $stats['reserved'] }}</div>
+                <p class="text-[11px] text-gray-400">Negosiasi / verifikasi</p>
+            </div>
+
+            <div class="p-4 sm:p-5 rounded-xl bg-white border border-gray-200 space-y-1">
+                <div class="flex items-center justify-between text-slate-500">
+                    <span class="text-xs font-semibold">Terjual</span>
+                    <i data-lucide="x-circle" class="w-4 h-4 text-slate-500"></i>
+                </div>
+                <div class="text-xl sm:text-2xl font-bold text-gray-700">{{ $stats['sold'] ?? ($stats['rented'] ?? 0) }}
+                </div>
+                <p class="text-[11px] text-gray-400">Aset telah terjual</p>
             </div>
         </div>
-        @endforeach
-    </div>
 
-    {{-- Filter & Search --}}
-    <form method="GET" class="flex flex-wrap gap-3 mb-5 bg-white border border-border-subtle rounded-2xl p-4 shadow-sm">
-        <div class="flex items-center gap-2 bg-background rounded-full px-4 py-2 flex-1 min-w-[180px] border border-border-subtle">
-            <span class="material-symbols-outlined text-on-surface-variant text-lg">search</span>
-            <input name="search" value="{{ request('search') }}" placeholder="Cari nama atau alamat..." type="text"
-                class="bg-transparent border-none focus:ring-0 text-sm w-full outline-none" />
-        </div>
-        <select name="status" class="bg-background border border-border-subtle rounded-full px-4 py-2 text-sm outline-none">
-            <option value="">Semua Status</option>
-            <option value="available" {{ request('status')=='available'?'selected':'' }}>Tersedia</option>
-            <option value="reserved"  {{ request('status')=='reserved' ?'selected':'' }}>Dalam Proses</option>
-            <option value="sold"      {{ request('status')=='sold'     ?'selected':'' }}>Terjual</option>
-        </select>
-        <button type="submit" class="bg-primary text-white rounded-full px-5 py-2 text-sm font-semibold hover:bg-primary-dark transition">Filter</button>
-        @if(request()->hasAny(['search','status']))
-        <a href="{{ route('admin.assets.index') }}" class="flex items-center gap-1 text-sm text-on-surface-variant border border-border-subtle rounded-full px-4 py-2 hover:text-primary transition">
-            <span class="material-symbols-outlined text-base">close</span> Reset
-        </a>
-        @endif
-    </form>
+        {{-- Filter --}}
+        <form method="GET" action="{{ route('admin.assets.index') }}" id="admin-filter-form" class="space-y-4">
+            <div class="flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        placeholder="Cari nama aset, kode, jalan, atau daerah..."
+                        class="w-full bg-white border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition min-h-[44px]">
+                    <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                </div>
 
-    {{-- Table --}}
-    <div class="bg-white rounded-2xl border border-border-subtle shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-background border-b border-border-subtle">
-                    <tr>
-                        <th class="text-left px-5 py-3.5 font-semibold text-on-surface-variant text-xs uppercase tracking-wide">Aset</th>
-                        <th class="text-left px-4 py-3.5 font-semibold text-on-surface-variant text-xs uppercase tracking-wide hidden md:table-cell">Wilayah</th>
-                        <th class="text-left px-4 py-3.5 font-semibold text-on-surface-variant text-xs uppercase tracking-wide hidden lg:table-cell">Luas</th>
-                        <th class="text-left px-4 py-3.5 font-semibold text-on-surface-variant text-xs uppercase tracking-wide">Harga</th>
-                        <th class="text-left px-4 py-3.5 font-semibold text-on-surface-variant text-xs uppercase tracking-wide">Status</th>
-                        <th class="text-right px-5 py-3.5 font-semibold text-on-surface-variant text-xs uppercase tracking-wide">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-border-subtle">
-                    @forelse($assets as $asset)
-                    @php
-                        $sc = match($asset->status) {
-                            'available' => 'bg-emerald-100 text-emerald-700',
-                            'reserved'  => 'bg-amber-100 text-amber-700',
-                            'sold'      => 'bg-gray-100 text-gray-500',
-                            default     => 'bg-gray-100 text-gray-500',
-                        };
-                    @endphp
-                    <tr class="hover:bg-background/60 transition">
-                        <td class="px-5 py-4">
-                            <div class="flex items-center gap-3">
-                                <img src="{{ $asset->primary_image_url }}" alt="" class="w-10 h-10 rounded-xl object-cover" />
-                                <div>
-                                    <p class="font-semibold text-on-surface leading-tight">{{ $asset->name }}</p>
-                                    <p class="text-xs text-on-surface-variant mt-0.5">{{ $asset->asset_code }}</p>
+                <div class="relative min-w-[180px]" x-data="{ 
+                    open: false, 
+                    selected: '{{ request('status', '') }}',
+                    options: {
+                        '': 'Semua Status',
+                        'available': 'Tersedia',
+                        'reserved': 'Dalam Proses',
+                        'sold': 'Terjual'
+                    }
+                }" @click.outside="open = false">
+                    <input type="hidden" name="status" :value="selected">
+                    <button type="button" @click="open = !open"
+                        class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 flex items-center justify-between focus:border-primary transition min-h-[44px]">
+                        <span x-text="options[selected] || 'Semua Status'" class="font-medium truncate"></span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 shrink-0 transition-transform"
+                            :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+
+                    <div x-show="open" x-cloak style="display: none;" x-transition:enter="transition ease-out duration-100"
+                        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                        class="absolute right-0 top-full mt-1.5 w-full bg-white border border-gray-200 rounded-xl shadow-lg p-1.5 z-50">
+                        <template x-for="(label, key) in options" :key="key">
+                            <button type="button"
+                                @click="selected = key; open = false; $nextTick(() => document.getElementById('admin-filter-form').submit())"
+                                :class="selected === key ? 'bg-primary-light text-primary font-bold' : 'text-gray-700 hover:bg-gray-50'"
+                                class="w-full text-left flex items-center justify-between px-3 py-2 rounded-lg text-xs transition">
+                                <span x-text="label"></span>
+                                <i data-lucide="check" x-show="selected === key" class="w-3.5 h-3.5 text-primary"></i>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button type="submit"
+                        class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-semibold transition min-h-[44px] shrink-0">
+                        Filter
+                    </button>
+                    @if(request()->hasAny(['search', 'status', 'district']))
+                        <a href="{{ route('admin.assets.index') }}"
+                            class="px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 text-sm font-medium transition min-h-[44px] shrink-0 flex items-center justify-center"
+                            title="Reset Filter">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        </a>
+                    @endif
+                </div>
+            </div>
+        </form>
+
+        {{-- Assets Container --}}
+        <div class="space-y-4 w-full">
+
+            {{-- Desktop Table --}}
+            <div class="hidden md:block border-t border-b border-gray-200 bg-white overflow-x-auto">
+                <table class="w-full text-left text-sm text-gray-600">
+                    <thead
+                        class="bg-gray-50/80 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                        <tr>
+                            <th class="pl-6 pr-4 py-4">Properti</th>
+                            <th class="px-5 py-4">Wilayah</th>
+                            <th class="px-5 py-4">Spesifikasi (LT / LB)</th>
+                            <th class="px-5 py-4">Nilai Penawaran</th>
+                            <th class="px-5 py-4">Status</th>
+                            <th class="pl-4 pr-6 py-4 text-right">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse($assets as $asset)
+                            <tr class="hover:bg-gray-50/60 transition">
+
+                                {{-- Properti Thumbnail & Name --}}
+                                <td class="pl-6 pr-4 py-4.5">
+                                    <div class="flex items-center gap-3.5">
+                                        <img src="{{ $asset->primary_image_url }}" alt="{{ $asset->name }}"
+                                            class="w-12 h-12 rounded-xl object-cover bg-gray-100 border border-gray-200 shrink-0">
+                                        <div>
+                                            <div class="font-bold text-gray-900 hover:text-primary transition leading-snug">
+                                                <a href="{{ route('assets.show', $asset->id) }}">{{ $asset->name }}</a>
+                                            </div>
+                                            <div class="text-xs text-gray-400 font-mono mt-0.5">{{ $asset->asset_code }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                {{-- Wilayah --}}
+                                <td class="px-5 py-4.5 text-xs font-medium text-gray-700">
+                                    {{ $asset->district_area }}
+                                </td>
+
+                                {{-- Specs --}}
+                                <td class="px-5 py-4.5 text-xs text-gray-700">
+                                    <span class="font-bold text-gray-900">{{ number_format($asset->land_area, 0, ',', '.') }}
+                                        m²</span>
+                                    <span class="text-gray-400">/</span>
+                                    <span>{{ number_format($asset->building_area, 0, ',', '.') }} m²</span>
+                                </td>
+
+                                {{-- Price --}}
+                                <td class="px-5 py-4.5 font-bold text-gray-900 text-xs">
+                                    {{ $asset->price_formatted }}
+                                </td>
+
+                                {{-- Status Badge --}}
+                                <td class="px-5 py-4.5">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase
+                                          {{ $asset->status === 'available' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : ($asset->status === 'reserved' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-gray-100 text-gray-700 border border-gray-200') }}">
+                                        {{ $asset->status_label }}
+                                    </span>
+                                </td>
+
+                                {{-- Actions --}}
+                                <td class="pl-4 pr-6 py-4.5 text-right">
+                                    <div class="inline-flex items-center gap-2">
+                                        <a href="{{ route('assets.show', $asset->id) }}"
+                                            class="p-2 rounded-lg bg-gray-50 hover:bg-orange-50 text-gray-600 hover:text-primary border border-gray-200 transition"
+                                            title="Lihat Halaman Publik">
+                                            <i data-lucide="external-link" class="w-4 h-4"></i>
+                                        </a>
+
+                                        <a href="{{ route('admin.assets.edit', $asset) }}"
+                                            class="p-2 rounded-lg bg-gray-50 hover:bg-orange-50 text-gray-600 hover:text-primary border border-gray-200 transition"
+                                            title="Edit Aset">
+                                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                        </a>
+
+                                        <form method="POST" action="{{ route('admin.assets.destroy', $asset) }}"
+                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus data aset {{ $asset->name }}?')"
+                                            class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="p-2 rounded-lg bg-gray-50 hover:bg-red-50 text-gray-600 hover:text-red-600 border border-gray-200 transition"
+                                                title="Hapus Aset">
+                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="px-6 py-12 text-center text-gray-400">
+                                    <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-gray-300"></i>
+                                    <p class="font-semibold text-gray-600 text-sm">Tidak ada aset ditemukan</p>
+                                    <p class="text-xs text-gray-400 mt-0.5">Coba sesuaikan kata kunci pencarian atau filter
+                                        status.</p>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- Mobile Flat List (Clean Typography Hierarchy with Generous Padding) --}}
+            <div class="md:hidden divide-y divide-gray-200 border-t border-b border-gray-200 bg-white">
+                @forelse($assets as $asset)
+                    <div class="px-5 sm:px-6 py-5 space-y-3">
+
+                        {{-- Header: Image + Code + Name + Status --}}
+                        <div class="flex items-start gap-3">
+                            <img src="{{ $asset->primary_image_url }}" alt="{{ $asset->name }}"
+                                class="w-14 h-14 rounded-lg object-cover bg-gray-100 border border-gray-200 shrink-0">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between gap-1 mb-0.5">
+                                    <span
+                                        class="text-[11px] font-mono text-gray-400 uppercase tracking-wider">{{ $asset->asset_code }}</span>
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider shrink-0
+                                          {{ $asset->status === 'available' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : ($asset->status === 'reserved' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-gray-100 text-gray-700 border border-gray-200') }}">
+                                        {{ $asset->status_label }}
+                                    </span>
                                 </div>
+                                <h3 class="font-bold text-gray-950 text-sm leading-snug">
+                                    <a href="{{ route('assets.show', $asset->id) }}" class="hover:text-primary transition">
+                                        {{ $asset->name }}
+                                    </a>
+                                </h3>
+                                <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
+                                    <i data-lucide="map-pin" class="w-3 h-3 text-primary shrink-0"></i>
+                                    <span class="truncate">{{ $asset->district_area }}</span>
+                                </p>
                             </div>
-                        </td>
-                        <td class="px-4 py-4 text-on-surface-variant hidden md:table-cell">{{ $asset->district_area }}</td>
-                        <td class="px-4 py-4 text-on-surface-variant hidden lg:table-cell">
-                            {{ number_format($asset->land_area,0,',','.') }} m²
-                        </td>
-                        <td class="px-4 py-4 font-semibold text-primary">{{ $asset->price_formatted }}</td>
-                        <td class="px-4 py-4">
-                            <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full {{ $sc }}">{{ $asset->status_label }}</span>
-                        </td>
-                        <td class="px-5 py-4 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                <a href="{{ route('assets.show', $asset->id) }}" title="Lihat" class="p-1.5 rounded-lg hover:bg-primary-light text-on-surface-variant hover:text-primary transition">
-                                    <span class="material-symbols-outlined text-lg">visibility</span>
+                        </div>
+
+                        {{-- Specs & Price: Pure Typography (No visual box wrapper) --}}
+                        <div class="flex items-baseline justify-between text-xs pt-1 border-t border-gray-100">
+                            <div>
+                                <span class="text-gray-400">Luas: </span>
+                                <span class="font-bold text-gray-900">{{ number_format($asset->land_area, 0, ',', '.') }}
+                                    m²</span>
+                                <span class="text-gray-400 font-normal"> /
+                                    {{ number_format($asset->building_area, 0, ',', '.') }} m²</span>
+                            </div>
+                            <div>
+                                <span class="font-bold text-primary text-sm">{{ $asset->price_formatted }}</span>
+                            </div>
+                        </div>
+
+                        {{-- Action Bar: Spacious & Clean --}}
+                        <div class="flex items-center justify-between pt-2">
+                            <a href="{{ route('assets.show', $asset->id) }}"
+                                class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-600 hover:text-primary transition py-1">
+                                <i data-lucide="external-link" class="w-3.5 h-3.5 text-gray-400"></i>
+                                <span>Lihat Publik</span>
+                            </a>
+
+                            <div class="flex items-center gap-2">
+                                <a href="{{ route('admin.assets.edit', $asset) }}"
+                                    class="px-3.5 py-1.5 rounded-lg bg-primary hover:bg-primary-hover text-white text-xs font-semibold transition inline-flex items-center gap-1.5">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                    <span>Edit</span>
                                 </a>
-                                <a href="{{ route('admin.assets.edit', $asset) }}" title="Edit" class="p-1.5 rounded-lg hover:bg-primary-light text-on-surface-variant hover:text-primary transition">
-                                    <span class="material-symbols-outlined text-lg">edit</span>
-                                </a>
+
                                 <form method="POST" action="{{ route('admin.assets.destroy', $asset) }}"
-                                    onsubmit="return confirm('Hapus aset «{{ $asset->name }}»? Tindakan ini tidak dapat dibatalkan.')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" title="Hapus" class="p-1.5 rounded-lg hover:bg-danger-light text-on-surface-variant hover:text-danger transition">
-                                        <span class="material-symbols-outlined text-lg">delete</span>
+                                    onsubmit="return confirm('Hapus aset {{ $asset->name }}?')" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="p-1.5 rounded-lg bg-gray-50 hover:bg-red-50 text-gray-400 hover:text-red-600 border border-gray-200 transition flex items-center justify-center"
+                                        title="Hapus Aset">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                     </button>
                                 </form>
                             </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="text-center py-16 text-on-surface-variant">
-                            <span class="material-symbols-outlined text-4xl block mb-2">inventory_2</span>
-                            Belum ada aset. <a href="{{ route('admin.assets.create') }}" class="text-primary font-semibold hover:underline">Tambah sekarang.</a>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                        </div>
+
+                    </div>
+                @empty
+                    <div class="px-6 py-12 text-center text-gray-400">
+                        <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-gray-300"></i>
+                        <p class="font-semibold text-gray-600 text-sm">Tidak ada aset ditemukan</p>
+                    </div>
+                @endforelse
+            </div>
+
         </div>
+
     </div>
-</main>
-</body>
-</html>
+@endsection

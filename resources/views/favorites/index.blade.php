@@ -1,94 +1,115 @@
-<!DOCTYPE html>
-<html class="light" lang="id">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Favorit Saya — KAI Daop 4 Semarang</title>
-    <meta name="description" content="Daftar aset properti KAI Daop 4 Semarang yang Anda simpan sebagai favorit." />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('layout.app')
 
-    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <script>
-        tailwind.config = { theme: { extend: {
-            colors: { "primary":"#006948","primary-dark":"#005137","primary-light":"#e6f4ee","background":"#f4f8f5","surface":"#ffffff","on-surface":"#1a201c","on-surface-variant":"#637369","border-subtle":"#e8eee9" },
-            fontFamily: { "jakarta":["Plus Jakarta Sans","sans-serif"] }
-        }}}
-    </script>
-    <style>
-        body { font-family:"Plus Jakarta Sans",sans-serif; }
-        .material-symbols-outlined { font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24; line-height:1; }
-        .ms-filled { font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24; }
-    </style>
-</head>
-<body class="bg-background text-on-surface min-h-screen">
+@section('title', 'Favorit Saya — KAI Daop 4 Semarang')
 
-<x-sidebar />
+@section('content')
+<div class="w-full px-6 sm:px-8 lg:px-10 py-8 pb-32 sm:pb-12">
 
-<main class="pl-4 pr-4 sm:pl-28 sm:pr-6 md:pl-32 md:pr-8 pt-8 pb-16 min-h-screen max-w-[1200px] mx-auto">
+    {{-- Page Header --}}
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-gray-200">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-bold uppercase tracking-wider text-primary">Koleksi Tersimpan</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-950 tracking-tight flex items-center gap-2.5">
+                <i data-lucide="heart" class="w-6 h-6 text-red-500 fill-rose-500"></i>
+                <span>Properti Favorit Saya</span>
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                Menyimpan <strong class="text-gray-900 font-semibold">{{ $favorites->count() }}</strong> aset pilihan untuk ditinjau kembali
+            </p>
+        </div>
 
-    <div class="mb-8">
-        <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-1">Koleksi Saya</p>
-        <h1 class="text-2xl md:text-3xl font-bold text-on-surface flex items-center gap-2">
-            <span class="material-symbols-outlined ms-filled text-red-500 text-3xl">favorite</span>
-            Favorit Saya
-        </h1>
-        <p class="text-sm text-on-surface-variant mt-1">{{ $favorites->count() }} aset tersimpan</p>
+        <a href="{{ route('assets.catalog') }}" 
+           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-sm font-semibold text-gray-700 transition min-h-[44px] self-start sm:self-auto">
+            <i data-lucide="plus" class="w-5 h-5 text-primary"></i>
+            <span>Cari Properti Lain</span>
+        </a>
     </div>
 
-    @if(session('success'))
-    <div class="mb-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl px-4 py-3 text-sm">{{ session('success') }}</div>
-    @endif
-
+    {{-- Empty State --}}
     @if($favorites->isEmpty())
-    <div class="text-center py-24 text-on-surface-variant">
-        <span class="material-symbols-outlined text-6xl mb-4 block text-gray-300">favorite_border</span>
-        <p class="font-semibold text-lg mb-2">Belum ada aset favorit</p>
-        <p class="text-sm mb-6">Kunjungi katalog dan klik ikon ❤️ pada aset yang menarik perhatian Anda.</p>
-        <a href="{{ route('assets.catalog') }}" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-primary-dark transition">
-            <span class="material-symbols-outlined text-base">apartment</span>
-            Lihat Katalog
+    <div class="text-center py-16 sm:py-20 max-w-lg mx-auto">
+        <div class="w-14 h-14 rounded-full bg-orange-50 text-primary flex items-center justify-center mx-auto mb-3">
+            <i data-lucide="heart" class="w-7 h-7"></i>
+        </div>
+        <h2 class="font-semibold text-gray-900 text-base sm:text-lg">Belum Ada Properti Favorit</h2>
+        <p class="text-xs text-slate-500 mt-1.5 mb-6 flex items-center justify-center gap-1 flex-wrap">
+            <span>Klik ikon</span>
+            <span class="inline-flex items-center text-red-500 mx-0.5"><i data-lucide="heart" class="w-3.5 h-3.5 fill-red-500"></i></span>
+            <span>pada kartu properti di katalog atau peta untuk menyimpannya di sini.</span>
+        </p>
+        <a href="{{ route('assets.catalog') }}" 
+           class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-semibold transition min-h-[44px]">
+            <i data-lucide="building-2" class="w-5 h-5"></i>
+            <span>Jelajahi Katalog Aset</span>
         </a>
     </div>
     @else
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {{-- Favorites Grid --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         @foreach($favorites as $fav)
         @php $asset = $fav->asset; @endphp
         @if($asset)
-        <article class="bg-white rounded-2xl border border-border-subtle shadow-sm overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <div class="relative h-44 overflow-hidden">
-                <img class="w-full h-full object-cover" src="{{ $asset->primary_image_url }}" alt="{{ $asset->name }}" />
-                {{-- Remove favorite button --}}
-                <form method="POST" action="{{ route('favorites.toggle') }}" class="absolute top-3 right-3">
-                    @csrf
-                    <input type="hidden" name="asset_id" value="{{ $asset->id }}" />
-                    <button type="submit" title="Hapus dari favorit"
-                        class="w-8 h-8 rounded-full bg-white/80 backdrop-blur flex items-center justify-center hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined ms-filled text-red-500 text-lg">favorite</span>
-                    </button>
-                </form>
-            </div>
-            <div class="p-4">
-                <p class="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">{{ $asset->district_area }}</p>
-                <h2 class="font-bold text-on-surface text-base leading-snug mb-1">{{ $asset->name }}</h2>
-                <p class="text-xs text-on-surface-variant flex items-center gap-1 mb-3">
-                    <span class="material-symbols-outlined text-sm">location_on</span>
-                    {{ Str::limit($asset->full_address, 55) }}
-                </p>
-                <div class="flex justify-between items-center">
-                    <span class="font-bold text-primary text-lg">{{ $asset->price_formatted }}</span>
-                    <a href="{{ route('assets.show', $asset->id) }}"
-                        class="bg-primary text-white text-xs font-semibold px-4 py-2 rounded-full hover:bg-primary-dark transition flex items-center gap-1">
-                        Detail <span class="material-symbols-outlined text-xs">arrow_forward</span>
-                    </a>
+        <a href="{{ route('assets.show', $asset->id) }}" 
+           class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300 flex flex-col justify-between group cursor-pointer">
+            <div>
+                {{-- Image Container --}}
+                <div class="relative h-52 w-full overflow-hidden bg-gray-100">
+                    <img src="{{ $asset->primary_image_url }}" 
+                         alt="{{ $asset->name }}" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+
+                    <form method="POST" action="{{ route('favorites.toggle') }}" class="absolute top-3 right-3 z-10" onclick="event.stopPropagation()">
+                        @csrf
+                        <input type="hidden" name="asset_id" value="{{ $asset->id }}">
+                        <button type="submit" title="Hapus dari favorit"
+                                class="w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm shadow-sm flex items-center justify-center text-red-500 hover:scale-110 transition">
+                            <i data-lucide="heart" class="w-4 h-4 fill-red-500"></i>
+                        </button>
+                    </form>
+
+                    <div class="absolute top-3 left-3">
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide uppercase shadow-sm
+                              {{ $asset->status === 'available' ? 'bg-white text-emerald-700' : ($asset->status === 'reserved' ? 'bg-amber-500 text-white' : 'bg-gray-800 text-white') }}">
+                            {{ $asset->status_label }}
+                        </span>
+                    </div>
+                </div>
+
+                {{-- Content Details --}}
+                <div class="p-5">
+                    <div class="text-xl font-extrabold text-gray-950 tracking-tight mb-1.5">
+                        {{ $asset->price_formatted }}
+                    </div>
+
+                    <div class="text-xs text-gray-500 font-medium flex items-center gap-2 mb-3">
+                        <span>LT: <strong class="text-gray-800">{{ number_format($asset->land_area, 0, ',', '.') }} m²</strong></span>
+                        <span>•</span>
+                        <span>LB: <strong class="text-gray-800">{{ number_format($asset->building_area, 0, ',', '.') }} m²</strong></span>
+                    </div>
+
+                    <h3 class="font-bold text-sm text-gray-900 leading-snug line-clamp-1 mb-1 group-hover:text-primary transition">
+                        {{ $asset->name }}
+                    </h3>
+                    <p class="text-xs text-gray-500 flex items-center gap-1 line-clamp-1">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-gray-400 shrink-0"></i>
+                        <span>{{ $asset->full_address }}</span>
+                    </p>
                 </div>
             </div>
-        </article>
+
+            <div class="p-5 pt-0 border-t border-gray-100 mt-4 flex items-center justify-between">
+                <span class="text-[11px] font-semibold text-primary uppercase">
+                    {{ $asset->district_area }}
+                </span>
+            </div>
+
+        </a>
         @endif
         @endforeach
     </div>
     @endif
-</main>
-</body>
-</html>
+
+</div>
+@endsection

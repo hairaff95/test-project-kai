@@ -18,15 +18,22 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email'    => ['required', 'email'],
+        $request->validate([
+            'login'    => ['required', 'string'],
             'password' => ['required', 'string', 'min:6'],
         ], [
-            'email.required'    => 'Email wajib diisi.',
-            'email.email'       => 'Format email tidak valid.',
-            'password.required' => 'Password wajib diisi.',
-            'password.min'      => 'Password minimal 6 karakter.',
+            'login.required'    => 'Email atau username wajib diisi.',
+            'password.required' => 'Kata sandi wajib diisi.',
+            'password.min'      => 'Kata sandi minimal 6 karakter.',
         ]);
+
+        $loginInput = $request->input('login');
+        $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        
+        $credentials = [
+            $fieldType => $loginInput,
+            'password' => $request->input('password')
+        ];
 
         $remember = $request->boolean('remember');
 
@@ -36,8 +43,8 @@ class AuthController extends Controller
         }
 
         return back()
-            ->withInput($request->only('email'))
-            ->with('error', 'Email atau password salah. Silakan coba lagi.');
+            ->withInput($request->only('login'))
+            ->with('error', 'Kredensial email/username atau kata sandi tidak cocok.');
     }
 
     public function logout(Request $request)

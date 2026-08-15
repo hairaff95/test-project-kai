@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AssetImage extends Model
 {
-    protected $fillable = ['asset_id', 'image_path', 'is_primary'];
+    protected $fillable = ['asset_id', 'image_path', 'caption', 'is_primary'];
 
     public function asset(): BelongsTo
     {

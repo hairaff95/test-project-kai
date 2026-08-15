@@ -17,6 +17,7 @@ Route::get('/', [AssetController::class, 'index'])->name('assets.index');
 Route::get('/assets', [AssetController::class, 'catalog'])->name('assets.catalog');
 Route::get('/assets/{id}', [AssetController::class, 'show'])->name('assets.show');
 Route::get('/faq', [AssetController::class, 'faq'])->name('faq');
+Route::get('/settings', [AssetController::class, 'settings'])->name('settings');
 
 // Favorites
 Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');

@@ -1,319 +1,236 @@
-<!DOCTYPE html>
-<html class="light" lang="id">
+@extends('layout.app')
 
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Login Admin - KAI Asset Management</title>
+@section('title', 'Admin & Staf Login — KAI Daop 4 Semarang')
 
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet" />
+@section('content')
+    <div
+        class="min-h-screen w-full bg-[#F5F1E7] text-stone-900 relative overflow-hidden flex flex-col justify-between selection:bg-orange-100 selection:text-primary">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        "primary":            "#006948",
-                        "primary-dark":       "#005137",
-                        "primary-light":      "#e6f4ee",
-                        "background":         "#f4f8f5",
-                        "surface":            "#ffffff",
-                        "on-surface":         "#1a201c",
-                        "on-surface-variant": "#637369",
-                        "border-subtle":      "#e8eee9",
-                    },
-                    fontFamily: {
-                        "jakarta": ["Plus Jakarta Sans", "sans-serif"],
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        body { font-family: "Plus Jakarta Sans", sans-serif; }
-        .material-symbols-outlined {
-            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
-            line-height: 1;
-        }
-        .ms-filled { font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24; }
-
-        /* Decorative background pattern */
-        .bg-pattern {
-            background-color: #006948;
-            background-image:
-                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.04) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 40%),
-                radial-gradient(circle at 60% 80%, rgba(0,81,55,0.8) 0%, transparent 50%);
-        }
-
-        /* Input focus ring */
-        .form-input:focus {
-            outline: none;
-            border-color: #006948;
-            box-shadow: 0 0 0 3px rgba(0, 105, 72, 0.12);
-        }
-        .form-input { transition: border-color 0.15s, box-shadow 0.15s; }
-
-        /* Shake animation for error */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%       { transform: translateX(-6px); }
-            40%       { transform: translateX(6px); }
-            60%       { transform: translateX(-4px); }
-            80%       { transform: translateX(4px); }
-        }
-        .shake { animation: shake 0.4s ease; }
-    </style>
-</head>
-
-<body class="min-h-screen flex antialiased">
-
-    <!-- ===== LEFT PANEL (decorative) ===== -->
-    <div class="hidden lg:flex lg:w-[45%] xl:w-1/2 bg-pattern flex-col justify-between p-10 xl:p-14 relative overflow-hidden">
-
-        <!-- Decorative circles -->
-        <div class="absolute top-0 right-0 w-80 h-80 bg-white/[0.03] rounded-full -translate-y-1/3 translate-x-1/3"></div>
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-white/[0.04] rounded-full translate-y-1/3 -translate-x-1/3"></div>
-        <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-white/[0.02] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-
-        <!-- Logo -->
-        <div class="relative z-10 flex items-center gap-3">
-            <div class="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center">
-                <span class="material-symbols-outlined ms-filled text-white text-[22px]">train</span>
-            </div>
-            <div>
-                <p class="text-white font-bold text-sm leading-tight">KAI Asset</p>
-                <p class="text-white/60 text-xs">Management System</p>
-            </div>
-        </div>
-
-        <!-- Center content -->
-        <div class="relative z-10">
-            <div class="inline-flex items-center gap-2 bg-white/10 text-white/80 text-xs font-medium px-3 py-1.5 rounded-full mb-6">
-                <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
-                Panel Admin Aktif
-            </div>
-            <h1 class="text-3xl xl:text-4xl font-bold text-white leading-tight mb-4">
-                Kelola Aset<br />Properti KAI<br />
-                <span class="text-white/50">dengan mudah.</span>
-            </h1>
-            <p class="text-white/60 text-sm leading-relaxed max-w-xs">
-                Platform terpusat untuk memantau, mengelola, dan menawarkan seluruh aset properti PT Kereta Api Indonesia.
-            </p>
-
-            <!-- Feature pills -->
-            <div class="flex flex-wrap gap-2 mt-8">
-                <span class="flex items-center gap-1.5 bg-white/10 text-white/80 text-xs px-3 py-1.5 rounded-full">
-                    <span class="material-symbols-outlined ms-filled text-[13px]">map</span>
-                    Peta Interaktif
-                </span>
-                <span class="flex items-center gap-1.5 bg-white/10 text-white/80 text-xs px-3 py-1.5 rounded-full">
-                    <span class="material-symbols-outlined ms-filled text-[13px]">inventory_2</span>
-                    Kelola Aset
-                </span>
-                <span class="flex items-center gap-1.5 bg-white/10 text-white/80 text-xs px-3 py-1.5 rounded-full">
-                    <span class="material-symbols-outlined ms-filled text-[13px]">bar_chart</span>
-                    Statistik
-                </span>
-            </div>
-        </div>
-
-        <!-- Bottom -->
-        <div class="relative z-10">
-            <p class="text-white/30 text-xs">© 2026 PT Kereta Api Indonesia (Persero)</p>
-        </div>
-    </div>
-
-    <!-- ===== RIGHT PANEL (form) ===== -->
-    <div class="flex-1 flex flex-col justify-center items-center bg-background px-6 py-12 sm:px-10">
-
-        <!-- Mobile logo -->
-        <div class="lg:hidden flex items-center gap-2 mb-8">
-            <div class="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
-                <span class="material-symbols-outlined ms-filled text-white text-[20px]">train</span>
-            </div>
-            <div>
-                <p class="text-on-surface font-bold text-sm">KAI Asset Management</p>
-            </div>
-        </div>
-
-        <div class="w-full max-w-sm">
-
-            <!-- Heading -->
-            <div class="mb-8">
-                <h2 class="text-2xl font-bold text-on-surface">Masuk ke Panel Admin</h2>
-                <p class="text-sm text-on-surface-variant mt-1.5">Masukkan kredensial akun admin Anda</p>
+        {{-- Top Header --}}
+        <header class="w-full px-6 sm:px-10 lg:px-16 pt-6 sm:pt-8 flex items-center justify-between z-20">
+            {{-- Left: Brand & Contact --}}
+            <div class="space-y-1">
+                <a href="{{ route('assets.index') }}" class="flex items-center gap-2 group">
+                    <span class="font-extrabold text-xl sm:text-2xl tracking-tight text-stone-950">
+                        KAI <span class="text-primary font-black">DAOP 4</span>
+                    </span>
+                </a>
+                <a href="mailto:daop4.semarang@kai.id"
+                    class="text-xs text-stone-500 hover:text-stone-900 flex items-center gap-1.5 transition">
+                    <span>daop4.semarang@kai.id</span>
+                    <i data-lucide="arrow-right"
+                        class="w-3.5 h-3.5 text-stone-400 group-hover:translate-x-0.5 transition-transform"></i>
+                </a>
             </div>
 
-            <!-- Session error -->
-            @if (session('error'))
-            <div id="alert-error"
-                 class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-2xl px-4 py-3 mb-6 text-sm">
-                <span class="material-symbols-outlined ms-filled text-[18px] shrink-0 mt-0.5">error</span>
-                <span>{{ session('error') }}</span>
-                <button onclick="this.closest('#alert-error').remove()" class="ml-auto shrink-0 text-red-400 hover:text-red-600">
-                    <span class="material-symbols-outlined text-[16px]">close</span>
+            {{-- Right: Globe & Action Button --}}
+            <div class="flex items-center gap-4 sm:gap-6">
+                <button type="button" title="Bahasa Indonesia"
+                    class="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-stone-950 transition">
+                    <i data-lucide="globe" class="w-4 h-4 text-stone-500"></i>
+                    <span>ID</span>
                 </button>
+
+                <a href="{{ route('assets.catalog') }}"
+                    class="px-5 py-2.5 rounded-2xl bg-[#F7A867] hover:bg-[#ea934a] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition min-h-[40px] flex items-center justify-center">
+                    Katalog Aset
+                </a>
             </div>
-            @endif
+        </header>
 
-            <!-- Form -->
-            <form id="login-form" action="{{ route('login.post') }}" method="POST" class="flex flex-col gap-5" novalidate>
-                @csrf
 
-                <!-- Email -->
-                <div>
-                    <label for="email" class="block text-xs font-semibold text-on-surface-variant mb-1.5">
-                        Email
-                    </label>
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-[18px]">mail</span>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            placeholder="admin@kai.id"
-                            autocomplete="email"
-                            class="form-input w-full bg-white border border-border-subtle rounded-xl pl-10 pr-4 py-3
-                                   text-sm text-on-surface placeholder:text-on-surface-variant/40
-                                   @error('email') border-red-400 @enderror" />
+        {{-- Background Thematic Illustrations & Doodle Vector Elements --}}
+        <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+            {{-- Right Side: Thematic Illustration Image with Vector Overlay --}}
+            <div class="hidden lg:block absolute right-0 bottom-0 top-16 w-1/2 max-w-[700px] h-full opacity-90">
+                <img src="{{ asset('images/auth-kai-bg.jpg') }}" alt="KAI Login Illustration"
+                    class="w-full h-full object-contain object-right-bottom mix-blend-multiply select-none">
+            </div>
+
+            {{-- Left Side: Decorative Geometric Dotted Blocks & Wireframe Cards --}}
+            <div class="hidden md:block absolute left-8 lg:left-20 bottom-16 w-72 space-y-4">
+
+                {{-- Floating Wireframe Card 1 --}}
+                <div
+                    class="relative w-36 h-24 rounded-2xl border-2 border-stone-800 bg-white/60 backdrop-blur-xs p-3.5 shadow-sm transform -rotate-3 hover:rotate-0 transition">
+                    <div class="w-16 h-2 rounded-full bg-stone-300 mb-2"></div>
+                    <div class="w-24 h-1.5 rounded-full bg-stone-200 mb-1.5"></div>
+                    <div class="w-12 h-1.5 rounded-full bg-stone-200"></div>
+                    <div
+                        class="absolute -top-3 -right-3 w-7 h-7 rounded-full bg-[#F7A867] border-2 border-stone-800 flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-white"></i>
                     </div>
-                    @error('email')
-                        <p class="text-xs text-red-500 mt-1.5 flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[13px]">error</span>
-                            {{ $message }}
-                        </p>
-                    @enderror
                 </div>
 
-                <!-- Password -->
-                <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label for="password" class="text-xs font-semibold text-on-surface-variant">
-                            Password
-                        </label>
+                {{-- Dotted Geometric Pedestal 1 --}}
+                <div class="flex items-end gap-3">
+                    <div
+                        class="w-20 h-36 rounded-2xl bg-[#F8D279] border-2 border-stone-800 p-2 relative overflow-hidden flex flex-col justify-between">
+                        <div class="grid grid-cols-2 gap-2 opacity-80 pt-1">
+                            <div class="w-2.5 h-2.5 rounded-full bg-stone-900 mx-auto"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-stone-900 mx-auto"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-stone-900 mx-auto"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-stone-900 mx-auto"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-stone-900 mx-auto"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-stone-900 mx-auto"></div>
+                        </div>
+                        <div class="w-full text-center">
+                            <span class="text-[9px] font-black text-stone-900 tracking-tighter">DAOP 4</span>
+                        </div>
                     </div>
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-[18px]">lock</span>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="••••••••"
-                            autocomplete="current-password"
-                            class="form-input w-full bg-white border border-border-subtle rounded-xl pl-10 pr-11 py-3
-                                   text-sm text-on-surface placeholder:text-on-surface-variant/40
-                                   @error('password') border-red-400 @enderror" />
-                        <!-- Toggle visibility -->
-                        <button type="button" onclick="togglePassword()"
-                            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant/50 hover:text-on-surface-variant transition">
-                            <span class="material-symbols-outlined text-[18px]" id="eye-icon">visibility</span>
+
+                    {{-- Wireframe Card 2 with Arrow --}}
+                    <div
+                        class="w-24 h-28 rounded-2xl bg-white border-2 border-stone-800 p-2.5 flex flex-col justify-between">
+                        <div class="w-full flex justify-end">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" class="text-stone-800">
+                                <path d="M7 17L17 7M17 7H7M17 7V17" />
+                            </svg>
+                        </div>
+                        <div class="space-y-1">
+                            <div class="w-10 h-2 rounded-full bg-[#F7A867]"></div>
+                            <div class="w-14 h-1.5 rounded-full bg-stone-200"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Hand-drawn Squiggle Curve --}}
+                <svg width="120" height="40" viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" class="text-stone-800 opacity-75">
+                    <path d="M5 25 C 20 5, 35 35, 50 15 C 65 -5, 80 35, 95 15 C 105 5, 115 25, 118 20" />
+                </svg>
+            </div>
+
+            {{-- Floating Squiggles & Dots --}}
+            <div class="absolute top-28 left-1/4 w-3 h-3 rounded-full border-2 border-stone-800 opacity-60"></div>
+            <div class="absolute top-44 right-1/4 w-2 h-2 rounded-full bg-stone-800 opacity-60"></div>
+            <div class="absolute bottom-32 left-1/3 w-4 h-4 rounded-full border-2 border-stone-800 opacity-40"></div>
+        </div>
+
+
+        {{-- Main Central Card --}}
+        <main class="w-full flex items-center justify-center px-4 py-8 z-10 my-auto">
+            <div
+                class="w-full max-w-[430px] bg-white rounded-[32px] sm:rounded-[36px] shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-stone-200/90 p-7 sm:p-9 space-y-6">
+
+                {{-- Card Title & Greeting --}}
+                <div class="text-center space-y-2">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-stone-950 tracking-tight">
+                        Agent Login
+                    </h1>
+                    <p class="text-xs sm:text-sm text-stone-500 max-w-xs mx-auto leading-relaxed">
+                        Hey, Enter your details to get sign in to your account
+                    </p>
+                </div>
+
+                {{-- Error Flash Alert --}}
+                @if(session('error'))
+                    <div
+                        class="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-xs font-semibold text-red-700 flex items-center gap-2.5">
+                        <i data-lucide="alert-circle" class="w-4 h-4 text-red-500 shrink-0"></i>
+                        <span>{{ session('error') }}</span>
+                    </div>
+                @endif
+
+                {{-- Login Form --}}
+                <form method="POST" action="{{ route('login.post') }}" class="space-y-4">
+                    @csrf
+
+                    {{-- Input 1: Enter Email / Username --}}
+                    <div>
+                        <div class="relative">
+                            <input type="text" name="login" id="login-input" value="{{ old('login') }}" required autofocus
+                                placeholder="Enter Email / Phone No"
+                                class="w-full h-12 bg-white border border-stone-200 rounded-2xl pl-4 pr-11 text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-400 focus:ring-2 focus:ring-orange-100 outline-none transition">
+                            <div
+                                class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-stone-300">
+                            </div>
+                        </div>
+                        @error('login')
+                            <p class="text-xs text-red-600 mt-1 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Input 2: Passcode with Hide/Show text toggle --}}
+                    <div x-data="{ show: false }">
+                        <div class="relative">
+                            <input :type="show ? 'text' : 'password'" name="password" id="password-input" required
+                                placeholder="Passcode"
+                                class="w-full h-12 bg-white border border-stone-200 rounded-2xl pl-4 pr-16 text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-400 focus:ring-2 focus:ring-orange-100 outline-none transition">
+                            <button type="button" @click="show = !show"
+                                class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-stone-500 hover:text-stone-900 transition select-none">
+                                <span x-text="show ? 'Hide' : 'Show'">Hide</span>
+                            </button>
+                        </div>
+                        @error('password')
+                            <p class="text-xs text-red-600 mt-1 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Trouble in sign in link --}}
+                    <div class="pt-0.5">
+                        <a href="https://wa.me/6281234567890?text={{ urlencode('Halo Helpdesk IT KAI Daop 4, saya membutuhkan bantuan akses akun login admin.') }}"
+                            target="_blank"
+                            class="text-xs font-medium text-stone-800 hover:text-primary transition underline-offset-2 hover:underline">
+                            Having trouble in sign in?
+                        </a>
+                    </div>
+
+                    {{-- Submit CTA Button --}}
+                    <button type="submit"
+                        class="w-full h-12 rounded-2xl bg-[#F7A867] hover:bg-[#ea934a] text-white font-bold text-sm tracking-wide shadow-sm hover:shadow-md transition flex items-center justify-center">
+                        Sign in
+                    </button>
+                </form>
+
+                {{-- Demo Account Quick Fill --}}
+                <div class="pt-4 border-t border-stone-100">
+                    <p class="text-[11px] font-bold text-stone-400 uppercase tracking-wider text-center mb-2.5">
+                        Pintasan Kredensial Demo
+                    </p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" onclick="fillCredentials('superadmin', 'superadmin123')"
+                            class="p-2.5 rounded-xl border border-stone-200 bg-stone-50/70 hover:bg-orange-50 hover:border-primary/40 hover:text-primary text-xs font-semibold text-stone-700 transition flex flex-col items-center gap-0.5">
+                            <span>Super Admin</span>
+                            <span class="text-[10px] text-stone-400 font-normal">superadmin123</span>
+                        </button>
+                        <button type="button" onclick="fillCredentials('admin.daop4', 'admin123')"
+                            class="p-2.5 rounded-xl border border-stone-200 bg-stone-50/70 hover:bg-orange-50 hover:border-primary/40 hover:text-primary text-xs font-semibold text-stone-700 transition flex flex-col items-center gap-0.5">
+                            <span>Admin Daop 4</span>
+                            <span class="text-[10px] text-stone-400 font-normal">admin123</span>
                         </button>
                     </div>
-                    @error('password')
-                        <p class="text-xs text-red-500 mt-1.5 flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[13px]">error</span>
-                            {{ $message }}
-                        </p>
-                    @enderror
                 </div>
 
-                <!-- Remember me -->
-                <div class="flex items-center justify-between">
-                    <label class="flex items-center gap-2 cursor-pointer select-none">
-                        <input type="checkbox" name="remember" id="remember"
-                            class="w-4 h-4 rounded border-border-subtle text-primary focus:ring-primary focus:ring-1 cursor-pointer" />
-                        <span class="text-sm text-on-surface-variant">Ingat saya</span>
-                    </label>
-                    <a href="#" class="text-sm text-primary hover:text-primary-dark font-medium transition">
-                        Lupa password?
+                {{-- Bottom Request Now Link --}}
+                <div class="text-center pt-2 text-xs text-stone-600">
+                    <span>Don't have an account?</span>
+                    <a href="{{ route('assets.index') }}"
+                        class="font-bold text-stone-900 hover:text-primary transition ml-1 underline-offset-2 hover:underline">
+                        Request Now
                     </a>
                 </div>
 
-                <!-- Submit -->
-                <button type="submit" id="btn-submit"
-                    class="w-full bg-primary hover:bg-primary-dark text-white font-semibold text-sm
-                           py-3 rounded-xl flex items-center justify-center gap-2
-                           shadow-sm transition active:scale-[0.98]">
-                    <span id="btn-label">Masuk</span>
-                    <span class="material-symbols-outlined text-[18px]" id="btn-icon">arrow_forward</span>
-                    <!-- Spinner (hidden) -->
-                    <svg id="btn-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-                    </svg>
-                </button>
-
-            </form>
-
-            <!-- Divider -->
-            <div class="flex items-center gap-3 my-6">
-                <div class="flex-1 h-px bg-border-subtle"></div>
-                <span class="text-xs text-on-surface-variant/50">atau</span>
-                <div class="flex-1 h-px bg-border-subtle"></div>
             </div>
+        </main>
 
-            <!-- Back to public -->
-            <a href="{{ route('assets.index') }}"
-               class="w-full flex items-center justify-center gap-2 border border-border-subtle bg-white
-                      hover:bg-primary-light hover:border-primary text-on-surface-variant hover:text-primary
-                      font-medium text-sm py-3 rounded-xl transition">
-                <span class="material-symbols-outlined text-[18px]">map</span>
-                Lihat Peta Aset Publik
-            </a>
 
-            <p class="text-center text-xs text-on-surface-variant/60 mt-8">
-                Akses terbatas untuk pegawai KAI yang berwenang.<br />
-                Hubungi IT KAI untuk permintaan akun.
-            </p>
-        </div>
+        {{-- Footer --}}
+        <footer class="w-full px-6 py-6 text-center text-xs text-stone-500 z-20">
+            <span>Copyright @PT Kereta Api Indonesia (Persero) 2026</span>
+            <span class="mx-2 text-stone-300">|</span>
+            <a href="{{ route('faq') }}" class="hover:text-stone-900 transition">Privacy Policy</a>
+        </footer>
+
     </div>
+@endsection
 
+@push('scripts')
     <script>
-        /* Toggle password visibility */
-        function togglePassword() {
-            const input = document.getElementById('password');
-            const icon  = document.getElementById('eye-icon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.textContent = 'visibility_off';
-            } else {
-                input.type = 'password';
-                icon.textContent = 'visibility';
-            }
+        function fillCredentials(login, pass) {
+            document.getElementById('login-input').value = login;
+            document.getElementById('password-input').value = pass;
         }
-
-        /* Loading state on submit */
-        document.getElementById('login-form').addEventListener('submit', function (e) {
-            const email    = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-
-            if (!email || !password) {
-                document.getElementById('login-form').classList.add('shake');
-                setTimeout(() => document.getElementById('login-form').classList.remove('shake'), 500);
-                e.preventDefault();
-                return;
-            }
-
-            const btn     = document.getElementById('btn-submit');
-            const label   = document.getElementById('btn-label');
-            const icon    = document.getElementById('btn-icon');
-            const spinner = document.getElementById('btn-spinner');
-
-            btn.disabled  = true;
-            label.textContent = 'Memverifikasi...';
-            icon.classList.add('hidden');
-            spinner.classList.remove('hidden');
-        });
     </script>
-
-</body>
-</html>
+@endpush

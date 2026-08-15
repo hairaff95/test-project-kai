@@ -29,7 +29,33 @@ class AssetSeeder extends Seeder
                 'latitude'      => -6.9553000,
                 'longitude'     => 110.4561000,
                 'status'        => 'available',
-                'image'         => 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80',
+                'gallery'       => [
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80',
+                        'title' => 'Area Pergudangan Utama',
+                        'primary' => true,
+                    ],
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80',
+                        'title' => 'Interior & Ruang Rak Heavy Duty',
+                        'primary' => false,
+                    ],
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=80',
+                        'title' => 'Akses Loading Dock Kontainer',
+                        'primary' => false,
+                    ],
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+                        'title' => 'Ruang Kantor Administrasi',
+                        'primary' => false,
+                    ],
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80',
+                        'title' => 'Halaman Parkir & Manuver Truk',
+                        'primary' => false,
+                    ],
+                ],
             ],
             [
                 'asset_code'    => 'KAI-SMG-002',
@@ -49,7 +75,28 @@ class AssetSeeder extends Seeder
                 'latitude'      => -7.0051440,
                 'longitude'     => 110.4184230,
                 'status'        => 'available',
-                'image'         => 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80',
+                'gallery'       => [
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1200&q=80',
+                        'title' => 'Tampak Depan Bangunan Heritage',
+                        'primary' => true,
+                    ],
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+                        'title' => 'Ruang Tamu & Area Komersial Utama',
+                        'primary' => false,
+                    ],
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=800&q=80',
+                        'title' => 'Area Ruang Kerja / Pantry',
+                        'primary' => false,
+                    ],
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80',
+                        'title' => 'Halaman Samping & Taman Asri',
+                        'primary' => false,
+                    ],
+                ],
             ],
             [
                 'asset_code'    => 'KAI-SMG-003',
@@ -69,21 +116,46 @@ class AssetSeeder extends Seeder
                 'latitude'      => -6.9723500,
                 'longitude'     => 110.4149200,
                 'status'        => 'available',
-                'image'         => 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
+                'gallery'       => [
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80',
+                        'title' => 'Kavling Lahan Komersial Utama',
+                        'primary' => true,
+                    ],
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=800&q=80',
+                        'title' => 'Akses Jalan Raya Imam Bonjol',
+                        'primary' => false,
+                    ],
+                    [
+                        'url'   => 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
+                        'title' => 'Kawasan Sekitar Stasiun Poncol',
+                        'primary' => false,
+                    ],
+                ],
             ],
         ];
 
         foreach ($assets as $data) {
-            $imageUrl = $data['image'];
-            unset($data['image']);
+            $gallery = $data['gallery'];
+            unset($data['gallery']);
 
-            $asset = Asset::create($data);
+            $asset = Asset::updateOrCreate(
+                ['asset_code' => $data['asset_code']],
+                $data
+            );
 
-            AssetImage::create([
-                'asset_id'   => $asset->id,
-                'image_path' => $imageUrl,
-                'is_primary' => true,
-            ]);
+            // Clear old images for this asset
+            AssetImage::where('asset_id', $asset->id)->delete();
+
+            foreach ($gallery as $img) {
+                AssetImage::create([
+                    'asset_id'   => $asset->id,
+                    'image_path' => $img['url'],
+                    'caption'    => $img['title'] ?? 'Foto Properti',
+                    'is_primary' => $img['primary'] ?? false,
+                ]);
+            }
         }
     }
 }

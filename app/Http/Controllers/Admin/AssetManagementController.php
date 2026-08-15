@@ -31,6 +31,7 @@ class AssetManagementController extends Controller
             'available' => $assets->where('status', 'available')->count(),
             'reserved'  => $assets->where('status', 'reserved')->count(),
             'sold'      => $assets->where('status', 'sold')->count(),
+            'rented'    => $assets->where('status', 'sold')->count(),
         ];
 
         return view('admin.assets.index', compact('assets', 'stats'));

@@ -1,269 +1,364 @@
-<!DOCTYPE html>
-<html class="light" lang="en">
+@extends('layout.app')
 
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Detail Aset - {{ $asset->name }} — KAI Daop 4 Semarang</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Inter:wght@400;500&display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
+@section('title', $asset->name . ' — Detail Properti KAI Daop 4')
 
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "surface-tint": "#006c4a",
-                        "glass-surface": "rgba(255, 255, 255, 0.75)",
-                        "surface-container": "#e9efe9",
-                        "on-primary-fixed": "#002114",
-                        "surface-variant": "#dee4de",
-                        "on-tertiary": "#ffffff",
-                        "on-tertiary-fixed": "#410004",
-                        "tertiary-fixed-dim": "#ffb3ae",
-                        "bg-gradient-start": "#E0F2FE",
-                        "secondary-container": "#fea619",
-                        "background": "#f5fbf5",
-                        "on-primary-container": "#f5fff7",
-                        "primary-fixed": "#85f8c4",
-                        "on-secondary-container": "#684000",
-                        "on-secondary-fixed-variant": "#653e00",
-                        "on-secondary-fixed": "#2a1700",
-                        "inverse-on-surface": "#ecf2ec",
-                        "on-primary-fixed-variant": "#005137",
-                        "error": "#ba1a1a",
-                        "map-dark-pill": "rgba(0, 0, 0, 0.8)",
-                        "on-background": "#171d19",
-                        "secondary-fixed": "#ffddb8",
-                        "outline": "#6d7a72",
-                        "surface-container-low": "#eff5ef",
-                        "tertiary": "#9b3e3b",
-                        "secondary-fixed-dim": "#ffb95f",
-                        "secondary": "#855300",
-                        "inverse-primary": "#68dba9",
-                        "on-primary": "#ffffff",
-                        "surface": "#f5fbf5",
-                        "on-error": "#ffffff",
-                        "on-error-container": "#93000a",
-                        "on-tertiary-container": "#fffbff",
-                        "error-container": "#ffdad6",
-                        "primary-fixed-dim": "#68dba9",
-                        "tertiary-container": "#ba5551",
-                        "on-surface-variant": "#3d4a42",
-                        "surface-dim": "#d5dcd6",
-                        "surface-container-lowest": "#ffffff",
-                        "on-surface": "#171d19",
-                        "primary": "#006948",
-                        "outline-variant": "#bccac0",
-                        "surface-bright": "#f5fbf5",
-                        "surface-container-highest": "#dee4de",
-                        "on-tertiary-fixed-variant": "#7f2928",
-                        "inverse-surface": "#2c322e",
-                        "bg-gradient-end": "#DCFCE7",
-                        "tertiary-fixed": "#ffdad7",
-                        "surface-container-high": "#e4eae4",
-                        "glass-border": "rgba(255, 255, 255, 0.5)",
-                        "on-secondary": "#ffffff",
-                        "primary-container": "#00855d"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "2xl": "1rem",
-                        "3xl": "1.5rem",
-                        "full": "9999px"
-                    },
-                    "fontFamily": {
-                        "label-caps": ["Geist", "sans-serif"],
-                        "headline-lg": ["Geist", "sans-serif"],
-                        "headline-md": ["Geist", "sans-serif"],
-                        "data-tabular": ["Geist", "sans-serif"],
-                        "body-md": ["Inter", "sans-serif"],
-                        "display-lg": ["Geist", "sans-serif"],
-                        "body-lg": ["Inter", "sans-serif"]
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
-        }
-        .bg-map-layer {
-            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuB6ZneUgGDjqGatQIT32vaSn1IsPfI_wkWher32duQB7V3O7gJRdcqUBqPlBypCWuBI1cGCHTb9k4XSY2m5cUirfXs1I4XLsgrzD932JFRD6LcExEGzfIOvJezMZWRuatPhuwHnQd9Mmop1HLb9vD-zT7o5gAlnMg8pjQEcQvXCEP5hTHeUejJiJYwMyF7ltT_kfHlSD8jMYnAK4mU-UtO8iXULvLdT-8E2YZz7Zug0Gh245em4eOjU);
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
-</head>
+@push('head')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+@endpush
 
-<body class="bg-surface text-on-surface font-body-lg min-h-screen relative overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
-    <div class="fixed inset-0 z-0 bg-map-layer opacity-40 mix-blend-multiply"></div>
-    <div class="fixed inset-0 z-0 bg-gradient-to-br from-bg-gradient-start/80 to-bg-gradient-end/80 pointer-events-none"></div>
+@section('content')
+<div class="w-full px-6 sm:px-8 lg:px-10 py-8 pb-32 sm:pb-16 space-y-8">
 
-    <x-sidebar />
+    {{-- Breadcrumb Navigation --}}
+    <nav class="flex items-center gap-2 text-xs font-medium text-slate-500">
+        <a href="{{ route('assets.index') }}" class="hover:text-gray-900 transition">Beranda</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-gray-400"></i>
+        <a href="{{ route('assets.catalog') }}" class="hover:text-gray-900 transition">Katalog Properti</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-gray-400"></i>
+        <span class="text-gray-900 font-semibold truncate max-w-xs sm:max-w-md">{{ $asset->name }}</span>
+    </nav>
 
-    <main class="relative z-10 md:ml-28 lg:ml-32 min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex flex-col gap-4 md:gap-6">
-        <div class="flex items-center gap-3">
-            <a href="{{ route('assets.index') }}"
-                class="bg-glass-surface backdrop-blur-xl border border-glass-border p-2 md:p-2.5 rounded-full hover:bg-surface-variant/50 transition-colors shadow-sm flex items-center justify-center">
-                <span class="material-symbols-outlined text-on-surface-variant text-base md:text-xl">arrow_back</span>
-            </a>
-            <div class="flex flex-wrap items-center gap-1.5 md:gap-2 text-xs md:text-sm font-medium text-on-surface-variant">
-                <a href="{{ route('assets.index') }}" class="hover:underline">Assets</a>
-                <span class="material-symbols-outlined text-[14px] md:text-[16px]">chevron_right</span>
-                <span>Properti KAI</span>
-                <span class="material-symbols-outlined text-[14px] md:text-[16px]">chevron_right</span>
-                <span class="text-on-surface font-semibold truncate max-w-[200px] sm:max-w-none">{{ $asset->name }}</span>
+    {{-- Hero Image --}}
+    <div class="relative h-72 sm:h-[420px] lg:h-[480px] w-full rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 group">
+        
+        {{-- Photo --}}
+        <img id="main-hero-photo" 
+             src="{{ $asset->primary_image_url }}" 
+             alt="{{ $asset->name }}" 
+             class="w-full h-full object-cover transition-all duration-500">
+        
+        {{-- Gradient Overlay --}}
+        <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none"></div>
+
+        {{-- Status Badge --}}
+        <div class="absolute top-4 left-4 z-10 flex items-center gap-2">
+            <div class="bg-white/95 backdrop-blur-md rounded-xl p-1.5 flex items-center gap-2 border border-white/60">
+                <div class="w-8 h-8 rounded-lg bg-orange-50 text-primary flex items-center justify-center">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                </div>
+                <div class="pr-3 text-left">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase block leading-none">Status Aset</span>
+                    <span class="text-xs font-bold text-gray-900">{{ $asset->status_label }} · Verified KAI</span>
+                </div>
             </div>
         </div>
 
-        <div class="bg-glass-surface backdrop-blur-xl border border-glass-border shadow-[0_8px_32px_rgba(0,0,0,0.05)] rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col lg:flex-row gap-6 md:gap-8 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-white/40 to-transparent"></div>
-            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-white/40 to-transparent"></div>
+        {{-- Actions --}}
+        <div class="absolute top-4 right-4 z-10 flex items-center gap-2">
+            {{-- Favorite Button --}}
+            <form method="POST" action="{{ route('favorites.toggle') }}" class="inline">
+                @csrf
+                <input type="hidden" name="asset_id" value="{{ $asset->id }}">
+                <button type="submit" 
+                        title="{{ $isFavorited ? 'Hapus dari Favorit' : 'Simpan ke Favorit' }}"
+                        class="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md hover:bg-white text-gray-700 shadow-md flex items-center justify-center transition hover:scale-105">
+                    <i data-lucide="heart" class="w-5 h-5 {{ $isFavorited ? 'text-red-500 fill-red-500' : 'text-gray-600' }}"></i>
+                </button>
+            </form>
 
-            <div class="flex-1 flex flex-col gap-4 md:gap-6">
-                <div class="flex flex-col gap-3">
-                    <div class="relative w-full h-56 sm:h-72 md:h-96 rounded-xl md:rounded-2xl overflow-hidden border border-glass-border shadow-inner group">
-                        <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            src="{{ $asset->primary_image_url }}" alt="{{ $asset->name }}" />
-                        <div class="absolute top-3 left-3 md:top-4 md:left-4">
-                            <span class="bg-primary/90 text-on-primary text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md shadow-md flex items-center gap-1.5">
-                                <span class="w-2 h-2 rounded-full bg-primary-fixed animate-pulse"></span>
-                                {{ $asset->status_label }}
+            {{-- Google Maps Button --}}
+            <a href="https://www.google.com/maps/dir/?api=1&destination={{ $asset->latitude }},{{ $asset->longitude }}" 
+               target="_blank"
+               title="Petunjuk Arah Google Maps"
+               class="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md hover:bg-white text-gray-700 shadow-md flex items-center justify-center transition hover:scale-105">
+                <i data-lucide="navigation" class="w-5 h-5 text-primary"></i>
+            </a>
+        </div>
+
+        {{-- Photo Caption --}}
+        <div class="absolute bottom-5 left-5 z-10 max-w-lg">
+            <span class="text-[11px] font-bold tracking-wider text-orange-400 uppercase drop-shadow-sm block mb-0.5">
+                {{ $asset->district_area }} · Kode {{ $asset->asset_code }}
+            </span>
+            <h2 id="hero-photo-caption" class="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight drop-shadow-md">
+                {{ $asset->images->first()?->caption ?? 'Tampak Utama Properti' }}
+            </h2>
+        </div>
+
+        {{-- Gallery Button --}}
+        <div class="absolute bottom-5 right-5 z-10">
+            <button onclick="openGalleryModal()" 
+                    class="bg-black/60 hover:bg-black/80 backdrop-blur-md text-white border border-white/20 rounded-2xl px-4 py-2.5 flex items-center gap-2.5 shadow-xl transition group/btn">
+                <i data-lucide="image" class="w-4 h-4 text-orange-400 group-hover/btn:scale-110 transition"></i>
+                <span class="text-xs font-semibold">Lihat Semua ({{ $asset->images->count() }} Foto)</span>
+            </button>
+        </div>
+
+    </div>
+
+    {{-- Detail Info & Sidebar --}}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {{-- Left Column: Info & Specs --}}
+        <div class="lg:col-span-8 space-y-6">
+            
+            {{-- Title & Likes --}}
+            <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-4 border-b border-gray-200">
+                <div class="space-y-1">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-950 tracking-tight">
+                        {{ $asset->name }}
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-500 flex items-center gap-1.5">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-primary shrink-0"></i>
+                        <span>{{ $asset->full_address }}</span>
+                    </p>
+                </div>
+
+                {{-- Likes Pill --}}
+                <div class="flex items-center gap-2 self-start sm:self-auto bg-rose-50 border border-rose-200/80 px-3.5 py-1.5 rounded-[18px] shrink-0 text-rose-600 font-bold text-xs shadow-xs">
+                    <i data-lucide="heart" class="w-4 h-4 fill-rose-500 text-rose-500"></i>
+                    <span>{{ $asset->favorites_count }} Orang Menyukai</span>
+                </div>
+            </div>
+
+            {{-- Description --}}
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Deskripsi Properti</h3>
+                <p class="text-sm sm:text-base text-gray-700 leading-relaxed whitespace-pre-line">
+                    {{ $asset->description }}
+                </p>
+            </div>
+
+            {{-- Photo Gallery Thumbnails --}}
+            <div class="space-y-3 pt-2">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">
+                        Galeri Foto Detail Aset
+                    </h3>
+                    <span class="text-xs text-slate-500 font-medium">Klik foto untuk pratinjau</span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    @foreach($asset->images as $index => $img)
+                    <div onclick="switchHeroPhoto('{{ $img->url }}', '{{ addslashes($img->caption ?? 'Foto Aset ' . ($index + 1)) }}', this)"
+                         class="gallery-thumb group cursor-pointer bg-white rounded-[20px] overflow-hidden border {{ $index === 0 ? 'border-primary ring-2 ring-primary/20' : 'border-gray-200' }} hover:border-primary/60 transition shadow-xs">
+                        
+                        <div class="relative h-28 sm:h-32 w-full overflow-hidden bg-gray-100">
+                            <img src="{{ $img->url }}" alt="{{ $img->caption ?? $asset->name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <span class="absolute bottom-1.5 left-1.5 right-1.5 px-2 py-0.5 rounded-[10px] text-[10px] font-semibold bg-black/60 backdrop-blur-xs text-white truncate block">
+                                {{ $img->caption ?? 'Foto ' . ($index + 1) }}
                             </span>
                         </div>
                     </div>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- Location Map Section --}}
+            <div class="space-y-3 pt-4 border-t border-gray-100">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wider">
+                        Lokasi & Peta GIS (Daop 4 Semarang)
+                    </h3>
+                    <span class="text-xs font-mono text-slate-500">{{ $asset->latitude }}, {{ $asset->longitude }}</span>
                 </div>
 
-                <div class="flex justify-between items-start pt-3 md:pt-4 border-t border-glass-border">
-                    <div>
-                        <h1 class="font-geist font-bold text-xl sm:text-2xl md:text-3xl text-on-surface mb-1 md:mb-2">{{ $asset->name }}</h1>
-                        <p class="text-xs sm:text-sm font-medium text-on-surface-variant flex items-center gap-1">
-                            <span class="material-symbols-outlined text-[16px] md:text-[18px]">location_on</span>
-                            {{ $asset->full_address }}
-                        </p>
-                    </div>
-                    <form method="POST" action="{{ route('favorites.toggle') }}">
-                        @csrf
-                        <input type="hidden" name="asset_id" value="{{ $asset->id }}" />
-                        <button type="submit" class="bg-surface-container hover:bg-error-container text-on-surface-variant hover:text-error rounded-full p-2.5 md:p-3 transition-colors duration-200">
-                            <span class="material-symbols-outlined text-lg md:text-xl {{ $isFavorited ? 'ms-filled text-red-500' : '' }}">favorite</span>
-                        </button>
-                    </form>
+                <div class="relative h-64 sm:h-80 w-full rounded-[24px] overflow-hidden border border-gray-200 shadow-sm">
+                    <div id="detail-map" class="w-full h-full"></div>
                 </div>
+            </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 md:gap-4 mt-1 md:mt-2">
-                    <div class="bg-surface/60 rounded-xl p-3 md:p-4 border border-glass-border">
-                        <div class="text-on-surface-variant mb-1 flex items-center gap-1.5 md:gap-2">
-                            <span class="material-symbols-outlined text-[18px] md:text-[20px]">architecture</span>
-                            <span class="text-[10px] md:text-xs font-semibold tracking-wider">LUAS TANAH</span>
-                        </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ number_format($asset->land_area,0,',','.') }} m²</div>
-                    </div>
-                    <div class="bg-surface/60 rounded-xl p-3 md:p-4 border border-glass-border">
-                        <div class="text-on-surface-variant mb-1 flex items-center gap-1.5 md:gap-2">
-                            <span class="material-symbols-outlined text-[18px] md:text-[20px]">foundation</span>
-                            <span class="text-[10px] md:text-xs font-semibold tracking-wider">LUAS BANGUNAN</span>
-                        </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ number_format($asset->building_area,0,',','.') }} m²</div>
-                    </div>
-                    <div class="bg-surface/60 rounded-xl p-3 md:p-4 border border-glass-border">
-                        <div class="text-on-surface-variant mb-1 flex items-center gap-1.5 md:gap-2">
-                            <span class="material-symbols-outlined text-[18px] md:text-[20px]">local_shipping</span>
-                            <span class="text-[10px] md:text-xs font-semibold tracking-wider">AKSES JALAN</span>
-                        </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface truncate">{{ $asset->road_access }}</div>
-                    </div>
-                    <div class="bg-surface/60 rounded-xl p-3 md:p-4 border border-glass-border">
-                        <div class="text-on-surface-variant mb-1 flex items-center gap-1.5 md:gap-2">
-                            <span class="material-symbols-outlined text-[18px] md:text-[20px]">bolt</span>
-                            <span class="text-[10px] md:text-xs font-semibold tracking-wider">LISTRIK</span>
-                        </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ $asset->electricity ?? 'N/A' }}</div>
-                    </div>
-                    <div class="bg-surface/60 rounded-xl p-3 md:p-4 border border-glass-border">
-                        <div class="text-on-surface-variant mb-1 flex items-center gap-1.5 md:gap-2">
-                            <span class="material-symbols-outlined text-[18px] md:text-[20px]">water_drop</span>
-                            <span class="text-[10px] md:text-xs font-semibold tracking-wider">AIR</span>
-                        </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface">{{ $asset->water_supply ?? 'N/A' }}</div>
-                    </div>
-                    <div class="bg-surface/60 rounded-xl p-3 md:p-4 border border-glass-border">
-                        <div class="text-on-surface-variant mb-1 flex items-center gap-1.5 md:gap-2">
-                            <span class="material-symbols-outlined text-[18px] md:text-[20px]">security</span>
-                            <span class="text-[10px] md:text-xs font-semibold tracking-wider">KEAMANAN</span>
-                        </div>
-                        <div class="font-geist font-bold text-sm md:text-lg text-on-surface text-primary">{{ $asset->security ?? 'N/A' }}</div>
-                    </div>
-                </div>
+        </div>
 
-                <div class="mt-2 md:mt-4">
-                    <h3 class="font-geist font-semibold text-base md:text-xl text-on-surface mb-2">Deskripsi Aset</h3>
-                    <p class="text-xs sm:text-sm md:text-base text-on-surface-variant leading-relaxed">
-                        {{ $asset->description ?? 'Aset strategis milik PT Kereta Api Indonesia (Persero) Daop 4 Semarang.' }}
+        {{-- Right Column: Sticky Info Panel --}}
+        <div class="lg:col-span-4">
+            
+            <div class="bg-white rounded-[32px] p-6 sm:p-7 border border-gray-200 shadow-sm space-y-6 lg:sticky lg:top-24">
+                
+                {{-- Header --}}
+                <div class="border-b border-gray-100 pb-4">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Informasi Pokok</span>
+                    <h2 class="text-base font-bold text-gray-950 mt-0.5">Brief Information</h2>
+                    <p class="text-xs text-primary font-semibold mt-1">
+                        Pengelola: PT KAI Daop 4 Semarang
                     </p>
                 </div>
-            </div>
 
-            <div class="w-full lg:w-80 flex flex-col gap-4 md:gap-6">
-                <div class="bg-primary-container text-on-primary-container rounded-2xl p-5 md:p-6 shadow-[0_0_30px_rgba(0,133,93,0.2)] flex flex-col gap-3 md:gap-4 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
-                    <div>
-                        <span class="text-[10px] md:text-xs font-semibold tracking-wider text-primary-fixed opacity-90 block mb-1">HARGA PENAWARAN</span>
-                        <div class="font-geist font-bold text-2xl sm:text-3xl md:text-4xl tracking-tight">{{ $asset->price_formatted }}</div>
-                        <div class="text-xs md:text-sm opacity-80 mt-1">Negotiable • Direct Owner (PT KAI)</div>
-                    </div>
-                    <button class="w-full bg-on-primary-container text-primary-container font-semibold py-3 md:py-3.5 rounded-full mt-1 hover:bg-white transition-colors duration-300 flex items-center justify-center gap-2 group shadow-lg text-sm md:text-base">
-                        Ajukan Penawaran
-                        <span class="material-symbols-outlined text-sm md:text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                    </button>
-                    <button class="w-full bg-transparent border border-primary-fixed/30 text-primary-fixed text-xs md:text-sm font-medium py-2.5 md:py-3 rounded-full hover:bg-primary-fixed/10 transition-colors duration-300 flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined text-[16px] md:text-[18px]">download</span>
-                        Download Brosur
-                    </button>
-                </div>
-
-                <div class="bg-surface/60 rounded-xl p-4 border border-glass-border flex flex-col gap-2.5 md:gap-3">
-                    <div class="flex items-center justify-between">
-                        <h4 class="font-geist font-semibold text-sm md:text-base text-on-surface">Koordinat Lokasi</h4>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ $asset->latitude }},{{ $asset->longitude }}" target="_blank"
-                            class="text-primary text-xs md:text-sm font-medium hover:underline">Google Maps ↗</a>
-                    </div>
-                    <div class="font-geist text-xs md:text-sm text-on-surface-variant opacity-80">
-                        Lat: {{ $asset->latitude }} • Lng: {{ $asset->longitude }}
-                    </div>
-                </div>
-
-                <div class="bg-glass-surface rounded-xl p-4 border border-glass-border mt-auto">
-                    <div class="flex items-center gap-3 mb-3 md:mb-4">
-                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary text-white flex items-center justify-center border border-white">
-                            <span class="material-symbols-outlined text-lg md:text-xl">person</span>
+                {{-- Key Specs --}}
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="p-3 rounded-[20px] bg-gray-50 border border-gray-100 space-y-0.5">
+                        <div class="flex items-center gap-1.5 text-slate-500 text-xs">
+                            <i data-lucide="maximize" class="w-3.5 h-3.5 text-primary"></i>
+                            <span>Luas Tanah</span>
                         </div>
-                        <div>
-                            <div class="font-geist font-semibold text-sm md:text-base text-on-surface">Unit Komersialisasi Aset</div>
-                            <div class="text-xs md:text-sm text-on-surface-variant">KAI Daop 4 Semarang</div>
+                        <div class="text-xs sm:text-sm font-bold text-gray-900">
+                            {{ number_format($asset->land_area, 0, ',', '.') }} m²
                         </div>
                     </div>
-                    <div class="flex gap-2">
-                        <a href="https://wa.me/6281234567890" target="_blank"
-                            class="flex-1 bg-surface-container hover:bg-surface-variant text-on-surface font-medium text-xs md:text-sm py-2 md:py-2.5 rounded-full transition-colors flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined text-[16px] md:text-[18px]">call</span>
-                            Hubungi Unit
-                        </a>
+
+                    <div class="p-3 rounded-[20px] bg-gray-50 border border-gray-100 space-y-0.5">
+                        <div class="flex items-center gap-1.5 text-slate-500 text-xs">
+                            <i data-lucide="home" class="w-3.5 h-3.5 text-primary"></i>
+                            <span>Bangunan</span>
+                        </div>
+                        <div class="text-xs sm:text-sm font-bold text-gray-900">
+                            {{ number_format($asset->building_area, 0, ',', '.') }} m²
+                        </div>
+                    </div>
+
+                    <div class="p-3 rounded-[20px] bg-gray-50 border border-gray-100 space-y-0.5">
+                        <div class="flex items-center gap-1.5 text-slate-500 text-xs">
+                            <i data-lucide="truck" class="w-3.5 h-3.5 text-primary"></i>
+                            <span>Akses Jalan</span>
+                        </div>
+                        <div class="text-xs sm:text-sm font-bold text-gray-900 truncate">
+                            {{ $asset->road_access ?? 'Akses Aspal' }}
+                        </div>
+                    </div>
+
+                    <div class="p-3 rounded-[20px] bg-gray-50 border border-gray-100 space-y-0.5">
+                        <div class="flex items-center gap-1.5 text-slate-500 text-xs">
+                            <i data-lucide="zap" class="w-3.5 h-3.5 text-primary"></i>
+                            <span>Listrik</span>
+                        </div>
+                        <div class="text-xs sm:text-sm font-bold text-gray-900 truncate">
+                            {{ $asset->electricity ?? 'Tersedia' }}
+                        </div>
                     </div>
                 </div>
+
+                {{-- Pricing --}}
+                <div class="p-4 rounded-[22px] bg-orange-50/60 border border-primary-border space-y-1">
+                    <span class="text-[10px] font-bold text-primary uppercase tracking-wider block">Nilai Penawaran Sewa</span>
+                    <div class="text-xl sm:text-2xl font-black text-gray-950 tracking-tight">
+                        {{ $asset->price_formatted }}
+                    </div>
+                    <span class="text-[11px] text-slate-500 block">
+                        * Bersifat negotiable / dapat dinegosiasikan
+                    </span>
+                </div>
+
+                {{-- Action Buttons --}}
+                <div class="space-y-2.5 pt-1">
+                    @php
+                        $waNumber = $asset->contact_phone ? preg_replace('/[^0-9]/', '', $asset->contact_phone) : '6281234567890';
+                        $waText = urlencode("Halo Unit Komersialisasi KAI Daop 4, saya berminat untuk menyewa / mengajukan penawaran aset: " . $asset->name . " (" . $asset->asset_code . ").");
+                    @endphp
+
+                    <a href="https://wa.me/{{ $waNumber }}?text={{ $waText }}" target="_blank"
+                       class="w-full h-12 rounded-[20px] bg-gray-900 hover:bg-black text-white text-xs sm:text-sm font-semibold shadow-md transition flex items-center justify-center gap-2 min-h-[48px]">
+                        <i data-lucide="message-circle" class="w-5 h-5 text-emerald-400"></i>
+                        <span>Hubungi Kontak WhatsApp</span>
+                    </a>
+
+                    <a href="tel:02476541000"
+                       class="w-full h-11 rounded-[20px] bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs sm:text-sm font-semibold border border-gray-200 transition flex items-center justify-center gap-2 min-h-[44px]">
+                        <i data-lucide="phone" class="w-4 h-4 text-gray-500"></i>
+                        <span>Telepon Kantor (024) 7654-1000</span>
+                    </a>
+                </div>
+
+                {{-- PIC Unit --}}
+                <div class="pt-3 border-t border-gray-100 text-xs text-slate-500 flex items-center justify-between">
+                    <span>PIC: {{ $asset->contact_person ?? 'Unit Komersialisasi' }}</span>
+                    <span class="font-mono">{{ $asset->asset_code }}</span>
+                </div>
+
             </div>
+
         </div>
-    </main>
-</body>
 
-</html>
+    </div>
+
+</div>
+
+{{-- Fullscreen Photo Gallery Modal --}}
+<div id="gallery-modal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col justify-between p-4 sm:p-8">
+    <div class="flex items-center justify-between text-white pb-4 border-b border-white/20">
+        <div>
+            <h3 class="font-bold text-sm sm:text-base">{{ $asset->name }}</h3>
+            <p class="text-xs text-gray-400">Semua Foto Dokumentasi Aset</p>
+        </div>
+        <button onclick="closeGalleryModal()" class="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <div class="flex-1 flex items-center justify-center my-4 relative">
+        <img id="modal-active-img" src="{{ $asset->primary_image_url }}" class="max-h-[65vh] max-w-full rounded-2xl object-contain shadow-2xl">
+        <div id="modal-caption" class="absolute bottom-3 bg-black/70 px-4 py-1.5 rounded-full text-white text-xs font-semibold">
+            {{ $asset->images->first()?->caption ?? 'Foto Properti' }}
+        </div>
+    </div>
+
+    <div class="flex gap-2.5 overflow-x-auto pb-2 justify-center">
+        @foreach($asset->images as $img)
+        <button onclick="document.getElementById('modal-active-img').src = '{{ $img->url }}'; document.getElementById('modal-caption').textContent = '{{ addslashes($img->caption ?? 'Foto Properti') }}'"
+                class="w-16 h-12 sm:w-20 sm:h-14 rounded-xl overflow-hidden border border-white/40 hover:border-primary focus:border-primary shrink-0 transition">
+            <img src="{{ $img->url }}" class="w-full h-full object-cover">
+        </button>
+        @endforeach
+    </div>
+</div>
+@endsection
+
+@push('scripts')
+<script>
+    // Switch Hero Photo and Caption on Thumbnail Click
+    function switchHeroPhoto(url, caption, el) {
+        const heroImg = document.getElementById('main-hero-photo');
+        const captionEl = document.getElementById('hero-photo-caption');
+
+        if (heroImg) {
+            heroImg.style.opacity = '0.5';
+            heroImg.src = url;
+            setTimeout(() => { heroImg.style.opacity = '1'; }, 150);
+        }
+
+        if (captionEl && caption) {
+            captionEl.textContent = caption;
+        }
+
+        document.querySelectorAll('.gallery-thumb').forEach(t => {
+            t.classList.remove('border-primary', 'ring-2', 'ring-primary/20');
+            t.classList.add('border-gray-200');
+        });
+        if (el) {
+            el.classList.remove('border-gray-200');
+            el.classList.add('border-primary', 'ring-2', 'ring-primary/20');
+        }
+    }
+
+    function openGalleryModal() {
+        document.getElementById('gallery-modal').classList.remove('hidden');
+    }
+
+    function closeGalleryModal() {
+        document.getElementById('gallery-modal').classList.add('hidden');
+    }
+
+    // Initialize Detail Leaflet Map
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+
+        const lat = {{ $asset->latitude }};
+        const lng = {{ $asset->longitude }};
+
+        const map = L.map('detail-map', { 
+            zoomControl: true, 
+            attributionControl: true 
+        }).setView([lat, lng], 15);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://carto.com/">CARTO</a> | PT KAI Daop 4'
+        }).addTo(map);
+
+        const customPin = L.divIcon({
+            className: 'custom-leaflet-pin',
+            html: `
+                <div style="background: #F37021; color: white; width: 38px; height: 38px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 14px rgba(243,112,33,0.5); display: flex; align-items: center; justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+            `,
+            iconSize: [38, 38],
+            iconAnchor: [19, 38]
+        });
+
+        L.marker([lat, lng], { icon: customPin }).addTo(map)
+            .bindPopup(`<strong>{{ $asset->name }}</strong><br>{{ $asset->district_area }}`)
+            .openPopup();
+    });
+</script>
+@endpush
