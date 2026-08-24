@@ -20,9 +20,13 @@
         <nav class="mx-auto flex h-[75px] w-full items-center justify-between px-6">
 
             <!-- Logo -->
-            <div class="whitespace-nowrap text-[13px] font-semibold">
-                KAI Tracker
-                <span class="text-blue-600">App</span>
+            <div class="whitespace-nowrap text-[15px] font-semibold italic flex items-center justify-center">
+                <img
+                        src="{{ asset('image/dashboard-logo/kai-logo.svg') }}"
+                        alt="dark"
+                        class="h-[27px] w-[27px] -skew-x-12 object-contain"
+                >
+                Tracker<span class="text-blue-600">App</span>
             </div>
 
 
@@ -31,7 +35,7 @@
 
                 <li>
                     <a
-                        href="#"
+                        href="{{ route('welcome') }}"
                         class="block rounded-lg bg-[#dedede] px-3 py-2 font-semibold text-gray-800"
                     >
                         Dashboard
@@ -40,7 +44,7 @@
 
                 <li>
                     <a
-                        href="#"
+                        href="{{route('map')}}"
                         class="block rounded-lg px-3 py-2 hover:bg-[#dedede]"
                     >
                         Peta
