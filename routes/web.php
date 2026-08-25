@@ -10,3 +10,9 @@ Route::get('/', function () {
 
 Route::get('/map', [MapController::class, 'index'])->name('map');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('welcome');
+
+Route::get('/asset/{id}', function ($id) {
+    return view('asset-detail', [
+        'id' => $id
+    ]);
+})->name('asset.detail');

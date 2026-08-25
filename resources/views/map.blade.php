@@ -329,13 +329,13 @@
                 {{-- ICON --}}
 
                 <div
-                    class="flex h-[25px] w-[25px] shrink-0 items-center justify-center rounded-[3px] bg-[#eef5ff]"
+                    class="flex h-[25px] w-[25px] shrink-0 items-center justify-center"
                 >
-
-                    <span class="text-[17px] leading-none text-[#0878ff]">
-                        ▤
-                    </span>
-
+                    <img
+                        src="{{ asset('image/modal-popup-map/corporate_fare.svg') }}"
+                        alt="dark"
+                        class="object-contain"
+                    >
                 </div>
 
 
@@ -391,12 +391,14 @@
 
 
                 <div
-                    class="flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-[3px] bg-[#eaf8df]"
+                    class="flex h-[21px] w-[21px] shrink-0 justify-center"
                 >
 
-                    <span class="text-[11px] leading-none text-[#65b32e]">
-                        ▤
-                    </span>
+                    <img
+                        src="{{ asset('image/modal-popup-map/alamat.svg') }}"
+                        alt="dark"
+                        class="object-contain"
+                    >
 
                 </div>
 
@@ -429,12 +431,14 @@
 
 
                 <div
-                    class="flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-[3px] bg-[#e4f7fa]"
+                    class="flex h-[21px] w-[21px] shrink-0 justify-center"
                 >
 
-                    <span class="text-[11px] leading-none text-[#27aabd]">
-                        ◧
-                    </span>
+                    <img
+                        src="{{ asset('image/modal-popup-map/luas.svg') }}"
+                        alt="dark"
+                        class="object-contain"
+                    >
 
                 </div>
 
@@ -467,12 +471,14 @@
 
 
                 <div
-                    class="flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-[3px] bg-[#eee9ff]"
+                    class="flex h-[21px] w-[21px] shrink-0 justify-center"
                 >
 
-                    <span class="text-[11px] leading-none text-[#7956d8]">
-                        ▤
-                    </span>
+                    <img
+                        src="{{ asset('image/modal-popup-map/jenis-asset.svg') }}"
+                        alt="dark"
+                        class="object-contain"
+                    >
 
                 </div>
 
@@ -505,12 +511,14 @@
 
 
                 <div
-                    class="flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-[3px] bg-[#e2faed]"
+                    class="flex h-[21px] w-[21px] shrink-0 justify-center"
                 >
 
-                    <span class="text-[11px] leading-none text-[#22b86b]">
-                        ▰
-                    </span>
+                    <img
+                        src="{{ asset('image/modal-popup-map/nilai-asset.svg') }}"
+                        alt="dark"
+                        class="object-contain"
+                    >
 
                 </div>
 
@@ -543,12 +551,14 @@
 
 
                 <div
-                    class="flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-[3px] bg-[#fff1dc]"
+                    class="flex h-[21px] w-[21px] shrink-0 justify-center"
                 >
 
-                    <span class="text-[11px] leading-none text-[#f39a25]">
-                        ▣
-                    </span>
+                    <img
+                        src="{{ asset('image/modal-popup-map/periode.svg') }}"
+                        alt="dark"
+                        class="object-contain"
+                    >
 
                 </div>
 
@@ -1364,15 +1374,8 @@ function showAssetPopup(
     ).onclick =
         function() {
 
-            console.log(
-                'Detail asset:',
-                asset
-            );
-
-            alert(
-                'Detail aset: ' +
-                asset.name
-            );
+            window.location.href =
+                '/asset/' + locationId;
 
         };
 
