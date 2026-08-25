@@ -23,7 +23,7 @@ Route::get('/settings', [AssetController::class, 'settings'])->name('settings');
 
 // Fitur dari Teman (Map, Dashboard, Asset Detail)
 Route::get('/map', [MapController::class, 'index'])->name('map');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('welcome');
 Route::get('/asset/{id}', function ($id) {
     return view('asset-detail', [
         'id' => $id
