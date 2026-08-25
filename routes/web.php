@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MapController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AuthController;
@@ -7,6 +9,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\Admin\AssetManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
 
+<<<<<<< HEAD
 // Auth
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -39,3 +42,17 @@ Route::middleware(['auth', 'active_check', 'role:superadmin'])->prefix('admin')-
 Route::get('/kelola-aset', fn() => redirect()->route('admin.assets.index'))
     ->middleware(['auth', 'active_check', 'role:admin,superadmin'])
     ->name('assets.manage');
+=======
+Route::get('/', function () {
+    return view('welcome'); 
+});
+
+Route::get('/map', [MapController::class, 'index'])->name('map');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('welcome');
+
+Route::get('/asset/{id}', function ($id) {
+    return view('asset-detail', [
+        'id' => $id
+    ]);
+})->name('asset.detail');
+>>>>>>> detail-modal
