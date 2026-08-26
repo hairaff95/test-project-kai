@@ -15,31 +15,31 @@
     @endif
 </head>
 
-<body class="h-full min-h-screen lg:h-screen lg:overflow-hidden bg-[#F6F7F9] font-sans antialiased text-gray-900 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between">
+<body class="min-h-screen lg:h-screen lg:overflow-hidden bg-[#F6F7F9] font-sans antialiased text-gray-900 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between">
 
     {{-- Navbar --}}
     <x-navbar active="dashboard" />
 
-    <main class="w-full flex-1 min-h-0 max-w-[1600px] mx-auto px-5 sm:px-8 lg:px-10 pt-3 sm:pt-4 pb-4 lg:pb-5 flex flex-col justify-between">
+    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-5 pb-24 lg:pb-5 flex flex-col lg:justify-between lg:min-h-0">
 
         <!-- Page Header -->
-        <div class="mb-3 shrink-0">
+        <div class="mb-4 lg:mb-3 shrink-0">
             <h1 class="text-2xl sm:text-[30px] font-bold tracking-tight text-gray-950">
                 Halo Admin
             </h1>
         </div>
 
-        <!-- Dashboard Layout Grid (100% Fit Screen on Desktop, No Scroll) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-stretch flex-1 min-h-0">
+        <!-- Dashboard Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-3.5 items-stretch lg:flex-1 lg:min-h-0">
 
-            <!-- Kolom Kiri (8 Kolom) -->
-            <div class="lg:col-span-8 flex flex-col gap-3.5 min-h-0">
+            <!-- Kolom Kiri -->
+            <div class="lg:col-span-8 flex flex-col gap-4 lg:gap-3.5 lg:min-h-0">
 
-                <!-- 4 Kartu Statistik Atas -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 shrink-0">
+                <!-- 4 Kartu Statistik -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-3.5 shrink-0">
 
                     <!-- Kartu 1 -->
-                    <div class="rounded-3xl bg-white p-4 sm:p-4.5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col justify-between h-[125px] sm:h-[130px] transition hover:shadow-md">
+                    <div class="rounded-2xl sm:rounded-3xl bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col justify-between h-[120px] sm:h-[130px] transition hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-9 w-9 items-center justify-center">
                                 <x-icon name="folder" class="h-8 w-8" />
@@ -59,7 +59,7 @@
                     </div>
 
                     <!-- Kartu 2 -->
-                    <div class="rounded-3xl bg-white p-4 sm:p-4.5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col justify-between h-[125px] sm:h-[130px] transition hover:shadow-md">
+                    <div class="rounded-2xl sm:rounded-3xl bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col justify-between h-[120px] sm:h-[130px] transition hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-9 w-9 items-center justify-center">
                                 <x-icon name="folder" class="h-8 w-8" />
@@ -75,7 +75,7 @@
                     </div>
 
                     <!-- Kartu 3 -->
-                    <div class="rounded-3xl bg-white p-4 sm:p-4.5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col justify-between h-[125px] sm:h-[130px] transition hover:shadow-md">
+                    <div class="rounded-2xl sm:rounded-3xl bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col justify-between h-[120px] sm:h-[130px] transition hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-9 w-9 items-center justify-center">
                                 <x-icon name="folder" class="h-8 w-8" />
@@ -91,7 +91,7 @@
                     </div>
 
                     <!-- Kartu 4 -->
-                    <div class="rounded-3xl bg-white p-4 sm:p-4.5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col justify-between h-[125px] sm:h-[130px] transition hover:shadow-md">
+                    <div class="rounded-2xl sm:rounded-3xl bg-white p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col justify-between h-[120px] sm:h-[130px] transition hover:shadow-md">
                         <div class="flex items-start justify-between">
                             <div class="flex h-9 w-9 items-center justify-center">
                                 <x-icon name="folder" class="h-8 w-8" />
@@ -108,15 +108,15 @@
 
                 </div>
 
-                <!-- Container Utama: Pendapatan 2026 & Tabel Jatuh Tempo -->
-                <div class="rounded-3xl bg-white p-5 sm:p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 flex-1 min-h-0 flex flex-col justify-between">
+                <!-- Grafik Pendapatan & Tabel Jatuh Tempo -->
+                <div class="rounded-2xl sm:rounded-3xl bg-white p-5 sm:p-6 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col justify-between lg:flex-1 lg:min-h-0">
                     <div>
                         <h2 class="text-sm sm:text-base font-semibold text-gray-900 mb-3">
                             Pendapatan 2026
                         </h2>
 
-                        <!-- Chart Pendapatan -->
-                        <div class="relative h-[155px] sm:h-[170px] w-full">
+                        <!-- Chart Container -->
+                        <div class="relative h-[180px] sm:h-[190px] lg:h-[155px] xl:h-[170px] w-full mb-2">
                             <div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-4">
                                 <div class="flex items-center gap-2.5">
                                     <span class="w-7 text-[10px] text-gray-400 text-right shrink-0">1,000</span>
@@ -214,14 +214,14 @@
                         </div>
                     </div>
 
-                    <!-- Tabel Jatuh Tempo Terdekat (Leluasa / Tidak Mepet) -->
+                    <!-- Tabel Jatuh Tempo -->
                     <div class="mt-4 pt-3 border-t border-gray-100/90">
                         <h3 class="text-xs sm:text-sm font-bold text-gray-900 mb-2">
                             Jatuh Tempo Terdekat
                         </h3>
 
                         <div class="overflow-x-auto">
-                            <table class="w-full text-left text-xs">
+                            <table class="w-full text-left text-xs min-w-[320px]">
                                 <thead>
                                     <tr class="text-gray-400 font-normal border-b border-gray-100">
                                         <th class="pb-1.5 font-normal">Jenis Kontrak</th>
@@ -280,11 +280,11 @@
 
             </div>
 
-            <!-- Kolom Kanan (4 Kolom) -->
-            <div class="lg:col-span-4 flex flex-col gap-3.5 min-h-0">
+            <!-- Kolom Kanan -->
+            <div class="lg:col-span-4 flex flex-col gap-4 lg:gap-3.5 lg:min-h-0">
 
                 <!-- Distribusi Jenis Pendapatan -->
-                <div class="rounded-3xl bg-white p-4.5 sm:p-5.5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 shrink-0">
+                <div class="rounded-2xl sm:rounded-3xl bg-white p-5 sm:p-5.5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] border border-gray-100/90 shrink-0">
                     
                     <div class="flex items-center justify-between mb-3.5">
                         <h2 class="text-sm sm:text-base font-semibold text-gray-950">
@@ -371,10 +371,10 @@
 
                 </div>
 
-                <!-- Blacklog dan Pendapatan (Kartu Biru Gradasi Sesuai Gambar) -->
-                <div class="rounded-3xl bg-gradient-to-b from-[#659DF8] via-[#2F7EF8] to-[#0062F5] p-5 sm:p-6 text-white shadow-[0_4px_20px_rgba(21,112,239,0.2)] flex-1 min-h-0 flex flex-col justify-between relative overflow-hidden">
+                <!-- Blacklog dan Pendapatan -->
+                <div class="rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#659DF8] via-[#2F7EF8] to-[#0062F5] p-5 sm:p-6 text-white shadow-[0_4px_20px_rgba(21,112,239,0.2)] flex flex-col justify-between relative overflow-hidden lg:flex-1 lg:min-h-0">
                     
-                    <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center justify-between mb-3">
                         <h2 class="text-sm sm:text-base font-semibold text-white tracking-normal">
                             Blacklog dan Pendapatan
                         </h2>
@@ -383,17 +383,17 @@
                         </button>
                     </div>
 
-                    <div class="flex items-center justify-between gap-3 my-auto w-full">
+                    <div class="flex flex-col sm:flex-row items-center justify-start gap-3.5 my-auto w-full">
 
                         <!-- Donut Chart -->
-                        <div class="relative flex h-[145px] w-[145px] sm:h-[155px] sm:w-[155px] shrink-0 items-center justify-center">
+                        <div class="relative flex h-[180px] w-[180px] sm:h-[195px] sm:w-[195px] xl:h-[205px] xl:w-[205px] shrink-0 items-center justify-center">
                             <svg viewBox="0 0 100 100" class="h-full w-full overflow-visible">
                                 <path
                                     id="donut-arc-top"
                                     d="M 12 50 A 38 38 0 0 1 88 50"
                                     fill="none"
                                     stroke="#FFFFFF"
-                                    stroke-width="12"
+                                    stroke-width="11"
                                     class="transition-colors duration-300"
                                 />
                                 <path
@@ -401,7 +401,7 @@
                                     d="M 88 50 A 38 38 0 0 1 12 50"
                                     fill="none"
                                     stroke="rgba(255, 255, 255, 0.4)"
-                                    stroke-width="12"
+                                    stroke-width="11"
                                     class="transition-colors duration-300"
                                 />
                             </svg>
@@ -413,8 +413,8 @@
                             </div>
                         </div>
 
-                        <!-- Tombol Statistik -->
-                        <div class="flex flex-col gap-2.5 w-[140px] sm:w-[150px] shrink-0">
+                        <!-- Tombol Statistik (Mepet ke Lingkaran & Teks 1 Baris) -->
+                        <div class="flex flex-col gap-2.5 w-full sm:w-[160px] xl:w-[170px] shrink-0">
                             
                             <button
                                 type="button"
@@ -422,7 +422,7 @@
                                 onclick="switchDonutStat('blacklog')"
                                 class="w-full rounded-2xl border-1.5 border-white bg-white/15 px-3.5 py-2.5 text-left transition-all duration-200 shadow-sm cursor-pointer hover:bg-white/25 active:scale-[0.98]"
                             >
-                                <p class="text-xs sm:text-[13px] font-medium text-white flex items-center gap-1.5 leading-snug">
+                                <p class="text-xs sm:text-[13px] font-medium text-white flex items-center gap-1.5 leading-snug whitespace-nowrap">
                                     <span class="h-1.5 w-1.5 rounded-full bg-white shrink-0"></span>
                                     Total Blacklog
                                 </p>
@@ -437,7 +437,7 @@
                                 onclick="switchDonutStat('pendapatan')"
                                 class="w-full rounded-2xl border border-white/60 bg-transparent px-3.5 py-2.5 text-left transition-all duration-200 cursor-pointer hover:bg-white/15 active:scale-[0.98] opacity-85 hover:opacity-100"
                             >
-                                <p class="text-xs sm:text-[13px] font-medium text-white flex items-center gap-1.5 leading-snug">
+                                <p class="text-xs sm:text-[13px] font-medium text-white flex items-center gap-1.5 leading-snug whitespace-nowrap">
                                     <span class="h-1.5 w-1.5 rounded-full bg-white shrink-0"></span>
                                     Total Pendapatan
                                 </p>

@@ -340,12 +340,17 @@
         let indonesiaBounds = null;
         let baseIndonesiaZoom = 5;
 
-        // Inisialisasi peta Leaflet
+        // Inisialisasi peta Leaflet dengan smooth & responsive zoom
         const map = L.map('map', {
             center: [-2.2, 118.0],
             zoom: 5,
             zoomSnap: 0.1,
             zoomDelta: 0.5,
+            wheelPxPerZoomLevel: 85,
+            wheelDebounceTime: 0,
+            zoomAnimation: true,
+            fadeAnimation: true,
+            markerZoomAnimation: true,
             zoomControl: false,
             attributionControl: false,
             dragging: true,
@@ -414,12 +419,12 @@
 
         window.mapZoomIn = function() {
             flashZoomIn();
-            map.zoomIn();
+            map.setZoom(Math.floor(map.getZoom()) + 1);
         };
 
         window.mapZoomOut = function() {
             flashZoomOut();
-            map.zoomOut();
+            map.setZoom(Math.ceil(map.getZoom()) - 1);
         };
 
         window.mapPanTool = function() {
@@ -480,26 +485,13 @@
             setPanToolVisual(false);
         });
 
-        const mapCanvas = document.getElementById('map');
-        if (mapCanvas) {
-            mapCanvas.addEventListener('wheel', function(e) {
-                if (e.ctrlKey || Math.abs(e.deltaY) > 0) {
-                    if (e.deltaY < 0) {
-                        flashZoomIn();
-                    } else if (e.deltaY > 0) {
-                        flashZoomOut();
-                    }
-                }
-            }, { passive: true });
+        window.addEventListener('mouseup', function() {
+            setPanToolVisual(false);
+        });
 
-            window.addEventListener('mouseup', function() {
-                setPanToolVisual(false);
-            });
-
-            window.addEventListener('touchend', function() {
-                setPanToolVisual(false);
-            });
-        }
+        window.addEventListener('touchend', function() {
+            setPanToolVisual(false);
+        });
 
         // Ikon Pin Lokasi
         const redPinIcon = L.divIcon({

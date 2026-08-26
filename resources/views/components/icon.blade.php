@@ -16,6 +16,48 @@
         </svg>
         @break
 
+    @case('nav-home')
+        <svg {{ $attributes->merge(['class' => 'w-5 h-5', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3L3 10V20C3 20.5523 3.44772 21 4 21H20C20.5523 21 21 20.5523 21 20V10L12 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 16H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        @break
+
+    @case('nav-map')
+        <svg {{ $attributes->merge(['class' => 'w-5 h-5', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 21C16 17 20 13.4183 20 9C20 4.58172 16.4183 1 12 1C7.58172 1 4 4.58172 4 9C4 13.4183 8 17 12 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="9" r="3" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        @break
+
+    @case('nav-contract')
+        <svg {{ $attributes->merge(['class' => 'w-5 h-5', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 2V22L7 20L10 22L13 20L16 22L20 20V2L16 4L13 2L10 4L7 2L4 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 7H16M8 11H16M8 15H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        @break
+
+    @case('nav-scan')
+        <svg {{ $attributes->merge(['class' => 'w-5 h-5', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 7V5C3 3.89543 3.89543 3 5 3H7M17 3H19C20.1046 3 21 3.89543 21 5V7M21 17V19C21 20.1046 20.1046 21 19 21H17M7 21H5C3.89543 21 3 20.1046 3 19V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M7 8V16M10 8V16M14 8V16M17 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        @break
+
+    @case('nav-card')
+        <svg {{ $attributes->merge(['class' => 'w-5 h-5', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="5" width="20" height="14" rx="3" stroke="currentColor" stroke-width="2"/>
+            <path d="M2 10H22M6 15H10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        @break
+
+    @case('nav-user')
+        <svg {{ $attributes->merge(['class' => 'w-5 h-5', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+            <path d="M5 21V19C5 16.7909 7.23858 15 10 15H14C16.7614 15 19 16.7909 19 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        @break
+
     @case('dots-vertical')
     @case('more-vertical')
         <svg {{ $attributes->merge(['class' => 'w-4 h-4', 'viewBox' => '0 0 24 24', 'fill' => 'currentColor']) }} xmlns="http://www.w3.org/2000/svg">
