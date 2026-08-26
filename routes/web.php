@@ -25,9 +25,8 @@ Route::get('/settings', [AssetController::class, 'settings'])->name('settings');
 Route::get('/map', [MapController::class, 'index'])->name('map');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('welcome');
 Route::get('/asset/{id}', function ($id) {
-    return view('asset-detail', [
-        'id' => $id
-    ]);
+    $asset = \App\Models\Asset::with('images')->findOrFail($id);
+    return view('asset-detail', compact('asset'));
 })->name('asset.detail');
 
 // Favorites
