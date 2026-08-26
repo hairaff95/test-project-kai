@@ -29,13 +29,18 @@ Route::get('/asset/{id}', function ($id) {
     return view('asset-detail', compact('asset'));
 })->name('asset.detail');
 
+// Edit & Update aset (tanpa middleware auth untuk development)
+Route::get('/admin/assets/{asset}/edit', [AssetManagementController::class, 'edit'])->name('admin.assets.edit');
+Route::put('/admin/assets/{asset}', [AssetManagementController::class, 'update'])->name('admin.assets.update');
+Route::delete('/admin/assets/{asset}', [AssetManagementController::class, 'destroy'])->name('admin.assets.destroy');
+
 // Favorites
 Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 Route::post('/favorites/toggle', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
 
 // Admin
 Route::middleware(['auth', 'active_check', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('assets', AssetManagementController::class);
+    Route::resource('assets', AssetManagementController::class)->except(['edit', 'update', 'destroy']);
     Route::get('/kelola-aset-redirect', fn() => redirect()->route('admin.assets.index'))->name('assets.legacy_redirect');
 });
 
