@@ -86,7 +86,7 @@ class AssetManagementController extends Controller
 
     public function edit(Asset $asset)
     {
-        return view('admin.assets.edit', compact('asset'));
+        return view('asset-edit', compact('asset'));
     }
 
     public function update(Request $request, Asset $asset)
@@ -139,7 +139,7 @@ class AssetManagementController extends Controller
             }
         }
 
-        return redirect()->route('admin.assets.index')
+        return redirect()->route('asset.detail', $asset->id)
             ->with('success', "Aset «{$asset->name}» berhasil diperbarui.");
     }
 
@@ -155,7 +155,7 @@ class AssetManagementController extends Controller
         $name = $asset->name;
         $asset->delete();
 
-        return redirect()->route('admin.assets.index')
+        return redirect()->route('map')
             ->with('success', "Aset «{$name}» berhasil dihapus.");
     }
 }

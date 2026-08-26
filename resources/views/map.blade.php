@@ -320,21 +320,8 @@
 
     {{-- Javascript & Peta Leaflet --}}
     <script>
-        // Data aset
-        const assets = {
-            "0": {
-                name: "PT Kargo Cepat Pantura",
-                code: "AST-SMG-PCL-005",
-                location: "Semarang Poncol",
-                address: "Jl. Imam Bonjol No. 115, Purwosari, Kec. Semarang Utara, Kota Semarang",
-                area: "850,00 m²",
-                type: "Tanah — Depo Logistik & Kantor Ekspedisi",
-                value: "Rp 380.000.000",
-                period: "01/01/2026 – 31/12/2027",
-                latitude: "-6.9697",
-                longitude: "110.4137"
-            }
-        };
+        // Data aset dari database
+        const assets = @json($assets);
 
         let indonesiaGeojsonLayer = null;
         let indonesiaBounds = null;
@@ -632,7 +619,7 @@
                     </div>
 
                     <div class="mt-6 flex items-center gap-3">
-                        <a href="/asset-detail/${id}" class="btn-detail-lanjutan flex-1 text-center cursor-pointer rounded-xl bg-[#0066FF] py-3 px-4 text-sm font-semibold !text-white transition hover:bg-blue-700 shadow-sm inline-block" style="color: #ffffff !important;">Detail Lanjutan</a>
+                        <a href="/asset/${id}" class="btn-detail-lanjutan flex-1 text-center cursor-pointer rounded-xl bg-[#0066FF] py-3 px-4 text-sm font-semibold !text-white transition hover:bg-blue-700 shadow-sm inline-block" style="color: #ffffff !important;">Detail Lanjutan</a>
                         <a href="${googleMapsUrl}" target="_blank" class="btn-buka-maps w-[125px] text-center cursor-pointer rounded-xl border border-gray-300 bg-white py-3 px-4 text-sm font-medium text-gray-600 transition hover:bg-gray-50 inline-block">Buka Maps</a>
                     </div>
                 </div>
