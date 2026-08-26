@@ -77,4 +77,5 @@ $RECYCLE.BIN/
 ###########################
 /public/css/
 /public/js/
+!/public/js/indonesia.json
 /public/mix-manifest.json
