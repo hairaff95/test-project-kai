@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContractController;
+use App\Http\Controllers\JatuhTempoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MapController;
 use Illuminate\Support\Facades\Route;
@@ -22,11 +23,12 @@ Route::get('/assets/{id}', [AssetController::class, 'show'])->name('assets.show'
 Route::get('/faq', [AssetController::class, 'faq'])->name('faq');
 Route::get('/settings', [AssetController::class, 'settings'])->name('settings');
 
-// Fitur dari Teman (Map, Dashboard, Asset Detail, Daftar Kontrak)
+// Fitur dari Teman (Map, Dashboard, Asset Detail, Daftar Kontrak, Jatuh Tempo)
 Route::get('/map', [MapController::class, 'index'])->name('map');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('welcome');
 Route::get('/daftar-kontrak', [ContractController::class, 'index'])->name('contracts.index');
 Route::get('/contracts', [ContractController::class, 'index'])->name('contracts.alias');
+Route::get('/jatuh-tempo', [JatuhTempoController::class, 'index'])->name('due-dates.index');
 Route::get('/asset/{id}', function ($id) {
     $asset = \App\Models\Asset::with('images')->findOrFail($id);
     return view('asset-detail', compact('asset'));
