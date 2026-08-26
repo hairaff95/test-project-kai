@@ -104,9 +104,6 @@
     <div class="relative z-30 w-full max-w-[1600px] mx-auto px-5 sm:px-8 lg:px-10 pt-5 pointer-events-none">
         <div class="flex items-center justify-between relative min-h-[44px]">
             <div>
-                <h1 class="text-3xl sm:text-[32px] font-bold tracking-tight text-gray-950">
-                    Heatmaps
-                </h1>
             </div>
 
             <!-- Tools Zoom & Pan -->
