@@ -38,7 +38,7 @@
             </li>
             <li>
                 <a
-                    href="#"
+                    href="{{ route('due-dates.index') }}"
                     class="inline-block py-2 transition {{ $active === 'due-dates' ? 'rounded-xl bg-[#DCDCDC] px-4 font-semibold text-[#171717] shadow-none' : 'hover:text-[#171717]' }}"
                 >
                     Jatuh Tempo
@@ -118,7 +118,7 @@
         </a>
 
         <!-- Jatuh Tempo (Card Icon) -->
-        <a href="#" class="flex h-10 w-10 items-center justify-center rounded-full {{ $active === 'due-dates' ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Jatuh Tempo">
+        <a href="{{ route('due-dates.index') }}" class="flex h-10 w-10 items-center justify-center rounded-full {{ $active === 'due-dates' ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Jatuh Tempo">
             <x-icon name="nav-card" class="h-5 w-5" />
         </a>
 
