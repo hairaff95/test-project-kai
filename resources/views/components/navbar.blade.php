@@ -30,7 +30,7 @@
             </li>
             <li>
                 <a
-                    href="#"
+                    href="{{ route('contracts.index') }}"
                     class="inline-block py-2 transition {{ $active === 'contracts' ? 'rounded-xl bg-[#DCDCDC] px-4 font-semibold text-[#171717] shadow-none' : 'hover:text-[#171717]' }}"
                 >
                     Daftar Kontrak
@@ -108,7 +108,7 @@
         @endif
 
         <!-- Daftar Kontrak (Receipt Icon) -->
-        <a href="#" class="flex h-10 w-10 items-center justify-center rounded-full {{ $active === 'contracts' ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Daftar Kontrak">
+        <a href="{{ route('contracts.index') }}" class="flex h-10 w-10 items-center justify-center rounded-full {{ $active === 'contracts' ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Daftar Kontrak">
             <x-icon name="nav-contract" class="h-5 w-5" />
         </a>
 
