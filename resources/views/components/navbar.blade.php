@@ -64,27 +64,85 @@
 
         <!-- Profil & Aksi Kanan -->
         <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
-            <button type="button" class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-gray-300/80 bg-transparent text-gray-700 hover:bg-gray-200/70 transition shadow-none cursor-pointer" title="Toggle Theme">
+
+            <button
+                type="button"
+                class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-gray-300/80 bg-transparent text-gray-700 hover:bg-gray-200/70 transition shadow-none cursor-pointer"
+                title="Toggle Theme"
+            >
                 <x-icon name="moon" class="h-[18px] w-[18px] sm:h-[19px] sm:w-[19px] text-[#262626]" />
             </button>
 
-            <button type="button" class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-gray-300/80 bg-transparent text-gray-700 hover:bg-gray-200/70 transition shadow-none cursor-pointer" title="Notifikasi">
+            <button
+                type="button"
+                class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-gray-300/80 bg-transparent text-gray-700 hover:bg-gray-200/70 transition shadow-none cursor-pointer"
+                title="Notifikasi"
+            >
                 <x-icon name="notification" class="h-[18px] w-[18px] sm:h-[19px] sm:w-[19px] text-[#262626]" />
             </button>
 
-            <div class="flex items-center gap-2 pl-0.5">
-                <div class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-gray-200/80 text-gray-600 shrink-0">
-                    <x-icon name="profile-circle" class="h-5 w-5 sm:h-6 sm:w-6" />
+            <!-- Profile -->
+            <div class="relative ml-1">
+
+                <!-- Profile Button -->
+                <button
+                    id="profileButton"
+                    type="button"
+                    class="flex items-center gap-2 rounded-xl p-1.5 hover:bg-gray-200/70 transition cursor-pointer"
+                >
+                    <div class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-gray-200/80 text-gray-600 shrink-0">
+                        <x-icon name="profile-circle" class="h-5 w-5 sm:h-6 sm:w-6" />
+                    </div>
+
+                    <div class="hidden sm:block leading-tight text-left pl-0.5">
+                        <p class="text-sm font-bold text-[#171717]">
+                            Haidar R.
+                        </p>
+
+                        <p class="text-xs text-gray-400 font-normal mt-0.5">
+                            Admin
+                        </p>
+                    </div>
+
+                    <!-- Arrow -->
+                    <x-icon
+                        name="chevron-down"
+                        class="hidden sm:block h-4 w-4 text-gray-400 transition-transform duration-200"
+                        id="profileArrow"
+                    />
+                </button>
+
+
+                <!-- Dropdown -->
+                <div
+                    id="profileDropdown"
+                    class="absolute right-0 top-full mt-2 w-52 origin-top-right rounded-2xl p-1.5 shadow-xl opacity-0 invisible scale-95 transition-all duration-200"
+                    style="background: rgba(56,56,56,0.30); border: 1px solid rgba(255,255,255,0.1);"
+                >
+
+                    <!-- Pengaturan Akun -->
+                    <a
+                        href="#"
+                        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white hover:bg-white/10 transition"
+                    >
+                        <x-icon name="setting" class="h-5 w-5 text-white" />
+                        <span>Pengaturan Akun</span>
+                    </a>
+
+                    <!-- Logout -->
+                    <form method="POST" action="#">
+                        @csrf
+                        <button
+                            type="submit"
+                            class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white hover:bg-white/10 transition cursor-pointer"
+                        >
+                            <x-icon name="logout" class="h-5 w-5 text-white" />
+                            <span>Keluar</span>
+                        </button>
+                    </form>
+
                 </div>
-                
-                <div class="hidden sm:block leading-tight text-left pl-0.5">
-                    <p class="text-sm font-bold text-[#171717]">
-                        Haidar R.
-                    </p>
-                    <p class="text-xs text-gray-400 font-normal mt-0.5">
-                        Admin
-                    </p>
-                </div>
+
             </div>
         </div>
 
@@ -142,4 +200,77 @@
             navbar.classList.add('bg-[#F6F7F9]/95', 'border-transparent');
         }
     });
+
+    const profileButton = document.getElementById('profileButton');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileArrow = document.getElementById('profileArrow');
+
+    if (profileButton && profileDropdown) {
+
+        profileButton.addEventListener('click', function (event) {
+            event.stopPropagation();
+
+            const isOpen = !profileDropdown.classList.contains('invisible');
+
+            if (isOpen) {
+                // Tutup
+                profileDropdown.classList.add(
+                    'opacity-0',
+                    'invisible',
+                    'scale-95'
+                );
+
+                profileDropdown.classList.remove(
+                    'opacity-100',
+                    'visible',
+                    'scale-100'
+                );
+
+                profileArrow?.classList.remove('rotate-180');
+
+            } else {
+                // Buka
+                profileDropdown.classList.remove(
+                    'opacity-0',
+                    'invisible',
+                    'scale-95'
+                );
+
+                profileDropdown.classList.add(
+                    'opacity-100',
+                    'visible',
+                    'scale-100'
+                );
+
+                profileArrow?.classList.add('rotate-180');
+            }
+        });
+
+
+        // Klik di luar dropdown → tutup
+        document.addEventListener('click', function (event) {
+
+            if (
+                !profileButton.contains(event.target) &&
+                !profileDropdown.contains(event.target)
+            ) {
+
+                profileDropdown.classList.add(
+                    'opacity-0',
+                    'invisible',
+                    'scale-95'
+                );
+
+                profileDropdown.classList.remove(
+                    'opacity-100',
+                    'visible',
+                    'scale-100'
+                );
+
+                profileArrow?.classList.remove('rotate-180');
+            }
+
+        });
+
+    }
 </script>
