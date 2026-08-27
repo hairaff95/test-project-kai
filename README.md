@@ -1,64 +1,228 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Informasi Aset KAI
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web berbasis Laravel untuk manajemen dan monitoring aset PT. Kereta Api Indonesia (KAI). Sistem ini menyediakan fitur katalog aset, peta persebaran, monitoring kontrak, manajemen favorit, dan administrasi pengguna.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Dashboard** — Ringkasan data aset dan statistik
+- **Katalog & Explorer Aset** — Daftar, pencarian, dan detail aset
+- **Peta Aset** — Visualisasi persebaran aset di peta Indonesia
+- **Manajemen Kontrak** — Daftar kontrak dan monitoring jatuh tempo
+- **Backlog** — Monitoring aset yang belum terkontrak
+- **Favorit** — Tandai aset favorit
+- **FAQ** — Halaman pertanyaan umum
+- **Admin Panel** — Manajemen aset dan pengguna (khusus admin)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Requirements
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP >= 8.2
+- Composer
+- Node.js & NPM
+- Database: SQLite (default) atau MySQL/MariaDB
+- Laravel 11.x
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Struktur Folder
 
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+test-project-kai/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Admin/
+│   │   │   │   ├── AssetManagementController.php
+│   │   │   │   └── UserManagementController.php
+│   │   │   ├── AssetController.php
+│   │   │   ├── AuthController.php
+│   │   │   ├── BacklogController.php
+│   │   │   ├── ContractController.php
+│   │   │   ├── DashboardController.php
+│   │   │   ├── FavoriteController.php
+│   │   │   ├── JatuhTempoController.php
+│   │   │   └── MapController.php
+│   │   └── Middleware/
+│   │       └── CheckRole.php
+│   ├── Models/
+│   │   ├── Asset.php
+│   │   ├── AssetImage.php
+│   │   ├── ContractFinancial.php
+│   │   ├── Favorite.php
+│   │   ├── KaiAsset.php
+│   │   ├── KaiContract.php
+│   │   ├── MonthlySchedule.php
+│   │   ├── Penyewa.php
+│   │   └── User.php
+│   └── Providers/
+│       └── AppServiceProvider.php
+├── database/
+│   ├── migrations/          # File migrasi tabel database
+│   ├── seeders/             # Data seeder (KaiDatabaseSeeder, UserSeeder, dsb.)
+│   ├── factories/
+│   └── test_project_kai.sql # SQL dump database (opsional)
+├── public/
+│   ├── images/              # Gambar statis (background, dsb.)
+│   ├── js/                  # File JS statis (peta Indonesia, mapdata, dsb.)
+│   └── index.php
+├── resources/
+│   ├── css/
+│   │   └── app.css
+│   ├── js/
+│   │   └── app.js
+│   └── views/
+│       ├── admin/           # View panel admin (assets, users)
+│       ├── assets/          # View katalog, detail, explorer, edit aset
+│       ├── auth/            # View login
+│       ├── backlog/         # View backlog aset
+│       ├── components/      # Komponen reusable (navbar, icon)
+│       ├── contracts/       # View daftar kontrak
+│       ├── dashboard/       # View dashboard utama
+│       ├── favorites/       # View favorit
+│       ├── faq/             # View FAQ
+│       ├── jatuh-tempo/     # View monitoring jatuh tempo
+│       ├── layout/          # Layout utama aplikasi
+│       ├── map/             # View peta aset
+│       └── settings/        # View pengaturan
+├── routes/
+│   ├── web.php              # Definisi routing aplikasi
+│   └── console.php
+├── config/                  # Konfigurasi Laravel (database, cache, mail, dsb.)
+├── storage/                 # Log, cache, session, file upload
+├── bootstrap/
+├── tests/
+├── .env.example
+├── composer.json
+├── package.json
+└── vite.config.js
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## Cara Menjalankan Project
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 1. Clone & Install Dependensi
 
-## Code of Conduct
+```bash
+# Clone repository (jika dari git)
+git clone <url-repository>
+cd test-project-kai
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Install dependensi PHP
+composer install
 
-## Security Vulnerabilities
+# Install dependensi JavaScript
+npm install
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 2. Konfigurasi Environment
 
-## License
+```bash
+# Salin file environment
+cp .env.example .env
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Generate application key
+php artisan key:generate
+```
 
-## cara run
-1. composer install
-2. cp .env.example .env
-3. php artisan migrate
-4. php artisan serve
+Edit file `.env` sesuai kebutuhan, terutama konfigurasi database:
+
+**Menggunakan SQLite (default):**
+```env
+DB_CONNECTION=sqlite
+```
+File database SQLite akan dibuat otomatis di `database/database.sqlite`.
+
+**Menggunakan MySQL:**
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nama_database
+DB_USERNAME=root
+DB_PASSWORD=password_anda
+```
+
+### 3. Setup Database
+
+```bash
+# Buat file SQLite (jika menggunakan SQLite)
+touch database/database.sqlite
+
+# Jalankan migrasi
+php artisan migrate
+
+# (Opsional) Jalankan seeder untuk data awal
+php artisan db:seed --class=DatabaseSeeder
+```
+
+Atau gunakan file SQL dump yang tersedia:
+```bash
+# Import SQL dump (untuk MySQL)
+mysql -u root -p nama_database < database/test_project_kai.sql
+```
+
+### 4. Build Assets Frontend
+
+```bash
+# Development (dengan hot reload)
+npm run dev
+
+# Production build
+npm run build
+```
+
+### 5. Jalankan Server
+
+```bash
+php artisan serve
+```
+
+Aplikasi akan berjalan di: **http://localhost:8000**
+
+---
+
+## Akun Default (jika menggunakan seeder)
+
+| Role  | Email               | Password |
+|-------|---------------------|----------|
+| Admin | admin@kai.id        | password |
+| User  | user@kai.id         | password |
+
+> Sesuaikan akun dengan isi `UserSeeder.php` jika berbeda.
+
+---
+
+## Perintah Artisan Berguna
+
+```bash
+# Jalankan server development
+php artisan serve
+
+# Reset dan jalankan ulang semua migrasi + seeder
+php artisan migrate:fresh --seed
+
+# Bersihkan cache aplikasi
+php artisan optimize:clear
+
+# Lihat semua route yang terdaftar
+php artisan route:list
+```
+
+---
+
+## Tech Stack
+
+- **Backend**: Laravel 11, PHP 8.2+
+- **Frontend**: Blade Templates, Vite
+- **Database**: SQLite / MySQL
+- **Map**: Custom JS (countrymap.js, indonesia.json)
+
+---
+
+## Lisensi
+
+Project ini dikembangkan dalam rangka magang di PT. Kereta Api Indonesia (KAI).

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Asset;
 use App\Models\Favorite;
+use App\Models\KaiAsset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -103,6 +104,15 @@ class AssetController extends Controller
         $isFavorited = in_array($asset->id, $favoriteIds);
 
         return view('assets.show', compact('asset', 'isFavorited'));
+    }
+
+    public function showKai(string $asset_number)
+    {
+        $asset = KaiAsset::with('contract.penyewa', 'contract.financial', 'contract.monthlySchedules')
+            ->where('asset_number', $asset_number)
+            ->firstOrFail();
+
+        return view('assets.detail', compact('asset'));
     }
 
     public function manage()

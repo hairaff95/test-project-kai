@@ -86,7 +86,13 @@ class AssetManagementController extends Controller
 
     public function edit(Asset $asset)
     {
-        return view('asset-edit', compact('asset'));
+        // Cari KaiAsset berdasarkan asset_number
+        $kaiAsset = \App\Models\KaiAsset::with('contract.financial', 'contract.monthlySchedules')
+            ->where('asset_number', $asset->asset_number ?? $asset->getKey())
+            ->first();
+
+        // Jika tidak ketemu di KaiAsset, buat objek dummy dari Asset lama
+        return view('asset-edit', ['asset' => $kaiAsset ?? $asset]);
     }
 
     public function update(Request $request, Asset $asset)
@@ -153,6 +159,48 @@ class AssetManagementController extends Controller
         }
 
         $name = $asset->name;
+        $asset->delete();
+
+        return redirect()->route('map')
+            ->with('success', "Aset «{$name}» berhasil dihapus.");
+    }
+
+    // ── KaiAsset update & destroy (schema baru) ───────────────
+
+    public function editKai(string $asset_number)
+    {
+        $asset = \App\Models\KaiAsset::with('contract.financial', 'contract.monthlySchedules')
+            ->where('asset_number', $asset_number)
+            ->firstOrFail();
+
+        return view('assets.edit', compact('asset'));
+    }
+
+    public function updateKai(Request $request, string $asset_number)
+    {
+        $asset = \App\Models\KaiAsset::where('asset_number', $asset_number)->firstOrFail();
+
+        $validated = $request->validate([
+            'asset_block_name' => 'required|string|max:255',
+            'size_area'        => 'required|numeric|min:0',
+            'peruntukan'       => 'nullable|string|max:100',
+            'jenis_aset'       => 'nullable|string|max:100',
+            'stasiun'          => 'nullable|string|max:100',
+            'wilayah_aset'     => 'nullable|string|max:100',
+            'latitude'         => 'nullable|numeric',
+            'longitude'        => 'nullable|numeric',
+        ]);
+
+        $asset->update($validated);
+
+        return redirect()->route('asset.detail', $asset->asset_number)
+            ->with('success', "Aset «{$asset->asset_block_name}» berhasil diperbarui.");
+    }
+
+    public function destroyKai(string $asset_number)
+    {
+        $asset = \App\Models\KaiAsset::where('asset_number', $asset_number)->firstOrFail();
+        $name  = $asset->asset_block_name;
         $asset->delete();
 
         return redirect()->route('map')

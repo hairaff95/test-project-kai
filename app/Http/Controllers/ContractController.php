@@ -2,148 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KaiContract;
 use Illuminate\Http\Request;
 
 class ContractController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Sample contract data for UI presentation matching design
-        $contracts = [
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-            [
-                'tenant' => 'Drs. Bambang Sudarsono',
-                'asset_no' => 'AST-TGL-GDG-002',
-                'station' => 'Semarang Tawang',
-                'asset_type' => 'Bangunan Dinas',
-                'designation' => 'Gudang Logistik Komersil & Pergudangan Pelabuhan',
-                'area' => '2.462',
-                'contract_value' => 'Rp 970.028.000',
-                'due_date' => '4 bulan 6 hari',
-                'status' => 'Aktif/Terbit',
-            ],
-        ];
+        $query = KaiContract::with(['penyewa', 'asset', 'financial'])->latest('created_at');
 
-        return view('contracts', compact('contracts'));
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(function ($q) use ($s) {
+                $q->where('contract_number', 'like', "%{$s}%")
+                  ->orWhereHas('penyewa', fn($q2) => $q2->where('fullnama', 'like', "%{$s}%"))
+                  ->orWhereHas('asset', fn($q2) => $q2->where('asset_block_name', 'like', "%{$s}%"));
+            });
+        }
+
+        if ($request->filled('jenis_kontrak')) {
+            $query->where('jenis_kontrak', $request->jenis_kontrak);
+        }
+
+        $contracts = $query->get();
+
+        return view('contracts.index', compact('contracts'));
     }
 }

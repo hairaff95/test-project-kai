@@ -165,77 +165,71 @@
                     <tbody class="divide-y divide-gray-100 text-xs sm:text-[13px] text-gray-700">
                         @forelse($contracts as $index => $item)
                             @php
-                                $statusClass = match($item['overdue_class'] ?? 'normal') {
-                                    'warning' => 'status-warning',
-                                    'danger'  => 'status-danger',
-                                    default   => 'status-normal',
+                                $daysLeft = $item->end_datetime_baru
+                                    ? now()->diffInDays($item->end_datetime_baru, false)
+                                    : null;
+                                $statusClass = match(true) {
+                                    $daysLeft === null        => 'status-normal',
+                                    $daysLeft < 0             => 'status-danger',
+                                    $daysLeft <= 30           => 'status-danger',
+                                    $daysLeft <= 90           => 'status-warning',
+                                    default                   => 'status-normal',
                                 };
-                                $dotClass = match($item['overdue_class'] ?? 'normal') {
-                                    'warning' => 'dot-warning',
-                                    'danger'  => 'dot-danger',
-                                    default   => 'dot-normal',
+                                $dotClass = match(true) {
+                                    $daysLeft === null        => 'dot-normal',
+                                    $daysLeft < 0             => 'dot-danger',
+                                    $daysLeft <= 30           => 'dot-danger',
+                                    $daysLeft <= 90           => 'dot-warning',
+                                    default                   => 'dot-normal',
+                                };
+                                $kondisi = match(true) {
+                                    $daysLeft === null        => 'Tidak diketahui',
+                                    $daysLeft < 0             => 'Sudah berakhir',
+                                    $daysLeft <= 30           => 'Segera berakhir',
+                                    $daysLeft <= 90           => 'Perlu perhatian',
+                                    default                   => 'Aktif',
                                 };
                             @endphp
                             <tr class="hover:bg-gray-50/70 transition-colors">
-                                {{-- No Aset --}}
                                 <td class="py-3.5 px-4 font-semibold text-gray-900 whitespace-nowrap">
-                                    {{ $item['asset_no'] }}
+                                    {{ $item->asset_number }}
                                 </td>
-                                {{-- Nama / Tenant --}}
                                 <td class="py-3.5 px-4 text-gray-700 whitespace-nowrap font-medium">
-                                    {{ $item['tenant'] }}
+                                    {{ $item->penyewa?->fullnama ?? '-' }}
                                 </td>
-                                {{-- Jenis Aset --}}
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
-                                    {{ $item['asset_type'] }}
+                                    {{ $item->asset?->jenis_aset ?? '-' }}
                                 </td>
-                                {{-- Tgl Mulai --}}
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
-                                    {{ $item['start_date'] }}
+                                    {{ $item->start_datetime?->format('d-m-Y') ?? '-' }}
                                 </td>
-                                {{-- Tgl Akhir --}}
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
-                                    {{ $item['end_date'] }}
+                                    {{ $item->end_datetime_baru?->format('d-m-Y') ?? $item->end_datetime?->format('d-m-Y') ?? '-' }}
                                 </td>
-                                {{-- Nilai Kontrak --}}
                                 <td class="py-3.5 px-4 text-gray-900 font-semibold whitespace-nowrap">
-                                    {{ $item['contract_value'] }}
+                                    {{ $item->price_formatted }}
                                 </td>
-                                {{-- Jatuh Tempo --}}
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
-                                    {{ $item['due_date'] }}
+                                    {{ $item->due_days }}
                                 </td>
-                                {{-- Kondisi Kontrak --}}
                                 <td class="py-3.5 px-4 whitespace-nowrap">
                                     <span class="status-badge {{ $statusClass }}">
                                         <span class="dot {{ $dotClass }}"></span>
-                                        {{ $item['contract_status'] }}
+                                        {{ $kondisi }}
                                     </span>
                                 </td>
-                                {{-- Aksi --}}
                                 <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                     <div class="flex items-center justify-center gap-1.5">
-                                        {{-- View --}}
-                                        <button type="button" style="background-color: #212529;" class="flex h-7 w-7 items-center justify-center rounded-lg text-white hover:opacity-90 transition cursor-pointer" title="Lihat Detail">
-                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                <circle cx="12" cy="12" r="3" stroke-width="2"/>
-                                            </svg>
-                                        </button>
-                                        {{-- Edit --}}
-                                        <button type="button" style="background-color: #0066FF;" class="flex h-7 w-7 items-center justify-center rounded-lg text-white hover:opacity-90 transition cursor-pointer" title="Edit">
-                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                <path d="M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89783 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </button>
-                                        {{-- Delete --}}
-                                        <button type="button" style="background-color: #EF4444;" class="flex h-7 w-7 items-center justify-center rounded-lg text-white hover:opacity-90 transition cursor-pointer" title="Hapus">
-                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M3 6H5H21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                                <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </button>
+                                        <a href="{{ route('asset.detail', $item->asset_number) }}"
+                                            style="background-color: #212529;"
+                                            class="flex h-7 w-7 items-center justify-center rounded-lg text-white hover:opacity-90 transition" title="Lihat Detail">
+                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke-width="2"/></svg>
+                                        </a>
+                                        <a href="{{ route('admin.assets.edit', $item->asset_number) }}"
+                                            style="background-color: #0066FF;"
+                                            class="flex h-7 w-7 items-center justify-center rounded-lg text-white hover:opacity-90 transition" title="Edit">
+                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4C3.47 4 2.96 4.21 2.59 4.59C2.21 4.96 2 5.47 2 6V20C2 20.53 2.21 21.04 2.59 21.41C2.96 21.79 3.47 22 4 22H18C18.53 22 19.04 21.79 19.41 21.41C19.79 21.04 20 20.53 20 20V13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5C18.9 2.1 19.44 1.88 20 1.88C20.56 1.88 21.1 2.1 21.5 2.5C21.9 2.9 22.12 3.44 22.12 4C22.12 4.56 21.9 5.1 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>

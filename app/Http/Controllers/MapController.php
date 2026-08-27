@@ -2,31 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Asset;
+use App\Models\KaiAsset;
 use Illuminate\Http\Request;
 
 class MapController extends Controller
 {
     public function index()
     {
-        $assets = Asset::all();
+        $assets = KaiAsset::with('contract.penyewa')->get();
 
-        // Format data untuk JavaScript di view
-        $assetsForMap = $assets->keyBy('id')->map(function ($asset) {
+        // Format data untuk JavaScript di view — key by asset_number
+        $assetsForMap = $assets->keyBy('asset_number')->map(function ($asset) {
+            $contract = $asset->contract;
+            $penyewa  = $contract?->penyewa;
+
             return [
-                'name'      => $asset->name,
-                'code'      => $asset->asset_code ?? '',
-                'location'  => $asset->district_area ?? '',
-                'address'   => $asset->full_address ?? '',
-                'area'      => number_format((float) $asset->land_area, 2, ',', '.') . ' m²',
-                'type'      => $asset->description ?? '',
-                'value'     => $asset->price_formatted,
-                'period'    => '',
+                'name'      => $asset->asset_block_name,
+                'code'      => $asset->asset_number,
+                'location'  => $asset->stasiun,
+                'address'   => $asset->wilayah_aset,
+                'area'      => $asset->size_area_formatted,
+                'type'      => $asset->jenis_aset . ' — ' . $asset->peruntukan,
+                'value'     => $contract ? 'Rp ' . number_format((float) $contract->price, 0, ',', '.') : '-',
+                'period'    => $contract
+                    ? $contract->start_datetime->format('d/m/Y') . ' – ' . $contract->end_datetime->format('d/m/Y')
+                    : '',
+                'tenant'    => $penyewa?->fullnama ?? '-',
                 'latitude'  => (string) $asset->latitude,
                 'longitude' => (string) $asset->longitude,
             ];
         });
 
-        return view('map', ['assets' => $assetsForMap]);
+        return view('map.index', ['assets' => $assetsForMap]);
     }
 }

@@ -147,34 +147,33 @@
                         @forelse($contracts as $item)
                             <tr class="hover:bg-gray-50/70 transition-colors">
                                 <td class="py-3.5 px-4 font-semibold text-gray-900 whitespace-nowrap">
-                                    {{ $item['tenant'] }}
+                                    {{ $item->penyewa?->fullnama ?? '-' }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
-                                    {{ $item['asset_no'] }}
+                                    {{ $item->asset_number }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
-                                    {{ $item['station'] }}
+                                    {{ $item->asset?->stasiun ?? '-' }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
-                                    {{ $item['asset_type'] }}
+                                    {{ $item->asset?->jenis_aset ?? '-' }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-600 font-normal max-w-[260px] leading-snug">
-                                    {{ $item['designation'] }}
+                                    {{ $item->asset?->peruntukan ?? '-' }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
-                                    {{ $item['area'] }}
+                                    {{ $item->asset ? number_format((float)$item->asset->size_area, 0, ',', '.') : '-' }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-900 font-semibold whitespace-nowrap">
-                                    {{ $item['contract_value'] }}
+                                    {{ $item->price_formatted }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
-                                    {{ $item['due_date'] }}
+                                    {{ $item->due_days }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-700 font-medium whitespace-nowrap">
-                                    {{ $item['status'] }}
+                                    {{ $item->jenis_kontrak }}
                                 </td>
                                 <td class="py-3.5 px-4 whitespace-nowrap text-center">
-                                    {{-- Three-dot action menu --}}
                                     <div class="relative inline-block text-left action-menu-wrapper">
                                         <button
                                             type="button"
@@ -187,21 +186,22 @@
                                                 <circle cx="12" cy="19" r="1.5"/>
                                             </svg>
                                         </button>
-
-                                        {{-- Dropdown Menu --}}
                                         <div class="action-dropdown hidden absolute right-0 z-50 mt-1 w-36 origin-top-right rounded-xl bg-white border border-gray-200 shadow-lg py-1">
-                                            <a href="#" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                            <a href="{{ route('asset.detail', $item->asset_number) }}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
                                                 <x-icon name="eye" class="w-4 h-4 text-gray-400" />
                                                 <span>Lihat</span>
                                             </a>
-                                            <a href="#" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
+                                            <a href="{{ route('admin.assets.edit', $item->asset_number) }}" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
                                                 <x-icon name="pencil" class="w-4 h-4 text-blue-500" />
                                                 <span class="text-blue-600 font-medium">Edit</span>
                                             </a>
-                                            <a href="#" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-red-50 transition">
-                                                <x-icon name="trash" class="w-4 h-4 text-red-500" />
-                                                <span class="text-red-500">Hapus</span>
-                                            </a>
+                                            <form action="{{ route('admin.assets.destroy', $item->asset_number) }}" method="POST" onsubmit="return confirm('Hapus aset ini?')">
+                                                @csrf @method('DELETE')
+                                                <button type="submit" class="flex w-full items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-red-50 transition">
+                                                    <x-icon name="trash" class="w-4 h-4 text-red-500" />
+                                                    <span class="text-red-500">Hapus</span>
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </td>
