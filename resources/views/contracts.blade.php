@@ -139,7 +139,7 @@
                             <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">Luas (m²)</th>
                             <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">Nilai Kontrak</th>
                             <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">Jatuh Tempo</th>
-                            <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">Status/Invoice</th>
+                            <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">Ket/Invoice</th>
                             <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -158,7 +158,7 @@
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
                                     {{ $item['asset_type'] }}
                                 </td>
-                                <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal max-w-[280px] truncate" title="{{ $item['designation'] }}">
+                                <td class="py-3.5 px-4 text-gray-600 font-normal max-w-[260px] leading-snug">
                                     {{ $item['designation'] }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
@@ -174,19 +174,35 @@
                                     {{ $item['status'] }}
                                 </td>
                                 <td class="py-3.5 px-4 whitespace-nowrap text-center">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        {{-- View Button (Dark) --}}
-                                        <button type="button" style="background-color: #212529;" class="flex h-7 w-7 items-center justify-center rounded-lg text-white hover:opacity-90 transition shadow-xs cursor-pointer" title="Lihat Detail">
-                                            <x-icon name="eye" class="w-3.5 h-3.5 text-white" />
+                                    {{-- Three-dot action menu --}}
+                                    <div class="relative inline-block text-left action-menu-wrapper">
+                                        <button
+                                            type="button"
+                                            class="action-menu-btn flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 transition cursor-pointer"
+                                            title="Aksi"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                                                <circle cx="12" cy="5" r="1.5"/>
+                                                <circle cx="12" cy="12" r="1.5"/>
+                                                <circle cx="12" cy="19" r="1.5"/>
+                                            </svg>
                                         </button>
-                                        {{-- Edit Button (Blue) --}}
-                                        <button type="button" style="background-color: #0066FF;" class="flex h-7 w-7 items-center justify-center rounded-lg text-white hover:opacity-90 transition shadow-xs cursor-pointer" title="Edit Kontrak">
-                                            <x-icon name="pencil" class="w-3.5 h-3.5 text-white" />
-                                        </button>
-                                        {{-- Delete Button (Red) --}}
-                                        <button type="button" style="background-color: #EF4444;" class="flex h-7 w-7 items-center justify-center rounded-lg text-white hover:opacity-90 transition shadow-xs cursor-pointer" title="Hapus Kontrak">
-                                            <x-icon name="trash" class="w-3.5 h-3.5 text-white" />
-                                        </button>
+
+                                        {{-- Dropdown Menu --}}
+                                        <div class="action-dropdown hidden absolute right-0 z-50 mt-1 w-36 origin-top-right rounded-xl bg-white border border-gray-200 shadow-lg py-1">
+                                            <a href="#" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                                                <x-icon name="eye" class="w-4 h-4 text-gray-400" />
+                                                <span>Lihat</span>
+                                            </a>
+                                            <a href="#" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
+                                                <x-icon name="pencil" class="w-4 h-4 text-blue-500" />
+                                                <span class="text-blue-600 font-medium">Edit</span>
+                                            </a>
+                                            <a href="#" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-red-50 transition">
+                                                <x-icon name="trash" class="w-4 h-4 text-red-500" />
+                                                <span class="text-red-500">Hapus</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -203,6 +219,22 @@
         </div>
 
     </main>
+
+    <script>
+        // Toggle action dropdown on three-dot button click
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('.action-menu-btn');
+
+            // Close all open dropdowns first
+            document.querySelectorAll('.action-dropdown').forEach(d => d.classList.add('hidden'));
+
+            if (btn) {
+                e.stopPropagation();
+                const dropdown = btn.closest('.action-menu-wrapper').querySelector('.action-dropdown');
+                dropdown.classList.toggle('hidden');
+            }
+        });
+    </script>
 
 </body>
 

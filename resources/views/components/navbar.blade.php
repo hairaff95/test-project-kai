@@ -116,17 +116,16 @@
                 <!-- Dropdown -->
                 <div
                     id="profileDropdown"
-                    class="absolute right-0 top-full mt-2 w-52 origin-top-right rounded-2xl p-1.5 shadow-xl opacity-0 invisible scale-95 transition-all duration-200"
-                    style="background: rgba(56,56,56,1); border: 1px solid rgba(255,255,255,0.1);"
+                    class="absolute right-0 top-full mt-2 w-52 origin-top-right rounded-2xl p-2 shadow-lg opacity-0 invisible scale-95 transition-all duration-200 bg-white border border-gray-200"
                 >
 
                     <!-- Pengaturan Akun -->
                     <a
                         href="#"
-                        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white hover:bg-white/10 transition"
+                        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
                     >
-                        <x-icon name="setting" class="h-5 w-5 text-white" />
-                        <span>Pengaturan Akun</span>
+                        <x-icon name="setting" class="h-5 w-5 text-gray-500" />
+                        <span>Pengaturan</span>
                     </a>
 
                     <!-- Logout -->
@@ -134,9 +133,9 @@
                         @csrf
                         <button
                             type="submit"
-                            class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white hover:bg-white/10 transition cursor-pointer"
+                            class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition cursor-pointer"
                         >
-                            <x-icon name="logout" class="h-5 w-5 text-white" />
+                            <x-icon name="logout" class="h-5 w-5 text-gray-500" />
                             <span>Keluar</span>
                         </button>
                     </form>

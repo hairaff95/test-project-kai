@@ -7,9 +7,14 @@
 
     <title>{{ config('app.name', 'KAI Tracker') }} — Peta</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite([
             'resources/css/app.css',
+            'resources/js/app.js',
         ])
     @endif
 
@@ -561,7 +566,7 @@
         function createPopupCardHTML(asset, id) {
             const googleMapsUrl = (asset.latitude && asset.longitude) 
                 ? `https://www.google.com/maps?q=${asset.latitude},${asset.longitude}` 
-                : '#';
+                : '#';  
 
             return `
                 <div class="w-[360px] sm:w-[410px] rounded-3xl bg-white p-7 shadow-[0_20px_50px_rgba(0,0,0,0.14)] border border-gray-100/90 font-sans text-left relative">

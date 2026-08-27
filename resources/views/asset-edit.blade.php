@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Edit Aset — {{ $asset->name }} - KAI Tracker</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css'])
     @endif
@@ -16,47 +20,7 @@
     {{-- =====================================================
          NAVBAR
     ====================================================== --}}
-
-    <header class="w-full border-t bg-[#f3f3f3]">
-        <nav class="mx-auto flex h-[75px] w-full items-center justify-between px-6">
-
-            {{-- LOGO --}}
-            <div class="flex items-center whitespace-nowrap text-[16px] font-semibold italic">
-                <img src="{{ asset('image/dashboard-logo/kai-logo.svg') }}" alt="KAI" class="mr-1 h-[28px] w-[28px] -skew-x-12 object-contain">
-                Tracker<span class="text-blue-600">App</span>
-            </div>
-
-            {{-- NAVIGATION --}}
-            <ul class="flex items-center gap-1 text-[13px] text-gray-700">
-                <li><a href="{{ route('welcome') }}" class="block px-3 py-2 font-semibold text-gray-800">Dashboard</a></li>
-                <li><a href="{{ route('map') }}" class="block rounded-lg bg-[#dedede] px-3 py-2 font-semibold text-gray-800">Peta</a></li>
-                <li><a href="#" class="block rounded-lg px-3 py-2 hover:bg-[#dedede]">Daftar Kontrak</a></li>
-                <li><a href="#" class="block rounded-lg px-3 py-2 hover:bg-[#dedede]">Jatuh Tempo</a></li>
-                <li><a href="#" class="block rounded-lg px-3 py-2 hover:bg-[#dedede]">Blacklog</a></li>
-                <li><a href="#" class="block rounded-lg px-3 py-2 hover:bg-[#dedede]">Laporan</a></li>
-            </ul>
-
-            {{-- USER --}}
-            <div class="flex items-center gap-2">
-                <button type="button" class="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white">
-                    <img src="{{ asset('image/dashboard-logo/moon.svg') }}" alt="dark" class="h-[19px] w-[19px] object-contain">
-                </button>
-                <button type="button" class="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white">
-                    <img src="{{ asset('image/dashboard-logo/notification.svg') }}" alt="notification" class="h-[19px] w-[19px] object-contain">
-                </button>
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white">
-                    <img src="{{ asset('image/dashboard-logo/profile-circle.svg') }}" alt="profile" class="h-[19px] w-[19px] object-contain">
-                </div>
-                @auth
-                    <div class="leading-tight">
-                        <p class="text-[13px] font-medium">{{ Auth::user()->name }}</p>
-                        <p class="text-[12px] text-gray-500">{{ ucfirst(Auth::user()->role) }}</p>
-                    </div>
-                @endauth
-            </div>
-
-        </nav>
-    </header>
+    <x-navbar active="dashboard" />
 
 
     {{-- =====================================================
@@ -542,14 +506,66 @@
                                 >
                             </div>
 
-                            <div>
+                            <div class="relative" id="datepicker-wrapper">
                                 <p class="text-[11px] text-gray-400">Hari Berjalan <span class="text-red-500">*</span></p>
-                                <input
-                                    type="text"
-                                    name="running_days"
-                                    placeholder="Hari..."
-                                    class="mt-1 w-full rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-[12px] font-medium outline-none placeholder-gray-300 focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
+                                {{-- Hidden real input for form submit --}}
+                                <input type="hidden" name="running_days" id="running_days_value">
+                                {{-- Display trigger --}}
+                                <button
+                                    type="button"
+                                    id="datepicker-trigger"
+                                    onclick="toggleDatepicker()"
+                                    class="mt-1 w-full rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-[12px] font-medium outline-none text-gray-400 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 cursor-pointer text-left flex items-center justify-between"
                                 >
+                                    <span id="datepicker-display">Pilih tanggal...</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </button>
+
+                                {{-- Custom Calendar Popup --}}
+                                <div
+                                    id="custom-datepicker"
+                                    class="hidden absolute z-50 mt-1 left-0 bg-white rounded-2xl shadow-xl border border-gray-100 p-4 select-none"
+                                    style="min-width: 260px;"
+                                >
+                                    {{-- Header: prev / Month dropdown / Year dropdown / next --}}
+                                    <div class="flex items-center justify-between mb-3">
+                                        <button type="button" onclick="changeMonth(-1)" class="h-7 w-7 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 transition cursor-pointer">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                                        </button>
+
+                                        <div class="flex items-center gap-1">
+                                            <select id="dp-month" onchange="onMonthChange()" class="text-sm font-semibold text-gray-800 bg-transparent border-none outline-none cursor-pointer appearance-none pr-4 relative">
+                                                <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
+                                                <option value="3">Apr</option><option value="4">Mei</option><option value="5">Jun</option>
+                                                <option value="6">Jul</option><option value="7">Agu</option><option value="8">Sep</option>
+                                                <option value="9">Okt</option><option value="10">Nov</option><option value="11">Des</option>
+                                            </select>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-gray-500 -ml-3 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+
+                                            <select id="dp-year" onchange="onYearChange()" class="text-sm font-semibold text-gray-800 bg-transparent border-none outline-none cursor-pointer appearance-none pr-4 ml-1">
+                                            </select>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-gray-500 -ml-3 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                        </div>
+
+                                        <button type="button" onclick="changeMonth(1)" class="h-7 w-7 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 transition cursor-pointer">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                                        </button>
+                                    </div>
+
+                                    {{-- Day headers --}}
+                                    <div class="grid grid-cols-7 mb-1">
+                                        @foreach(['Ming','Sen','Sel','Rab','Kam','Jum','Sa'] as $day)
+                                            <div class="text-center text-[11px] font-medium text-gray-400 py-1">{{ $day }}</div>
+                                        @endforeach
+                                    </div>
+
+                                    {{-- Date grid --}}
+                                    <div id="dp-grid" class="grid grid-cols-7 gap-y-0.5">
+                                        {{-- Filled by JS --}}
+                                    </div>
+                                </div>
                             </div>
 
                             <div>
@@ -669,6 +685,145 @@
         document.querySelector('[name=district_area_table]')?.addEventListener('input', function() {
             document.querySelector('[name=district_area]').value = this.value;
         });
+
+        // =====================
+        // Custom Date Picker
+        // =====================
+        const MONTHS_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+        let dpDate = new Date();
+        let dpSelected = null;
+
+        // Populate year dropdown (10 years back, 10 ahead)
+        function initYearDropdown() {
+            const sel = document.getElementById('dp-year');
+            const cur = new Date().getFullYear();
+            for (let y = cur - 10; y <= cur + 10; y++) {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                sel.appendChild(opt);
+            }
+            sel.value = dpDate.getFullYear();
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('dp-grid');
+            grid.innerHTML = '';
+
+            const year  = dpDate.getFullYear();
+            const month = dpDate.getMonth();
+
+            document.getElementById('dp-month').value = month;
+            document.getElementById('dp-year').value  = year;
+
+            // First day of month (0=Sun)
+            const firstDay = new Date(year, month, 1).getDay();
+            // Total days in month
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            // Days in prev month
+            const daysInPrev  = new Date(year, month, 0).getDate();
+
+            const today = new Date();
+
+            let cells = [];
+
+            // Prev month trailing days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                cells.push({ day: daysInPrev - i, month: month - 1, year: month === 0 ? year - 1 : year, other: true });
+            }
+            // Current month
+            for (let d = 1; d <= daysInMonth; d++) {
+                cells.push({ day: d, month, year, other: false });
+            }
+            // Next month leading days
+            let next = 1;
+            while (cells.length % 7 !== 0) {
+                cells.push({ day: next++, month: month + 1, year: month === 11 ? year + 1 : year, other: true });
+            }
+
+            cells.forEach(c => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = c.day;
+
+                const isToday = !c.other && c.day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+                const isSelected = dpSelected && !c.other &&
+                    c.day === dpSelected.getDate() &&
+                    month === dpSelected.getMonth() &&
+                    year === dpSelected.getFullYear();
+
+                let cls = 'w-full aspect-square flex items-center justify-center rounded-full text-[12px] transition cursor-pointer ';
+
+                if (isSelected) {
+                    cls += 'bg-blue-500 text-white font-semibold ';
+                } else if (isToday) {
+                    cls += 'border border-blue-400 text-blue-500 font-semibold hover:bg-blue-50 ';
+                } else if (c.other) {
+                    cls += 'text-gray-300 hover:bg-gray-50 ';
+                } else {
+                    cls += 'text-gray-700 hover:bg-gray-100 ';
+                }
+
+                btn.className = cls;
+
+                btn.addEventListener('click', () => {
+                    dpSelected = new Date(c.year, c.month, c.day);
+                    dpDate = new Date(c.year, c.month, 1);
+
+                    // Format display: DD/MM/YYYY
+                    const dd = String(dpSelected.getDate()).padStart(2,'0');
+                    const mm = String(dpSelected.getMonth()+1).padStart(2,'0');
+                    const yyyy = dpSelected.getFullYear();
+
+                    document.getElementById('datepicker-display').textContent = `${dd}/${mm}/${yyyy}`;
+                    document.getElementById('datepicker-display').classList.remove('text-gray-400');
+                    document.getElementById('datepicker-display').classList.add('text-gray-800');
+                    document.getElementById('running_days_value').value = `${yyyy}-${mm}-${dd}`;
+
+                    closeDatepicker();
+                });
+
+                grid.appendChild(btn);
+            });
+        }
+
+        function toggleDatepicker() {
+            const dp = document.getElementById('custom-datepicker');
+            dp.classList.toggle('hidden');
+            if (!dp.classList.contains('hidden')) renderCalendar();
+        }
+
+        function closeDatepicker() {
+            document.getElementById('custom-datepicker').classList.add('hidden');
+        }
+
+        function changeMonth(delta) {
+            dpDate.setMonth(dpDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function onMonthChange() {
+            dpDate.setMonth(parseInt(document.getElementById('dp-month').value));
+            renderCalendar();
+        }
+
+        function onYearChange() {
+            dpDate.setFullYear(parseInt(document.getElementById('dp-year').value));
+            renderCalendar();
+        }
+
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            const wrapper = document.getElementById('datepicker-wrapper');
+            if (wrapper && !wrapper.contains(e.target)) {
+                closeDatepicker();
+            }
+        });
+
+        // Init year dropdown on load
+        initYearDropdown();
     </script>
 
 </body>

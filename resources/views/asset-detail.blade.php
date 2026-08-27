@@ -7,9 +7,14 @@
 
     <title>{{ $asset->name }} - KAI Tracker</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite([
             'resources/css/app.css',
+            'resources/js/app.js',
         ])
     @endif
 </head>
@@ -19,113 +24,7 @@
     {{-- =====================================================
          NAVBAR
     ====================================================== --}}
-
-    <header class="w-full border-t bg-[#f3f3f3]">
-
-        <nav class="mx-auto flex h-[75px] w-full items-center justify-between px-6">
-
-            {{-- LOGO --}}
-
-            <div class="flex items-center whitespace-nowrap text-[16px] font-semibold italic">
-
-                <img
-                    src="{{ asset('image/dashboard-logo/kai-logo.svg') }}"
-                    alt="KAI"
-                    class="mr-1 h-[28px] w-[28px] -skew-x-12 object-contain"
-                >
-
-                Tracker<span class="text-blue-600">App</span>
-
-            </div>
-
-
-            {{-- NAVIGATION --}}
-
-            <ul class="flex items-center gap-1 text-[13px] text-gray-700">
-
-                <li>
-                    <a
-                        href="{{ route('welcome') }}"
-                        class="block px-3 py-2 font-semibold text-gray-800"
-                    >
-                        Dashboard
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        href="{{ route('map') }}"
-                        class="block rounded-lg bg-[#dedede] px-3 py-2 font-semibold text-gray-800"
-                    >
-                        Peta
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#" class="block rounded-lg px-3 py-2 hover:bg-[#dedede]">Daftar Kontrak</a>
-                </li>
-
-                <li>
-                    <a href="#" class="block rounded-lg px-3 py-2 hover:bg-[#dedede]">Jatuh Tempo</a>
-                </li>
-
-                <li>
-                    <a href="#" class="block rounded-lg px-3 py-2 hover:bg-[#dedede]">Blacklog</a>
-                </li>
-
-                <li>
-                    <a href="#" class="block rounded-lg px-3 py-2 hover:bg-[#dedede]">Laporan</a>
-                </li>
-
-            </ul>
-
-
-            {{-- USER --}}
-
-            <div class="flex items-center gap-2">
-
-                <button
-                    type="button"
-                    class="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white"
-                >
-                    <img
-                        src="{{ asset('image/dashboard-logo/moon.svg') }}"
-                        alt="dark"
-                        class="h-[19px] w-[19px] object-contain"
-                    >
-                </button>
-
-                <button
-                    type="button"
-                    class="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white"
-                >
-                    <img
-                        src="{{ asset('image/dashboard-logo/notification.svg') }}"
-                        alt="notification"
-                        class="h-[19px] w-[19px] object-contain"
-                    >
-                </button>
-
-                <div class="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white">
-                    <img
-                        src="{{ asset('image/dashboard-logo/profile-circle.svg') }}"
-                        alt="profile"
-                        class="h-[19px] w-[19px] object-contain"
-                    >
-                </div>
-
-                @auth
-                    <div class="leading-tight">
-                        <p class="text-[13px] font-medium">{{ Auth::user()->name }}</p>
-                        <p class="text-[12px] text-gray-500">{{ ucfirst(Auth::user()->role) }}</p>
-                    </div>
-                @endauth
-
-            </div>
-
-        </nav>
-
-    </header>
+    <x-navbar active="dashboard" />
 
 
 
