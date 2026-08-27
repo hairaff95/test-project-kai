@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\JatuhTempoController;
+use App\Http\Controllers\BacklogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MapController;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('welcome')
 Route::get('/daftar-kontrak', [ContractController::class, 'index'])->name('contracts.index');
 Route::get('/contracts', [ContractController::class, 'index'])->name('contracts.alias');
 Route::get('/jatuh-tempo', [JatuhTempoController::class, 'index'])->name('due-dates.index');
+Route::get('/backlog', [BacklogController::class, 'index'])->name('backlog.index');
 Route::get('/asset/{id}', function ($id) {
     $asset = \App\Models\Asset::with('images')->findOrFail($id);
     return view('asset-detail', compact('asset'));

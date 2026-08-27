@@ -46,7 +46,7 @@
             </li>
             <li>
                 <a
-                    href="#"
+                    href="{{ route('backlog.index') }}"
                     class="inline-block py-2 transition {{ $active === 'blacklog' ? 'rounded-xl bg-[#DCDCDC] px-4 font-semibold text-[#171717] shadow-none' : 'hover:text-[#171717]' }}"
                 >
                     Blacklog
@@ -117,7 +117,7 @@
                 <div
                     id="profileDropdown"
                     class="absolute right-0 top-full mt-2 w-52 origin-top-right rounded-2xl p-1.5 shadow-xl opacity-0 invisible scale-95 transition-all duration-200"
-                    style="background: rgba(56,56,56,0.30); border: 1px solid rgba(255,255,255,0.1);"
+                    style="background: rgba(56,56,56,1); border: 1px solid rgba(255,255,255,0.1);"
                 >
 
                     <!-- Pengaturan Akun -->
@@ -171,7 +171,7 @@
         </a>
 
         <!-- Blacklog (Scan Icon) -->
-        <a href="#" class="flex h-10 w-10 items-center justify-center rounded-full {{ $active === 'blacklog' ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Blacklog">
+        <a href="{{ route('backlog.index') }}" class="flex h-10 w-10 items-center justify-center rounded-full {{ $active === 'blacklog' ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Blacklog">
             <x-icon name="nav-scan" class="h-5 w-5" />
         </a>
 
