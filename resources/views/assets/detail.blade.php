@@ -21,7 +21,7 @@
             $contract  = $asset->contract;
             $financial = $contract?->financial;
             $monthly   = $contract?->monthlySchedules->first();
-            $penyewa   = $contract?->penyewa;
+            $tenant    = $contract?->tenant;
         @endphp
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-[325px_1fr]">
@@ -89,10 +89,10 @@
                             </div>
                         @endif
 
-                        @if($penyewa)
+                        @if($tenant)
                             <div class="col-span-2">
                                 <p class="text-[11px] text-gray-400">Ket. Pendapatan / Penyewa</p>
-                                <p class="mt-[3px] text-[11px] font-semibold leading-[1.4] text-gray-700">{{ $penyewa->fullnama }}</p>
+                                <p class="mt-[3px] text-[11px] font-semibold leading-[1.4] text-gray-700">{{ $tenant->fullname }}</p>
                             </div>
                         @endif
 
@@ -114,8 +114,8 @@
                         <h1 class="text-[30px] font-semibold leading-tight tracking-[-0.5px]">
                             {{ $asset->asset_block_name }}
                         </h1>
-                        <p class="mt-1 text-[12px] text-gray-400">
-                            {{ $asset->jenis_aset }}
+                        <p class="mt-3 text-[12px] text-gray-400">
+                            {{ $asset->jenis_asset }}
                         </p>
                     </div>
 
@@ -156,7 +156,11 @@
                 </div>
 
                 {{-- DESKRIPSI --}}
-                @if($contract?->keterangan)
+                @if($asset->description)
+                    <p class="mb-5 max-w-[680px] text-[13px] leading-[1.6] text-gray-500">
+                        {{ $asset->description }}
+                    </p>
+                @elseif($contract?->keterangan)
                     <p class="mb-5 max-w-[680px] text-[13px] leading-[1.6] text-gray-500">
                         {{ $contract->keterangan }}
                     </p>
@@ -169,20 +173,19 @@
 
                 <div class="overflow-hidden rounded-[14px] border border-[#cfcfcf]">
                     <div class="grid grid-cols-3">
-
                         <div class="flex min-h-[52px] items-center border-b border-r border-[#d5d5d5]">
                             <div class="w-[50%] bg-[#f5f5f5] px-3 py-3 text-[11px] font-medium">Wilayah Aset</div>
-                            <div class="flex w-[50%] items-center justify-end px-3 text-right text-[11px]">{{ $asset->wilayah_aset }}</div>
+                            <div class="flex w-[50%] items-center justify-end px-3 text-right text-[11px]">{{ $asset->wilayah_asset }}</div>
                         </div>
 
                         <div class="flex min-h-[52px] items-center border-b border-r border-[#d5d5d5]">
                             <div class="w-[50%] bg-[#f5f5f5] px-3 py-3 text-[11px] font-medium">Jenis Aset</div>
-                            <div class="flex w-[50%] items-center justify-end px-3 text-right text-[11px]">{{ $asset->jenis_aset }}</div>
+                            <div class="flex w-[50%] items-center justify-end px-3 text-right text-[11px]">{{ $asset->jenis_asset }}</div>
                         </div>
 
-                        <div class="row-span-2 flex items-center border-b border-[#d5d5d5]">
+                        <div class="row-span-3 flex items-center border-b border-[#d5d5d5]">
                             <div class="w-[35%] bg-[#f5f5f5] px-3 py-3 text-[11px] font-medium">Alamat Aset</div>
-                            <div class="flex w-[65%] items-center px-3 py-2 text-[11px] leading-[1.45]">{{ $asset->wilayah_aset }}, Stasiun {{ $asset->stasiun }}</div>
+                            <div class="flex w-[65%] items-center px-3 py-2 text-[11px] leading-[1.45]">{{ $asset->wilayah_asset }}, Stasiun {{ $asset->stasiun }}</div>
                         </div>
 
                         <div class="flex min-h-[52px] items-center border-b border-r border-[#d5d5d5]">
@@ -196,10 +199,6 @@
                         </div>
 
                         @if($contract)
-                            <div class="flex min-h-[52px] items-center border-r border-[#d5d5d5]">
-                                <div class="w-[50%] bg-[#f5f5f5] px-3 py-3 text-[11px] font-medium">Tipe Lahan</div>
-                                <div class="flex w-[50%] items-center justify-end px-3 text-right text-[11px]">{{ $contract->area_kontrak }}</div>
-                            </div>
 
                             <div class="flex min-h-[52px] items-center border-t border-r border-[#d5d5d5]">
                                 <div class="w-[50%] bg-[#f5f5f5] px-3 py-3 text-[11px] font-medium">Jenis Kontrak</div>
@@ -207,9 +206,9 @@
                             </div>
                         @endif
 
-                        <div class="flex min-h-[52px] items-center border-t border-[#d5d5d5]">
-                            <div class="w-[35%] bg-[#f5f5f5] px-3 py-3 text-[11px] font-medium">Peruntukan</div>
-                            <div class="flex w-[65%] items-center px-3 py-2 text-[11px] leading-[1.45]">{{ $asset->peruntukan }}</div>
+                        <div class="flex min-h-[52px] items-center border-t border-r border-[#d5d5d5]">
+                            <div class="w-[50%] bg-[#f5f5f5] px-3 py-3 text-[11px] font-medium">Peruntukan</div>
+                            <div class="flex w-[50%] items-center justify-end px-3 text-right text-[11px]">{{ $asset->peruntukan }}</div>
                         </div>
 
                     </div>

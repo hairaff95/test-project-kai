@@ -7,20 +7,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Penyewa extends Model
 {
-    protected $table = 'penyewa';
+    protected $table = 'tenants';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'fullnama',
-        'status_pelanggan',
+        'fullname',
+        'status_customer',
         'jenis_perusahaan',
-        'merek',
-        'dibuat_pada',
+        'brand',
+        'created_at',
     ];
 
     public function contracts(): HasMany
     {
-        return $this->hasMany(Contract::class, 'tenant_id');
+        return $this->hasMany(KaiContract::class, 'tenant_id');
     }
 }

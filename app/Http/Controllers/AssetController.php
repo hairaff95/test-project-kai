@@ -108,7 +108,7 @@ class AssetController extends Controller
 
     public function showKai(string $asset_number)
     {
-        $asset = KaiAsset::with('contract.penyewa', 'contract.financial', 'contract.monthlySchedules')
+        $asset = KaiAsset::with('contract.tenant', 'contract.financial', 'contract.monthlySchedules')
             ->where('asset_number', $asset_number)
             ->firstOrFail();
 

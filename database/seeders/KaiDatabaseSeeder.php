@@ -9,11 +9,11 @@ class KaiDatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // ── Penyewa ────────────────────────────────────────────
-        DB::table('penyewa')->insert([
-            ['id' => 1, 'fullnama' => 'PT Kargo Cepat Pantura',     'status_pelanggan' => 'Aktif',  'jenis_perusahaan' => 'PT',  'merek' => 'KCP Logistics',     'dibuat_pada' => now()],
-            ['id' => 2, 'fullnama' => 'Drs. Bambang Sudarsono',      'status_pelanggan' => 'Aktif',  'jenis_perusahaan' => 'Perorangan', 'merek' => '-',           'dibuat_pada' => now()],
-            ['id' => 3, 'fullnama' => 'CV Sumber Rejeki Semarang',   'status_pelanggan' => 'Aktif',  'jenis_perusahaan' => 'CV',  'merek' => 'Sumber Rejeki',     'dibuat_pada' => now()],
+        // ── Tenants ────────────────────────────────────────────
+        DB::table('tenants')->insert([
+            ['id' => 1, 'fullname' => 'PT Kargo Cepat Pantura',     'status_customer' => 'Aktif',  'jenis_perusahaan' => 'PT',         'brand' => 'KCP Logistics', 'created_at' => now()],
+            ['id' => 2, 'fullname' => 'Drs. Bambang Sudarsono',      'status_customer' => 'Aktif',  'jenis_perusahaan' => 'Perorangan', 'brand' => null,            'created_at' => now()],
+            ['id' => 3, 'fullname' => 'CV Sumber Rejeki Semarang',   'status_customer' => 'Aktif',  'jenis_perusahaan' => 'CV',         'brand' => 'Sumber Rejeki', 'created_at' => now()],
         ]);
 
         // ── Assets ─────────────────────────────────────────────
@@ -23,9 +23,9 @@ class KaiDatabaseSeeder extends Seeder
                 'asset_block_name' => 'PT Kargo Cepat Pantura',
                 'size_area'        => 850.00,
                 'peruntukan'       => 'Depo Logistik & Kantor Ekspedisi',
-                'jenis_aset'       => 'Tanah',
+                'jenis_asset'      => 'Tanah',
                 'stasiun'          => 'Semarang Poncol',
-                'wilayah_aset'     => 'Daop 4 Semarang',
+                'wilayah_asset'    => 'Daop 4 Semarang',
                 'latitude'         => -6.96970000,
                 'longitude'        => 110.41370000,
                 'created_at'       => now(),
@@ -35,9 +35,9 @@ class KaiDatabaseSeeder extends Seeder
                 'asset_block_name' => 'Gudang Logistik Tegal Timur',
                 'size_area'        => 2462.00,
                 'peruntukan'       => 'Gudang Logistik Komersial & Pergudangan Pelabuhan',
-                'jenis_aset'       => 'Bangunan Dinas',
+                'jenis_asset'      => 'Bangunan Dinas',
                 'stasiun'          => 'Tegal',
-                'wilayah_aset'     => 'Daop 4 Semarang',
+                'wilayah_asset'    => 'Daop 4 Semarang',
                 'latitude'         => -6.87900000,
                 'longitude'        => 109.12500000,
                 'created_at'       => now(),
@@ -47,9 +47,9 @@ class KaiDatabaseSeeder extends Seeder
                 'asset_block_name' => 'Eks Gudang Kaligawe',
                 'size_area'        => 2500.00,
                 'peruntukan'       => 'Pergudangan & Industri Ringan',
-                'jenis_aset'       => 'Gudang',
+                'jenis_asset'      => 'Gudang',
                 'stasiun'          => 'Semarang Tawang',
-                'wilayah_aset'     => 'Daop 4 Semarang',
+                'wilayah_asset'    => 'Daop 4 Semarang',
                 'latitude'         => -6.95530000,
                 'longitude'        => 110.45610000,
                 'created_at'       => now(),

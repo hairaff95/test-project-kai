@@ -44,7 +44,7 @@ class KaiContract extends Model
         'created_at'          => 'datetime',
     ];
 
-    public function penyewa(): BelongsTo
+    public function tenant(): BelongsTo
     {
         return $this->belongsTo(Penyewa::class, 'tenant_id');
     }

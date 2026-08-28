@@ -195,10 +195,10 @@
                                     {{ $item->asset_number }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-700 whitespace-nowrap font-medium">
-                                    {{ $item->penyewa?->fullnama ?? '-' }}
+                                    {{ $item->tenant?->fullname ?? '-' }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
-                                    {{ $item->asset?->jenis_aset ?? '-' }}
+                                    {{ $item->asset?->jenis_asset ?? '-' }}
                                 </td>
                                 <td class="py-3.5 px-4 text-gray-600 whitespace-nowrap font-normal">
                                     {{ $item->start_datetime?->format('d-m-Y') ?? '-' }}
@@ -219,17 +219,19 @@
                                     </span>
                                 </td>
                                 <td class="py-3.5 px-4 whitespace-nowrap text-center">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <a href="{{ route('asset.detail', $item->asset_number) }}"
-                                            style="background-color: #212529;"
-                                            class="flex h-7 w-7 items-center justify-center rounded-lg text-white hover:opacity-90 transition" title="Lihat Detail">
-                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke-width="2"/></svg>
-                                        </a>
-                                        <a href="{{ route('admin.assets.edit', $item->asset_number) }}"
-                                            style="background-color: #0066FF;"
-                                            class="flex h-7 w-7 items-center justify-center rounded-lg text-white hover:opacity-90 transition" title="Edit">
-                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4C3.47 4 2.96 4.21 2.59 4.59C2.21 4.96 2 5.47 2 6V20C2 20.53 2.21 21.04 2.59 21.41C2.96 21.79 3.47 22 4 22H18C18.53 22 19.04 21.79 19.41 21.41C19.79 21.04 20 20.53 20 20V13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5C18.9 2.1 19.44 1.88 20 1.88C20.56 1.88 21.1 2.1 21.5 2.5C21.9 2.9 22.12 3.44 22.12 4C22.12 4.56 21.9 5.1 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                        </a>
+                                    <div class="relative inline-block text-left action-menu-wrapper"
+                                         data-asset="{{ $item->asset_number }}">
+                                        <button
+                                            type="button"
+                                            class="action-menu-btn flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 transition cursor-pointer"
+                                            title="Aksi"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                                                <circle cx="12" cy="5" r="1.5"/>
+                                                <circle cx="12" cy="12" r="1.5"/>
+                                                <circle cx="12" cy="19" r="1.5"/>
+                                            </svg>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -246,6 +248,80 @@
         </div>
 
     </main>
+
+    {{-- Global dropdown — di luar tabel, pakai position fixed agar tidak terpotong overflow --}}
+    <div id="global-action-dropdown" class="hidden fixed z-[9999] w-40 rounded-xl bg-white border border-gray-200 shadow-lg py-1">
+        <a id="dd-lihat" href="#" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+            <svg class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke-width="2"/></svg>
+            <span>Lihat</span>
+        </a>
+        <a id="dd-edit" href="#" class="flex items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 transition">
+            <svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4C3.47 4 2.96 4.21 2.59 4.59C2.21 4.96 2 5.47 2 6V20C2 20.53 2.21 21.04 2.59 21.41C2.96 21.79 3.47 22 4 22H18C18.53 22 19.04 21.79 19.41 21.41C19.79 21.04 20 20.53 20 20V13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5C18.9 2.1 19.44 1.88 20 1.88C20.56 1.88 21.1 2.1 21.5 2.5C21.9 2.9 22.12 3.44 22.12 4C22.12 4.56 21.9 5.1 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="text-blue-600 font-medium">Edit</span>
+        </a>
+        <form id="dd-delete-form" method="POST" onsubmit="return confirm('Hapus aset ini?')">
+            @csrf @method('DELETE')
+            <button type="submit" class="flex w-full items-center gap-2.5 px-4 py-2 text-sm text-gray-700 hover:bg-red-50 transition">
+                <svg class="w-4 h-4 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 6l-1 14H6L5 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6M14 11v6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 6V4h6v2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="text-red-500">Hapus</span>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        (function () {
+            const dropdown     = document.getElementById('global-action-dropdown');
+            const ddLihat      = document.getElementById('dd-lihat');
+            const ddEdit       = document.getElementById('dd-edit');
+            const ddDeleteForm = document.getElementById('dd-delete-form');
+
+            const routes = {};
+            @foreach($contracts as $item)
+            routes['detail_{{ $item->asset_number }}'] = '{{ route('asset.detail', $item->asset_number) }}';
+            routes['edit_{{ $item->asset_number }}']   = '{{ route('admin.assets.edit', $item->asset_number) }}';
+            routes['delete_{{ $item->asset_number }}'] = '{{ route('admin.assets.destroy', $item->asset_number) }}';
+            @endforeach
+
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest('.action-menu-btn');
+
+                if (btn) {
+                    e.stopPropagation();
+
+                    const wrapper = btn.closest('.action-menu-wrapper');
+                    const assetId = wrapper.dataset.asset;
+                    const rect    = btn.getBoundingClientRect();
+                    const dropW   = 160;
+
+                    let left = rect.right - dropW;
+                    let top  = rect.bottom + 4;
+
+                    ddLihat.href        = routes[`detail_${assetId}`];
+                    ddEdit.href         = routes[`edit_${assetId}`];
+                    ddDeleteForm.action = routes[`delete_${assetId}`];
+
+                    if (!dropdown.classList.contains('hidden') && dropdown.dataset.open === assetId) {
+                        dropdown.classList.add('hidden');
+                        dropdown.dataset.open = '';
+                        return;
+                    }
+
+                    dropdown.style.top    = top + 'px';
+                    dropdown.style.left   = left + 'px';
+                    dropdown.dataset.open = assetId;
+                    dropdown.classList.remove('hidden');
+                } else if (!e.target.closest('#global-action-dropdown')) {
+                    dropdown.classList.add('hidden');
+                    dropdown.dataset.open = '';
+                }
+            });
+
+            document.addEventListener('scroll', function () {
+                dropdown.classList.add('hidden');
+                dropdown.dataset.open = '';
+            }, true);
+        })();
+    </script>
 
 </body>
 

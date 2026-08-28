@@ -10,7 +10,7 @@ class JatuhTempoController extends Controller
     public function index(Request $request)
     {
         // Ambil kontrak yang akan jatuh tempo dalam 6 bulan ke depan, diurutkan paling dekat
-        $contracts = KaiContract::with(['penyewa', 'asset'])
+        $contracts = KaiContract::with(['tenant', 'asset'])
             ->whereNotNull('end_datetime_baru')
             ->where('end_datetime_baru', '>=', now())
             ->where('end_datetime_baru', '<=', now()->addMonths(6))
@@ -19,7 +19,7 @@ class JatuhTempoController extends Controller
 
         // Jika belum ada data, tampilkan semua kontrak
         if ($contracts->isEmpty()) {
-            $contracts = KaiContract::with(['penyewa', 'asset'])
+            $contracts = KaiContract::with(['tenant', 'asset'])
                 ->orderBy('end_datetime_baru', 'asc')
                 ->get();
         }

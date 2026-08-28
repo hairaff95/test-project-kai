@@ -9,26 +9,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('assets', function (Blueprint $table) {
-            $table->id();
-            $table->string('asset_code')->unique();
-            $table->string('name');
-            $table->string('district_area');
-            $table->text('full_address');
-            $table->longText('description')->nullable();
-            $table->decimal('land_area', 10, 2)->default(0);
-            $table->decimal('building_area', 10, 2)->default(0);
-            $table->decimal('price', 15, 2)->default(0);
-            $table->string('road_access')->nullable();
-            $table->string('electricity')->nullable();
-            $table->string('water_supply')->nullable();
-            $table->string('security')->nullable();
-            $table->string('contact_person')->nullable();
-            $table->string('contact_phone')->nullable();
-            $table->decimal('latitude', 10, 7);
-            $table->decimal('longitude', 10, 7);
-            $table->enum('status', ['available', 'reserved', 'sold'])->default('available');
-            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->timestamps();
+            $table->string('asset_number', 100)->primary();
+            $table->string('asset_block_name', 255)->nullable();
+            $table->string('sub_title', 255)->nullable();
+            $table->text('description')->nullable();
+            $table->decimal('size_area', 10, 2)->nullable();
+            $table->string('peruntukan', 100)->nullable();
+            $table->string('jenis_asset', 100)->nullable();
+            $table->string('stasiun', 100)->nullable();
+            $table->string('wilayah_asset', 100)->nullable();
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

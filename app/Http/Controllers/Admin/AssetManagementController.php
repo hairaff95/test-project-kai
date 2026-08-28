@@ -184,9 +184,9 @@ class AssetManagementController extends Controller
             'asset_block_name' => 'required|string|max:255',
             'size_area'        => 'required|numeric|min:0',
             'peruntukan'       => 'nullable|string|max:100',
-            'jenis_aset'       => 'nullable|string|max:100',
+            'jenis_asset'       => 'nullable|string|max:100',
             'stasiun'          => 'nullable|string|max:100',
-            'wilayah_aset'     => 'nullable|string|max:100',
+            'wilayah_asset'     => 'nullable|string|max:100',
             'latitude'         => 'nullable|numeric',
             'longitude'        => 'nullable|numeric',
         ]);

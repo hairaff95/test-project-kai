@@ -151,8 +151,8 @@
                             >
                             <input
                                 type="text"
-                                name="wilayah_aset"
-                                value="{{ old('wilayah_aset', $asset->wilayah_aset) }}"
+                                name="wilayah_asset"
+                                value="{{ old('wilayah_asset', $asset->wilayah_asset) }}"
                                 placeholder="Wilayah Aset..."
                                 class="mt-1 w-full border-0 bg-transparent text-[12px] text-gray-400 outline-none placeholder-gray-300 focus:text-gray-600"
                             >
@@ -194,20 +194,20 @@
                             <div class="flex min-h-[52px] items-center border-b border-r border-[#d5d5d5]">
                                 <div class="w-[50%] bg-[#f5f5f5] px-3 py-3 text-[11px] font-medium">Wilayah Aset <span class="text-red-500">*</span></div>
                                 <div class="flex w-[50%] px-2">
-                                    <input type="text" name="wilayah_aset_table"
-                                        value="{{ old('wilayah_aset', $asset->wilayah_aset) }}"
+                                    <input type="text" name="wilayah_asset_table"
+                                        value="{{ old('wilayah_asset', $asset->wilayah_asset) }}"
                                         placeholder="Wilayah..."
                                         class="w-full bg-transparent text-right text-[11px] outline-none placeholder-gray-300"
-                                        oninput="document.querySelector('[name=wilayah_aset]').value=this.value">
+                                        oninput="document.querySelector('[name=wilayah_asset]').value=this.value">
                                 </div>
                             </div>
 
                             <div class="flex min-h-[52px] items-center border-b border-r border-[#d5d5d5]">
                                 <div class="w-[50%] bg-[#f5f5f5] px-3 py-3 text-[11px] font-medium">Jenis Aset <span class="text-red-500">*</span></div>
                                 <div class="flex w-[50%] px-2">
-                                    <select name="jenis_aset" class="w-full bg-transparent text-right text-[11px] outline-none">
+                                    <select name="jenis_asset" class="w-full bg-transparent text-right text-[11px] outline-none">
                                         @foreach(['Tanah','Bangunan Dinas','Gudang','Ruko','Lahan Komersial'] as $opt)
-                                            <option value="{{ $opt }}" {{ old('jenis_aset', $asset->jenis_aset) === $opt ? 'selected' : '' }}>{{ $opt }}</option>
+                                            <option value="{{ $opt }}" {{ old('jenis_asset', $asset->jenis_asset) === $opt ? 'selected' : '' }}>{{ $opt }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -217,7 +217,7 @@
                                 <div class="w-[35%] bg-[#f5f5f5] px-3 py-3 text-[11px] font-medium">Alamat Aset</div>
                                 <div class="flex w-[65%] px-2 py-2">
                                     <textarea name="alamat_display" rows="3" placeholder="Alamat lengkap..."
-                                        class="w-full bg-transparent text-[11px] leading-[1.45] outline-none placeholder-gray-300 resize-none">{{ old('alamat_display', $asset->wilayah_aset.', Stasiun '.$asset->stasiun) }}</textarea>
+                                        class="w-full bg-transparent text-[11px] leading-[1.45] outline-none placeholder-gray-300 resize-none">{{ old('alamat_display', $asset->wilayah_asset.', Stasiun '.$asset->stasiun) }}</textarea>
                                 </div>
                             </div>
 
@@ -386,8 +386,8 @@
     </main>
 
     <script>
-        document.querySelector('[name=wilayah_aset_table]')?.addEventListener('input', function() {
-            document.querySelector('[name=wilayah_aset]').value = this.value;
+        document.querySelector('[name=wilayah_asset_table]')?.addEventListener('input', function() {
+            document.querySelector('[name=wilayah_asset]').value = this.value;
         });
     </script>
 
