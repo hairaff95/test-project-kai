@@ -2,51 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    /**
+     * Show the login page.
+     */
     public function showLogin()
     {
-        if (Auth::check()) {
-            return redirect()->route('admin.assets.index');
-        }
-
         return view('auth.login');
     }
 
+    /**
+     * Handle the login request.
+     * For now, bypasses credentials so clicking 'Masuk' logs in directly.
+     */
     public function login(Request $request)
     {
-        $request->validate([
-            'login'    => ['required', 'string'],
-            'password' => ['required', 'string', 'min:6'],
-        ], [
-            'login.required'    => 'Email atau username wajib diisi.',
-            'password.required' => 'Kata sandi wajib diisi.',
-            'password.min'      => 'Kata sandi minimal 6 karakter.',
-        ]);
+        $user = User::first();
 
-        $loginInput = $request->input('login');
-        $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-        
-        $credentials = [
-            $fieldType => $loginInput,
-            'password' => $request->input('password')
-        ];
-
-        $remember = $request->boolean('remember');
-
-        if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
-            return redirect()->intended(route('admin.assets.index'));
+        if ($user) {
+            Auth::login($user);
         }
 
-        return back()
-            ->withInput($request->only('login'))
-            ->with('error', 'Kredensial email/username atau kata sandi tidak cocok.');
+        $request->session()->regenerate();
+
+        return redirect()->route('welcome');
     }
 
+    /**
+     * Show the OTP code verification page.
+     */
+    public function showVerifyCode()
+    {
+        return view('auth.verify-code');
+    }
+
+    /**
+     * Show the reset/change password page.
+     */
+    public function showResetPassword()
+    {
+        return view('auth.reset-password');
+    }
+
+    /**
+     * Handle logout and redirect to login page.
+     */
     public function logout(Request $request)
     {
         Auth::logout();

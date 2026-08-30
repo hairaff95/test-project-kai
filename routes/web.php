@@ -1,65 +1,61 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\JatuhTempoController;
 use App\Http\Controllers\BacklogController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MapController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\AssetController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Admin\AssetManagementController;
-use App\Http\Controllers\Admin\UserManagementController;
 
-// Auth
+/*
+|--------------------------------------------------------------------------
+| Web Routes — KAI Tracker App
+|--------------------------------------------------------------------------
+*/
+
+// ================= AUTHENTICATION & PASSWORD RESET =================
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/verifikasi-kode', [AuthController::class, 'showVerifyCode'])->name('password.verify');
+Route::get('/ubah-kata-sandi', [AuthController::class, 'showResetPassword'])->name('password.reset');
 
-// Public — redirect ke map karena pakai schema baru
-Route::get('/', fn() => redirect()->route('map'))->name('assets.index');
-Route::get('/assets', fn() => redirect()->route('map'))->name('assets.catalog');
-Route::get('/assets/{id}', fn() => redirect()->route('map'))->name('assets.show');
-Route::get('/faq', fn() => view('faq.index', ['role' => 'user']))->name('faq');
-Route::get('/settings', fn() => view('settings.index', ['user' => null]))->name('settings');
+// ================= PENGATURAN (SUPER ADMIN) =================
+Route::get('/pengaturan', function () {
+    return view('settings.index', ['active' => 'pengaturan']);
+})->name('settings.index');
 
-// Fitur dari Teman (Map, Dashboard, Asset Detail, Daftar Kontrak, Jatuh Tempo)
+// ================= DASHBOARD & MAP =================
+Route::get('/', [DashboardController::class, 'index'])->name('welcome');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/map', [MapController::class, 'index'])->name('map');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('welcome');
+
+// ================= DAFTAR KONTRAK =================
 Route::get('/daftar-kontrak', [ContractController::class, 'index'])->name('contracts.index');
+Route::get('/daftar-kontrak/{asset_number}/edit', [ContractController::class, 'edit'])->name('contracts.edit');
+Route::put('/daftar-kontrak/{asset_number}', [ContractController::class, 'update'])->name('contracts.update');
 Route::get('/contracts', [ContractController::class, 'index'])->name('contracts.alias');
+
+// ================= JATUH TEMPO =================
 Route::get('/jatuh-tempo', [JatuhTempoController::class, 'index'])->name('due-dates.index');
+Route::get('/jatuh-tempo/{asset_number}/edit', [JatuhTempoController::class, 'edit'])->name('due-dates.edit');
+Route::put('/jatuh-tempo/{asset_number}', [JatuhTempoController::class, 'update'])->name('due-dates.update');
+
+// ================= BACKLOG =================
 Route::get('/backlog', [BacklogController::class, 'index'])->name('backlog.index');
+Route::get('/backlog/{asset_number}/edit', [BacklogController::class, 'edit'])->name('backlog.edit');
+Route::put('/backlog/{asset_number}', [BacklogController::class, 'update'])->name('backlog.update');
+
+// ================= LAPORAN =================
+Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+Route::get('/laporan/{asset_number}/edit', [LaporanController::class, 'edit'])->name('laporan.edit');
+Route::put('/laporan/{asset_number}', [LaporanController::class, 'update'])->name('laporan.update');
+Route::get('/reports', [LaporanController::class, 'index'])->name('reports.alias');
+
+// ================= DETAIL & HAPUS ASET =================
 Route::get('/asset/{asset_number}', [AssetController::class, 'showKai'])->name('asset.detail');
-
-// Edit & Update aset — pakai KaiAsset (asset_number sebagai key)
-Route::get('/admin/assets/{asset_number}/edit', function ($asset_number) {
-    $asset = \App\Models\KaiAsset::with('contract.financial', 'contract.monthlySchedules')
-        ->where('asset_number', $asset_number)->firstOrFail();
-    return view('assets.edit', compact('asset'));
-})->name('admin.assets.edit');
-
-Route::put('/admin/assets/{asset_number}', [\App\Http\Controllers\Admin\AssetManagementController::class, 'updateKai'])->name('admin.assets.update');
-Route::delete('/admin/assets/{asset_number}', [\App\Http\Controllers\Admin\AssetManagementController::class, 'destroyKai'])->name('admin.assets.destroy');
-
-// Favorites — dinonaktifkan (tabel tidak ada di schema baru)
-Route::get('/favorites', fn() => redirect()->route('map'))->name('favorites.index');
-Route::post('/favorites/toggle', fn() => response()->json(['is_favorited' => false]))->name('favorites.toggle');
-
-// Admin
-Route::middleware(['auth', 'active_check', 'role:admin,superadmin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('assets', AssetManagementController::class)->except(['edit', 'update', 'destroy']);
-    Route::get('/kelola-aset-redirect', fn() => redirect()->route('admin.assets.index'))->name('assets.legacy_redirect');
-});
-
-// Super Admin
-Route::middleware(['auth', 'active_check', 'role:superadmin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('users', UserManagementController::class)->except(['show', 'create', 'edit']);
-    Route::post('users/{user}/kick', [UserManagementController::class, 'kickUser'])->name('users.kick');
-});
-
-// Legacy route alias
-Route::get('/kelola-aset', fn() => redirect()->route('admin.assets.index'))
-    ->middleware(['auth', 'active_check', 'role:admin,superadmin'])
-    ->name('assets.manage');
-
+Route::delete('/asset/{asset_number}', [AssetController::class, 'destroy'])->name('admin.assets.destroy');
+Route::delete('/assets/{asset_number}', [AssetController::class, 'destroy'])->name('assets.destroy');

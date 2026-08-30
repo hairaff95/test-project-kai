@@ -65,4 +65,55 @@ class ContractController extends Controller
 
         return view('contracts.index', compact('contracts', 'jenisAssetOptions', 'statusCustomerOptions'));
     }
+
+    public function edit($identifier)
+    {
+        $contract = KaiContract::with(['tenant', 'asset', 'financial'])
+            ->where('contract_number', $identifier)
+            ->orWhere('asset_number', $identifier)
+            ->firstOrFail();
+
+        $asset = $contract->asset;
+        $tenant = $contract->tenant;
+        $financial = $contract->financial;
+
+        return view('contracts.edit', compact('contract', 'asset', 'tenant', 'financial'));
+    }
+
+    public function update(Request $request, $identifier)
+    {
+        $contract = KaiContract::with(['tenant', 'asset', 'financial'])
+            ->where('contract_number', $identifier)
+            ->orWhere('asset_number', $identifier)
+            ->firstOrFail();
+
+        if ($contract->tenant) {
+            if ($request->filled('nama_penyewa')) {
+                $contract->tenant->fullname = $request->nama_penyewa;
+            }
+            if ($request->filled('status_customer')) {
+                $contract->tenant->status_customer = $request->status_customer;
+            }
+            if ($request->filled('brand')) {
+                $contract->tenant->brand = $request->brand;
+            }
+            $contract->tenant->save();
+        }
+
+        if ($contract->asset && $request->filled('asset_block_name')) {
+            $contract->asset->asset_block_name = $request->asset_block_name;
+            $contract->asset->save();
+        }
+
+        if ($request->filled('nilai_kontrak')) {
+            $cleanedPrice = preg_replace('/[^\d]/', '', $request->nilai_kontrak);
+            if ($cleanedPrice) {
+                $contract->price = $cleanedPrice;
+            }
+        }
+
+        $contract->save();
+
+        return redirect()->route('contracts.index')->with('success', 'Kontrak berhasil diperbarui.');
+    }
 }

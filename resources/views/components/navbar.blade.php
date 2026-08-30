@@ -1,7 +1,7 @@
 @props(['active' => 'dashboard'])
 
 <!-- Top Navigation Bar -->
-<header id="mainNavbar" class="sticky top-0 z-40 w-full bg-[#F6F7F9]/95 backdrop-blur-md transition-all duration-200 border-b border-transparent">
+<header id="mainNavbar" class="sticky top-0 z-[100] w-full bg-[#F6F7F9]/95 backdrop-blur-md transition-all duration-200 border-b border-transparent">
     <nav class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 h-16 sm:h-20 flex items-center justify-between gap-3">
 
         <!-- Logo KAI TrackerApp -->
@@ -47,14 +47,14 @@
             <li>
                 <a
                     href="{{ route('backlog.index') }}"
-                    class="inline-block py-2 transition {{ $active === 'blacklog' ? 'rounded-xl bg-[#DCDCDC] px-4 font-semibold text-[#171717] shadow-none' : 'hover:text-[#171717]' }}"
+                    class="inline-block py-2 transition {{ in_array($active, ['backlog', 'blacklog']) ? 'rounded-xl bg-[#DCDCDC] px-4 font-semibold text-[#171717] shadow-none' : 'hover:text-[#171717]' }}"
                 >
-                    Blacklog
+                    Backlog
                 </a>
             </li>
             <li>
                 <a
-                    href="#"
+                    href="{{ route('laporan.index') }}"
                     class="inline-block py-2 transition {{ $active === 'reports' ? 'rounded-xl bg-[#DCDCDC] px-4 font-semibold text-[#171717] shadow-none' : 'hover:text-[#171717]' }}"
                 >
                     Laporan
@@ -63,7 +63,7 @@
         </ul>
 
         <!-- Profil & Aksi Kanan -->
-        <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
             <button
                 type="button"
@@ -82,13 +82,13 @@
             </button>
 
             <!-- Profile -->
-            <div class="relative ml-1">
+            <div class="relative">
 
                 <!-- Profile Button -->
                 <button
                     id="profileButton"
                     type="button"
-                    class="flex items-center gap-2 rounded-xl p-1.5 hover:bg-gray-200/70 transition cursor-pointer"
+                    class="flex items-center gap-2 rounded-xl hover:opacity-90 transition cursor-pointer"
                 >
                     <div class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-gray-200/80 text-gray-600 shrink-0">
                         <x-icon name="profile-circle" class="h-5 w-5 sm:h-6 sm:w-6" />
@@ -121,7 +121,7 @@
 
                     <!-- Pengaturan Akun -->
                     <a
-                        href="#"
+                        href="{{ route('settings.index') }}"
                         class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
                     >
                         <x-icon name="setting" class="h-5 w-5 text-gray-500" />
@@ -129,16 +129,13 @@
                     </a>
 
                     <!-- Logout -->
-                    <form method="POST" action="#">
-                        @csrf
-                        <button
-                            type="submit"
-                            class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition cursor-pointer"
-                        >
-                            <x-icon name="logout" class="h-5 w-5 text-gray-500" />
-                            <span>Keluar</span>
-                        </button>
-                    </form>
+                    <a
+                        href="{{ route('logout') }}"
+                        class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition cursor-pointer"
+                    >
+                        <x-icon name="logout" class="h-5 w-5 text-gray-500" />
+                        <span>Keluar</span>
+                    </a>
 
                 </div>
 
@@ -169,8 +166,8 @@
             <x-icon name="nav-contract" class="h-5 w-5" />
         </a>
 
-        <!-- Blacklog (Scan Icon) -->
-        <a href="{{ route('backlog.index') }}" class="flex h-10 w-10 items-center justify-center rounded-full {{ $active === 'blacklog' ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Blacklog">
+        <!-- Backlog (Scan Icon) -->
+        <a href="{{ route('backlog.index') }}" class="flex h-10 w-10 items-center justify-center rounded-full {{ in_array($active, ['backlog', 'blacklog']) ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Backlog">
             <x-icon name="nav-scan" class="h-5 w-5" />
         </a>
 
