@@ -1,16 +1,16 @@
 @props(['active' => 'dashboard'])
 
-<!-- Top Navigation Bar -->
+<!-- ===== TOP NAVIGATION BAR (Sticky, for all screens) ===== -->
 <header id="mainNavbar" class="sticky top-0 z-[100] w-full bg-[#F6F7F9]/95 backdrop-blur-md transition-all duration-200 border-b border-transparent">
-    <nav class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 h-16 sm:h-20 flex items-center justify-between gap-3">
+    <nav class="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-10 h-11 sm:h-14 lg:h-20 flex items-center justify-between gap-2 sm:gap-3">
 
         <!-- Logo KAI TrackerApp -->
-        <a href="{{ route('welcome') }}" class="flex items-center gap-1.5 text-[17px] sm:text-[18px] font-bold italic tracking-tight text-gray-950 shrink-0 transition hover:opacity-90">
-            <x-icon name="kai-logo" class="h-6 sm:h-[26px] w-auto shrink-0" />
+        <a href="{{ route('welcome') }}" class="flex items-center gap-1 sm:gap-1.5 text-[11px] sm:text-[15px] lg:text-[18px] font-bold italic tracking-tight text-gray-950 shrink-0 transition hover:opacity-90">
+            <x-icon name="kai-logo" class="h-[14px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
             <span class="leading-none select-none">Tracker<span class="text-[#0066FF]">App</span></span>
         </a>
 
-        <!-- Menu Navigasi Desktop -->
+        <!-- Menu Navigasi Desktop (lg and above only) -->
         <ul class="hidden lg:flex items-center gap-7 xl:gap-8 text-sm font-medium text-[#4A4A4A]">
             <li>
                 <a
@@ -65,20 +65,23 @@
         <!-- Profil & Aksi Kanan -->
         <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
+            <!-- Ganti Mode / Theme Toggle (Tampil di Mobile & Desktop) -->
             <button
                 type="button"
-                class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-gray-300/80 bg-transparent text-gray-700 hover:bg-gray-200/70 transition shadow-none cursor-pointer"
-                title="Toggle Theme"
+                id="themeToggleBtn"
+                class="flex h-7 w-7 sm:h-9 sm:w-9 lg:h-10 lg:w-10 items-center justify-center rounded-lg lg:rounded-[10px] border border-gray-300/80 bg-transparent text-gray-700 hover:bg-gray-200/70 active:scale-95 transition shadow-none cursor-pointer"
+                title="Ganti Mode"
             >
-                <x-icon name="moon" class="h-[18px] w-[18px] sm:h-[19px] sm:w-[19px] text-[#262626]" />
+                <x-icon name="moon" class="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-[19px] lg:w-[19px] text-[#262626]" />
             </button>
 
+            <!-- Notifikasi Bell (mobile & desktop) -->
             <button
                 type="button"
-                class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-gray-300/80 bg-transparent text-gray-700 hover:bg-gray-200/70 transition shadow-none cursor-pointer"
+                class="flex h-7 w-7 sm:h-9 sm:w-9 lg:h-10 lg:w-10 items-center justify-center rounded-lg lg:rounded-[10px] border border-gray-300/80 bg-transparent text-gray-700 hover:bg-gray-200/70 active:scale-95 transition shadow-none cursor-pointer"
                 title="Notifikasi"
             >
-                <x-icon name="notification" class="h-[18px] w-[18px] sm:h-[19px] sm:w-[19px] text-[#262626]" />
+                <x-icon name="notification" class="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-[19px] lg:w-[19px] text-[#262626]" />
             </button>
 
             <!-- Profile -->
@@ -88,10 +91,10 @@
                 <button
                     id="profileButton"
                     type="button"
-                    class="flex items-center gap-2 rounded-xl hover:opacity-90 transition cursor-pointer"
+                    class="flex items-center gap-1.5 sm:gap-2 rounded-lg lg:rounded-[10px] hover:opacity-90 transition cursor-pointer"
                 >
-                    <div class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-gray-200/80 text-gray-600 shrink-0">
-                        <x-icon name="profile-circle" class="h-5 w-5 sm:h-6 sm:w-6" />
+                    <div class="flex h-7 w-7 sm:h-9 sm:w-9 lg:h-10 lg:w-10 items-center justify-center rounded-lg lg:rounded-[10px] bg-gray-200/80 text-gray-600 shrink-0">
+                        <x-icon name="profile-circle" class="w-3.5 h-3.5 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
                     </div>
 
                     <div class="hidden sm:block leading-tight text-left pl-0.5">
@@ -116,24 +119,30 @@
                 <!-- Dropdown -->
                 <div
                     id="profileDropdown"
-                    class="absolute right-0 top-full mt-2 w-52 origin-top-right rounded-2xl p-2 shadow-lg opacity-0 invisible scale-95 transition-all duration-200 bg-white border border-gray-200"
+                    class="absolute right-0 top-full mt-1.5 sm:mt-2 w-44 sm:w-52 origin-top-right rounded-lg lg:rounded-[10px] p-1.5 sm:p-2 shadow-[0_12px_36px_rgba(0,0,0,0.12)] opacity-0 invisible scale-95 transition-all duration-200 bg-white border border-gray-100/90 z-[110]"
                 >
+
+                    <!-- User Info Mini (Khusus mobile karena di header disembunyikan) -->
+                    <div class="sm:hidden px-2.5 py-1.5 mb-1 border-b border-gray-100">
+                        <p class="text-xs font-bold text-[#171717] truncate leading-tight">Haidar R.</p>
+                        <p class="text-[10px] text-gray-400 font-medium leading-tight mt-0.5">Admin</p>
+                    </div>
 
                     <!-- Pengaturan Akun -->
                     <a
                         href="{{ route('settings.index') }}"
-                        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+                        class="flex items-center gap-2 sm:gap-2.5 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11.5px] sm:text-xs font-medium text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition"
                     >
-                        <x-icon name="setting" class="h-5 w-5 text-gray-500" />
-                        <span>Pengaturan</span>
+                        <x-icon name="setting" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 shrink-0" />
+                        <span>Pengaturan Akun</span>
                     </a>
 
                     <!-- Logout -->
                     <a
                         href="{{ route('logout') }}"
-                        class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition cursor-pointer"
+                        class="flex w-full items-center gap-2 sm:gap-2.5 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11.5px] sm:text-xs font-medium text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition cursor-pointer"
                     >
-                        <x-icon name="logout" class="h-5 w-5 text-gray-500" />
+                        <x-icon name="logout" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 shrink-0" />
                         <span>Keluar</span>
                     </a>
 
@@ -145,44 +154,85 @@
     </nav>
 </header>
 
-<!-- Bottom Mobile Navigation Bar Sesuai Desain -->
-<div class="lg:hidden fixed bottom-0 inset-x-0 z-50 pointer-events-none select-none">
-    <nav class="pointer-events-auto bg-[#1E2228] rounded-t-[28px] sm:rounded-t-[32px] px-6 sm:px-10 pt-3 pb-6 flex items-center justify-between shadow-[0_-8px_30px_rgba(0,0,0,0.35)] w-full max-w-[480px] mx-auto">
-        
-        <!-- Home / Dashboard (Active Blue Pill) -->
+<!-- ===== BOTTOM MOBILE NAVIGATION (floating pill style, hidden on lg+) ===== -->
+<div class="lg:hidden fixed bottom-0 inset-x-0 z-50 pointer-events-none select-none px-3 pb-4" style="padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem));">
+    <nav id="mobileBottomNav" class="pointer-events-auto mx-auto bg-white/95 backdrop-blur-xl rounded-[28px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 flex items-center justify-between shadow-[0_8px_40px_rgba(0,0,0,0.12),0_2px_10px_rgba(0,0,0,0.06)] w-full max-w-[430px] border border-gray-200/80 transition-all duration-300">
+
+        <!-- Home / Dashboard -->
         @if($active === 'dashboard')
-            <a href="{{ route('welcome') }}" class="flex items-center gap-2 rounded-full bg-[#0066FF] px-5 py-2.5 text-sm font-medium text-white shadow-md transition">
-                <x-icon name="nav-home" class="h-4.5 w-4.5" />
+            <a href="{{ route('welcome') }}" class="mobile-nav-item flex items-center gap-1.5 sm:gap-2 rounded-full bg-[#0066FF] px-3 sm:px-4 py-1.5 sm:py-2 text-[12px] sm:text-[13px] font-semibold text-white shadow-[0_4px_14px_rgba(0,102,255,0.35)]">
+                <x-icon name="nav-home" class="h-4 w-4 sm:h-[18px] sm:w-[18px] shrink-0" />
                 <span>Home</span>
             </a>
         @else
-            <a href="{{ route('welcome') }}" class="flex h-10 w-10 items-center justify-center rounded-full text-white/70 hover:text-white transition" title="Dashboard">
-                <x-icon name="nav-home" class="h-5 w-5" />
+            <a href="{{ route('welcome') }}" class="mobile-nav-item flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100" title="Dashboard">
+                <x-icon name="nav-home" class="h-[19px] w-[19px] sm:h-[20px] sm:w-[20px]" />
             </a>
         @endif
 
-        <!-- Daftar Kontrak (Receipt Icon) -->
-        <a href="{{ route('contracts.index') }}" class="flex h-10 w-10 items-center justify-center rounded-full {{ $active === 'contracts' ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Daftar Kontrak">
-            <x-icon name="nav-contract" class="h-5 w-5" />
-        </a>
+        <!-- Peta / Map -->
+        @if($active === 'map')
+            <a href="{{ route('map') }}" class="mobile-nav-item flex items-center gap-1.5 sm:gap-2 rounded-full bg-[#0066FF] px-3 sm:px-4 py-1.5 sm:py-2 text-[12px] sm:text-[13px] font-semibold text-white shadow-[0_4px_14px_rgba(0,102,255,0.35)]">
+                <x-icon name="nav-map" class="h-4 w-4 sm:h-[18px] sm:w-[18px] shrink-0" />
+                <span>Peta</span>
+            </a>
+        @else
+            <a href="{{ route('map') }}" class="mobile-nav-item flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100" title="Peta">
+                <x-icon name="nav-map" class="h-[19px] w-[19px] sm:h-[20px] sm:w-[20px]" />
+            </a>
+        @endif
 
-        <!-- Backlog (Scan Icon) -->
-        <a href="{{ route('backlog.index') }}" class="flex h-10 w-10 items-center justify-center rounded-full {{ in_array($active, ['backlog', 'blacklog']) ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Backlog">
-            <x-icon name="nav-scan" class="h-5 w-5" />
-        </a>
+        <!-- Daftar Kontrak -->
+        @if($active === 'contracts')
+            <a href="{{ route('contracts.index') }}" class="mobile-nav-item flex items-center gap-1.5 sm:gap-2 rounded-full bg-[#0066FF] px-3 sm:px-4 py-1.5 sm:py-2 text-[12px] sm:text-[13px] font-semibold text-white shadow-[0_4px_14px_rgba(0,102,255,0.35)]">
+                <x-icon name="nav-contract" class="h-4 w-4 sm:h-[18px] sm:w-[18px] shrink-0" />
+                <span>Kontrak</span>
+            </a>
+        @else
+            <a href="{{ route('contracts.index') }}" class="mobile-nav-item flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100" title="Daftar Kontrak">
+                <x-icon name="nav-contract" class="h-[19px] w-[19px] sm:h-[20px] sm:w-[20px]" />
+            </a>
+        @endif
 
-        <!-- Jatuh Tempo (Card Icon) -->
-        <a href="{{ route('due-dates.index') }}" class="flex h-10 w-10 items-center justify-center rounded-full {{ $active === 'due-dates' ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Jatuh Tempo">
-            <x-icon name="nav-card" class="h-5 w-5" />
-        </a>
+        <!-- Jatuh Tempo -->
+        @if($active === 'due-dates')
+            <a href="{{ route('due-dates.index') }}" class="mobile-nav-item flex items-center gap-1.5 sm:gap-2 rounded-full bg-[#0066FF] px-3 sm:px-4 py-1.5 sm:py-2 text-[12px] sm:text-[13px] font-semibold text-white shadow-[0_4px_14px_rgba(0,102,255,0.35)]">
+                <x-icon name="nav-card" class="h-4 w-4 sm:h-[18px] sm:w-[18px] shrink-0" />
+                <span>Tempo</span>
+            </a>
+        @else
+            <a href="{{ route('due-dates.index') }}" class="mobile-nav-item flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100" title="Jatuh Tempo">
+                <x-icon name="nav-card" class="h-[19px] w-[19px] sm:h-[20px] sm:w-[20px]" />
+            </a>
+        @endif
 
-        <!-- Profil / User Icon -->
-        <a href="#" class="flex h-10 w-10 items-center justify-center rounded-full {{ $active === 'reports' ? 'text-white bg-[#0066FF]' : 'text-white/70 hover:text-white' }} transition" title="Profil">
-            <x-icon name="nav-user" class="h-5 w-5" />
-        </a>
+        <!-- Backlog -->
+        @if(in_array($active, ['backlog', 'blacklog']))
+            <a href="{{ route('backlog.index') }}" class="mobile-nav-item flex items-center gap-1.5 sm:gap-2 rounded-full bg-[#0066FF] px-3 sm:px-4 py-1.5 sm:py-2 text-[12px] sm:text-[13px] font-semibold text-white shadow-[0_4px_14px_rgba(0,102,255,0.35)]">
+                <x-icon name="nav-scan" class="h-4 w-4 sm:h-[18px] sm:w-[18px] shrink-0" />
+                <span>Backlog</span>
+            </a>
+        @else
+            <a href="{{ route('backlog.index') }}" class="mobile-nav-item flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100" title="Backlog">
+                <x-icon name="nav-scan" class="h-[19px] w-[19px] sm:h-[20px] sm:w-[20px]" />
+            </a>
+        @endif
+
+        <!-- Laporan -->
+        @if(in_array($active, ['reports', 'laporan']))
+            <a href="{{ route('laporan.index') }}" class="mobile-nav-item flex items-center gap-1.5 sm:gap-2 rounded-full bg-[#0066FF] px-3 sm:px-4 py-1.5 sm:py-2 text-[12px] sm:text-[13px] font-semibold text-white shadow-[0_4px_14px_rgba(0,102,255,0.35)]">
+                <x-icon name="nav-report" class="h-4 w-4 sm:h-[18px] sm:w-[18px] shrink-0" />
+                <span>Laporan</span>
+            </a>
+        @else
+            <a href="{{ route('laporan.index') }}" class="mobile-nav-item flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100" title="Laporan">
+                <x-icon name="nav-report" class="h-[19px] w-[19px] sm:h-[20px] sm:w-[20px]" />
+            </a>
+        @endif
 
     </nav>
 </div>
+
 
 <script>
     window.addEventListener('scroll', function() {

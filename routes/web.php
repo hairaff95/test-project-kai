@@ -23,10 +23,18 @@ Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->nam
 Route::get('/verifikasi-kode', [AuthController::class, 'showVerifyCode'])->name('password.verify');
 Route::get('/ubah-kata-sandi', [AuthController::class, 'showResetPassword'])->name('password.reset');
 
-// ================= PENGATURAN (SUPER ADMIN) =================
+// ================= PENGATURAN =================
 Route::get('/pengaturan', function () {
-    return view('settings.index', ['active' => 'pengaturan']);
+    return view('settings.admin', ['active' => 'pengaturan']);
 })->name('settings.index');
+
+Route::get('/pengaturan-admin', function () {
+    return view('settings.admin', ['active' => 'pengaturan']);
+})->name('settings.admin');
+
+Route::get('/pengaturan-superadmin', function () {
+    return view('settings.index', ['active' => 'pengaturan']);
+})->name('settings.superadmin');
 
 // ================= DASHBOARD & MAP =================
 Route::get('/', [DashboardController::class, 'index'])->name('welcome');

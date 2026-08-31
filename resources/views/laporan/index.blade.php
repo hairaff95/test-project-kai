@@ -21,7 +21,7 @@
     <x-navbar active="reports" />
 
     {{-- Main Content --}}
-    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-6 pb-24 lg:pb-8 flex flex-col gap-4 sm:gap-5">
+    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-6 pb-28 lg:pb-8 flex flex-col gap-4 sm:gap-5">
 
         {{-- Page Header --}}
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
@@ -31,31 +31,31 @@
 
             {{-- Header Action Buttons --}}
             <div class="flex items-center gap-2 self-start sm:self-auto">
-                <button id="btn-filter-lap" type="button" class="flex items-center gap-2 rounded-xl bg-[#0066FF] hover:bg-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-xs transition cursor-pointer">
-                    <x-icon name="filter-icon" class="w-4 h-4 text-white" />
+                <button id="btn-filter-lap" type="button" class="flex items-center gap-1.5 sm:gap-2 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition cursor-pointer">
+                    <x-icon name="filter-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                     <span>Filter</span>
                 </button>
 
-                <a href="{{ route('laporan.index') }}" class="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 shadow-xs transition cursor-pointer" title="Reset">
-                    <x-icon name="refresh" class="w-4.5 h-4.5 text-gray-600" />
+                <a href="{{ route('laporan.index') }}" class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg lg:rounded-[10px] border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 shadow-xs transition cursor-pointer" title="Reset">
+                    <x-icon name="refresh" class="w-4 h-4 sm:w-4.5 sm:h-4.5 text-gray-600" />
                 </a>
             </div>
         </div>
 
         {{-- Unified Card Container: Filter Bar + Bordered Table --}}
-        <div class="rounded-2xl sm:rounded-3xl bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col gap-4">
+        <div class="rounded-3xl bg-white p-3 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col gap-2.5 sm:gap-4">
 
             {{-- Filter Bar --}}
-            <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
 
                 {{-- Search --}}
-                <div class="relative w-[170px] sm:w-[185px] h-[38px] sm:h-[40px]">
-                    <x-icon name="search" class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <div class="relative w-full sm:w-[185px] h-[32px] sm:h-[38px]">
+                    <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                         id="search-lap"
                         type="text"
                         placeholder="Search"
-                        class="w-full h-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#0066FF] text-gray-700 placeholder-gray-400 transition"
+                        class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white border border-gray-200 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 placeholder-gray-400 transition"
                     >
                 </div>
 

@@ -21,56 +21,56 @@
     <x-navbar active="backlog" />
 
     {{-- Main Content --}}
-    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-6 pb-24 lg:pb-8 flex flex-col gap-4 sm:gap-5">
+    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-6 pb-28 lg:pb-8 flex flex-col gap-4 sm:gap-5">
 
         {{-- Page Header --}}
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
-            <h1 class="text-2xl sm:text-[30px] font-bold tracking-tight text-gray-950">
+            <h1 class="text-xl sm:text-[30px] font-bold tracking-tight text-gray-950">
                 Backlog
             </h1>
 
             {{-- Header Action Buttons --}}
             <div class="flex items-center gap-2 self-start sm:self-auto">
-                <button id="btn-filter-bl" type="button" class="flex items-center gap-2 rounded-xl bg-[#0066FF] hover:bg-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-xs transition cursor-pointer">
-                    <x-icon name="filter-icon" class="w-4 h-4 text-white" />
+                <button id="btn-filter-bl" type="button" class="flex items-center gap-1.5 sm:gap-2 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition cursor-pointer">
+                    <x-icon name="filter-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                     <span>Filter</span>
                 </button>
 
-                <a href="{{ route('backlog.index') }}" class="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 shadow-xs transition cursor-pointer" title="Reset">
-                    <x-icon name="refresh" class="w-4.5 h-4.5 text-gray-600" />
+                <a href="{{ route('backlog.index') }}" class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg lg:rounded-[10px] border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 shadow-xs transition cursor-pointer" title="Reset">
+                    <x-icon name="refresh" class="w-4 h-4 sm:w-4.5 sm:h-4.5 text-gray-600" />
                 </a>
             </div>
         </div>
 
         {{-- Unified Card Container: Filter Bar + Bordered Table --}}
-        <div class="rounded-2xl sm:rounded-3xl bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col gap-4">
+        <div class="rounded-3xl bg-white p-3 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col gap-2.5 sm:gap-4">
 
             {{-- Filter Bar --}}
-            <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
 
                 {{-- Search --}}
-                <div class="relative w-[170px] sm:w-[185px] h-[38px] sm:h-[40px]">
-                    <x-icon name="search" class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <div class="relative w-full sm:w-[185px] h-[32px] sm:h-[38px]">
+                    <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                         id="search-bl"
                         type="text"
                         placeholder="Search"
-                        class="w-full h-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#0066FF] text-gray-700 placeholder-gray-400 transition"
+                        class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white border border-gray-200 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 placeholder-gray-400 transition"
                     >
                 </div>
 
                 {{-- Filter Status Customer (Dinamis dari database) --}}
                 <div class="relative custom-filter-container">
-                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[38px] sm:h-[40px] bg-white border border-gray-200 hover:border-gray-300 rounded-xl px-3.5 py-2 transition cursor-pointer">
-                        <span id="label-status" class="text-gray-400 font-normal text-xs sm:text-sm select-none">Status Customer</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 ml-2 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
+                        <span id="label-status" class="text-gray-400 font-normal text-[11px] sm:text-xs select-none">Status Customer</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] min-w-[175px] max-h-[280px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-2 sm:p-2.5 flex flex-col gap-1">
-                        <button type="button" onclick="filterBlClient('status', '', 'Status Customer')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="filterBlClient('status', '', 'Status Customer')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>Semua Status</span>
                         </button>
                         @foreach($statusCustomerOptions as $opt)
-                            <button type="button" onclick="filterBlClient('status', '{{ $opt }}', '{{ $opt }}')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                            <button type="button" onclick="filterBlClient('status', '{{ $opt }}', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>{{ $opt }}</span>
                             </button>
                         @endforeach
@@ -79,24 +79,24 @@
 
                 {{-- Filter Semua Stasiun --}}
                 <div class="relative custom-filter-container">
-                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[38px] sm:h-[40px] bg-white border border-gray-200 hover:border-gray-300 rounded-xl px-3.5 py-2 transition cursor-pointer">
-                        <span id="label-stasiun" class="text-gray-400 font-normal text-xs sm:text-sm select-none">Semua Stasiun</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 ml-2 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
+                        <span id="label-stasiun" class="text-gray-400 font-normal text-[11px] sm:text-xs select-none">Semua Stasiun</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] min-w-[180px] max-h-[280px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-2 sm:p-2.5 flex flex-col gap-1">
-                        <button type="button" onclick="filterBlClient('stasiun', '', 'Semua Stasiun')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="filterBlClient('stasiun', '', 'Semua Stasiun')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>Semua Stasiun</span>
                         </button>
-                        <button type="button" onclick="filterBlClient('stasiun', 'Semarang Poncol', 'Semarang Poncol')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="filterBlClient('stasiun', 'Semarang Poncol', 'Semarang Poncol')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>Semarang Poncol</span>
                         </button>
-                        <button type="button" onclick="filterBlClient('stasiun', 'Semarang Tawang', 'Semarang Tawang')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="filterBlClient('stasiun', 'Semarang Tawang', 'Semarang Tawang')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>Semarang Tawang</span>
                         </button>
-                        <button type="button" onclick="filterBlClient('stasiun', 'Pekalongan', 'Pekalongan')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="filterBlClient('stasiun', 'Pekalongan', 'Pekalongan')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>Pekalongan</span>
                         </button>
-                        <button type="button" onclick="filterBlClient('stasiun', 'Tegal', 'Tegal')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="filterBlClient('stasiun', 'Tegal', 'Tegal')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>Tegal</span>
                         </button>
                     </div>
@@ -104,8 +104,82 @@
 
             </div>
 
-            {{-- Table Wrapper Ber-Stroke --}}
-            <div class="border border-gray-200 rounded-xl overflow-hidden bg-white">
+            {{-- MOBILE CARD LIST VIEW (sm:hidden - Mobile-First Card View) --}}
+            <div id="mobile-cards-bl" class="sm:hidden flex flex-col gap-3">
+                @forelse($items as $row)
+                    <div class="bl-card-item rounded-xl border border-gray-200/90 bg-white p-3.5 shadow-2xs flex flex-col gap-2.5"
+                         data-status="{{ strtolower($row['status_customer'] ?? 'Aktif') }}"
+                         data-penyewa="{{ strtolower($row['nama_penyewa'] ?? '') }}"
+                         data-kontrak="{{ strtolower($row['no_kontrak'] ?? '') }}"
+                    >
+                        {{-- Card Header: No Kontrak + Status Badge --}}
+                        <div class="flex items-start justify-between gap-2 border-b border-gray-100 pb-2">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">No Kontrak</span>
+                                <span class="text-xs font-bold text-gray-900 leading-snug">{{ $row['no_kontrak'] }}</span>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold {{ strtolower($row['status_customer'] ?? '') === 'aktif' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' : 'bg-blue-50 text-blue-700 border border-blue-200/60' }}">
+                                {{ $row['status_customer'] ?? 'Aktif' }}
+                            </span>
+                        </div>
+
+                        {{-- Tenant Name --}}
+                        <div>
+                            <span class="text-[10px] font-medium text-gray-400 block">Nama Penyewa</span>
+                            <h3 class="text-sm font-bold text-gray-900 leading-tight mt-0.5">
+                                {{ $row['nama_penyewa'] }}
+                            </h3>
+                        </div>
+
+                        {{-- 2-Cols Financial Details Grid --}}
+                        <div class="grid grid-cols-2 gap-2 bg-gray-50/90 rounded-lg p-2.5 text-xs">
+                            <div>
+                                <span class="text-gray-400 block text-[10px]">Nilai Backlog</span>
+                                <span class="font-semibold text-gray-900 text-[11px]">{{ $row['nilai_backlog'] }}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 block text-[10px]">Nilai Backlog 2</span>
+                                <span class="font-semibold text-gray-900 text-[11px]">{{ $row['nilai_backlog2'] }}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 block text-[10px]">Invoice</span>
+                                <span class="font-medium text-emerald-600 text-[11px]">{{ $row['invoice'] }}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 block text-[10px]">GL Account</span>
+                                <span class="font-medium text-gray-800 text-[11px]">{{ $row['gl_account'] }}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 block text-[10px]">Hari 2026</span>
+                                <span class="font-medium text-gray-800 text-[11px]">{{ $row['hari_2026'] }} Hari</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 block text-[10px]">Nilai Perhari</span>
+                                <span class="font-bold text-gray-950 text-[11px]">Rp {{ $row['nilai_perhari'] }}</span>
+                            </div>
+                        </div>
+
+                        {{-- Card Actions Footer --}}
+                        <div class="flex items-center justify-end gap-2 pt-1 border-t border-gray-100">
+                            <a href="{{ route('asset.detail', $row['asset_number']) }}" class="flex-1 min-h-[40px] inline-flex items-center justify-center gap-1.5 rounded-lg lg:rounded-[10px] border border-gray-200 bg-white hover:bg-gray-50 text-xs font-semibold text-gray-700 shadow-2xs transition">
+                                <x-icon name="icon-lihat" class="w-4 h-4 text-gray-500" />
+                                <span>Lihat Detail</span>
+                            </a>
+                            <a href="{{ route('backlog.edit', $row['asset_number']) }}" class="flex-1 min-h-[40px] inline-flex items-center justify-center gap-1.5 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 text-xs font-semibold text-white shadow-2xs transition">
+                                <x-icon name="icon-edit-detail-peta" class="w-4 h-4 text-white" />
+                                <span>Edit</span>
+                            </a>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-8 text-xs text-gray-400 bg-gray-50 rounded-xl">
+                        Tidak ada data backlog yang tersedia.
+                    </div>
+                @endforelse
+            </div>
+
+            {{-- DESKTOP TABLE VIEW (hidden sm:block) --}}
+            <div class="hidden sm:block border border-gray-200 rounded-xl overflow-hidden bg-white">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
@@ -121,7 +195,7 @@
                                 <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 text-xs sm:text-[13px] text-gray-800">
+                        <tbody class="divide-y divide-gray-100 text-[13px] text-gray-800">
                             @forelse($items as $row)
                                 <tr class="hover:bg-gray-50/60 transition-colors"
                                     data-status="{{ strtolower($row['status_customer'] ?? 'Aktif') }}"
@@ -182,19 +256,19 @@
     </main>
 
     {{-- Global Dropdown Menu Aksi --}}
-    <div id="global-action-dropdown" class="hidden fixed z-[9999] w-[155px] sm:w-[165px] rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-2 sm:p-2.5 flex flex-col gap-1">
-        <a id="dd-lihat" href="#" class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition">
-            <x-icon name="icon-lihat" class="w-5 h-5 text-gray-500 shrink-0" />
+    <div id="global-action-dropdown" class="hidden fixed z-[9999] w-[140px] sm:w-[165px] rounded-xl sm:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1.5 sm:p-2.5 flex flex-col gap-0.5 sm:gap-1">
+        <a id="dd-lihat" href="#" class="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition">
+            <x-icon name="icon-lihat" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 shrink-0" />
             <span>Lihat</span>
         </a>
-        <a id="dd-edit" href="#" class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition">
-            <x-icon name="edit" class="w-5 h-5 text-gray-500 shrink-0" />
+        <a id="dd-edit" href="#" class="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition">
+            <x-icon name="edit" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 shrink-0" />
             <span>Edit</span>
         </a>
         <form id="dd-delete-form" method="POST" onsubmit="return confirm('Hapus aset ini?')">
             @csrf @method('DELETE')
-            <button type="submit" class="flex w-full items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 rounded-xl transition cursor-pointer">
-                <x-icon name="delete" class="w-5 h-5 text-[#EF4444] shrink-0" />
+            <button type="submit" class="flex w-full items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 rounded-xl transition cursor-pointer">
+                <x-icon name="delete" class="w-4 h-4 sm:w-5 sm:h-5 text-[#EF4444] shrink-0" />
                 <span>Hapus</span>
             </button>
         </form>
@@ -272,7 +346,7 @@
                 // Close menus
                 document.querySelectorAll('.filter-dropdown-menu').forEach(m => m.classList.add('hidden'));
 
-                // Apply client-side row filtering
+                // Apply client-side row and mobile card filtering
                 const rows = document.querySelectorAll('tbody tr[data-status]');
                 rows.forEach(row => {
                     const text = row.innerText.toLowerCase();
@@ -282,11 +356,19 @@
                     const matchStatus = !filters.status || rowStatus === filters.status.toLowerCase();
                     const matchStasiun = !filters.stasiun || text.includes(filters.stasiun.toLowerCase());
 
-                    if (matchSearch && matchStatus && matchStasiun) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
+                    row.style.display = (matchSearch && matchStatus && matchStasiun) ? '' : 'none';
+                });
+
+                const cards = document.querySelectorAll('.bl-card-item');
+                cards.forEach(card => {
+                    const text = card.innerText.toLowerCase();
+                    const cardStatus = (card.dataset.status || '').toLowerCase();
+
+                    const matchSearch = !filters.search || text.includes(filters.search.toLowerCase());
+                    const matchStatus = !filters.status || cardStatus === filters.status.toLowerCase();
+                    const matchStasiun = !filters.stasiun || text.includes(filters.stasiun.toLowerCase());
+
+                    card.style.display = (matchSearch && matchStatus && matchStasiun) ? '' : 'none';
                 });
             };
 

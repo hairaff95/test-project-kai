@@ -2,7 +2,7 @@
 
 @switch($name)
     @case('kai-logo')
-        <svg {{ $attributes->merge(['class' => 'h-8 w-auto', 'viewBox' => '0 0 294.74 124.22']) }} xmlns="http://www.w3.org/2000/svg">
+        <svg {{ $attributes->merge(['class' => 'w-auto', 'viewBox' => '0 0 294.74 124.22']) }} xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <style>.cls-1{fill:#2d2a70;}.cls-2{fill:#ed6b23;}</style>
             </defs>
@@ -210,6 +210,14 @@
         </svg>
         @break
 
+    @case('nav-report')
+    @case('nav-laporan')
+        <svg {{ $attributes->merge(['class' => 'w-5 h-5', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 17H15M9 13H15M9 9H11M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H14L21 10V19C21 20.1046 20.1046 21 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 3V10H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        @break
+
     @case('dots-vertical')
     @case('more-vertical')
         <svg {{ $attributes->merge(['class' => 'w-4 h-4', 'viewBox' => '0 0 24 24', 'fill' => 'currentColor']) }} xmlns="http://www.w3.org/2000/svg">
@@ -220,13 +228,13 @@
         @break
 
     @case('moon')
-        <svg {{ $attributes->merge(['class' => 'w-6 h-6', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+        <svg {{ $attributes->merge(['viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
             <path d="M2.03 12.42C2.39 17.57 6.76 21.76 11.99 21.99C15.68 22.15 18.98 20.43 20.96 17.72C21.78 16.61 21.34 15.87 19.97 16.12C19.3 16.24 18.61 16.29 17.89 16.26C13 16.06 9 11.97 8.98 7.14001C8.97 5.84001 9.24 4.61001 9.73 3.49001C10.27 2.25001 9.62 1.66001 8.37 2.19001C4.41 3.86001 1.7 7.85001 2.03 12.42Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         @break
 
     @case('notification')
-        <svg {{ $attributes->merge(['class' => 'w-6 h-6', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+        <svg {{ $attributes->merge(['viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
             <path d="M12.02 2.91C8.71 2.91 6.02 5.6 6.02 8.91V11.8C6.02 12.41 5.76 13.34 5.45 13.86L4.3 15.77C3.59 16.95 4.08 18.26 5.38 18.7C9.69 20.14 14.34 20.14 18.65 18.7C19.86 18.3 20.39 16.87 19.73 15.77L18.58 13.86C18.28 13.34 18.02 12.41 18.02 11.8V8.91C18.02 5.61 15.32 2.91 12.02 2.91Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
             <path d="M13.87 3.2C13.56 3.11 13.24 3.04 12.91 3C11.95 2.88 11.03 2.95 10.17 3.2C10.46 2.46 11.18 1.94 12.02 1.94C12.86 1.94 13.58 2.46 13.87 3.2Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
             <path opacity="0.4" d="M15.02 19.06C15.02 20.71 13.67 22.06 12.02 22.06C11.2 22.06 10.44 21.72 9.89999 21.18C9.35999 20.64 9.01999 19.88 9.01999 19.06" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"/>
@@ -234,7 +242,7 @@
         @break
 
     @case('profile-circle')
-        <svg {{ $attributes->merge(['class' => 'w-6 h-6', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+        <svg {{ $attributes->merge(['viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
             <path opacity="0.4" d="M12.12 12.78C12.05 12.77 11.96 12.77 11.88 12.78C10.12 12.72 8.71997 11.28 8.71997 9.51001C8.71997 7.70001 10.18 6.23001 12 6.23001C13.81 6.23001 15.28 7.70001 15.28 9.51001C15.27 11.28 13.88 12.72 12.12 12.78Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <path opacity="0.34" d="M18.74 19.38C16.96 21.01 14.6 22 12 22C9.40001 22 7.04001 21.01 5.26001 19.38C5.36001 18.44 5.96001 17.52 7.03001 16.8C9.77001 14.98 14.25 14.98 16.97 16.8C18.04 17.52 18.64 18.44 18.74 19.38Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

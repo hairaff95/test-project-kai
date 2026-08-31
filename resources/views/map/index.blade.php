@@ -105,20 +105,72 @@
     {{-- Navbar --}}
     <x-navbar active="map" />
 
-    {{-- Header: Judul Heatmaps, Tools Zoom, & Tombol Filter (z-50 di atas Overlay & Modal) --}}
-    <div class="relative z-50 w-full max-w-[1600px] mx-auto px-5 sm:px-8 lg:px-10 pt-5 pointer-events-none">
-        <div class="flex items-center justify-between relative min-h-[44px]">
-            <!-- Judul Heatmaps -->
+    {{-- Header: Judul Heatmaps, Tools Zoom, & Tombol Filter (z-30) --}}
+    <div class="relative z-30 w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 pointer-events-none">
+
+        {{-- Mobile: Left (Title + Tools underneath) and Right (Filter button) --}}
+        <div class="flex items-start justify-between lg:hidden">
+            <div class="pointer-events-auto flex flex-col gap-2">
+                <h1 class="text-[22px] font-bold text-gray-950 tracking-tight leading-tight">
+                    Heatmaps
+                </h1>
+                
+                {{-- Zoom tools underneath Heatmaps text --}}
+                <div class="flex items-center gap-1.5">
+                    <button
+                        id="zoomInButton"
+                        type="button"
+                        onclick="if(window.mapZoomIn) window.mapZoomIn();"
+                        class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] bg-white/90 backdrop-blur-sm hover:bg-gray-100 active:bg-gray-200 text-gray-700 transition cursor-pointer shadow-xs"
+                        title="Zoom In"
+                    >
+                        <x-icon name="zoom-in" class="w-4 h-4" />
+                    </button>
+                    <button
+                        id="zoomOutButton"
+                        type="button"
+                        onclick="if(window.mapZoomOut) window.mapZoomOut();"
+                        class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] bg-white/90 backdrop-blur-sm hover:bg-gray-100 active:bg-gray-200 text-gray-700 transition cursor-pointer shadow-xs"
+                        title="Zoom Out"
+                    >
+                        <x-icon name="zoom-out" class="w-4 h-4" />
+                    </button>
+                    <button
+                        id="panToolButton"
+                        type="button"
+                        onclick="if(window.mapPanTool) window.mapPanTool();"
+                        class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] bg-white/90 backdrop-blur-sm hover:bg-gray-100 active:bg-gray-200 text-gray-700 transition cursor-pointer shadow-xs"
+                        title="Pusatkan Peta Indonesia"
+                    >
+                        <x-icon name="hand-pan" class="w-4 h-4 text-gray-600" />
+                    </button>
+                </div>
+            </div>
+
             <div class="pointer-events-auto">
-                <h1 class="text-2xl sm:text-[30px] font-bold text-gray-950 tracking-tight">
+                <button
+                    id="filterButton"
+                    type="button"
+                    class="w-11 h-11 flex items-center justify-center rounded-[10px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-gray-200 hover:bg-gray-50 active:bg-gray-100 transition cursor-pointer z-30 relative select-none"
+                    style="cursor: pointer !important;"
+                    title="Filter Peta"
+                >
+                    <x-icon name="filter-peta" class="w-5 h-5 text-gray-800 pointer-events-none" />
+                </button>
+            </div>
+        </div>
+
+        {{-- Desktop: single row (title + center tools + filter button) --}}
+        <div class="hidden lg:flex items-center justify-between relative min-h-[44px]">
+            <div class="pointer-events-auto">
+                <h1 class="text-[30px] font-bold text-gray-950 tracking-tight">
                     Heatmaps
                 </h1>
             </div>
 
-            <!-- Tools Zoom & Pan -->
             <div class="pointer-events-auto absolute left-1/2 -translate-x-1/2 flex items-center gap-[5px] bg-transparent">
                 <button
-                    id="zoomInButton"
+                    id="zoomInButtonDesktop"
                     type="button"
                     onclick="if(window.mapZoomIn) window.mapZoomIn();"
                     class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] bg-transparent hover:bg-gray-200/80 active:bg-gray-300/80 text-gray-700 transition cursor-pointer"
@@ -127,7 +179,7 @@
                     <x-icon name="zoom-in" class="w-6 h-6" />
                 </button>
                 <button
-                    id="zoomOutButton"
+                    id="zoomOutButtonDesktop"
                     type="button"
                     onclick="if(window.mapZoomOut) window.mapZoomOut();"
                     class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] bg-transparent hover:bg-gray-200/80 active:bg-gray-300/80 text-gray-700 transition cursor-pointer"
@@ -136,7 +188,7 @@
                     <x-icon name="zoom-out" class="w-6 h-6" />
                 </button>
                 <button
-                    id="panToolButton"
+                    id="panToolButtonDesktop"
                     type="button"
                     onclick="if(window.mapPanTool) window.mapPanTool();"
                     class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] bg-transparent hover:bg-gray-200/80 active:bg-gray-300/80 text-gray-700 transition cursor-pointer"
@@ -146,10 +198,9 @@
                 </button>
             </div>
 
-            <!-- Tombol Filter Peta (Selalu Pointer & Dapat Diklik) -->
             <div class="pointer-events-auto">
                 <button
-                    id="filterButton"
+                    id="filterButtonDesktop"
                     type="button"
                     class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-[10px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-gray-100 hover:bg-gray-50 active:bg-gray-100 transition-transform duration-300 ease-in-out cursor-pointer z-50 relative select-none"
                     style="cursor: pointer !important;"
@@ -167,52 +218,52 @@
     {{-- Overlay Background Filter (z-30 di bawah tombol) --}}
     <div id="filterOverlay" class="invisible fixed inset-0 z-30 bg-black/[0.08] opacity-0 transition-all duration-300 pointer-events-auto"></div>
 
-    {{-- Modal Filter (Sejajar Tombol di Atas & Memanjang ke Bawah bottom-6/bottom-8 Sesuai Kode Awal) --}}
+    {{-- Modal Filter (Slide in from Right on both Mobile & Desktop, scaled down for Mobile) --}}
     <aside
         id="filterModal"
-        class="fixed right-5 sm:right-8 lg:right-10 bottom-6 sm:bottom-8 z-40 w-[373px] max-w-[calc(100vw-40px)] bg-white rounded-[10px] p-6 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.08)] border border-gray-100/90 transition-all duration-300 ease-in-out transform translate-x-[150%] opacity-0 pointer-events-none flex flex-col justify-start overflow-y-auto"
+        class="fixed right-3 sm:right-6 lg:right-10 top-16 sm:top-20 bottom-24 lg:bottom-8 z-40 w-[295px] sm:w-[350px] lg:w-[373px] bg-white rounded-2xl lg:rounded-[10px] p-4 sm:p-6 lg:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.14)] border border-gray-100/90 transition-all duration-300 ease-in-out transform translate-x-[140%] opacity-0 pointer-events-none flex flex-col justify-start overflow-y-auto"
     >
-        <div class="mb-6 flex items-center justify-between">
-            <h2 class="text-lg sm:text-[20px] font-bold text-gray-950 tracking-tight">
+        <div class="mb-3 sm:mb-5 lg:mb-6 flex items-center justify-between">
+            <h2 class="text-base sm:text-lg lg:text-[20px] font-bold text-gray-950 tracking-tight">
                 Filter Peta
             </h2>
         </div>
 
         {{-- FILTER 2-COLUMN GRID --}}
-        <div class="grid grid-cols-2 gap-x-4 gap-y-5">
+        <div class="grid grid-cols-2 gap-x-2.5 sm:gap-x-4 gap-y-3 sm:gap-y-5">
 
             {{-- 1. STASIUN --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-[6px] text-sm font-semibold text-gray-700 mb-[6px]">
-                    <x-icon name="subway" class="w-5 h-5 shrink-0 text-gray-400" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
+                    <x-icon name="subway" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
                     Stasiun
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="stasiun" name="stasiun" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-[10px] px-3.5 py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-xs sm:text-[13px] truncate select-none">Semua Stasiun</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 shrink-0 ml-1.5 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Stasiun</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] w-full min-w-[150px] max-h-[220px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('stasiun', '', 'Semua Stasiun')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('stasiun', '', 'Semua Stasiun')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Stasiun</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'gambir', 'Gambir')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'gambir', 'Gambir')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Gambir</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'bandung', 'Bandung')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'bandung', 'Bandung')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Bandung</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'surabaya', 'Surabaya')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'surabaya', 'Surabaya')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Surabaya</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'semarang', 'Semarang Poncol')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'semarang', 'Semarang Poncol')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semarang Poncol</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'pekalongan', 'Pekalongan')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'pekalongan', 'Pekalongan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Pekalongan</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'tegal', 'Tegal')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'tegal', 'Tegal')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Tegal</span>
                         </button>
                     </div>
@@ -221,24 +272,24 @@
 
             {{-- 2. WILAYAH --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-[6px] text-sm font-semibold text-gray-700 mb-[6px]">
-                    <x-icon name="explore_nearby" class="w-5 h-5 shrink-0" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
+                    <x-icon name="explore_nearby" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
                     Wilayah
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="wilayah" name="wilayah" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-[10px] px-3.5 py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-xs sm:text-[13px] truncate select-none">Row & Non Row</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 shrink-0 ml-1.5 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Row & Non Row</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] w-full min-w-[150px] max-h-[220px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('wilayah', '', 'Row & Non Row')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('wilayah', '', 'Row & Non Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Row & Non Row</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('wilayah', 'row', 'Row')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('wilayah', 'row', 'Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Row</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('wilayah', 'non-row', 'Non Row')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('wilayah', 'non-row', 'Non Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Non Row</span>
                         </button>
                     </div>
@@ -247,24 +298,24 @@
 
             {{-- 3. ASET --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-[6px] text-sm font-semibold text-gray-700 mb-[6px]">
-                    <x-icon name="aset-icon" class="w-5 h-5 shrink-0" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
+                    <x-icon name="aset-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
                     Aset
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="aset" name="aset" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-[10px] px-3.5 py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-xs sm:text-[13px] truncate select-none">Semua Aset</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 shrink-0 ml-1.5 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Aset</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] w-full min-w-[150px] max-h-[220px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('aset', '', 'Semua Aset')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('aset', '', 'Semua Aset')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Aset</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('aset', 'tanah', 'Tanah')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('aset', 'tanah', 'Tanah')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Tanah</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('aset', 'bangunan', 'Bangunan')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('aset', 'bangunan', 'Bangunan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Bangunan</span>
                         </button>
                     </div>
@@ -273,24 +324,24 @@
 
             {{-- 4. JENIS KONTRAK --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-[6px] text-sm font-semibold text-gray-700 mb-[6px]">
-                    <x-icon name="contract-icon" class="w-5 h-5 shrink-0" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
+                    <x-icon name="contract-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
                     Jenis Kontrak
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="jenis_kontrak" name="jenis_kontrak" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-[10px] px-3.5 py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-xs sm:text-[13px] truncate select-none">Semua Kontrak</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 shrink-0 ml-1.5 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Kontrak</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] w-full min-w-[150px] max-h-[220px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('jenis_kontrak', '', 'Semua Kontrak')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('jenis_kontrak', '', 'Semua Kontrak')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Kontrak</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Sewa</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'kerjasama', 'Kerja Sama')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'kerjasama', 'Kerja Sama')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Kerja Sama</span>
                         </button>
                     </div>
@@ -299,27 +350,27 @@
 
             {{-- 5. JENIS PENDAPATAN --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-[6px] text-sm font-semibold text-gray-700 mb-[6px]">
-                    <x-icon name="jenis-pendapatan-icon" class="w-5 h-5 shrink-0" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
+                    <x-icon name="jenis-pendapatan-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
                     Jenis Pendapatan
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="jenis_pendapatan" name="jenis_pendapatan" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-[10px] px-3.5 py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-xs sm:text-[13px] truncate select-none">Semua Pend...</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 shrink-0 ml-1.5 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Pend...</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] w-full min-w-[150px] max-h-[220px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', '', 'Semua Pend...')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', '', 'Semua Pend...')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Pend...</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Sewa</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'iklan', 'Iklan')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'iklan', 'Iklan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Iklan</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'lainnya', 'Lainnya')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'lainnya', 'Lainnya')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Lainnya</span>
                         </button>
                     </div>
@@ -328,24 +379,24 @@
 
             {{-- 6. SPV --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-[6px] text-sm font-semibold text-gray-700 mb-[6px]">
-                    <x-icon name="spv-icon" class="w-5 h-5 shrink-0" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
+                    <x-icon name="spv-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
                     SPV
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="spv" name="spv" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-[10px] px-3.5 py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-xs sm:text-[13px] truncate select-none">Semua SPV</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 shrink-0 ml-1.5 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua SPV</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] w-full min-w-[150px] max-h-[220px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('spv', '', 'Semua SPV')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('spv', '', 'Semua SPV')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua SPV</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('spv', 'spv1', 'SPV 1')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('spv', 'spv1', 'SPV 1')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>SPV 1</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('spv', 'spv2', 'SPV 2')" class="filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('spv', 'spv2', 'SPV 2')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>SPV 2</span>
                         </button>
                     </div>
@@ -355,20 +406,20 @@
         </div>
 
         {{-- ACTION BUTTONS --}}
-        <div class="mt-8 flex gap-3.5 shrink-0">
+        <div class="mt-4 sm:mt-6 lg:mt-8 flex gap-2 sm:gap-3.5 shrink-0">
             <button
                 id="applyFilter"
                 type="button"
-                class="h-[48px] flex-1 rounded-[10px] bg-[#0066FF] hover:bg-blue-700 text-sm font-semibold text-white transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                class="h-[38px] sm:h-[44px] lg:h-[48px] flex-1 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-semibold text-white transition flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs cursor-pointer"
             >
-                <x-icon name="filter-icon" class="w-4 h-4 text-white" />
+                <x-icon name="filter-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                 Terapkan Filter
             </button>
 
             <button
                 id="resetFilter"
                 type="button"
-                class="h-[48px] w-[115px] rounded-[10px] border border-gray-300 bg-white text-sm font-semibold text-gray-800 transition hover:bg-gray-50 cursor-pointer"
+                class="h-[38px] sm:h-[44px] lg:h-[48px] w-[75px] sm:w-[95px] lg:w-[115px] rounded-lg lg:rounded-[10px] border border-gray-300 bg-white text-xs sm:text-sm font-semibold text-gray-800 transition hover:bg-gray-50 cursor-pointer"
             >
                 Reset
             </button>
@@ -611,83 +662,85 @@
             }
         });
 
-        // Ikon 3D untuk popup kartu aset dengan Drop Shadow persis Figma (diperbesar 2x menjadi w-12 h-12)
-        const ICON_CORP = `<svg class="w-8 h-8 shrink-0 text-[#0066FF]" viewBox="0 0 21 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 18.7775V0H10.4319V4.17278H20.8639V18.7775H0ZM2.08639 16.6911H8.34555V14.6047H2.08639V16.6911ZM2.08639 12.5183H8.34555V10.4319H2.08639V12.5183ZM2.08639 8.34555H8.34555V6.25916H2.08639V8.34555ZM2.08639 4.17278H8.34555V2.08639H2.08639V4.17278ZM10.4319 16.6911H18.7775V6.25916H10.4319V16.6911ZM12.5183 10.4319V8.34555H16.6911V10.4319H12.5183ZM12.5183 14.6047V12.5183H16.6911V14.6047H12.5183Z" fill="currentColor"/></svg>`;
-        const ICON_ALAMAT = `<svg class="w-12 h-12 shrink-0" viewBox="-1 -1 24 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_alm)"><g filter="url(#f1_d_alm)"><path d="M4.51 3.01C4.51 2.18 5.18 1.5 6.01 1.5H18.04C18.87 1.5 19.54 2.18 19.54 3.01V11.28C19.54 12.11 18.87 12.78 18.04 12.78H6.01C5.18 12.78 4.51 12.11 4.51 11.28V3.01Z" fill="url(#p0_lin_alm)"/></g><path fill-rule="evenodd" clip-rule="evenodd" d="M10.52 4.51L13.53 5.26V16.54L10.52 15.79V10.31C10.78 10.77 11.27 11.09 11.84 11.09C12.67 11.09 13.34 10.41 13.34 9.58C13.34 8.75 12.67 8.08 11.84 8.08C11.27 8.08 10.78 8.39 10.52 8.86V4.51Z" fill="white" fill-opacity="0.4"/><path d="M7.52 5.26L4.51 4.51V15.79L7.52 16.54V5.26Z" fill="white" fill-opacity="0.4"/><path d="M13.53 5.26L16.54 4.51V15.79L13.53 16.54V5.26Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.52 4.51L7.52 5.26V16.54L10.52 15.79V10.31C10.4 10.1 10.34 9.85 10.34 9.58C10.34 9.32 10.4 9.07 10.52 8.86V4.51Z" fill="white" fill-opacity="0.4"/><path d="M1.5 5.26L4.51 4.51V15.79L1.5 16.54V5.26Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M12.06 14.28C12.7 13.72 14.47 11.93 14.47 9.69C14.47 8.32 13.65 6.95 11.84 6.95C10.03 6.95 9.21 8.32 9.21 9.69C9.21 11.93 10.98 13.72 11.62 14.28C11.75 14.4 11.93 14.4 12.06 14.28ZM11.84 11.09C12.67 11.09 13.34 10.41 13.34 9.58C13.34 8.75 12.67 8.08 11.84 8.08C11.01 8.08 10.34 8.75 10.34 9.58C10.34 10.41 11.01 11.09 11.84 11.09Z" fill="white" fill-opacity="0.6"/></g><defs><filter id="f_d_alm" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#93DF32" flood-opacity="0.4"/></filter><filter id="f1_d_alm" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_alm" x1="12" y1="1.5" x2="12" y2="12.8" gradientUnits="userSpaceOnUse"><stop stop-color="#93DF32"/><stop offset="1" stop-color="#70BD0D"/></linearGradient></defs></svg>`;
-        const ICON_LUAS = `<svg class="w-12 h-12 shrink-0" viewBox="-1 -1 23 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_ls)"><g filter="url(#f1_d_ls)"><path d="M9.99 6.92C9.99 6.49 10.34 6.15 10.76 6.15H17.68C18.1 6.15 18.45 6.49 18.45 6.92V16.14C18.45 16.57 18.1 16.91 17.68 16.91H10.76C10.34 16.91 9.99 16.57 9.99 16.14V6.92Z" fill="url(#p0_lin_ls)"/></g><g filter="url(#f2_d_ls)"><path d="M5.38 2.31C5.38 1.88 5.72 1.54 6.15 1.54H11.53C11.95 1.54 12.3 1.88 12.3 2.31V16.14C12.3 16.57 11.95 16.91 11.53 16.91H6.15C5.72 16.91 5.38 16.57 5.38 16.14V2.31Z" fill="url(#p1_lin_ls)"/></g><path d="M1.54 5.38C1.54 4.96 1.88 4.61 2.31 4.61H7.69C8.11 4.61 8.46 4.96 8.46 5.38V19.22C8.46 19.64 8.11 19.99 7.69 19.99H2.31C1.88 19.99 1.54 19.64 1.54 19.22V5.38Z" fill="white" fill-opacity="0.4"/></g><defs><filter id="f_d_ls" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#31C8D2" flood-opacity="0.4"/></filter><filter id="f1_d_ls" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><filter id="f2_d_ls" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_ls" x1="14.2" y1="6.1" x2="14.2" y2="16.9" gradientUnits="userSpaceOnUse"><stop stop-color="#31C8D2"/><stop offset="1" stop-color="#1AA6E1"/></linearGradient><linearGradient id="p1_lin_ls" x1="8.8" y1="1.5" x2="8.8" y2="16.9" gradientUnits="userSpaceOnUse"><stop stop-color="#31C8D2"/><stop offset="1" stop-color="#1AA6E1"/></linearGradient></defs></svg>`;
-        const ICON_JENIS = `<svg class="w-12 h-12 shrink-0" viewBox="-1 -1 24 23" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_jns)"><g filter="url(#f1_d_jns)"><path d="M4.51 3.01C4.51 2.18 5.18 1.5 6.01 1.5H18.04C18.87 1.5 19.54 2.18 19.54 3.01V11.28C19.54 12.11 18.87 12.78 18.04 12.78H6.01C5.18 12.78 4.51 12.11 4.51 11.28V3.01Z" fill="url(#p0_lin_jns)"/></g><path d="M1.5 5.26C1.5 4.85 1.84 4.51 2.25 4.51H15.79C16.2 4.51 16.54 4.85 16.54 5.26V6.77C16.54 7.18 16.2 7.52 15.79 7.52H2.25C1.84 7.52 1.5 7.18 1.5 6.77V5.26Z" fill="white" fill-opacity="0.4"/><path d="M1.5 8.64C1.5 8.44 1.67 8.27 1.88 8.27H14.66C14.87 8.27 15.03 8.44 15.03 8.64V10.15C15.03 10.36 14.87 10.52 14.66 10.52H1.88C1.67 10.52 1.5 10.36 1.5 10.15V8.64Z" fill="white" fill-opacity="0.4"/><path d="M1.5 11.65C1.5 11.44 1.67 11.28 1.88 11.28H8.64C8.85 11.28 9.02 11.44 9.02 11.65V12.4C9.02 12.61 8.85 12.78 8.64 12.78H1.88C1.67 12.78 1.5 12.61 1.5 12.4V11.65Z" fill="white" fill-opacity="0.4"/><path d="M11.22 16.68C12.1 18.11 13.71 18.11 14.63 18C16.48 17.78 17.78 16.73 17.41 13.23C17.31 12.26 16.57 11.86 15.69 12.45C15.36 11.51 13.75 11.78 13.84 12.67L13.64 10.73C13.56 10 13.16 9.31 12.33 9.41C11.5 9.5 11.5 10.49 11.6 11.41L11.96 14.87L11.17 13.98C10.91 13.76 10.24 13.15 9.7 13.41C9.17 13.67 9.08 14.23 9.37 14.68C9.65 15.14 10.65 15.76 11.22 16.68Z" fill="white" fill-opacity="0.6"/></g><defs><filter id="f_d_jns" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#9D68F3" flood-opacity="0.4"/></filter><filter id="f1_d_jns" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_jns" x1="12" y1="1.5" x2="12" y2="12.8" gradientUnits="userSpaceOnUse"><stop stop-color="#6966FF"/><stop offset="1" stop-color="#9D68F3"/></linearGradient></defs></svg>`;
-        const ICON_NILAI = `<svg class="w-12 h-12 shrink-0" viewBox="-1 -1 23 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_nl)"><g filter="url(#f1_d_nl)"><path d="M4.2 2.8C4.2 2.03 4.83 1.4 5.6 1.4H16.8C17.57 1.4 18.2 2.03 18.2 2.8V9.1C18.2 9.87 17.57 10.5 16.8 10.5H5.6C4.83 10.5 4.2 9.87 4.2 9.1V2.8Z" fill="url(#p0_lin_nl)"/></g><path d="M3.85 4.25C4.05 3.5 4.82 3.06 5.57 3.26L16.39 6.15C17.13 6.35 17.58 7.12 17.38 7.87L15.75 13.96C15.55 14.7 14.78 15.15 14.03 14.95L3.21 12.05C2.47 11.85 2.02 11.08 2.22 10.33L3.85 4.25Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M1.4 7.35C1.4 6.58 2.03 5.95 2.8 5.95H14C14.77 5.95 15.4 6.58 15.4 7.35V13.65C15.4 14.42 14.77 15.05 14 15.05H2.8C2.03 15.05 1.4 14.42 1.4 13.65V7.35ZM10.5 10.5C10.5 12.24 9.56 13.65 8.4 13.65C7.24 13.65 6.3 12.24 6.3 10.5C6.3 8.76 7.24 7.35 8.4 7.35C9.56 7.35 10.5 8.76 10.5 10.5ZM3.85 7.7C3.85 8.09 3.54 8.4 3.15 8.4C2.76 8.4 2.45 8.09 2.45 7.7C2.45 7.31 2.76 7 3.15 7C3.54 7 3.85 7.31 3.85 7.7ZM14.35 7.7C14.35 8.09 14.04 8.4 13.65 8.4C13.26 8.4 12.95 8.09 12.95 7.7C12.95 7.31 13.26 7 13.65 7C14.04 7 14.35 7.31 14.35 7.7ZM3.15 14C3.54 14 3.85 13.69 3.85 13.3C3.85 12.91 3.54 12.6 3.15 12.6C2.76 12.6 2.45 12.91 2.45 13.3C2.45 13.69 2.76 14 3.15 14ZM14.35 13.3C14.35 13.69 14.04 14 13.65 14C13.26 14 12.95 13.69 12.95 13.3C12.95 12.91 13.26 12.6 13.65 12.6C14.04 12.6 14.35 12.91 14.35 13.3Z" fill="white" fill-opacity="0.4"/></g><defs><filter id="f_d_nl" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#21EB66" flood-opacity="0.4"/></filter><filter id="f1_d_nl" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_nl" x1="11.2" y1="1.4" x2="11.2" y2="10.5" gradientUnits="userSpaceOnUse"><stop stop-color="#21EB66"/><stop offset="1" stop-color="#12D583"/></linearGradient></defs></svg>`;
-        const ICON_PERIODE = `<svg class="w-12 h-12 shrink-0" viewBox="-1 -1 25 22" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_prd)"><g filter="url(#f1_d_prd)"><path d="M4.57 3.05C4.57 2.21 5.25 1.52 6.09 1.52H18.28C19.12 1.52 19.81 2.21 19.81 3.05V11.43C19.81 12.27 19.12 12.95 18.28 12.95H6.09C5.25 12.95 4.57 12.27 4.57 11.43V3.05Z" fill="url(#p0_lin_prd)"/></g><path d="M1.52 6.09V6.86H16.76V6.09C16.76 5.25 16.08 4.57 15.24 4.57H3.05C2.21 4.57 1.52 5.25 1.52 6.09Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M16.76 7.62V15.24C16.76 16.08 16.08 16.76 15.24 16.76H3.05C2.21 16.76 1.52 16.08 1.52 15.24V7.62H16.76ZM13.71 10.67C14.13 10.67 14.47 10.32 14.47 9.9C14.47 9.48 14.13 9.14 13.71 9.14C13.29 9.14 12.95 9.48 12.95 9.9C12.95 10.32 13.29 10.67 13.71 10.67Z" fill="white" fill-opacity="0.4"/></g><defs><filter id="f_d_prd" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#FFA800" flood-opacity="0.4"/></filter><filter id="f1_d_prd" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_prd" x1="12.2" y1="1.5" x2="12.2" y2="12.9" gradientUnits="userSpaceOnUse"><stop stop-color="#FFA800"/><stop offset="1" stop-color="#FF7A00"/></linearGradient></defs></svg>`;
+        // Ikon 3D untuk popup kartu aset dengan Drop Shadow persis Figma (responsif scalable)
+        const ICON_CORP = `<svg class="w-full h-full text-[#0066FF]" viewBox="0 0 21 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 18.7775V0H10.4319V4.17278H20.8639V18.7775H0ZM2.08639 16.6911H8.34555V14.6047H2.08639V16.6911ZM2.08639 12.5183H8.34555V10.4319H2.08639V12.5183ZM2.08639 8.34555H8.34555V6.25916H2.08639V8.34555ZM2.08639 4.17278H8.34555V2.08639H2.08639V4.17278ZM10.4319 16.6911H18.7775V6.25916H10.4319V16.6911ZM12.5183 10.4319V8.34555H16.6911V10.4319H12.5183ZM12.5183 14.6047V12.5183H16.6911V14.6047H12.5183Z" fill="currentColor"/></svg>`;
+        const ICON_ALAMAT = `<svg class="w-full h-full" viewBox="-1 -1 24 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_alm)"><g filter="url(#f1_d_alm)"><path d="M4.51 3.01C4.51 2.18 5.18 1.5 6.01 1.5H18.04C18.87 1.5 19.54 2.18 19.54 3.01V11.28C19.54 12.11 18.87 12.78 18.04 12.78H6.01C5.18 12.78 4.51 12.11 4.51 11.28V3.01Z" fill="url(#p0_lin_alm)"/></g><path fill-rule="evenodd" clip-rule="evenodd" d="M10.52 4.51L13.53 5.26V16.54L10.52 15.79V10.31C10.78 10.77 11.27 11.09 11.84 11.09C12.67 11.09 13.34 10.41 13.34 9.58C13.34 8.75 12.67 8.08 11.84 8.08C11.27 8.08 10.78 8.39 10.52 8.86V4.51Z" fill="white" fill-opacity="0.4"/><path d="M7.52 5.26L4.51 4.51V15.79L7.52 16.54V5.26Z" fill="white" fill-opacity="0.4"/><path d="M13.53 5.26L16.54 4.51V15.79L13.53 16.54V5.26Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.52 4.51L7.52 5.26V16.54L10.52 15.79V10.31C10.4 10.1 10.34 9.85 10.34 9.58C10.34 9.32 10.4 9.07 10.52 8.86V4.51Z" fill="white" fill-opacity="0.4"/><path d="M1.5 5.26L4.51 4.51V15.79L1.5 16.54V5.26Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M12.06 14.28C12.7 13.72 14.47 11.93 14.47 9.69C14.47 8.32 13.65 6.95 11.84 6.95C10.03 6.95 9.21 8.32 9.21 9.69C9.21 11.93 10.98 13.72 11.62 14.28C11.75 14.4 11.93 14.4 12.06 14.28ZM11.84 11.09C12.67 11.09 13.34 10.41 13.34 9.58C13.34 8.75 12.67 8.08 11.84 8.08C11.01 8.08 10.34 8.75 10.34 9.58C10.34 10.41 11.01 11.09 11.84 11.09Z" fill="white" fill-opacity="0.6"/></g><defs><filter id="f_d_alm" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#93DF32" flood-opacity="0.4"/></filter><filter id="f1_d_alm" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_alm" x1="12" y1="1.5" x2="12" y2="12.8" gradientUnits="userSpaceOnUse"><stop stop-color="#93DF32"/><stop offset="1" stop-color="#70BD0D"/></linearGradient></defs></svg>`;
+        const ICON_LUAS = `<svg class="w-full h-full" viewBox="-1 -1 23 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_ls)"><g filter="url(#f1_d_ls)"><path d="M9.99 6.92C9.99 6.49 10.34 6.15 10.76 6.15H17.68C18.1 6.15 18.45 6.49 18.45 6.92V16.14C18.45 16.57 18.1 16.91 17.68 16.91H10.76C10.34 16.91 9.99 16.57 9.99 16.14V6.92Z" fill="url(#p0_lin_ls)"/></g><g filter="url(#f2_d_ls)"><path d="M5.38 2.31C5.38 1.88 5.72 1.54 6.15 1.54H11.53C11.95 1.54 12.3 1.88 12.3 2.31V16.14C12.3 16.57 11.95 16.91 11.53 16.91H6.15C5.72 16.91 5.38 16.57 5.38 16.14V2.31Z" fill="url(#p1_lin_ls)"/></g><path d="M1.54 5.38C1.54 4.96 1.88 4.61 2.31 4.61H7.69C8.11 4.61 8.46 4.96 8.46 5.38V19.22C8.46 19.64 8.11 19.99 7.69 19.99H2.31C1.88 19.99 1.54 19.64 1.54 19.22V5.38Z" fill="white" fill-opacity="0.4"/></g><defs><filter id="f_d_ls" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#31C8D2" flood-opacity="0.4"/></filter><filter id="f1_d_ls" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><filter id="f2_d_ls" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_ls" x1="14.2" y1="6.1" x2="14.2" y2="16.9" gradientUnits="userSpaceOnUse"><stop stop-color="#31C8D2"/><stop offset="1" stop-color="#1AA6E1"/></linearGradient><linearGradient id="p1_lin_ls" x1="8.8" y1="1.5" x2="8.8" y2="16.9" gradientUnits="userSpaceOnUse"><stop stop-color="#31C8D2"/><stop offset="1" stop-color="#1AA6E1"/></linearGradient></defs></svg>`;
+        const ICON_JENIS = `<svg class="w-full h-full" viewBox="-1 -1 24 23" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_jns)"><g filter="url(#f1_d_jns)"><path d="M4.51 3.01C4.51 2.18 5.18 1.5 6.01 1.5H18.04C18.87 1.5 19.54 2.18 19.54 3.01V11.28C19.54 12.11 18.87 12.78 18.04 12.78H6.01C5.18 12.78 4.51 12.11 4.51 11.28V3.01Z" fill="url(#p0_lin_jns)"/></g><path d="M1.5 5.26C1.5 4.85 1.84 4.51 2.25 4.51H15.79C16.2 4.51 16.54 4.85 16.54 5.26V6.77C16.54 7.18 16.2 7.52 15.79 7.52H2.25C1.84 7.52 1.5 7.18 1.5 6.77V5.26Z" fill="white" fill-opacity="0.4"/><path d="M1.5 8.64C1.5 8.44 1.67 8.27 1.88 8.27H14.66C14.87 8.27 15.03 8.44 15.03 8.64V10.15C15.03 10.36 14.87 10.52 14.66 10.52H1.88C1.67 10.52 1.5 10.36 1.5 10.15V8.64Z" fill="white" fill-opacity="0.4"/><path d="M1.5 11.65C1.5 11.44 1.67 11.28 1.88 11.28H8.64C8.85 11.28 9.02 11.44 9.02 11.65V12.4C9.02 12.61 8.85 12.78 8.64 12.78H1.88C1.67 12.78 1.5 12.61 1.5 12.4V11.65Z" fill="white" fill-opacity="0.4"/><path d="M11.22 16.68C12.1 18.11 13.71 18.11 14.63 18C16.48 17.78 17.78 16.73 17.41 13.23C17.31 12.26 16.57 11.86 15.69 12.45C15.36 11.51 13.75 11.78 13.84 12.67L13.64 10.73C13.56 10 13.16 9.31 12.33 9.41C11.5 9.5 11.5 10.49 11.6 11.41L11.96 14.87L11.17 13.98C10.91 13.76 10.24 13.15 9.7 13.41C9.17 13.67 9.08 14.23 9.37 14.68C9.65 15.14 10.65 15.76 11.22 16.68Z" fill="white" fill-opacity="0.6"/></g><defs><filter id="f_d_jns" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#9D68F3" flood-opacity="0.4"/></filter><filter id="f1_d_jns" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_jns" x1="12" y1="1.5" x2="12" y2="12.8" gradientUnits="userSpaceOnUse"><stop stop-color="#6966FF"/><stop offset="1" stop-color="#9D68F3"/></linearGradient></defs></svg>`;
+        const ICON_NILAI = `<svg class="w-full h-full" viewBox="-1 -1 23 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_nl)"><g filter="url(#f1_d_nl)"><path d="M4.2 2.8C4.2 2.03 4.83 1.4 5.6 1.4H16.8C17.57 1.4 18.2 2.03 18.2 2.8V9.1C18.2 9.87 17.57 10.5 16.8 10.5H5.6C4.83 10.5 4.2 9.87 4.2 9.1V2.8Z" fill="url(#p0_lin_nl)"/></g><path d="M3.85 4.25C4.05 3.5 4.82 3.06 5.57 3.26L16.39 6.15C17.13 6.35 17.58 7.12 17.38 7.87L15.75 13.96C15.55 14.7 14.78 15.15 14.03 14.95L3.21 12.05C2.47 11.85 2.02 11.08 2.22 10.33L3.85 4.25Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M1.4 7.35C1.4 6.58 2.03 5.95 2.8 5.95H14C14.77 5.95 15.4 6.58 15.4 7.35V13.65C15.4 14.42 14.77 15.05 14 15.05H2.8C2.03 15.05 1.4 14.42 1.4 13.65V7.35ZM10.5 10.5C10.5 12.24 9.56 13.65 8.4 13.65C7.24 13.65 6.3 12.24 6.3 10.5C6.3 8.76 7.24 7.35 8.4 7.35C9.56 7.35 10.5 8.76 10.5 10.5ZM3.85 7.7C3.85 8.09 3.54 8.4 3.15 8.4C2.76 8.4 2.45 8.09 2.45 7.7C2.45 7.31 2.76 7 3.15 7C3.54 7 3.85 7.31 3.85 7.7ZM14.35 7.7C14.35 8.09 14.04 8.4 13.65 8.4C13.26 8.4 12.95 8.09 12.95 7.7C12.95 7.31 13.26 7 13.65 7C14.04 7 14.35 7.31 14.35 7.7ZM3.15 14C3.54 14 3.85 13.69 3.85 13.3C3.85 12.91 3.54 12.6 3.15 12.6C2.76 12.6 2.45 12.91 2.45 13.3C2.45 13.69 2.76 14 3.15 14ZM14.35 13.3C14.35 13.69 14.04 14 13.65 14C13.26 14 12.95 13.69 12.95 13.3C12.95 12.91 13.26 12.6 13.65 12.6C14.04 12.6 14.35 12.91 14.35 13.3Z" fill="white" fill-opacity="0.4"/></g><defs><filter id="f_d_nl" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#21EB66" flood-opacity="0.4"/></filter><filter id="f1_d_nl" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_nl" x1="11.2" y1="1.4" x2="11.2" y2="10.5" gradientUnits="userSpaceOnUse"><stop stop-color="#21EB66"/><stop offset="1" stop-color="#12D583"/></linearGradient></defs></svg>`;
+        const ICON_PERIODE = `<svg class="w-full h-full" viewBox="-1 -1 25 22" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_prd)"><g filter="url(#f1_d_prd)"><path d="M4.57 3.05C4.57 2.21 5.25 1.52 6.09 1.52H18.28C19.12 1.52 19.81 2.21 19.81 3.05V11.43C19.81 12.27 19.12 12.95 18.28 12.95H6.09C5.25 12.95 4.57 12.27 4.57 11.43V3.05Z" fill="url(#p0_lin_prd)"/></g><path d="M1.52 6.09V6.86H16.76V6.09C16.76 5.25 16.08 4.57 15.24 4.57H3.05C2.21 4.57 1.52 5.25 1.52 6.09Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M16.76 7.62V15.24C16.76 16.08 16.08 16.76 15.24 16.76H3.05C2.21 16.76 1.52 16.08 1.52 15.24V7.62H16.76ZM13.71 10.67C14.13 10.67 14.47 10.32 14.47 9.9C14.47 9.48 14.13 9.14 13.71 9.14C13.29 9.14 12.95 9.48 12.95 9.9C12.95 10.32 13.29 10.67 13.71 10.67Z" fill="white" fill-opacity="0.4"/></g><defs><filter id="f_d_prd" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#FFA800" flood-opacity="0.4"/></filter><filter id="f1_d_prd" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_prd" x1="12.2" y1="1.5" x2="12.2" y2="12.9" gradientUnits="userSpaceOnUse"><stop stop-color="#FFA800"/><stop offset="1" stop-color="#FF7A00"/></linearGradient></defs></svg>`;
 
-        // Template HTML untuk kartu popup aset
+        // Template HTML untuk kartu popup aset (Responsive: compact di mobile, proporsional di desktop)
         function createPopupCardHTML(asset, id) {
             const googleMapsUrl = (asset.latitude && asset.longitude) 
                 ? `https://www.google.com/maps?q=${asset.latitude},${asset.longitude}` 
                 : '#';  
 
             return `
-                <div class="w-[370px] sm:w-[420px] rounded-3xl bg-white p-7 shadow-[0_20px_50px_rgba(0,0,0,0.14)] border border-gray-100/90 font-sans text-left relative">
-                    <div class="mb-4">
-                        <div class="flex items-center gap-3">
-                            ${ICON_CORP}
-                            <h3 class="m-0 text-[21px] sm:text-[23px] font-bold leading-tight text-gray-950 truncate">${asset.name || '-'}</h3>
+                <div class="w-[260px] sm:w-[360px] rounded-2xl sm:rounded-3xl bg-white p-3 sm:p-5 shadow-[0_16px_40px_rgba(0,0,0,0.16)] border border-gray-100/90 font-sans text-left relative">
+                    <div class="mb-2 sm:mb-3.5">
+                        <div class="flex items-center gap-2 sm:gap-2.5">
+                            <div class="w-5 h-5 sm:w-6 sm:h-6 shrink-0 text-[#0066FF] flex items-center justify-center">
+                                ${ICON_CORP}
+                            </div>
+                            <h3 class="m-0 text-xs sm:text-base font-bold leading-tight text-gray-950 truncate">${asset.name || '-'}</h3>
                         </div>
-                        <p class="mt-2 text-sm font-medium text-gray-400 pl-11 truncate">${(asset.code ? asset.code + ' • ' : '') + (asset.location || '')}</p>
+                        <p class="mt-0.5 sm:mt-1 text-[9.5px] sm:text-xs font-medium text-gray-400 pl-7 sm:pl-8.5 truncate">${(asset.code ? asset.code + ' • ' : '') + (asset.location || '')}</p>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-x-5 gap-y-4 pt-2">
-                        <div class="flex items-center gap-3">
-                            <div class="shrink-0">${ICON_ALAMAT}</div>
+                    <div class="grid grid-cols-2 gap-x-2 sm:gap-x-4 gap-y-2 sm:gap-y-3 pt-1.5 sm:pt-2.5 border-t sm:border-0 border-gray-100">
+                        <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_ALAMAT}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-xs font-semibold text-gray-900">Alamat</span>
-                                <span class="block text-xs text-gray-500 mt-0.5 leading-snug break-words">${asset.address || '-'}</span>
+                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 leading-tight">Alamat</span>
+                                <span class="block text-[9.5px] sm:text-xs text-gray-500 mt-0.5 leading-tight truncate">${asset.address || '-'}</span>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-3">
-                            <div class="shrink-0">${ICON_LUAS}</div>
+                        <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_LUAS}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-xs font-semibold text-gray-900">Luas</span>
-                                <span class="block text-xs text-gray-500 mt-0.5 leading-snug">${asset.area || '-'}</span>
+                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 leading-tight">Luas</span>
+                                <span class="block text-[9.5px] sm:text-xs text-gray-500 mt-0.5 leading-tight truncate">${asset.area || '-'}</span>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-3">
-                            <div class="shrink-0">${ICON_JENIS}</div>
+                        <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_JENIS}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-xs font-semibold text-gray-900">Jenis Aset</span>
-                                <span class="block text-xs text-gray-500 mt-0.5 leading-snug break-words">${asset.type || '-'}</span>
+                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 leading-tight">Jenis Aset</span>
+                                <span class="block text-[9.5px] sm:text-xs text-gray-500 mt-0.5 leading-tight truncate">${asset.type || '-'}</span>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-3">
-                            <div class="shrink-0">${ICON_NILAI}</div>
+                        <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_NILAI}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-xs font-semibold text-gray-900">Nilai Aset</span>
-                                <span class="block text-xs text-gray-500 mt-0.5 leading-snug">${asset.value || '-'}</span>
+                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 leading-tight">Nilai Aset</span>
+                                <span class="block text-[9.5px] sm:text-xs text-gray-500 mt-0.5 leading-tight truncate">${asset.value || '-'}</span>
                             </div>
                         </div>
 
-                        <div class="col-span-2 flex items-center gap-3">
-                            <div class="shrink-0">${ICON_PERIODE}</div>
+                        <div class="col-span-2 flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+                            <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_PERIODE}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-xs font-semibold text-gray-900">Periode</span>
-                                <span class="block text-xs text-gray-500 mt-0.5 leading-snug">${asset.period || '-'}</span>
+                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 leading-tight">Periode</span>
+                                <span class="block text-[9.5px] sm:text-xs text-gray-500 mt-0.5 leading-tight truncate">${asset.period || '-'}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-6 flex items-center gap-3">
-                        <a href="/asset/${id}" class="btn-detail-lanjutan flex-1 text-center cursor-pointer rounded-xl bg-[#0066FF] py-3 px-4 text-sm font-semibold !text-white transition hover:bg-blue-700 shadow-sm inline-block" style="color: #ffffff !important;">Detail Lanjutan</a>
-                        <a href="${googleMapsUrl}" target="_blank" class="btn-buka-maps flex items-center justify-center gap-1.5 w-[130px] text-center cursor-pointer rounded-xl border border-gray-300 bg-white py-3 px-3 text-sm font-medium text-gray-600 transition hover:bg-gray-50">
-                            <svg class="w-4 h-4 text-gray-600 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div class="mt-2.5 sm:mt-4 flex items-center gap-2">
+                        <a href="/asset/${id}" class="btn-detail-lanjutan flex-1 h-[34px] sm:h-[38px] flex items-center justify-center text-center cursor-pointer rounded-xl bg-[#0066FF] px-2.5 sm:px-4 text-[11px] sm:text-xs font-semibold !text-white transition hover:bg-blue-700 shadow-xs whitespace-nowrap" style="color: #ffffff !important;">Detail Lanjutan</a>
+                        <a href="${googleMapsUrl}" target="_blank" class="btn-buka-maps h-[34px] sm:h-[38px] flex items-center justify-center gap-1.5 text-center cursor-pointer rounded-xl border border-gray-200 bg-white px-2.5 sm:px-3 text-[11px] sm:text-xs font-medium text-gray-700 transition hover:bg-gray-50 shrink-0 whitespace-nowrap shadow-xs">
+                            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M22 9.00002V15C22 17.5 21.5 19.25 20.38 20.38L14 14L21.73 6.27002C21.91 7.06002 22 7.96002 22 9.00002Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M21.73 6.27L6.26999 21.73C3.25999 21.04 2 18.96 2 15V9C2 4 4 2 9 2H15C18.96 2 21.04 3.26 21.73 6.27Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M20.38 20.38C19.25 21.5 17.5 22 15 22H9.00003C7.96003 22 7.06002 21.91 6.27002 21.73L14 14L20.38 20.38Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path opacity="0.4" d="M6.24002 7.97997C6.92002 5.04997 11.32 5.04997 12 7.97997C12.39 9.69997 11.31 11.16 10.36 12.06C9.67001 12.72 8.58003 12.72 7.88003 12.06C6.93003 11.16 5.84002 9.69997 6.24002 7.97997Z" stroke="currentColor" stroke-width="1.5"/>
                                 <path opacity="0.4" d="M9.0946 8.69995H9.10359" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span>Buka Maps</span>
+                            <span class="whitespace-nowrap">Buka Maps</span>
                         </a>
                     </div>
                 </div>
@@ -714,15 +767,17 @@
 
                     marker.on('click', function(e) {
                         L.DomEvent.stopPropagation(e);
-                        
+
                         const baseZoom = baseIndonesiaZoom || map.getMinZoom() || 5;
                         const pointZoomLevel = baseZoom + 1.2;
 
                         const projected = map.project([lat, lng], pointZoomLevel);
-                        const targetCenter = map.unproject(projected.subtract([0, 150]), pointZoomLevel);
+                        // On mobile: subtract 105px so popup attached to pin is vertically centered
+                        const yOffset = isMobile() ? 105 : 150;
+                        const targetCenter = map.unproject(projected.subtract([0, yOffset]), pointZoomLevel);
 
                         map.flyTo(targetCenter, pointZoomLevel, {
-                            duration: 0.65
+                            duration: 0.55
                         });
 
                         marker.openPopup();
@@ -731,12 +786,18 @@
             });
         }
 
+
         map.on('popupclose', function() {
             fitIndonesiaBounds();
         });
 
+        map.on('click', function() {
+            closeFilterModal();
+        });
+
         // Kontrol filter panel & button animation
         const filterButton = document.getElementById('filterButton');
+        const filterButtonDesktop = document.getElementById('filterButtonDesktop');
         const filterModal = document.getElementById('filterModal');
         const filterOverlay = document.getElementById('filterOverlay');
         const applyFilter = document.getElementById('applyFilter');
@@ -744,8 +805,15 @@
 
         let isFilterOpen = false;
 
+        function isMobile() {
+            return window.innerWidth < 1024;
+        }
+
         function alignFilterModal() {
-            if (filterButton && filterModal) {
+            if (!isMobile() && filterButtonDesktop && filterModal) {
+                const rect = filterButtonDesktop.getBoundingClientRect();
+                filterModal.style.top = rect.top + 'px';
+            } else if (isMobile() && filterButton && filterModal) {
                 const rect = filterButton.getBoundingClientRect();
                 filterModal.style.top = rect.top + 'px';
             }
@@ -760,16 +828,21 @@
         function openFilter() {
             isFilterOpen = true;
             alignFilterModal();
-            
-            // 1. Tampilkan Panel Filter (slide in from right)
-            filterModal.classList.remove('translate-x-[150%]', 'opacity-0', 'pointer-events-none');
+
+            // Slide in from right on both mobile and desktop
+            filterModal.classList.remove('translate-x-[140%]', 'opacity-0', 'pointer-events-none');
             filterModal.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
 
-            // 2. Geser Tombol Filter ke samping kiri panel
-            const shiftWidth = (filterModal.offsetWidth || 373) + 12;
-            filterButton.style.transform = 'translateX(-' + shiftWidth + 'px)';
+            // Shift filter button to the left
+            if (isMobile() && filterButton) {
+                const shiftWidth = (filterModal.offsetWidth || 295) + 12;
+                filterButton.style.transform = 'translateX(-' + shiftWidth + 'px)';
+            } else if (!isMobile() && filterButtonDesktop) {
+                const shiftWidth = (filterModal.offsetWidth || 373) + 12;
+                filterButtonDesktop.style.transform = 'translateX(-' + shiftWidth + 'px)';
+            }
 
-            // 3. Tampilkan Overlay
+            // Show overlay
             filterOverlay.classList.remove('invisible', 'opacity-0');
             filterOverlay.classList.add('visible', 'opacity-100');
         }
@@ -777,18 +850,22 @@
         function closeFilterModal() {
             isFilterOpen = false;
 
-            // 1. Sembunyikan Panel Filter (slide out to right)
+            // Slide back right on both mobile and desktop
             filterModal.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
-            filterModal.classList.add('translate-x-[150%]', 'opacity-0', 'pointer-events-none');
+            filterModal.classList.add('translate-x-[140%]', 'opacity-0', 'pointer-events-none');
 
-            // 2. Kembalikan Tombol Filter ke posisi semula
-            filterButton.style.transform = 'translateX(0)';
+            if (filterButton) {
+                filterButton.style.transform = 'translateX(0)';
+            }
+            if (filterButtonDesktop) {
+                filterButtonDesktop.style.transform = 'translateX(0)';
+            }
 
-            // 3. Sembunyikan Overlay
+            // Hide overlay
             filterOverlay.classList.remove('visible', 'opacity-100');
             filterOverlay.classList.add('invisible', 'opacity-0');
 
-            // 4. Tutup semua dropdown menu yang terbuka
+            // Close all dropdown menus
             document.querySelectorAll('.filter-dropdown-menu').forEach(m => m.classList.add('hidden'));
         }
 
@@ -859,10 +936,19 @@
             }
         });
 
-        filterButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleFilter();
-        });
+        // Wire up both mobile and desktop filter buttons
+        if (filterButton) {
+            filterButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleFilter();
+            });
+        }
+        if (filterButtonDesktop) {
+            filterButtonDesktop.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleFilter();
+            });
+        }
 
         filterOverlay.addEventListener('click', function() {
             closeFilterModal();

@@ -21,7 +21,7 @@
     <x-navbar active="reports" />
 
     {{-- Main Content --}}
-    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-6 pb-24 lg:pb-10 flex flex-col gap-6">
+    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-6 pb-28 lg:pb-10 flex flex-col gap-6">
 
         {{-- Page Header & Breadcrumbs & Action Buttons --}}
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">

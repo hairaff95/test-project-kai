@@ -19,7 +19,7 @@
 
     <x-navbar active="map" />
 
-    <main class="mx-auto px-6 sm:px-10 py-5">
+    <main class="mx-auto px-4 sm:px-10 py-3 sm:py-5 pb-28 sm:pb-10">
 
         @php
             $contract  = $asset->contract;
@@ -28,66 +28,107 @@
             $tenant    = $contract?->tenant;
         @endphp
 
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[325px_1fr]">
+        <div class="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-[325px_1fr]">
 
             {{-- ===================== LEFT COLUMN ===================== --}}
 
             <div>
 
                 {{-- BREADCRUMB NAVIGATION --}}
-                <div class="mb-4 flex items-center gap-1.5 text-xs sm:text-[13px] text-gray-400">
+                <div class="mb-3 sm:mb-4 flex items-center gap-1.5 text-[11px] sm:text-[13px] text-gray-400">
                     <a href="{{ route('map') }}" class="hover:text-gray-600 transition">Peta</a>
                     <span>/</span>
                     <span class="text-[#0066FF] font-medium">Detail Lanjutan</span>
                 </div>
 
+                {{-- MOBILE HEADER & ACTIONS (Tampil sebelum foto pada mobile saja) --}}
+                <div class="lg:hidden mb-3.5 flex flex-col gap-2">
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight text-gray-950 leading-tight">
+                            {{ $asset->asset_block_name }}
+                        </h1>
+                        <p class="mt-1 text-[10px] sm:text-[11px] text-gray-400 uppercase tracking-wide font-normal">
+                            {{ $asset->wilayah_asset ?? 'JL. SLAMET 17 KEL. BENDAN KEC. PEKALONGAN BARAT KAB. PEKALONGAN' }} ({{ $asset->asset_number }})
+                        </p>
+                    </div>
+
+                    {{-- DESKRIPSI MOBILE --}}
+                    <p class="text-xs leading-relaxed text-gray-500 font-normal">
+                        {{ $asset->description ?? ($contract?->keterangan ?? 'Kawasan strategis dekat pusat niaga Tegal') }}
+                    </p>
+
+                    {{-- TOMBOL EDIT & HAPUS MOBILE (Di bawah teks deskripsi) --}}
+                    <div class="flex items-center gap-2 pt-0.5">
+                        <button
+                            type="button"
+                            onclick="openEditDrawer()"
+                            class="inline-flex items-center gap-1.5 rounded-lg bg-[#0066FF] hover:bg-blue-700 px-3 py-1.5 text-xs font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
+                        >
+                            <x-icon name="icon-edit-detail-peta" class="w-3.5 h-3.5 text-white" />
+                            <span>Edit</span>
+                        </button>
+
+                        <form action="{{ route('admin.assets.destroy', $asset->asset_number) }}" method="POST" id="form-hapus-aset-mobile">
+                            @csrf
+                            @method('DELETE')
+                            <button
+                                type="button"
+                                onclick="document.getElementById('modal-hapus').classList.remove('hidden')"
+                                class="inline-flex items-center gap-1.5 rounded-lg bg-[#E52500] hover:bg-red-700 px-3 py-1.5 text-xs font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
+                            >
+                                <x-icon name="icon-trash-edit-detail-peta" class="w-3.5 h-3.5 text-white" />
+                                <span>Hapus</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
                 {{-- FOTO UTAMA --}}
-                <div class="flex h-[256px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#d8d8d8]">
-                    <div class="text-[13px] text-gray-500">Foto Aset</div>
+                <div class="flex h-[180px] sm:h-[256px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#d8d8d8]">
+                    <div class="text-xs sm:text-[13px] text-gray-500">Foto Aset</div>
                 </div>
 
                 {{-- THUMBNAIL --}}
-                <div class="mt-3 grid grid-cols-3 gap-2">
+                <div class="mt-2.5 sm:mt-3 grid grid-cols-3 gap-2">
                     @for($i = 0; $i < 3; $i++)
-                        <div class="flex h-[96px] items-center justify-center overflow-hidden rounded-xl bg-[#d8d8d8]"></div>
+                        <div class="flex h-[65px] sm:h-[96px] items-center justify-center overflow-hidden rounded-xl bg-[#d8d8d8]"></div>
                     @endfor
                 </div>
 
                 {{-- DATA ADMINISTRATIF (Blok Putih) --}}
-                {{-- DATA ADMINISTRATIF (Blok Putih) --}}
-                <div class="mt-4 rounded-2xl border border-gray-200/80 bg-white p-5 shadow-xs">
+                <div class="mt-3.5 sm:mt-4 rounded-xl sm:rounded-2xl border border-gray-200/80 bg-white p-3.5 sm:p-5 shadow-xs">
 
-                    <h3 class="mb-3 text-[14px] font-semibold text-gray-900">Data Administratif</h3>
+                    <h3 class="mb-2.5 sm:mb-3 text-xs sm:text-[14px] font-semibold text-gray-900">Data Administratif</h3>
 
-                    <div class="grid grid-cols-2 gap-x-5 gap-y-3.5">
+                    <div class="grid grid-cols-2 gap-x-3 sm:gap-x-5 gap-y-2.5 sm:gap-y-3.5">
 
                         <div>
-                            <p class="text-[11px] text-gray-400">GL Akun</p>
-                            <p class="mt-[3px] text-[11px] font-semibold text-gray-800">{{ $financial->gl_account ?? '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">GL Akun</p>
+                            <p class="mt-0.5 text-[10px] sm:text-[11px] font-semibold text-gray-800">{{ $financial->gl_account ?? '-' }}</p>
                         </div>
                         <div>
-                            <p class="text-[11px] text-gray-400">Form RKA</p>
-                            <p class="mt-[3px] text-[11px] font-normal text-gray-800">{{ $financial->form_rka ?? '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">Form RKA</p>
+                            <p class="mt-0.5 text-[10px] sm:text-[11px] font-normal text-gray-800">{{ $financial->form_rka ?? '-' }}</p>
                         </div>
                         <div>
-                            <p class="text-[11px] text-gray-400">Jenis Pendapatan</p>
-                            <p class="mt-[3px] text-[11px] font-normal text-gray-800">{{ $financial->jenis_pendapatan ?? '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">Jenis Pendapatan</p>
+                            <p class="mt-0.5 text-[10px] sm:text-[11px] font-normal text-gray-800">{{ $financial->jenis_pendapatan ?? '-' }}</p>
                         </div>
                         <div>
-                            <p class="text-[11px] text-gray-400">SPV / Sales Executive</p>
-                            <p class="mt-[3px] text-[11px] font-normal text-gray-800">{{ $contract->spv ?? '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">SPV / Sales Executive</p>
+                            <p class="mt-0.5 text-[10px] sm:text-[11px] font-normal text-gray-800">{{ $contract->spv ?? '-' }}</p>
                         </div>
                         <div>
-                            <p class="text-[11px] text-gray-400">Tahun RKA</p>
-                            <p class="mt-[3px] text-[11px] font-normal text-gray-800">{{ $financial->tahun_rka ?? '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">Tahun RKA</p>
+                            <p class="mt-0.5 text-[10px] sm:text-[11px] font-normal text-gray-800">{{ $financial->tahun_rka ?? '-' }}</p>
                         </div>
                         <div>
-                            <p class="text-[11px] text-gray-400">Ket. Pendapatan</p>
-                            <p class="mt-[3px] text-[11px] font-normal leading-[1.4] text-gray-800">{{ $asset->description ?? ($tenant?->fullname ?? '-') }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">Ket. Pendapatan</p>
+                            <p class="mt-0.5 text-[10px] sm:text-[11px] font-normal leading-[1.4] text-gray-800">{{ $asset->description ?? ($tenant?->fullname ?? '-') }}</p>
                         </div>
                         <div class="col-span-2">
-                            <p class="text-[11px] text-gray-400">Keterangan</p>
-                            <p class="mt-[3px] text-[11px] font-normal leading-[1.4] text-gray-800">{{ $contract->keterangan ?? '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">Keterangan</p>
+                            <p class="mt-0.5 text-[10px] sm:text-[11px] font-normal leading-[1.4] text-gray-800">{{ $contract->keterangan ?? '-' }}</p>
                         </div>
 
                     </div>
@@ -99,61 +140,96 @@
 
             {{-- ===================== RIGHT COLUMN ===================== --}}
 
-            <div class="pt-[36px]">
+            <div class="pt-0 lg:pt-[36px]">
 
-                {{-- HEADER (Sejajar dengan bagian atas kotak foto aset) --}}
-                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                {{-- HEADER & DESKRIPSI DESKTOP (Hanya tampil di layar desktop lg+) --}}
+                <div class="hidden lg:block">
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4">
 
-                    <div>
-                        <h1 class="text-2xl sm:text-[30px] font-bold tracking-tight text-gray-950 leading-tight">
-                            {{ $asset->asset_block_name }}
-                        </h1>
-                        <p class="mt-1.5 text-[11px] text-gray-400 uppercase tracking-wide font-normal">
-                            {{ $asset->wilayah_asset ?? 'JL. SLAMET 17 KEL. BENDAN KEC. PEKALONGAN BARAT KAB. PEKALONGAN' }} ({{ $asset->asset_number }})
-                        </p>
-                    </div>
+                        <div>
+                            <h1 class="text-xl sm:text-[30px] font-bold tracking-tight text-gray-950 leading-tight">
+                                {{ $asset->asset_block_name }}
+                            </h1>
+                            <p class="mt-1 text-[10px] sm:text-[11px] text-gray-400 uppercase tracking-wide font-normal">
+                                {{ $asset->wilayah_asset ?? 'JL. SLAMET 17 KEL. BENDAN KEC. PEKALONGAN BARAT KAB. PEKALONGAN' }} ({{ $asset->asset_number }})
+                            </p>
+                        </div>
 
-                    {{-- TOMBOL EDIT & HAPUS (Sejajar di kanan) --}}
-                    <div class="flex shrink-0 items-center gap-2">
+                        {{-- TOMBOL EDIT & HAPUS (Sejajar di kanan) --}}
+                        <div class="flex shrink-0 items-center gap-2">
 
-                        <button
-                            type="button"
-                            onclick="openEditDrawer()"
-                            class="inline-flex items-center gap-2 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 px-4 py-2 text-sm font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
-                        >
-                            <x-icon name="icon-edit-detail-peta" class="w-4 h-4 text-white" />
-                            <span>Edit</span>
-                        </button>
-
-                        <form action="{{ route('admin.assets.destroy', $asset->asset_number) }}" method="POST" id="form-hapus-aset">
-                            @csrf
-                            @method('DELETE')
                             <button
                                 type="button"
-                                onclick="document.getElementById('modal-hapus').classList.remove('hidden')"
-                                class="inline-flex items-center gap-2 rounded-[8px] bg-[#E52500] hover:bg-red-700 px-4 py-2 text-sm font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
+                                onclick="openEditDrawer()"
+                                class="inline-flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-[8px] bg-[#0066FF] hover:bg-blue-700 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
                             >
-                                <x-icon name="icon-trash-edit-detail-peta" class="w-4 h-4 text-white" />
-                                <span>Hapus</span>
+                                <x-icon name="icon-edit-detail-peta" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+                                <span>Edit</span>
                             </button>
-                        </form>
+
+                            <form action="{{ route('admin.assets.destroy', $asset->asset_number) }}" method="POST" id="form-hapus-aset">
+                                @csrf
+                                @method('DELETE')
+                                <button
+                                    type="button"
+                                    onclick="document.getElementById('modal-hapus').classList.remove('hidden')"
+                                    class="inline-flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-[8px] bg-[#E52500] hover:bg-red-700 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
+                                >
+                                    <x-icon name="icon-trash-edit-detail-peta" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+                                    <span>Hapus</span>
+                                </button>
+                            </form>
+
+                        </div>
 
                     </div>
 
+                    {{-- DESKRIPSI --}}
+                    <p class="mt-2.5 sm:mt-4 text-xs sm:text-[13px] leading-relaxed text-gray-500 max-w-[850px] font-normal">
+                        {{ $asset->description ?? ($contract?->keterangan ?? 'Lorem ipsum dolor sit amet consectetur. Nisi vitae dolor lectus velit enim lorem. Nam mauris non egestas vitae blandit ultrices hendrerit nunc donec. Amet tellus tristique tortor fringilla enim vitae at. Ornare fermentum morbi ullamcorper ut tortor ut aenean tellus. Vestibulum suspendisse dapibus orci lectus.') }}
+                    </p>
                 </div>
-
-                {{-- DESKRIPSI --}}
-                <p class="mt-4 text-[13px] leading-relaxed text-gray-500 max-w-[850px] font-normal">
-                    {{ $asset->description ?? ($contract?->keterangan ?? 'Lorem ipsum dolor sit amet consectetur. Nisi vitae dolor lectus velit enim lorem. Nam mauris non egestas vitae blandit ultrices hendrerit nunc donec. Amet tellus tristique tortor fringilla enim vitae at. Ornare fermentum morbi ullamcorper ut tortor ut aenean tellus. Vestibulum suspendisse dapibus orci lectus.') }}
-                </p>
 
 
                 {{-- ============ ALAMAT (Blok Putih) ============ --}}
 
-                <div class="mt-5 rounded-2xl border border-gray-200/80 bg-white p-5 shadow-xs">
-                    <h3 class="mb-3 text-[14px] font-semibold text-gray-900">Alamat</h3>
+                <div class="mt-3.5 sm:mt-5 rounded-xl sm:rounded-2xl border border-gray-200/80 bg-white p-3.5 sm:p-5 shadow-xs">
+                    <h3 class="mb-2.5 sm:mb-3 text-xs sm:text-[14px] font-semibold text-gray-900">Alamat</h3>
 
-                    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+                    {{-- Mobile View for Alamat --}}
+                    <div class="sm:hidden overflow-hidden rounded-lg border border-gray-200 bg-white divide-y divide-gray-100 text-[11px]">
+                        <div class="flex items-center justify-between px-3 py-2 bg-white">
+                            <span class="text-gray-400">Wilayah Aset</span>
+                            <span class="font-medium text-gray-800 text-right">{{ $asset->wilayah_asset }}</span>
+                        </div>
+                        <div class="flex items-center justify-between px-3 py-2 bg-white">
+                            <span class="text-gray-400">Jenis Aset</span>
+                            <span class="font-medium text-gray-800 text-right">{{ $asset->jenis_asset }}</span>
+                        </div>
+                        <div class="flex items-center justify-between px-3 py-2 bg-white">
+                            <span class="text-gray-400">Stasiun</span>
+                            <span class="font-medium text-gray-800 text-right">{{ $asset->stasiun }}</span>
+                        </div>
+                        <div class="flex items-center justify-between px-3 py-2 bg-white">
+                            <span class="text-gray-400">Luas Area</span>
+                            <span class="font-medium text-gray-800 text-right">{{ $asset->size_area_formatted }}</span>
+                        </div>
+                        <div class="flex items-center justify-between px-3 py-2 bg-white">
+                            <span class="text-gray-400">Jenis Kontrak</span>
+                            <span class="font-medium text-gray-800 text-right">{{ $contract?->jenis_kontrak ?? '-' }}</span>
+                        </div>
+                        <div class="flex items-center justify-between px-3 py-2 bg-white">
+                            <span class="text-gray-400">Peruntukan</span>
+                            <span class="font-medium text-gray-800 text-right">{{ $asset->peruntukan }}</span>
+                        </div>
+                        <div class="flex flex-col gap-0.5 px-3 py-2 bg-white">
+                            <span class="text-gray-400">Alamat Aset</span>
+                            <span class="font-medium text-gray-800 leading-snug">{{ $asset->description ?? ($asset->wilayah_asset . ', Stasiun ' . $asset->stasiun) }}</span>
+                        </div>
+                    </div>
+
+                    {{-- Desktop View for Alamat --}}
+                    <div class="hidden sm:block overflow-hidden rounded-xl border border-gray-200 bg-white">
                         <div class="grid grid-cols-3">
                             <div class="flex min-h-[52px] items-center border-b border-r border-gray-200 bg-white">
                                 <div class="w-[50%] bg-white px-3.5 py-3 text-[11px] text-gray-900 font-normal">Wilayah Aset</div>
@@ -196,51 +272,51 @@
 
                 {{-- ============ DATA FINANSIAL (Blok Putih) ============ --}}
 
-                <div class="mt-5 rounded-2xl border border-gray-200/80 bg-white p-5 shadow-xs">
+                <div class="mt-3.5 sm:mt-5 rounded-xl sm:rounded-2xl border border-gray-200/80 bg-white p-3.5 sm:p-5 shadow-xs">
 
-                    <h3 class="mb-3 text-[14px] font-semibold text-gray-900">Data Finansial</h3>
+                    <h3 class="mb-2.5 sm:mb-3 text-xs sm:text-[14px] font-semibold text-gray-900">Data Finansial</h3>
 
-                    <div class="grid grid-cols-3 gap-x-8 gap-y-4">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 sm:gap-x-8 gap-y-2.5 sm:gap-y-4">
 
                         <div>
-                            <p class="text-[11px] text-gray-400">Nilai Kontrak</p>
-                            <p class="mt-1 text-[12px] font-semibold text-gray-900">{{ $contract?->price_formatted ?? '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">Nilai Kontrak</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-semibold text-gray-900">{{ $contract?->price_formatted ?? '-' }}</p>
                         </div>
 
                         <div>
-                            <p class="text-[11px] text-gray-400">Jumlah Hari</p>
-                            <p class="mt-1 text-[12px] font-normal text-gray-800">{{ $financial ? number_format($financial->jumlah_hari, 0, ',', '.') . ' hari' : '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">Jumlah Hari</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800">{{ $financial ? number_format($financial->jumlah_hari, 0, ',', '.') . ' hari' : '-' }}</p>
                         </div>
 
                         <div>
-                            <p class="text-[11px] text-gray-400">Nilai Per Hari</p>
-                            <p class="mt-1 text-[12px] font-normal text-gray-800">{{ $financial ? 'Rp ' . number_format($financial->nilai_per_hari, 0, ',', '.') : '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">Nilai Per Hari</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800">{{ $financial ? 'Rp ' . number_format($financial->nilai_per_hari, 0, ',', '.') : '-' }}</p>
                         </div>
 
                         <div>
-                            <p class="text-[11px] text-gray-400">Hari Berjalan</p>
-                            <p class="mt-1 text-[12px] font-normal text-gray-800">{{ $financial ? number_format($financial->hari_2026, 0, ',', '.') . ' hari' : '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">Hari Berjalan</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800">{{ $financial ? number_format($financial->hari_2026, 0, ',', '.') . ' hari' : '-' }}</p>
                         </div>
 
                         <div>
-                            <p class="text-[11px] text-gray-400">Nilai Tahun Berjalan</p>
-                            <p class="mt-1 text-[12px] font-normal text-gray-800">{{ $financial ? 'Rp ' . number_format($financial->nilai_2026, 0, ',', '.') : '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">Nilai Tahun Berjalan</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800">{{ $financial ? 'Rp ' . number_format($financial->nilai_2026, 0, ',', '.') : '-' }}</p>
                         </div>
 
                         <div>
-                            <p class="text-[11px] text-gray-400">Total Jan–Des</p>
-                            <p class="mt-1 text-[12px] font-normal text-gray-800">{{ $financial ? 'Rp ' . number_format($financial->nilai_2026, 0, ',', '.') : '-' }}</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400">Total Jan–Des</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800">{{ $financial ? 'Rp ' . number_format($financial->nilai_2026, 0, ',', '.') : '-' }}</p>
                         </div>
 
                     </div>
 
 
                     {{-- NILAI PER BULAN --}}
-                    <div class="mt-5">
-                        <p class="mb-2.5 text-[11px] text-gray-400 font-normal">Nilai Per Bulan:</p>
+                    <div class="mt-3.5 sm:mt-5">
+                        <p class="mb-2 sm:mb-2.5 text-[10px] sm:text-[11px] text-gray-400 font-normal">Nilai Per Bulan:</p>
 
-                        <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
-                            <div class="grid grid-cols-4">
+                        <div class="overflow-hidden rounded-lg sm:rounded-xl border border-gray-200 bg-white">
+                            <div class="grid grid-cols-2 sm:grid-cols-4">
                                 @php
                                     $bulan = [
                                         ['Jan', 'januari'],  ['Apr', 'april'],    ['Jul', 'juli'],     ['Okt', 'oktober'],
@@ -250,14 +326,14 @@
                                 @endphp
                                 @foreach($bulan as $idx => [$label, $col])
                                     @php
-                                        $isLastRow = $idx >= 8;
-                                        $isLastCol = ($idx % 4) === 3;
-                                        $borderB = !$isLastRow ? 'border-b' : '';
-                                        $borderR = !$isLastCol ? 'border-r' : '';
+                                        $isLastRowDesktop = $idx >= 8;
+                                        $isLastColDesktop = ($idx % 4) === 3;
+                                        $isLastRowMobile  = $idx >= 10;
+                                        $isLastColMobile  = ($idx % 2) === 1;
                                     @endphp
-                                    <div class="flex {{ $borderB }} {{ $borderR }} border-gray-200 bg-white">
-                                        <div class="w-[35%] bg-white px-3 py-2 text-[11px] text-gray-900 font-normal border-r border-gray-200">{{ $label }}</div>
-                                        <div class="flex flex-1 items-center justify-end px-3 text-[11px] text-gray-800 font-normal bg-white">
+                                    <div class="flex border-b sm:border-b-0 {{ !$isLastRowDesktop ? 'sm:border-b' : '' }} {{ !$isLastRowMobile ? 'border-b' : 'border-b-0' }} border-r {{ $isLastColDesktop ? 'sm:border-r-0' : 'sm:border-r' }} {{ $isLastColMobile ? 'border-r-0' : 'border-r' }} border-gray-200 bg-white">
+                                        <div class="w-[38%] sm:w-[35%] bg-white px-2 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-[11px] text-gray-900 font-normal border-r border-gray-200">{{ $label }}</div>
+                                        <div class="flex flex-1 items-center justify-end px-2 sm:px-3 text-[10px] sm:text-[11px] text-gray-800 font-normal bg-white">
                                             {{ $monthly ? number_format((float) $monthly->$col, 0, ',', '.') : '-' }}
                                         </div>
                                     </div>
@@ -278,13 +354,13 @@
     {{-- SLIDE DRAWER EDIT ASET --}}
     <div id="drawer-edit-backdrop" class="opacity-0 pointer-events-none fixed inset-0 top-16 sm:top-20 z-30 bg-black/20 backdrop-blur-[1px] transition-opacity duration-300" onclick="closeEditDrawer()"></div>
 
-    <div id="drawer-edit" class="fixed right-5 sm:right-8 lg:right-10 top-[84px] sm:top-[100px] bottom-6 sm:bottom-8 z-40 w-[420px] max-w-[calc(100vw-40px)] rounded-2xl bg-white border border-gray-100 shadow-[0_20px_60px_rgba(0,0,0,0.18)] p-6 flex flex-col justify-between overflow-hidden transform translate-x-[120%] transition-transform duration-300 ease-in-out">
+    <div id="drawer-edit" class="fixed right-0 sm:right-8 lg:right-10 top-14 sm:top-[100px] bottom-0 sm:bottom-8 z-40 w-full sm:w-[420px] max-w-full sm:max-w-[calc(100vw-40px)] rounded-t-2xl sm:rounded-2xl bg-white border border-gray-100 shadow-[0_20px_60px_rgba(0,0,0,0.18)] p-4 sm:p-6 flex flex-col justify-between overflow-hidden transform translate-x-[120%] transition-transform duration-300 ease-in-out">
         
         {{-- TABS ATAS --}}
-        <div class="flex items-center border-b border-gray-100 pb-3 gap-6 text-xs sm:text-[13px] shrink-0">
-            <button type="button" id="tab-btn-info" onclick="switchEditTab('info')" class="font-medium text-[#0066FF] border-b-2 border-[#0066FF] pb-2 -mb-3 transition cursor-pointer">Informasi Aset</button>
-            <button type="button" id="tab-btn-admin" onclick="switchEditTab('admin')" class="font-medium text-gray-500 hover:text-gray-800 pb-2 -mb-3 transition cursor-pointer">Data Administratif</button>
-            <button type="button" id="tab-btn-finansial" onclick="switchEditTab('finansial')" class="font-medium text-gray-500 hover:text-gray-800 pb-2 -mb-3 transition cursor-pointer">Data Finansial</button>
+        <div class="flex items-center border-b border-gray-100 pb-2.5 sm:pb-3 gap-3.5 sm:gap-6 text-xs sm:text-[13px] shrink-0">
+            <button type="button" id="tab-btn-info" onclick="switchEditTab('info')" class="font-medium text-[#0066FF] border-b-2 border-[#0066FF] pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer">Informasi Aset</button>
+            <button type="button" id="tab-btn-admin" onclick="switchEditTab('admin')" class="font-medium text-gray-500 hover:text-gray-800 pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer">Data Administratif</button>
+            <button type="button" id="tab-btn-finansial" onclick="switchEditTab('finansial')" class="font-medium text-gray-500 hover:text-gray-800 pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer">Data Finansial</button>
         </div>
 
         {{-- ==================== TAB 1: INFORMASI ASET (3 SUB-PAGES) ==================== --}}
