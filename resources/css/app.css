@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
@@ -9,8 +11,33 @@
 }
 
 /* ===========================
-   MOBILE RESPONSIVE GLOBALS
+   CENTRALIZED THEME DESIGN TOKENS
    =========================== */
+:root {
+    --bg-main: #F6F7F9;
+    --bg-card: #FFFFFF;
+    --bg-card-border: rgba(243, 244, 246, 0.9);
+    --bg-subtle: #F5F5F7;
+    --text-primary: #171717;
+    --text-secondary: #6B7280;
+    --text-muted: #9CA3AF;
+    --border-subtle: #E5E7EB;
+    --nav-active-bg: #DCDCDC;
+    --nav-active-text: #171717;
+}
+
+.dark {
+    --bg-main: #282A2C;
+    --bg-card: #1F2123;
+    --bg-card-border: rgba(255, 255, 255, 0.05);
+    --bg-subtle: #2D3034;
+    --text-primary: #FFFFFF;
+    --text-secondary: #9AA0A6;
+    --text-muted: #787E87;
+    --border-subtle: rgba(255, 255, 255, 0.1);
+    --nav-active-bg: #43484E;
+    --nav-active-text: #FFFFFF;
+}
 
 /* Safe area insets for notch / home indicator */
 :root {
@@ -97,6 +124,16 @@ body {
 
 #mainNavbar {
     view-transition-name: main-top-navbar;
+}
+
+#mainNavbar.navbar-scrolled {
+    border-color: rgba(229, 231, 235, 0.8);
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+.dark #mainNavbar.navbar-scrolled {
+    border-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(40, 42, 44, 0.95);
 }
 
 /* ===========================

@@ -11,6 +11,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Anti-FOUC Theme Script -->
+    <script>
+        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite([
             'resources/css/app.css',
@@ -26,10 +35,16 @@
         .tool-active-bg {
             background-color: rgba(229, 231, 235, 0.8) !important;
         }
+        .dark .tool-active-bg {
+            background-color: rgba(255, 255, 255, 0.15) !important;
+        }
 
         #map {
             background-color: #F6F7F9 !important;
             cursor: grab !important;
+        }
+        .dark #map {
+            background-color: #282A2C !important;
         }
 
         #map:active, #map.leaflet-drag-target {
@@ -41,6 +56,9 @@
             font-family: inherit;
             outline: none;
             cursor: grab !important;
+        }
+        .dark .leaflet-container {
+            background: #282A2C !important;
         }
 
         .leaflet-container:active, .leaflet-container.leaflet-drag-target {
@@ -74,10 +92,26 @@
             text-decoration: none !important;
         }
 
-        .leaflet-container a.btn-buka-maps,
-        .leaflet-container a.btn-buka-maps * {
-            color: #4b5563 !important;
+        .leaflet-container a.btn-buka-maps {
+            background-color: #ffffff !important;
+            border-color: #e5e7eb !important;
+            color: #374151 !important;
             text-decoration: none !important;
+        }
+
+        .leaflet-container a.btn-buka-maps * {
+            color: #374151 !important;
+        }
+
+        .dark .leaflet-container a.btn-buka-maps {
+            background-color: #2D3034 !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            color: #ffffff !important;
+            text-decoration: none !important;
+        }
+
+        .dark .leaflet-container a.btn-buka-maps * {
+            color: #ffffff !important;
         }
 
         .custom-pin-wrapper {
@@ -100,7 +134,7 @@
     </style>
 </head>
 
-<body class="h-screen overflow-hidden bg-[#F6F7F9] font-sans antialiased text-gray-900 selection:bg-blue-100 selection:text-blue-600 relative">
+<body class="h-screen overflow-hidden bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-600 relative transition-colors duration-200">
 
     {{-- Navbar --}}
     <x-navbar active="map" />
@@ -111,7 +145,7 @@
         {{-- Mobile: Left (Title + Tools underneath) and Right (Filter button) --}}
         <div class="flex items-start justify-between lg:hidden">
             <div class="pointer-events-auto flex flex-col gap-2">
-                <h1 class="text-[22px] font-bold text-gray-950 tracking-tight leading-tight">
+                <h1 class="text-[22px] font-bold text-gray-950 dark:text-white tracking-tight leading-tight">
                     Heatmaps
                 </h1>
                 
@@ -121,7 +155,7 @@
                         id="zoomInButton"
                         type="button"
                         onclick="if(window.mapZoomIn) window.mapZoomIn();"
-                        class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] bg-white/90 backdrop-blur-sm hover:bg-gray-100 active:bg-gray-200 text-gray-700 transition cursor-pointer shadow-xs"
+                        class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] dark:border-white/15 bg-white/90 dark:bg-[#34383D]/90 backdrop-blur-sm hover:bg-gray-100 dark:hover:bg-[#40454B] active:bg-gray-200 text-gray-700 dark:text-white transition cursor-pointer shadow-xs"
                         title="Zoom In"
                     >
                         <x-icon name="zoom-in" class="w-4 h-4" />
@@ -130,7 +164,7 @@
                         id="zoomOutButton"
                         type="button"
                         onclick="if(window.mapZoomOut) window.mapZoomOut();"
-                        class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] bg-white/90 backdrop-blur-sm hover:bg-gray-100 active:bg-gray-200 text-gray-700 transition cursor-pointer shadow-xs"
+                        class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] dark:border-white/15 bg-white/90 dark:bg-[#34383D]/90 backdrop-blur-sm hover:bg-gray-100 dark:hover:bg-[#40454B] active:bg-gray-200 text-gray-700 dark:text-white transition cursor-pointer shadow-xs"
                         title="Zoom Out"
                     >
                         <x-icon name="zoom-out" class="w-4 h-4" />
@@ -139,10 +173,10 @@
                         id="panToolButton"
                         type="button"
                         onclick="if(window.mapPanTool) window.mapPanTool();"
-                        class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] bg-white/90 backdrop-blur-sm hover:bg-gray-100 active:bg-gray-200 text-gray-700 transition cursor-pointer shadow-xs"
+                        class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] dark:border-white/15 bg-white/90 dark:bg-[#34383D]/90 backdrop-blur-sm hover:bg-gray-100 dark:hover:bg-[#40454B] active:bg-gray-200 text-gray-700 dark:text-white transition cursor-pointer shadow-xs"
                         title="Pusatkan Peta Indonesia"
                     >
-                        <x-icon name="hand-pan" class="w-4 h-4 text-gray-600" />
+                        <x-icon name="hand-pan" class="w-4 h-4 text-gray-600 dark:text-white" />
                     </button>
                 </div>
             </div>
@@ -151,11 +185,11 @@
                 <button
                     id="filterButton"
                     type="button"
-                    class="w-11 h-11 flex items-center justify-center rounded-[10px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-gray-200 hover:bg-gray-50 active:bg-gray-100 transition cursor-pointer z-30 relative select-none"
+                    class="w-11 h-11 flex items-center justify-center rounded-[10px] bg-white dark:bg-[#1F2123] shadow-[0_4px_12px_rgba(0,0,0,0.08)] dark:shadow-none border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-[#2D3034] active:bg-gray-100 text-gray-800 dark:text-white transition cursor-pointer z-30 relative select-none"
                     style="cursor: pointer !important;"
                     title="Filter Peta"
                 >
-                    <x-icon name="filter-peta" class="w-5 h-5 text-gray-800 pointer-events-none" />
+                    <x-icon name="filter-peta" class="w-5 h-5 text-gray-800 dark:text-white pointer-events-none" />
                 </button>
             </div>
         </div>
@@ -163,7 +197,7 @@
         {{-- Desktop: single row (title + center tools + filter button) --}}
         <div class="hidden lg:flex items-center justify-between relative min-h-[44px]">
             <div class="pointer-events-auto">
-                <h1 class="text-[30px] font-bold text-gray-950 tracking-tight">
+                <h1 class="text-[30px] font-bold text-gray-950 dark:text-white tracking-tight">
                     Heatmaps
                 </h1>
             </div>
@@ -173,7 +207,7 @@
                     id="zoomInButtonDesktop"
                     type="button"
                     onclick="if(window.mapZoomIn) window.mapZoomIn();"
-                    class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] bg-transparent hover:bg-gray-200/80 active:bg-gray-300/80 text-gray-700 transition cursor-pointer"
+                    class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] dark:border-white/20 bg-transparent hover:bg-gray-200/80 dark:hover:bg-[#34383D] active:bg-gray-300/80 text-gray-700 dark:text-white transition cursor-pointer"
                     title="Zoom In"
                 >
                     <x-icon name="zoom-in" class="w-6 h-6" />
@@ -182,7 +216,7 @@
                     id="zoomOutButtonDesktop"
                     type="button"
                     onclick="if(window.mapZoomOut) window.mapZoomOut();"
-                    class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] bg-transparent hover:bg-gray-200/80 active:bg-gray-300/80 text-gray-700 transition cursor-pointer"
+                    class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] dark:border-white/20 bg-transparent hover:bg-gray-200/80 dark:hover:bg-[#34383D] active:bg-gray-300/80 text-gray-700 dark:text-white transition cursor-pointer"
                     title="Zoom Out"
                 >
                     <x-icon name="zoom-out" class="w-6 h-6" />
@@ -191,10 +225,10 @@
                     id="panToolButtonDesktop"
                     type="button"
                     onclick="if(window.mapPanTool) window.mapPanTool();"
-                    class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] bg-transparent hover:bg-gray-200/80 active:bg-gray-300/80 text-gray-700 transition cursor-pointer"
+                    class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] dark:border-white/20 bg-transparent hover:bg-gray-200/80 dark:hover:bg-[#34383D] active:bg-gray-300/80 text-gray-700 dark:text-white transition cursor-pointer"
                     title="Pusatkan Peta Indonesia"
                 >
-                    <x-icon name="hand-pan" class="w-6 h-6 text-gray-600" />
+                    <x-icon name="hand-pan" class="w-6 h-6 text-gray-600 dark:text-white" />
                 </button>
             </div>
 
@@ -202,11 +236,11 @@
                 <button
                     id="filterButtonDesktop"
                     type="button"
-                    class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-[10px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-gray-100 hover:bg-gray-50 active:bg-gray-100 transition-transform duration-300 ease-in-out cursor-pointer z-50 relative select-none"
+                    class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-[10px] bg-white dark:bg-[#1F2123] shadow-[0_4px_12px_rgba(0,0,0,0.06)] dark:shadow-none border border-gray-100 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-[#2D3034] active:bg-gray-100 text-gray-800 dark:text-white transition-transform duration-300 ease-in-out cursor-pointer z-50 relative select-none"
                     style="cursor: pointer !important;"
                     title="Filter Peta"
                 >
-                    <x-icon name="filter-peta" class="w-6 h-6 text-gray-800 pointer-events-none" />
+                    <x-icon name="filter-peta" class="w-6 h-6 text-gray-800 dark:text-white pointer-events-none" />
                 </button>
             </div>
         </div>
@@ -221,10 +255,10 @@
     {{-- Modal Filter (Slide in from Right on both Mobile & Desktop, scaled down for Mobile) --}}
     <aside
         id="filterModal"
-        class="fixed right-3 sm:right-6 lg:right-10 top-16 sm:top-20 bottom-24 lg:bottom-8 z-40 w-[295px] sm:w-[350px] lg:w-[373px] bg-white rounded-2xl lg:rounded-[10px] p-4 sm:p-6 lg:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.14)] border border-gray-100/90 transition-all duration-300 ease-in-out transform translate-x-[140%] opacity-0 pointer-events-none flex flex-col justify-start overflow-y-auto"
+        class="fixed right-3 sm:right-6 lg:right-10 top-16 sm:top-20 bottom-24 lg:bottom-8 z-40 w-[295px] sm:w-[350px] lg:w-[373px] bg-white dark:bg-[#1F2123] rounded-2xl lg:rounded-[10px] p-4 sm:p-6 lg:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.14)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-gray-100/90 dark:border-white/5 transition-all duration-300 ease-in-out transform translate-x-[140%] opacity-0 pointer-events-none flex flex-col justify-start overflow-y-auto"
     >
         <div class="mb-3 sm:mb-5 lg:mb-6 flex items-center justify-between">
-            <h2 class="text-base sm:text-lg lg:text-[20px] font-bold text-gray-950 tracking-tight">
+            <h2 class="text-base sm:text-lg lg:text-[20px] font-bold text-gray-950 dark:text-white tracking-tight">
                 Filter Peta
             </h2>
         </div>
@@ -234,36 +268,36 @@
 
             {{-- 1. STASIUN --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
-                    <x-icon name="subway" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="subway" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Stasiun
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="stasiun" name="stasiun" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Stasiun</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Stasiun</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('stasiun', '', 'Semua Stasiun')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('stasiun', '', 'Semua Stasiun')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Stasiun</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'gambir', 'Gambir')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'gambir', 'Gambir')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Gambir</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'bandung', 'Bandung')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'bandung', 'Bandung')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Bandung</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'surabaya', 'Surabaya')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'surabaya', 'Surabaya')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Surabaya</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'semarang', 'Semarang Poncol')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'semarang', 'Semarang Poncol')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semarang Poncol</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'pekalongan', 'Pekalongan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'pekalongan', 'Pekalongan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Pekalongan</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'tegal', 'Tegal')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'tegal', 'Tegal')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Tegal</span>
                         </button>
                     </div>
@@ -272,24 +306,24 @@
 
             {{-- 2. WILAYAH --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
-                    <x-icon name="explore_nearby" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="explore_nearby" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Wilayah
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="wilayah" name="wilayah" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Row & Non Row</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Row & Non Row</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('wilayah', '', 'Row & Non Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('wilayah', '', 'Row & Non Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Row & Non Row</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('wilayah', 'row', 'Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('wilayah', 'row', 'Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Row</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('wilayah', 'non-row', 'Non Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('wilayah', 'non-row', 'Non Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Non Row</span>
                         </button>
                     </div>
@@ -298,24 +332,24 @@
 
             {{-- 3. ASET --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
-                    <x-icon name="aset-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="aset-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Aset
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="aset" name="aset" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Aset</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Aset</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('aset', '', 'Semua Aset')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('aset', '', 'Semua Aset')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Aset</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('aset', 'tanah', 'Tanah')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('aset', 'tanah', 'Tanah')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Tanah</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('aset', 'bangunan', 'Bangunan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('aset', 'bangunan', 'Bangunan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Bangunan</span>
                         </button>
                     </div>
@@ -324,24 +358,24 @@
 
             {{-- 4. JENIS KONTRAK --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
-                    <x-icon name="contract-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="contract-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Jenis Kontrak
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="jenis_kontrak" name="jenis_kontrak" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Kontrak</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Kontrak</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('jenis_kontrak', '', 'Semua Kontrak')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('jenis_kontrak', '', 'Semua Kontrak')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Kontrak</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Sewa</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'kerjasama', 'Kerja Sama')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'kerjasama', 'Kerja Sama')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Kerja Sama</span>
                         </button>
                     </div>
@@ -350,27 +384,27 @@
 
             {{-- 5. JENIS PENDAPATAN --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
-                    <x-icon name="jenis-pendapatan-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="jenis-pendapatan-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Jenis Pendapatan
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="jenis_pendapatan" name="jenis_pendapatan" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Pend...</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Pend...</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', '', 'Semua Pend...')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', '', 'Semua Pend...')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Pend...</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Sewa</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'iklan', 'Iklan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'iklan', 'Iklan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Iklan</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'lainnya', 'Lainnya')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'lainnya', 'Lainnya')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Lainnya</span>
                         </button>
                     </div>
@@ -379,24 +413,24 @@
 
             {{-- 6. SPV --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 mb-1 sm:mb-[6px]">
-                    <x-icon name="spv-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400" />
+                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="spv-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     SPV
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="spv" name="spv" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white border border-gray-200 hover:border-gray-300 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua SPV</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 shrink-0 ml-1 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua SPV</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('spv', '', 'Semua SPV')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('spv', '', 'Semua SPV')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua SPV</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('spv', 'spv1', 'SPV 1')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('spv', 'spv1', 'SPV 1')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>SPV 1</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('spv', 'spv2', 'SPV 2')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('spv', 'spv2', 'SPV 2')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>SPV 2</span>
                         </button>
                     </div>
@@ -419,7 +453,7 @@
             <button
                 id="resetFilter"
                 type="button"
-                class="h-[38px] sm:h-[44px] lg:h-[48px] w-[75px] sm:w-[95px] lg:w-[115px] rounded-lg lg:rounded-[10px] border border-gray-300 bg-white text-xs sm:text-sm font-semibold text-gray-800 transition hover:bg-gray-50 cursor-pointer"
+                class="h-[38px] sm:h-[44px] lg:h-[48px] w-[75px] sm:w-[95px] lg:w-[115px] rounded-lg lg:rounded-[10px] border border-gray-300 dark:border-white/15 bg-white dark:bg-[#2D3034] text-xs sm:text-sm font-semibold text-gray-800 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/10 cursor-pointer"
             >
                 Reset
             </button>
@@ -605,6 +639,18 @@
             iconAnchor: [16, 30]
         });
 
+        // Function to get current GeoJSON style based on theme
+        function getGeoJsonStyle() {
+            const isDark = document.documentElement.classList.contains('dark');
+            return {
+                fillColor: isDark ? '#4A4E54' : '#757575',
+                fillOpacity: 1,
+                color: isDark ? '#282A2C' : '#F6F7F9',
+                weight: 0.7,
+                opacity: 1
+            };
+        }
+
         // Load GeoJSON batas wilayah Indonesia
         fetch('/js/indonesia.json')
             .then(response => {
@@ -613,23 +659,19 @@
             })
             .then(data => {
                 indonesiaGeojsonLayer = L.geoJSON(data, {
-                    style: {
-                        fillColor: '#757575',
-                        fillOpacity: 1,
-                        color: '#F6F7F9',
-                        weight: 0.7,
-                        opacity: 1
-                    },
+                    style: getGeoJsonStyle(),
                     onEachFeature: function(feature, layer) {
                         layer.on({
                             mouseover: function(e) {
+                                const isDark = document.documentElement.classList.contains('dark');
                                 e.target.setStyle({
-                                    fillColor: '#636363'
+                                    fillColor: isDark ? '#5C6269' : '#636363'
                                 });
                             },
                             mouseout: function(e) {
+                                const isDark = document.documentElement.classList.contains('dark');
                                 e.target.setStyle({
-                                    fillColor: '#757575'
+                                    fillColor: isDark ? '#4A4E54' : '#757575'
                                 });
                             }
                         });
@@ -654,6 +696,38 @@
                 console.error('GeoJSON error:', error);
             });
 
+        // Theme synchronization for map and popups
+        window.updateMapTheme = function() {
+            if (indonesiaGeojsonLayer) {
+                indonesiaGeojsonLayer.setStyle(getGeoJsonStyle());
+            }
+            if (map) {
+                map.eachLayer(layer => {
+                    if (layer instanceof L.Marker && layer._assetData && layer._assetId) {
+                        const popup = layer.getPopup();
+                        if (popup) {
+                            popup.setContent(createPopupCardHTML(layer._assetData, layer._assetId));
+                        }
+                    }
+                });
+            }
+        };
+
+        // Listen for theme toggle events
+        window.addEventListener('themeChanged', function() {
+            if (window.updateMapTheme) window.updateMapTheme();
+        });
+
+        // Hook observer for class changes on documentElement
+        const themeObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'class') {
+                    if (window.updateMapTheme) window.updateMapTheme();
+                }
+            });
+        });
+        themeObserver.observe(document.documentElement, { attributes: true });
+
         window.addEventListener('resize', function() {
             if (indonesiaBounds) {
                 const baseMinZoom = map.getBoundsZoom(indonesiaBounds, false, [10, 10]);
@@ -677,63 +751,63 @@
                 : '#';  
 
             return `
-                <div class="w-[260px] sm:w-[360px] rounded-2xl sm:rounded-3xl bg-white p-3 sm:p-5 shadow-[0_16px_40px_rgba(0,0,0,0.16)] border border-gray-100/90 font-sans text-left relative">
+                <div class="w-[260px] sm:w-[360px] rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-5 shadow-[0_16px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.7)] border border-gray-100/90 dark:border-white/10 font-sans text-left relative">
                     <div class="mb-2 sm:mb-3.5">
                         <div class="flex items-center gap-2 sm:gap-2.5">
                             <div class="w-5 h-5 sm:w-6 sm:h-6 shrink-0 text-[#0066FF] flex items-center justify-center">
                                 ${ICON_CORP}
                             </div>
-                            <h3 class="m-0 text-xs sm:text-base font-bold leading-tight text-gray-950 truncate">${asset.name || '-'}</h3>
+                            <h3 class="m-0 text-xs sm:text-base font-bold leading-tight text-gray-950 dark:text-white truncate">${asset.name || '-'}</h3>
                         </div>
-                        <p class="mt-0.5 sm:mt-1 text-[9.5px] sm:text-xs font-medium text-gray-400 pl-7 sm:pl-8.5 truncate">${(asset.code ? asset.code + ' • ' : '') + (asset.location || '')}</p>
+                        <p class="mt-0.5 sm:mt-1 text-[9.5px] sm:text-xs font-medium text-gray-400 dark:text-[#9AA0A6] pl-7 sm:pl-8.5 truncate">${(asset.code ? asset.code + ' • ' : '') + (asset.location || '')}</p>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-x-2 sm:gap-x-4 gap-y-2 sm:gap-y-3 pt-1.5 sm:pt-2.5 border-t sm:border-0 border-gray-100">
+                    <div class="grid grid-cols-2 gap-x-2 sm:gap-x-4 gap-y-2 sm:gap-y-3 pt-1.5 sm:pt-2.5 border-t sm:border-0 border-gray-100 dark:border-white/10">
                         <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                             <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_ALAMAT}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 leading-tight">Alamat</span>
-                                <span class="block text-[9.5px] sm:text-xs text-gray-500 mt-0.5 leading-tight truncate">${asset.address || '-'}</span>
+                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight">Alamat</span>
+                                <span class="block text-[9.5px] sm:text-xs text-gray-500 dark:text-white mt-0.5 leading-tight truncate">${asset.address || '-'}</span>
                             </div>
                         </div>
 
                         <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                             <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_LUAS}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 leading-tight">Luas</span>
-                                <span class="block text-[9.5px] sm:text-xs text-gray-500 mt-0.5 leading-tight truncate">${asset.area || '-'}</span>
+                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight">Luas</span>
+                                <span class="block text-[9.5px] sm:text-xs text-gray-500 dark:text-white mt-0.5 leading-tight truncate">${asset.area || '-'}</span>
                             </div>
                         </div>
 
                         <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                             <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_JENIS}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 leading-tight">Jenis Aset</span>
-                                <span class="block text-[9.5px] sm:text-xs text-gray-500 mt-0.5 leading-tight truncate">${asset.type || '-'}</span>
+                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight">Jenis Aset</span>
+                                <span class="block text-[9.5px] sm:text-xs text-gray-500 dark:text-white mt-0.5 leading-tight truncate">${asset.type || '-'}</span>
                             </div>
                         </div>
 
                         <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                             <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_NILAI}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 leading-tight">Nilai Aset</span>
-                                <span class="block text-[9.5px] sm:text-xs text-gray-500 mt-0.5 leading-tight truncate">${asset.value || '-'}</span>
+                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight">Nilai Aset</span>
+                                <span class="block text-[9.5px] sm:text-xs text-gray-500 dark:text-white mt-0.5 leading-tight truncate">${asset.value || '-'}</span>
                             </div>
                         </div>
 
                         <div class="col-span-2 flex items-center gap-1.5 sm:gap-2.5 min-w-0">
                             <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_PERIODE}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 leading-tight">Periode</span>
-                                <span class="block text-[9.5px] sm:text-xs text-gray-500 mt-0.5 leading-tight truncate">${asset.period || '-'}</span>
+                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight">Periode</span>
+                                <span class="block text-[9.5px] sm:text-xs text-gray-500 dark:text-white mt-0.5 leading-tight truncate">${asset.period || '-'}</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-2.5 sm:mt-4 flex items-center gap-2">
                         <a href="/asset/${id}" class="btn-detail-lanjutan flex-1 h-[34px] sm:h-[38px] flex items-center justify-center text-center cursor-pointer rounded-xl bg-[#0066FF] px-2.5 sm:px-4 text-[11px] sm:text-xs font-semibold !text-white transition hover:bg-blue-700 shadow-xs whitespace-nowrap" style="color: #ffffff !important;">Detail Lanjutan</a>
-                        <a href="${googleMapsUrl}" target="_blank" class="btn-buka-maps h-[34px] sm:h-[38px] flex items-center justify-center gap-1.5 text-center cursor-pointer rounded-xl border border-gray-200 bg-white px-2.5 sm:px-3 text-[11px] sm:text-xs font-medium text-gray-700 transition hover:bg-gray-50 shrink-0 whitespace-nowrap shadow-xs">
-                            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <a href="${googleMapsUrl}" target="_blank" class="btn-buka-maps h-[34px] sm:h-[38px] flex items-center justify-center gap-1.5 text-center cursor-pointer rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#2D3034] px-2.5 sm:px-3 text-[11px] sm:text-xs font-medium text-gray-700 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/10 shrink-0 whitespace-nowrap shadow-xs">
+                            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600 dark:text-white shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M22 9.00002V15C22 17.5 21.5 19.25 20.38 20.38L14 14L21.73 6.27002C21.91 7.06002 22 7.96002 22 9.00002Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M21.73 6.27L6.26999 21.73C3.25999 21.04 2 18.96 2 15V9C2 4 4 2 9 2H15C18.96 2 21.04 3.26 21.73 6.27Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M20.38 20.38C19.25 21.5 17.5 22 15 22H9.00003C7.96003 22 7.06002 21.91 6.27002 21.73L14 14L20.38 20.38Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -755,6 +829,8 @@
 
                 if (!isNaN(lat) && !isNaN(lng)) {
                     const marker = L.marker([lat, lng], { icon: redPinIcon }).addTo(map);
+                    marker._assetData = asset;
+                    marker._assetId = id;
 
                     const popup = L.popup({
                         offset: [0, -16],

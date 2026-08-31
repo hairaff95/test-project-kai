@@ -10,12 +10,21 @@
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Anti-FOUC Theme Script -->
+    <script>
+        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 </head>
 
-<body class="min-h-screen bg-[#F6F7F9] font-sans antialiased text-gray-900 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between">
+<body class="min-h-screen bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between transition-colors duration-200">
 
     {{-- Navbar --}}
     <x-navbar active="pengaturan" />
@@ -27,7 +36,7 @@
 
             {{-- ================= SIDEBAR KIRI ================= --}}
             <div class="space-y-4 lg:space-y-6">
-                <h1 class="text-[24px] sm:text-[30px] lg:text-[34px] font-bold text-gray-950 tracking-tight">
+                <h1 class="text-[24px] sm:text-[30px] lg:text-[34px] font-bold text-gray-950 dark:text-white tracking-tight">
                     Pengaturan
                 </h1>
 
@@ -38,7 +47,7 @@
                         type="button"
                         onclick="switchAdminTab('profil')"
                         id="tab-btn-profil"
-                        class="shrink-0 text-left text-sm font-semibold transition cursor-pointer text-[#0066FF] lg:text-[#0066FF] px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-blue-50 lg:bg-transparent"
+                        class="shrink-0 text-left text-sm font-semibold transition cursor-pointer text-[#0066FF] dark:text-[#3B82F6] px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-blue-50 dark:bg-blue-900/30 lg:bg-transparent lg:dark:bg-transparent"
                     >
                         Profil Saya
                     </button>
@@ -48,7 +57,7 @@
                         type="button"
                         onclick="switchAdminTab('reset-sandi')"
                         id="tab-btn-reset-sandi"
-                        class="shrink-0 text-left text-sm font-medium transition cursor-pointer text-gray-400 hover:text-gray-700 px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-gray-100/80 lg:bg-transparent"
+                        class="shrink-0 text-left text-sm font-medium transition cursor-pointer text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-gray-100/80 dark:bg-[#2D3034] lg:bg-transparent lg:dark:bg-transparent"
                     >
                         Pengajuan Reset Sandi
                     </button>
@@ -63,20 +72,20 @@
                 <div id="panel-profil" class="space-y-6">
 
                     {{-- Card 1: Avatar & Nama --}}
-                    <div class="rounded-3xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 transition-colors">
                         <div class="flex items-center gap-5 sm:gap-6">
                             {{-- Avatar circle --}}
-                            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#D9D9D9] flex items-center justify-center text-gray-400 shrink-0 select-none overflow-hidden">
-                                <svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#D9D9D9] dark:bg-[#34383D] flex items-center justify-center text-gray-400 dark:text-gray-300 shrink-0 select-none overflow-hidden">
+                                <svg class="w-12 h-12 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                                 </svg>
                             </div>
 
                             <div>
-                                <h2 class="text-xl sm:text-2xl font-bold text-gray-900 leading-snug" id="display-fullname">
+                                <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white leading-snug" id="display-fullname">
                                     Haidar Rafi Kosong Enam
                                 </h2>
-                                <p class="text-xs sm:text-sm text-gray-500 font-medium mt-1">
+                                <p class="text-xs sm:text-sm text-gray-500 dark:text-[#9AA0A6] font-medium mt-1">
                                     Admin KAI Aset
                                 </p>
                             </div>
@@ -95,9 +104,9 @@
                     </div>
 
                     {{-- Card 2: Informasi Profil --}}
-                    <div class="rounded-3xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-xs space-y-6">
-                        <div class="flex items-center justify-between border-b border-gray-100 pb-4">
-                            <h3 class="text-base sm:text-lg font-bold text-gray-900">
+                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-8 shadow-xs space-y-6 transition-colors">
+                        <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/10 pb-4">
+                            <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
                                 Informasi Profil
                             </h3>
                             <button
@@ -113,24 +122,24 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8 pt-2">
                             {{-- Nama Awal --}}
                             <div>
-                                <span class="block text-xs font-medium text-gray-400 mb-1.5">Nama Awal</span>
-                                <span class="block text-sm sm:text-[15px] font-semibold text-gray-900" id="display-first-name">
+                                <span class="block text-xs font-medium text-gray-400 dark:text-[#9AA0A6] mb-1.5">Nama Awal</span>
+                                <span class="block text-sm sm:text-[15px] font-semibold text-gray-900 dark:text-white" id="display-first-name">
                                     Haidar Rafi
                                 </span>
                             </div>
 
                             {{-- Nama Akhir --}}
                             <div>
-                                <span class="block text-xs font-medium text-gray-400 mb-1.5">Nama Akhir</span>
-                                <span class="block text-sm sm:text-[15px] font-semibold text-gray-900" id="display-last-name">
+                                <span class="block text-xs font-medium text-gray-400 dark:text-[#9AA0A6] mb-1.5">Nama Akhir</span>
+                                <span class="block text-sm sm:text-[15px] font-semibold text-gray-900 dark:text-white" id="display-last-name">
                                     Kosong Enam
                                 </span>
                             </div>
 
                             {{-- Alamat Email --}}
                             <div class="sm:col-span-2">
-                                <span class="block text-xs font-medium text-gray-400 mb-1.5">Alamat Email</span>
-                                <span class="block text-sm sm:text-[15px] font-semibold text-gray-900" id="display-email">
+                                <span class="block text-xs font-medium text-gray-400 dark:text-[#9AA0A6] mb-1.5">Alamat Email</span>
+                                <span class="block text-sm sm:text-[15px] font-semibold text-gray-900 dark:text-white" id="display-email">
                                     admin.kai@daop4.com
                                 </span>
                             </div>
@@ -142,15 +151,15 @@
 
                 {{-- ------------------- TAB 2: PENGAJUAN RESET SANDI ------------------- --}}
                 <div id="panel-reset-sandi" class="hidden">
-                    <div class="rounded-3xl border border-gray-200/80 bg-white p-6 sm:p-10 shadow-xs space-y-6 max-w-3xl">
+                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-6 max-w-3xl transition-colors">
                         
                         {{-- Title --}}
-                        <h2 class="text-2xl sm:text-[30px] font-bold text-gray-950 tracking-tight leading-tight">
+                        <h2 class="text-2xl sm:text-[30px] font-bold text-gray-950 dark:text-white tracking-tight leading-tight">
                             Pengajuan Ubah Kata Sandi
                         </h2>
 
                         {{-- Description per Desain Figma --}}
-                        <p class="text-xs sm:text-sm text-gray-600 font-normal leading-relaxed">
+                        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 font-normal leading-relaxed">
                             Ajukan Reset Kata Sandi login aplikasi Tracker APP, ingat pengajuan kata sandi menunggu persetujuan dari superadmin selama 1x24 jam, jika belum di setujui silahkan cek email untuk mendapatkan kata sandi sementara untuk login dan untuk pengubahan kata sandi
                         </p>
 
@@ -187,44 +196,44 @@
     </main>
 
     {{-- ================= MODAL EDIT INFORMASI PROFIL ================= --}}
-    <div id="modal-edit-profile" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-        <div class="w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-gray-100 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+    <div id="modal-edit-profile" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+        <div class="w-full max-w-md rounded-3xl bg-white dark:bg-[#1F2123] p-6 sm:p-8 shadow-2xl border border-gray-100 dark:border-white/10 space-y-5 animate-in fade-in zoom-in-95 duration-200 transition-colors">
             
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 class="text-lg font-bold text-gray-900">Edit Informasi Profil</h3>
-                <button type="button" onclick="closeEditProfileModal()" class="text-gray-400 hover:text-gray-700 text-lg cursor-pointer">✕</button>
+            <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/10 pb-3">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Edit Informasi Profil</h3>
+                <button type="button" onclick="closeEditProfileModal()" class="text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white text-lg cursor-pointer">✕</button>
             </div>
 
             <form id="form-edit-profile" onsubmit="saveProfileChanges(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Nama Awal</label>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Nama Awal</label>
                     <input
                         type="text"
                         id="input-first-name"
                         value="Haidar Rafi"
-                        class="w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 focus:border-[#0066FF] focus:outline-none transition"
+                        class="w-full rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Nama Akhir</label>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Nama Akhir</label>
                     <input
                         type="text"
                         id="input-last-name"
                         value="Kosong Enam"
-                        class="w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 focus:border-[#0066FF] focus:outline-none transition"
+                        class="w-full rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Alamat Email</label>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Alamat Email</label>
                     <input
                         type="email"
                         id="input-email"
                         value="admin.kai@daop4.com"
-                        class="w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-sm text-gray-900 focus:border-[#0066FF] focus:outline-none transition"
+                        class="w-full rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
@@ -233,7 +242,7 @@
                     <button
                         type="button"
                         onclick="closeEditProfileModal()"
-                        class="px-5 py-2.5 rounded-[8px] border border-gray-200 text-xs sm:text-sm font-medium text-gray-600 hover:bg-gray-50 transition cursor-pointer"
+                        class="px-5 py-2.5 rounded-[8px] border border-gray-200 dark:border-white/10 text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer"
                     >
                         Batal
                     </button>
@@ -257,8 +266,8 @@
             const panelProfil = document.getElementById('panel-profil');
             const panelReset = document.getElementById('panel-reset-sandi');
 
-            const activeClass = "shrink-0 text-left text-sm font-semibold transition cursor-pointer text-[#0066FF] px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-blue-50 lg:bg-transparent";
-            const inactiveClass = "shrink-0 text-left text-sm font-medium transition cursor-pointer text-gray-400 hover:text-gray-700 px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-gray-100/80 lg:bg-transparent";
+            const activeClass = "shrink-0 text-left text-sm font-semibold transition cursor-pointer text-[#0066FF] dark:text-[#3B82F6] px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-blue-50 dark:bg-blue-900/30 lg:bg-transparent lg:dark:bg-transparent";
+            const inactiveClass = "shrink-0 text-left text-sm font-medium transition cursor-pointer text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-gray-100/80 dark:bg-[#2D3034] lg:bg-transparent lg:dark:bg-transparent";
 
             if (tabName === 'profil') {
                 btnProfil.className = activeClass;
