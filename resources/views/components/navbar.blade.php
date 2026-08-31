@@ -65,6 +65,19 @@
         <!-- Profil & Aksi Kanan -->
         <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
+            {{-- Tombol CRUD khusus admin/superadmin --}}
+            @auth
+                @if(auth()->user()->isAdmin())
+                    <div class="hidden sm:flex items-center gap-1.5">
+                        <a href="{{ route('superadmin.admins.create') }}"
+                            class="hidden lg:flex items-center gap-1.5 bg-[#0066FF] hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-xl transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                            Tambah Aset
+                        </a>
+                    </div>
+                @endif
+            @endauth
+
             <button
                 type="button"
                 class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-gray-300/80 bg-transparent text-gray-700 hover:bg-gray-200/70 transition shadow-none cursor-pointer"
@@ -96,11 +109,17 @@
 
                     <div class="hidden sm:block leading-tight text-left pl-0.5">
                         <p class="text-sm font-bold text-[#171717]">
-                            Haidar R.
+                            @auth {{ auth()->user()->name }} @else Tamu @endauth
                         </p>
 
                         <p class="text-xs text-gray-400 font-normal mt-0.5">
-                            Admin
+                            @auth
+                                @if(auth()->user()->isSuperAdmin()) Super Admin
+                                @elseif(auth()->user()->isAdmin()) Admin
+                                @else User @endif
+                            @else
+                                -
+                            @endauth
                         </p>
                     </div>
 
@@ -118,24 +137,56 @@
                     id="profileDropdown"
                     class="absolute right-0 top-full mt-2 w-52 origin-top-right rounded-2xl p-2 shadow-lg opacity-0 invisible scale-95 transition-all duration-200 bg-white border border-gray-200"
                 >
+                    @auth
+                        @if(auth()->user()->isSuperAdmin())
+                            <!-- Panel Super Admin -->
+                            <a
+                                href="{{ route('superadmin.dashboard') }}"
+                                class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+                            >
+                                <x-icon name="setting" class="h-5 w-5 text-gray-500" />
+                                <span>Panel Super Admin</span>
+                            </a>
+                        @elseif(auth()->user()->isAdmin())
+                            <!-- Reset Password (Admin) -->
+                            <a
+                                href="{{ route('password.request') }}"
+                                class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+                            >
+                                <x-icon name="setting" class="h-5 w-5 text-gray-500" />
+                                <span>Reset Password</span>
+                            </a>
+                        @endif
 
-                    <!-- Pengaturan Akun -->
-                    <a
-                        href="{{ route('settings.index') }}"
-                        class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
-                    >
-                        <x-icon name="setting" class="h-5 w-5 text-gray-500" />
-                        <span>Pengaturan</span>
-                    </a>
+                        <!-- Pengaturan Akun -->
+                        <a
+                            href="{{ route('settings.index') }}"
+                            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+                        >
+                            <x-icon name="setting" class="h-5 w-5 text-gray-500" />
+                            <span>Pengaturan</span>
+                        </a>
 
-                    <!-- Logout -->
-                    <a
-                        href="{{ route('logout') }}"
-                        class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition cursor-pointer"
-                    >
-                        <x-icon name="logout" class="h-5 w-5 text-gray-500" />
-                        <span>Keluar</span>
-                    </a>
+                        <!-- Logout -->
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button
+                                type="submit"
+                                class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition cursor-pointer"
+                            >
+                                <x-icon name="logout" class="h-5 w-5 text-gray-500" />
+                                <span>Keluar</span>
+                            </button>
+                        </form>
+                    @else
+                        <a
+                            href="{{ route('login') }}"
+                            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+                        >
+                            <x-icon name="logout" class="h-5 w-5 text-gray-500" />
+                            <span>Masuk</span>
+                        </a>
+                    @endauth
 
                 </div>
 

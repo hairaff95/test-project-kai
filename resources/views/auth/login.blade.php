@@ -135,7 +135,7 @@
 
                     {{-- Ubah kata sandi link --}}
                     <div class="pt-1">
-                        <a href="{{ route('password.verify') }}" class="text-xs text-gray-500 hover:text-[#0066FF] underline transition inline-block cursor-pointer">
+                        <a href="{{ route('password.request') }}" class="text-xs text-gray-500 hover:text-[#0066FF] underline transition inline-block cursor-pointer">
                             Ubah kata sandi
                         </a>
                     </div>

@@ -18,7 +18,7 @@ class CheckActiveStatus
             $request->session()->regenerateToken();
 
             return redirect()->route('login')
-                ->with('error', 'Akun Anda telah dinonaktifkan. Silakan hubungi Super Admin.');
+                ->withErrors(['login' => 'Akun Anda telah dinonaktifkan oleh Super Admin.']);
         }
 
         return $next($request);
