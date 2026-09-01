@@ -73,7 +73,7 @@ class AuthController extends Controller
     private function redirectByRole(User $user)
     {
         if ($user->isSuperAdmin()) {
-            return redirect()->route('superadmin.dashboard');
+            return redirect()->route('settings.index');
         }
 
         return redirect()->route('welcome');
@@ -84,10 +84,22 @@ class AuthController extends Controller
      */
     public function showVerifyCode()
     {
-        // Pastikan session request_id ada
-        if (!session('reset_request_id')) {
+        $requestId      = session('reset_request_id');
+        $sessionExpires = session('otp_session_expires_at');
+        $resetRequest   = $requestId ? \App\Models\PasswordResetRequest::find($requestId) : null;
+
+        $sessionExpired = $sessionExpires && now()->timestamp > $sessionExpires;
+
+        // Session tidak ada sama sekali → redirect diam-diam ke form request
+        if (!$requestId) {
+            return redirect()->route('password.request');
+        }
+
+        // Session ada tapi expired atau OTP tidak valid → tampilkan error
+        if (!$resetRequest || $sessionExpired || !$resetRequest->isApproved() || !$resetRequest->isOtpValid()) {
+            session()->forget(['reset_request_id', 'otp_verified', 'pending_reset_user_id', 'otp_session_expires_at']);
             return redirect()->route('password.request')
-                ->with('error', 'Sesi tidak valid. Silakan mulai ulang proses reset password.');
+                ->with('error', 'Kode OTP sudah kedaluwarsa. Silakan ajukan ulang.');
         }
 
         return view('auth.verify-code');

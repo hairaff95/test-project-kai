@@ -47,8 +47,11 @@ Route::post('/ubah-kata-sandi/request', [PasswordResetRequestController::class, 
 
 // Status request
 Route::get('/ubah-kata-sandi/status', [PasswordResetRequestController::class, 'requestStatus'])
-    ->middleware(['auth', 'active_check'])
     ->name('password.request.status');
+
+// Polling endpoint — cek status request (JSON)
+Route::get('/ubah-kata-sandi/status/poll', [PasswordResetRequestController::class, 'pollStatus'])
+    ->name('password.request.poll');
 
 // Link dari email: admin akses halaman OTP via token (ID request)
 Route::get('/ubah-kata-sandi/akses/{resetRequest}', [PasswordResetRequestController::class, 'accessViaToken'])->name('password.access-token');
@@ -56,58 +59,44 @@ Route::get('/ubah-kata-sandi/akses/{resetRequest}', [PasswordResetRequestControl
 // Step 2: Masukkan OTP
 Route::get('/verifikasi-kode', [AuthController::class, 'showVerifyCode'])->name('password.verify');
 Route::post('/verifikasi-kode', [PasswordResetRequestController::class, 'verifyOtp'])->name('password.verify.post');
+Route::post('/verifikasi-kode/kirim-ulang', [PasswordResetRequestController::class, 'resendOtp'])->name('password.resend-otp');
 
 // Step 3: Atur password baru
 Route::get('/ubah-kata-sandi', [AuthController::class, 'showResetPassword'])->name('password.reset');
 Route::post('/ubah-kata-sandi', [PasswordResetRequestController::class, 'resetPassword'])->name('password.reset.post');
 
-// ================= SUPER ADMIN PANEL =================
-Route::prefix('superadmin')->name('superadmin.')->middleware(['auth', 'active_check', 'role:superadmin'])->group(function () {
+// ================= PENGATURAN =================
+Route::middleware(['auth', 'active_check'])->group(function () {
+    Route::get('/pengaturan', function () {
+        if (auth()->user()->isSuperAdmin()) {
+            return app(SuperAdminController::class)->settingsIndex();
+        }
+        return view('settings.admin', ['active' => 'pengaturan']);
+    })->name('settings.index');
 
-    // Dashboard
-    Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/pengaturan-admin', function () {
+        return view('settings.admin', ['active' => 'pengaturan']);
+    })->name('settings.admin');
 
-    // CRUD Admin
-    Route::prefix('admins')->name('admins.')->group(function () {
-        Route::get('/', [SuperAdminController::class, 'adminIndex'])->name('index');
-        Route::get('/create', [SuperAdminController::class, 'adminCreate'])->name('create');
-        Route::post('/', [SuperAdminController::class, 'adminStore'])->name('store');
-        Route::get('/{admin}/edit', [SuperAdminController::class, 'adminEdit'])->name('edit');
-        Route::put('/{admin}', [SuperAdminController::class, 'adminUpdate'])->name('update');
-        Route::patch('/{admin}/toggle', [SuperAdminController::class, 'adminToggleActive'])->name('toggle');
-        Route::delete('/{admin}', [SuperAdminController::class, 'adminDestroy'])->name('destroy');
-    });
+    Route::get('/pengaturan-superadmin', [SuperAdminController::class, 'settingsIndex'])->name('settings.superadmin');
 
-    // Kelola Reset Password Requests
-    Route::get('/reset-requests', [SuperAdminController::class, 'resetRequests'])->name('reset-requests');
-    Route::patch('/reset-requests/{resetRequest}/approve', [SuperAdminController::class, 'approveRequest'])->name('reset-requests.approve');
-    Route::patch('/reset-requests/{resetRequest}/reject', [SuperAdminController::class, 'rejectRequest'])->name('reset-requests.reject');
-
+    // Import & Download Template Excel
+    Route::post('/pengaturan/import-excel', [ExcelImportController::class, 'import'])->name('settings.import-excel');
+    Route::get('/pengaturan/download-template', [ExcelImportController::class, 'downloadTemplate'])->name('settings.download-template');
 });
 
-// ================= PENGATURAN =================
-Route::get('/pengaturan', function () {
-    if (auth()->check() && auth()->user()->isSuperAdmin()) {
-        return view('settings.index', ['active' => 'pengaturan']);
-    }
-    return view('settings.admin', ['active' => 'pengaturan']);
-})->name('settings.index');
-
-Route::get('/pengaturan-admin', function () {
-    return view('settings.admin', ['active' => 'pengaturan']);
-})->name('settings.admin');
-
-Route::get('/pengaturan-superadmin', function () {
-    return view('settings.index', ['active' => 'pengaturan']);
-})->name('settings.superadmin');
-
-// Import & Download Template Excel
-Route::post('/pengaturan/import-excel', [ExcelImportController::class, 'import'])->name('settings.import-excel');
-Route::get('/pengaturan/download-template', [ExcelImportController::class, 'downloadTemplate'])->name('settings.download-template');
+// Super Admin Specific Endpoints
+Route::middleware(['auth', 'active_check', 'role:superadmin'])->group(function () {
+    Route::put('/pengaturan/profil', [SuperAdminController::class, 'profileUpdate'])->name('settings.profile.update');
+    Route::post('/pengaturan/admins', [SuperAdminController::class, 'adminStore'])->name('settings.admins.store');
+    Route::post('/pengaturan/admins/{admin}/toggle', [SuperAdminController::class, 'adminToggleActive'])->name('settings.admins.toggle');
+    Route::delete('/pengaturan/admins/{admin}', [SuperAdminController::class, 'adminDestroy'])->name('settings.admins.destroy');
+    Route::post('/pengaturan/reset-requests/{resetRequest}/approve', [SuperAdminController::class, 'approveRequest'])->name('settings.reset-requests.approve');
+    Route::post('/pengaturan/reset-requests/{resetRequest}/reject', [SuperAdminController::class, 'rejectRequest'])->name('settings.reset-requests.reject');
+});
 
 // ================= MAIN APP (semua user, termasuk guest) =================
 Route::middleware(['active_check'])->group(function () {
-
     // Dashboard & Map
     Route::get('/', [DashboardController::class, 'index'])->name('welcome');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -130,6 +119,23 @@ Route::middleware(['active_check'])->group(function () {
     // Detail Aset (read-only untuk semua)
     Route::get('/asset/{asset_number}', [AssetController::class, 'showKai'])->name('asset.detail');
 
+
+// ================= SUPER ADMIN ROUTES (legacy - redirect ke pengaturan) =================
+Route::middleware(['auth', 'active_check', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+    Route::get('/dashboard', fn() => redirect()->route('settings.index'))->name('dashboard');
+
+    // Redirect lama ke settings baru
+    Route::get('/admins', fn() => redirect()->route('settings.index'))->name('admins.index');
+    Route::get('/admins/create', fn() => redirect()->route('settings.index'))->name('admins.create');
+    Route::get('/admins/{admin}/edit', fn() => redirect()->route('settings.index'))->name('admins.edit');
+    Route::get('/reset-requests', fn() => redirect()->route('settings.index', ['tab' => 'persetujuan-sandi']))->name('reset-requests');
+
+    // POST actions — tetap berfungsi, diteruskan ke controller
+    Route::post('/admins', [SuperAdminController::class, 'adminStore'])->name('admins.store');
+    Route::post('/admins/{admin}/toggle', [SuperAdminController::class, 'adminToggleActive'])->name('admins.toggle');
+    Route::delete('/admins/{admin}', [SuperAdminController::class, 'adminDestroy'])->name('admins.destroy');
+    Route::post('/reset-requests/{resetRequest}/approve', [SuperAdminController::class, 'approveRequest'])->name('reset-requests.approve');
+    Route::post('/reset-requests/{resetRequest}/reject', [SuperAdminController::class, 'rejectRequest'])->name('reset-requests.reject');
 });
 
 // ================= ADMIN ONLY ROUTES (CRUD) =================

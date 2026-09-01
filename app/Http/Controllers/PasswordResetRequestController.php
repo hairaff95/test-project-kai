@@ -18,6 +18,9 @@ class PasswordResetRequestController extends Controller
      */
     public function showRequestForm()
     {
+        // Bersihkan session OTP lama agar tidak ada konflik
+        session()->forget(['reset_request_id', 'otp_verified', 'pending_reset_user_id', 'otp_session_expires_at']);
+
         return view('auth.request-reset');
     }
 
@@ -52,7 +55,7 @@ class PasswordResetRequestController extends Controller
             ->first();
 
         if ($existing) {
-            return redirect()->route('password.request')
+            return redirect()->route('password.request.status')
                 ->with('error', 'Request untuk email ini sudah ada dan sedang diproses. Silakan tunggu atau cek email Anda.');
         }
 
@@ -62,25 +65,72 @@ class PasswordResetRequestController extends Controller
             'request_expires_at' => now()->addHours(24),
         ]);
 
-        return redirect()->route('password.request')
-            ->with('success', 'Request reset password berhasil dikirim. Super Admin akan segera memprosesnya.');
+        // Simpan user_id di session supaya halaman status bisa diakses tanpa login
+        session(['pending_reset_user_id' => $user->id]);
+
+        return redirect()->route('password.request.status')
+            ->with('success', 'Request berhasil dikirim. Menunggu persetujuan Super Admin...');
     }
 
     /**
-     * Tampilkan status request (butuh login karena halaman ini untuk user yang sudah login).
+     * Tampilkan status request.
      */
     public function requestStatus()
     {
+        $userId = auth()->id() ?? session('pending_reset_user_id');
+
         $resetRequest = null;
 
-        if (auth()->check()) {
-            $resetRequest = PasswordResetRequest::where('user_id', auth()->id())
+        if ($userId) {
+            $resetRequest = PasswordResetRequest::where('user_id', $userId)
                 ->whereIn('status', ['pending', 'approved'])
                 ->latest()
                 ->first();
+
+            // Jika sudah approved, set session reset_request_id + expiry
+            if ($resetRequest && $resetRequest->status === 'approved') {
+                session([
+                    'reset_request_id'       => $resetRequest->id,
+                    'otp_session_expires_at' => $resetRequest->otp_expires_at?->timestamp,
+                ]);
+            }
         }
 
         return view('auth.request-status', compact('resetRequest'));
+    }
+
+    /**
+     * Polling endpoint — return JSON status request untuk auto-redirect di frontend.
+     */
+    public function pollStatus()
+    {
+        $userId = auth()->id() ?? session('pending_reset_user_id');
+
+        if (!$userId) {
+            return response()->json(['status' => 'none']);
+        }
+
+        $resetRequest = PasswordResetRequest::where('user_id', $userId)
+            ->whereIn('status', ['pending', 'approved'])
+            ->latest()
+            ->first();
+
+        if (!$resetRequest) {
+            return response()->json(['status' => 'none']);
+        }
+
+        if ($resetRequest->status === 'approved' && $resetRequest->isOtpValid()) {
+            session([
+                'reset_request_id'      => $resetRequest->id,
+                'otp_session_expires_at' => $resetRequest->otp_expires_at->timestamp,
+            ]);
+            return response()->json([
+                'status'       => 'approved',
+                'redirect_url' => route('password.verify'),
+            ]);
+        }
+
+        return response()->json(['status' => $resetRequest->status]);
     }
 
     /**
@@ -94,6 +144,38 @@ class PasswordResetRequestController extends Controller
         }
 
         return view('auth.verify-code');
+    }
+
+    /**
+     * Kirim ulang OTP ke email admin.
+     */
+    public function resendOtp()
+    {
+        $requestId    = session('reset_request_id');
+        $resetRequest = PasswordResetRequest::find($requestId);
+
+        if (!$resetRequest || !$resetRequest->isApproved()) {
+            return redirect()->route('password.request')
+                ->with('error', 'Sesi tidak valid. Silakan ulangi proses.');
+        }
+
+        // Generate OTP baru
+        $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        $resetRequest->update([
+            'otp_code'       => $otp,
+            'otp_expires_at' => now()->addMinute(),
+        ]);
+
+        try {
+            \Illuminate\Support\Facades\Mail::to($resetRequest->user->email)
+                ->send(new \App\Mail\OtpMail($resetRequest->user, $otp, $resetRequest));
+        } catch (\Exception $e) {
+            \Log::error('Gagal kirim ulang OTP: ' . $e->getMessage());
+        }
+
+        return redirect()->route('password.verify')
+            ->with('success', 'Kode OTP baru telah dikirim ke email Anda.');
     }
 
     /**

@@ -30,8 +30,9 @@
     <div class="w-full max-w-[420px]">
 
         {{-- Logo --}}
-        <div class="text-center mb-8">
-            <span class="text-2xl font-bold italic text-gray-900 dark:text-white">KAI <span class="text-[#0066FF] dark:text-[#3B82F6]">TrackerApp</span></span>
+        <div class="text-center mb-8 flex items-center justify-center gap-1.5">
+            <x-icon name="kai-logo" class="h-[19px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
+            <p class="text-gray-900 dark:text-white font-bold italic text-lg">Tracker<span class="text-[#0066FF] dark:text-[#3B82F6]">App</span></p>
         </div>
 
         {{-- Flash messages --}}
