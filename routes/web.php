@@ -86,6 +86,24 @@ Route::get('/pengaturan', function () {
     // Detail Aset (read-only untuk semua)
     Route::get('/asset/{asset_number}', [AssetController::class, 'showKai'])->name('asset.detail');
 
+
+// ================= SUPER ADMIN ROUTES =================
+Route::middleware(['auth', 'active_check', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+    Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
+
+    // Kelola Admin
+    Route::get('/admins', [SuperAdminController::class, 'adminIndex'])->name('admins.index');
+    Route::get('/admins/create', [SuperAdminController::class, 'adminCreate'])->name('admins.create');
+    Route::post('/admins', [SuperAdminController::class, 'adminStore'])->name('admins.store');
+    Route::get('/admins/{admin}/edit', [SuperAdminController::class, 'adminEdit'])->name('admins.edit');
+    Route::put('/admins/{admin}', [SuperAdminController::class, 'adminUpdate'])->name('admins.update');
+    Route::post('/admins/{admin}/toggle', [SuperAdminController::class, 'adminToggleActive'])->name('admins.toggle');
+    Route::delete('/admins/{admin}', [SuperAdminController::class, 'adminDestroy'])->name('admins.destroy');
+
+    // Kelola Request Reset Password
+    Route::get('/reset-requests', [SuperAdminController::class, 'resetRequests'])->name('reset-requests');
+    Route::post('/reset-requests/{resetRequest}/approve', [SuperAdminController::class, 'approveRequest'])->name('reset-requests.approve');
+    Route::post('/reset-requests/{resetRequest}/reject', [SuperAdminController::class, 'rejectRequest'])->name('reset-requests.reject');
 });
 
 // ================= ADMIN ONLY ROUTES (CRUD) =================
