@@ -90,6 +90,16 @@
                         @endif
                     </button>
 
+                    {{-- Tab: Import Data Excel --}}
+                    <button
+                        type="button"
+                        onclick="switchSuperTab('import-excel')"
+                        id="tab-btn-import"
+                        class="shrink-0 text-left text-sm transition cursor-pointer px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none"
+                    >
+                        Import Data Excel
+                    </button>
+
                 </nav>
             </div>
 
@@ -449,6 +459,112 @@
                     </div>
                 </div>
 
+
+                {{-- ─── TAB 3: IMPORT DATA EXCEL ─── --}}
+                <div id="panel-import-excel" class="hidden space-y-6">
+                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-8 shadow-xs space-y-6 transition-colors">
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                            Upload File Data
+                        </h2>
+
+                        <form id="import-excel-form" action="{{ route('settings.import-excel') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                            @csrf
+
+                            {{-- Dropzone Area --}}
+                            <div
+                                id="excel-dropzone"
+                                onclick="document.getElementById('excel-file-input').click()"
+                                class="group relative border-2 border-dashed border-gray-200 dark:border-white/15 hover:border-[#0066FF] dark:hover:border-[#0066FF] rounded-2xl p-8 sm:p-12 text-center flex flex-col items-center justify-center transition-all bg-gray-50/40 dark:bg-white/[0.02] hover:bg-blue-50/20 dark:hover:bg-blue-900/10 cursor-pointer select-none"
+                            >
+                                <input
+                                    type="file"
+                                    name="file"
+                                    id="excel-file-input"
+                                    accept=".csv, .xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/csv"
+                                    class="hidden"
+                                    onchange="handleExcelFileSelect(this.files)"
+                                />
+
+                                {{-- Icon Upload Data --}}
+                                <img
+                                    src="{{ asset('image/icon-upload-data.svg') }}"
+                                    alt="Icon Upload Data"
+                                    class="w-48 sm:w-56 max-h-36 sm:max-h-40 object-contain pointer-events-none mb-1 select-none transition group-hover:scale-105 duration-200"
+                                />
+
+                                <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mt-2">
+                                    Pilih file atau drag & drop ke area ini
+                                </p>
+                                <p class="text-xs text-gray-400 dark:text-[#9AA0A6] mt-1">
+                                    file mendukung format .csv, .xlsx, .xls
+                                </p>
+                            </div>
+
+                            {{-- Selected File Box --}}
+                            <div id="selected-file-card" style="display:none" class="rounded-2xl border border-gray-200/90 dark:border-white/10 p-4 sm:p-5 bg-white dark:bg-[#2D3034] shadow-2xs transition-all">
+                                <div class="flex items-center justify-between gap-4">
+                                    <div class="flex items-center gap-3.5 sm:gap-4 min-w-0">
+                                        {{-- Logo / Icon Penguploadan --}}
+                                        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gray-100 dark:bg-[#34383D] border border-gray-200/80 dark:border-white/10 flex items-center justify-center shrink-0">
+                                            <img
+                                                src="{{ asset('image/export.svg') }}"
+                                                alt="Logo Upload"
+                                                class="w-6 h-6 object-contain dark:invert"
+                                            />
+                                        </div>
+                                        <div class="min-w-0">
+                                            <h4 id="selected-file-name" class="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                                                pk.xlsx
+                                            </h4>
+                                            <p id="selected-file-size" class="text-xs text-gray-400 dark:text-[#9AA0A6] mt-0.5">
+                                                10 MB
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {{-- Remove button --}}
+                                    <button
+                                        type="button"
+                                        onclick="resetSelectedExcelFile()"
+                                        class="w-8 h-8 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 flex items-center justify-center transition cursor-pointer shrink-0"
+                                        title="Hapus file"
+                                    >
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                {{-- Upload Progress Bar --}}
+                                <div id="upload-progress-wrapper" class="mt-3.5 pt-2.5 border-t border-gray-100 dark:border-white/5 flex items-center gap-3">
+                                    <div class="flex-1 bg-gray-100 dark:bg-white/10 rounded-full h-1.5 overflow-hidden">
+                                        <div id="upload-progress-bar" class="bg-[#0066FF] h-1.5 rounded-full transition-all duration-300" style="width: 100%"></div>
+                                    </div>
+                                    <span id="upload-progress-text" class="text-xs font-semibold text-gray-500 dark:text-gray-400 shrink-0">100%</span>
+                                </div>
+                            </div>
+
+                            {{-- Bottom Action Buttons --}}
+                            <div class="flex items-center justify-end gap-2.5 sm:gap-3 pt-3">
+                                <button
+                                    type="button"
+                                    onclick="resetSelectedExcelFile()"
+                                    class="inline-flex items-center justify-center min-w-[96px] sm:min-w-[108px] h-[38px] sm:h-[42px] px-4 sm:px-5 rounded-lg bg-[#E00000] hover:bg-red-700 text-xs sm:text-sm font-semibold text-white shadow-xs transition active:scale-95 cursor-pointer whitespace-nowrap"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    id="btn-submit-import"
+                                    class="inline-flex items-center justify-center min-w-[96px] sm:min-w-[108px] h-[38px] sm:h-[42px] px-4 sm:px-5 rounded-lg bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-semibold text-white shadow-xs transition active:scale-95 cursor-pointer whitespace-nowrap"
+                                >
+                                    Import
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
             </div>
         </div>
     </main>
@@ -594,6 +710,7 @@
                 'profil-saya':       { btn: 'tab-btn-profil',     panel: 'panel-profil-saya' },
                 'manajemen-admin':   { btn: 'tab-btn-manajemen',  panel: 'panel-manajemen-admin' },
                 'persetujuan-sandi': { btn: 'tab-btn-persetujuan',panel: 'panel-persetujuan-sandi' },
+                'import-excel':      { btn: 'tab-btn-import',     panel: 'panel-import-excel' },
             };
 
             const activeBase   = 'shrink-0 text-left text-sm font-semibold transition cursor-pointer px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 lg:bg-transparent lg:dark:bg-transparent';
@@ -609,6 +726,59 @@
                 }
                 if (panelEl) panelEl.style.display = isActive ? 'block' : 'none';
             });
+        }
+
+        // ─── Drag & Drop / File Input Logic ───────────────────────────────────────
+        function handleExcelFileSelect(files) {
+            if (!files || files.length === 0) return;
+            const file = files[0];
+            const validExts = ['.csv', '.xlsx', '.xls'];
+            const fileName = file.name.toLowerCase();
+            const isValid = validExts.some(ext => fileName.endsWith(ext));
+
+            if (!isValid) {
+                alert('Format file tidak didukung. Silakan pilih file dengan format .csv, .xlsx, atau .xls.');
+                resetSelectedExcelFile();
+                return;
+            }
+
+            document.getElementById('selected-file-name').textContent = file.name;
+            document.getElementById('selected-file-size').textContent = formatFileSize(file.size);
+
+            const card = document.getElementById('selected-file-card');
+            const progress = document.getElementById('upload-progress-bar');
+            const progressText = document.getElementById('upload-progress-text');
+
+            if (card) card.style.display = 'block';
+
+            // Simulate quick load progress bar animation
+            if (progress && progressText) {
+                progress.style.width = '0%';
+                progressText.textContent = '0%';
+                let p = 0;
+                const interval = setInterval(() => {
+                    p += 25;
+                    if (p > 100) p = 100;
+                    progress.style.width = p + '%';
+                    progressText.textContent = p + '%';
+                    if (p === 100) clearInterval(interval);
+                }, 30);
+            }
+        }
+
+        function resetSelectedExcelFile() {
+            const input = document.getElementById('excel-file-input');
+            if (input) input.value = '';
+            const card = document.getElementById('selected-file-card');
+            if (card) card.style.display = 'none';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
         }
 
         // ─── Dropdown Three-Dots per row ──────────────────────────────────────────
@@ -657,10 +827,40 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             // Init semua panel tersembunyi dulu
-            ['panel-profil-saya', 'panel-manajemen-admin', 'panel-persetujuan-sandi'].forEach(id => {
+            ['panel-profil-saya', 'panel-manajemen-admin', 'panel-persetujuan-sandi', 'panel-import-excel'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.style.display = 'none';
             });
+
+            // Setup drag and drop events for excel dropzone
+            const dropzone = document.getElementById('excel-dropzone');
+            if (dropzone) {
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropzone.classList.add('border-[#0066FF]', 'bg-blue-50/30', 'dark:bg-blue-900/20');
+                    }, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropzone.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropzone.classList.remove('border-[#0066FF]', 'bg-blue-50/30', 'dark:bg-blue-900/20');
+                    }, false);
+                });
+
+                dropzone.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    if (files && files.length > 0) {
+                        const fileInput = document.getElementById('excel-file-input');
+                        if (fileInput) fileInput.files = files;
+                        handleExcelFileSelect(files);
+                    }
+                }, false);
+            }
 
             // Init semua dropdown tersembunyi
             document.querySelectorAll('.admin-dropdown').forEach(d => d.style.display = 'none');

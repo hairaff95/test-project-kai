@@ -79,6 +79,9 @@ Route::middleware(['auth', 'active_check', 'role:superadmin'])->group(function (
     // Persetujuan Reset Sandi
     Route::post('/pengaturan/reset-requests/{resetRequest}/approve', [SuperAdminController::class, 'approveRequest'])->name('settings.reset-requests.approve');
     Route::post('/pengaturan/reset-requests/{resetRequest}/reject', [SuperAdminController::class, 'rejectRequest'])->name('settings.reset-requests.reject');
+
+    // Import Data Excel
+    Route::post('/pengaturan/import-excel', [SuperAdminController::class, 'importExcel'])->name('settings.import-excel');
 });
 
     // Dashboard & Map
