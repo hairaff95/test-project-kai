@@ -46,8 +46,11 @@ Route::post('/ubah-kata-sandi/request', [PasswordResetRequestController::class, 
 
 // Status request
 Route::get('/ubah-kata-sandi/status', [PasswordResetRequestController::class, 'requestStatus'])
-    ->middleware(['auth', 'active_check'])
     ->name('password.request.status');
+
+// Polling endpoint — cek status request (JSON)
+Route::get('/ubah-kata-sandi/status/poll', [PasswordResetRequestController::class, 'pollStatus'])
+    ->name('password.request.poll');
 
 // Link dari email: admin akses halaman OTP via token (ID request)
 Route::get('/ubah-kata-sandi/akses/{resetRequest}', [PasswordResetRequestController::class, 'accessViaToken'])->name('password.access-token');
@@ -55,14 +58,28 @@ Route::get('/ubah-kata-sandi/akses/{resetRequest}', [PasswordResetRequestControl
 // Step 2: Masukkan OTP
 Route::get('/verifikasi-kode', [AuthController::class, 'showVerifyCode'])->name('password.verify');
 Route::post('/verifikasi-kode', [PasswordResetRequestController::class, 'verifyOtp'])->name('password.verify.post');
+Route::post('/verifikasi-kode/kirim-ulang', [PasswordResetRequestController::class, 'resendOtp'])->name('password.resend-otp');
 
 // Step 3: Atur password baru
 Route::get('/ubah-kata-sandi', [AuthController::class, 'showResetPassword'])->name('password.reset');
+Route::post('/ubah-kata-sandi', [PasswordResetRequestController::class, 'resetPassword'])->name('password.reset.post');
 
 // ================= PENGATURAN (SUPER ADMIN) =================
-Route::get('/pengaturan', function () {
-    return view('settings.index', ['active' => 'pengaturan']);
-})->name('settings.index');
+Route::middleware(['auth', 'active_check', 'role:superadmin'])->group(function () {
+    Route::get('/pengaturan', [SuperAdminController::class, 'settingsIndex'])->name('settings.index');
+
+    // Update Profil
+    Route::put('/pengaturan/profil', [SuperAdminController::class, 'profileUpdate'])->name('settings.profile.update');
+
+    // Kelola Admin
+    Route::post('/pengaturan/admins', [SuperAdminController::class, 'adminStore'])->name('settings.admins.store');
+    Route::post('/pengaturan/admins/{admin}/toggle', [SuperAdminController::class, 'adminToggleActive'])->name('settings.admins.toggle');
+    Route::delete('/pengaturan/admins/{admin}', [SuperAdminController::class, 'adminDestroy'])->name('settings.admins.destroy');
+
+    // Persetujuan Reset Sandi
+    Route::post('/pengaturan/reset-requests/{resetRequest}/approve', [SuperAdminController::class, 'approveRequest'])->name('settings.reset-requests.approve');
+    Route::post('/pengaturan/reset-requests/{resetRequest}/reject', [SuperAdminController::class, 'rejectRequest'])->name('settings.reset-requests.reject');
+});
 
     // Dashboard & Map
     Route::get('/', [DashboardController::class, 'index'])->name('welcome');
@@ -87,21 +104,20 @@ Route::get('/pengaturan', function () {
     Route::get('/asset/{asset_number}', [AssetController::class, 'showKai'])->name('asset.detail');
 
 
-// ================= SUPER ADMIN ROUTES =================
+// ================= SUPER ADMIN ROUTES (legacy - redirect ke pengaturan) =================
 Route::middleware(['auth', 'active_check', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
-    Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', fn() => redirect()->route('settings.index'))->name('dashboard');
 
-    // Kelola Admin
-    Route::get('/admins', [SuperAdminController::class, 'adminIndex'])->name('admins.index');
-    Route::get('/admins/create', [SuperAdminController::class, 'adminCreate'])->name('admins.create');
+    // Redirect lama ke settings baru
+    Route::get('/admins', fn() => redirect()->route('settings.index'))->name('admins.index');
+    Route::get('/admins/create', fn() => redirect()->route('settings.index'))->name('admins.create');
+    Route::get('/admins/{admin}/edit', fn() => redirect()->route('settings.index'))->name('admins.edit');
+    Route::get('/reset-requests', fn() => redirect()->route('settings.index', ['tab' => 'persetujuan-sandi']))->name('reset-requests');
+
+    // POST actions — tetap berfungsi, diteruskan ke controller
     Route::post('/admins', [SuperAdminController::class, 'adminStore'])->name('admins.store');
-    Route::get('/admins/{admin}/edit', [SuperAdminController::class, 'adminEdit'])->name('admins.edit');
-    Route::put('/admins/{admin}', [SuperAdminController::class, 'adminUpdate'])->name('admins.update');
     Route::post('/admins/{admin}/toggle', [SuperAdminController::class, 'adminToggleActive'])->name('admins.toggle');
     Route::delete('/admins/{admin}', [SuperAdminController::class, 'adminDestroy'])->name('admins.destroy');
-
-    // Kelola Request Reset Password
-    Route::get('/reset-requests', [SuperAdminController::class, 'resetRequests'])->name('reset-requests');
     Route::post('/reset-requests/{resetRequest}/approve', [SuperAdminController::class, 'approveRequest'])->name('reset-requests.approve');
     Route::post('/reset-requests/{resetRequest}/reject', [SuperAdminController::class, 'rejectRequest'])->name('reset-requests.reject');
 });

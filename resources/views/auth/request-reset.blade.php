@@ -16,8 +16,9 @@
     <div class="w-full max-w-[420px]">
 
         {{-- Logo --}}
-        <div class="text-center mb-8">
-            <span class="text-2xl font-bold italic text-gray-900">KAI <span class="text-[#0066FF]">TrackerApp</span></span>
+        <div class="text-center mb-8 flex items-center justify-center">
+            <x-icon name="kai-logo" class="h-[19px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
+            <p class="text-black font-bold italic">Tracker<span class="text-[#0066FF]">App</span></p>
         </div>
 
         {{-- Flash messages --}}
@@ -88,7 +89,7 @@
 
         <div class="mt-5 text-center">
             <a href="{{ route('login') }}" class="text-xs text-gray-400 hover:text-gray-700 transition">
-                &larr; Kembali ke halaman Masuk
+                Kembali ke halaman Masuk
             </a>
         </div>
 

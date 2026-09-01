@@ -147,7 +147,7 @@
 
             <div class="pt-1 text-center">
                 <a href="{{ route('login') }}" class="text-xs text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white transition">
-                    &larr; Kembali ke halaman Masuk
+                    Kembali ke halaman Masuk
                 </a>
             </div>
 

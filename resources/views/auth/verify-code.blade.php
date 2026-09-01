@@ -32,8 +32,9 @@
     <div class="w-full max-w-[420px] text-center">
 
         {{-- Logo --}}
-        <div class="mb-8">
-            <span class="text-2xl font-bold italic text-gray-900">KAI <span class="text-[#0066FF]">TrackerApp</span></span>
+        <div class="text-center mb-8 flex items-center justify-center">
+            <x-icon name="kai-logo" class="h-[19px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
+            <p class="text-black font-bold italic">Tracker<span class="text-[#0066FF]">App</span></p>
         </div>
 
         {{-- Error messages --}}
@@ -45,6 +46,11 @@
         @if(session('error'))
             <div class="mb-5 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm text-left">
                 {{ session('error') }}
+            </div>
+        @endif
+        @if(session('success'))
+            <div class="mb-5 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm text-left">
+                {{ session('success') }}
             </div>
         @endif
 
@@ -80,12 +86,15 @@
                 @endfor
             </div>
 
-            {{-- Resend Code Link --}}
+            {{-- Resend Code --}}
             <div class="text-xs text-gray-500 dark:text-[#9AA0A6] font-normal">
-                Tidak mendapat kode? 
-                <button type="button" onclick="resendCodeAlert()" class="text-[#0066FF] dark:text-[#3B82F6] font-medium hover:underline transition cursor-pointer">
-                    kirim ulang
-                </button>
+                Tidak mendapat kode?
+                <form method="POST" action="{{ route('password.resend-otp') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="text-[#0066FF] dark:text-[#3B82F6] font-medium hover:underline transition cursor-pointer">
+                        kirim ulang
+                    </button>
+                </form>
             </div>
 
             {{-- Submit Button 'Verifikasi' --}}
@@ -101,7 +110,7 @@
             {{-- Back to Login Link --}}
             <div class="pt-2">
                 <a href="{{ route('login') }}" class="text-xs text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white transition">
-                    &larr; Kembali ke halaman Masuk
+                    Kembali ke halaman Masuk
                 </a>
             </div>
 

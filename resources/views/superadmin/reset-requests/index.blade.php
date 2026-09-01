@@ -81,7 +81,6 @@
                                                 {{-- Approve --}}
                                                 <form action="{{ route('superadmin.reset-requests.approve', $req) }}" method="POST">
                                                     @csrf
-                                                    @method('PATCH')
                                                     <button type="submit"
                                                         class="flex items-center gap-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition"
                                                         onclick="return confirm('Setujui request reset password untuk {{ $req->user->name }}? OTP akan dikirim ke emailnya.')">
@@ -92,7 +91,6 @@
                                                 {{-- Reject --}}
                                                 <form action="{{ route('superadmin.reset-requests.reject', $req) }}" method="POST">
                                                     @csrf
-                                                    @method('PATCH')
                                                     <button type="submit"
                                                         class="flex items-center gap-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition"
                                                         onclick="return confirm('Tolak request ini?')">

@@ -16,8 +16,9 @@
     <div class="w-full max-w-[460px]">
 
         {{-- Logo --}}
-        <div class="text-center mb-8">
-            <span class="text-2xl font-bold italic text-gray-900">KAI <span class="text-[#0066FF]">TrackerApp</span></span>
+        <div class="text-center mb-8 flex items-center justify-center">
+            <x-icon name="kai-logo" class="h-[19px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
+            <p class="text-black font-bold italic">Tracker<span class="text-[#0066FF]">App</span></p>
         </div>
 
         {{-- Flash messages --}}
@@ -121,11 +122,57 @@
                         <div>
                             <p class="font-bold text-blue-800 text-sm mb-1">Request Disetujui!</p>
                             <p class="text-blue-700 text-xs leading-relaxed">
-                                Super Admin telah menyetujui request Anda. Kode OTP telah dikirim ke email Anda.
+                                Super Admin telah menyetujui request Anda.
                                 @if($resetRequest->otp_expires_at)
                                     Kode berlaku hingga <strong>{{ $resetRequest->otp_expires_at->format('H:i') }} WIB</strong>.
                                 @endif
                             </p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- OTP ditampilkan langsung --}}
+                @if($resetRequest->otp_code)
+                    <div class="bg-white border-2 border-[#0066FF] rounded-2xl p-6 mb-6 text-center">
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Kode OTP Anda</p>
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            @foreach(str_split($resetRequest->otp_code) as $digit)
+                                <div class="w-11 h-13 flex items-center justify-center rounded-[14px] border-2 border-[#0066FF] bg-blue-50 text-2xl font-bold text-[#0066FF]">
+                                    {{ $digit }}
+                                </div>
+                            @endforeach
+                        </div>
+                        <p class="text-xs text-gray-400">Gunakan kode ini untuk verifikasi. Jangan bagikan ke siapapun.</p>
+                    </div>
+                @endif
+
+                {{-- Progress Steps --}}
+                <div class="mb-8">
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Progress</p>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0">
+                                <span class="text-white text-xs font-bold">✓</span>
+                            </div>
+                            <span class="text-sm text-gray-700 font-medium">Request dikirim ke Super Admin</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0">
+                                <span class="text-white text-xs font-bold">✓</span>
+                            </div>
+                            <span class="text-sm text-gray-700 font-medium">Disetujui Super Admin</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0">
+                                <span class="text-white text-xs font-bold">✓</span>
+                            </div>
+                            <span class="text-sm text-gray-700 font-medium">OTP tersedia</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 bg-[#0066FF] rounded-full flex items-center justify-center shrink-0">
+                                <span class="text-white text-xs font-bold">4</span>
+                            </div>
+                            <span class="text-sm text-gray-800 font-semibold">Verifikasi OTP & ubah password</span>
                         </div>
                     </div>
                 </div>
@@ -180,6 +227,33 @@
         </div>
 
     </div>
+
+    @if(isset($resetRequest) && $resetRequest && $resetRequest->status === 'pending')
+    <script>
+        // Auto-polling setiap 3 detik saat status masih pending
+        const pollInterval = setInterval(async () => {
+            try {
+                const res  = await fetch('{{ route('password.request.poll') }}', {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await res.json();
+
+                if (data.status === 'approved' && data.redirect_url) {
+                    clearInterval(pollInterval);
+                    // Tampilkan notif sebelum redirect
+                    document.body.insertAdjacentHTML('afterbegin', `
+                        <div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0066FF;color:white;text-align:center;padding:12px;font-size:14px;font-weight:600;">
+                            ✅ Request disetujui! Mengalihkan ke halaman OTP...
+                        </div>
+                    `);
+                    setTimeout(() => window.location.href = data.redirect_url, 1500);
+                }
+            } catch (e) {
+                // Abaikan error jaringan, coba lagi di interval berikutnya
+            }
+        }, 3000);
+    </script>
+    @endif
 
 </body>
 </html>
