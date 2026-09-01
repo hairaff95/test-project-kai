@@ -2,7 +2,7 @@
 
 @switch($name)
     @case('kai-logo')
-        <svg {{ $attributes->merge(['class' => 'h-8 w-auto', 'viewBox' => '0 0 294.74 124.22']) }} xmlns="http://www.w3.org/2000/svg">
+        <svg {{ $attributes->merge(['class' => 'w-auto', 'viewBox' => '0 0 294.74 124.22']) }} xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <style>.cls-1{fill:#2d2a70;}.cls-2{fill:#ed6b23;}</style>
             </defs>
@@ -120,9 +120,10 @@
     @case('ds-total-nilai-kontrak')
     @case('total-nilai-kontrak')
         <svg {{ $attributes->merge(['class' => 'w-9 h-9', 'viewBox' => '0 0 41 41', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
-            <path d="M19.0138 27.1283C18.5867 27.1283 18.1596 26.9062 17.9204 26.5133C17.5617 25.9154 17.7496 25.1125 18.3646 24.7537L19.885 23.8483V22.0033C19.885 21.3029 20.4658 20.7221 21.1663 20.7221C21.8667 20.7221 22.4475 21.3029 22.4475 22.0033V24.5658C22.4475 25.01 22.2083 25.4371 21.8325 25.6592L19.6971 26.9404C19.4579 27.06 19.2358 27.1283 19.0138 27.1283Z" fill="#171717"/>
-            <path opacity="0.4" d="M37.3271 19.4921L36.2679 31.0746C35.9092 34.4913 34.5083 37.9763 26.9917 37.9763H13.9742C6.4575 37.9763 5.05666 34.4913 4.715 31.0917L3.67291 19.9704C3.69 19.9875 3.70708 20.0046 3.74125 20.0217C4.32208 20.3975 4.88583 20.7733 5.50083 21.115C5.74 21.2688 5.99625 21.4054 6.2525 21.5421C8.18291 22.6013 10.25 23.4383 12.3854 24.0192C13.2396 24.2754 14.1108 24.4633 14.9992 24.6171C15.3408 27.3504 17.6812 29.4688 20.5 29.4688C23.3529 29.4688 25.7104 27.2992 26.0179 24.5146V24.4975C26.8892 24.3267 27.7604 24.1046 28.6146 23.8483C30.75 23.1821 32.8171 22.2938 34.7475 21.1663C34.85 21.115 34.9354 21.0638 35.0037 21.0125C35.7896 20.5854 36.5412 20.09 37.2587 19.5775C37.2929 19.5604 37.31 19.5263 37.3271 19.4921Z" fill="#171717"/>
+            <path d="M37.3271 19.4921L36.2679 31.0746C35.9092 34.4913 34.5083 37.9763 26.9917 37.9763H13.9742C6.4575 37.9763 5.05666 34.4913 4.715 31.0917L3.67291 19.9704C3.69 19.9875 3.70708 20.0046 3.74125 20.0217C4.32208 20.3975 4.88583 20.7733 5.50083 21.115C5.74 21.2688 5.99625 21.4054 6.2525 21.5421C8.18291 22.6013 10.25 23.4383 12.3854 24.0192C13.2396 24.2754 14.1108 24.4633 14.9992 24.6171C15.3408 27.3504 17.6812 29.4688 20.5 29.4688C23.3529 29.4688 25.7104 27.2992 26.0179 24.5146V24.4975C26.8892 24.3267 27.7604 24.1046 28.6146 23.8483C30.75 23.1821 32.8171 22.2938 34.7475 21.1663C34.85 21.115 34.9354 21.0638 35.0037 21.0125C35.7896 20.5854 36.5412 20.09 37.2587 19.5775C37.2929 19.5604 37.31 19.5263 37.3271 19.4921Z" fill="#A1A1A1"/>
             <path d="M36.0287 11.9242C34.5767 10.3183 32.1679 9.51541 28.6317 9.51541H28.2217V9.44708C28.2217 6.57708 28.2217 3.02374 21.7983 3.02374H19.2017C12.7783 3.02374 12.7783 6.57708 12.7783 9.44708V9.51541H12.3683C8.83208 9.51541 6.40624 10.3183 4.97124 11.9242C3.27999 13.8204 3.33124 16.3317 3.50208 18.0571L3.51916 18.1767L3.67291 19.9704C3.68999 19.9875 3.72416 20.0046 3.75833 20.0217C4.33916 20.3975 4.90291 20.7733 5.51791 21.115C5.75708 21.2687 6.01333 21.4054 6.26958 21.5421C8.19999 22.6012 10.2671 23.4383 12.3854 24.0192C12.4367 28.4437 16.0583 32.0312 20.5 32.0312C24.9758 32.0312 28.6146 28.3925 28.6146 23.9167V23.8483C30.7671 23.1992 32.8342 22.2937 34.7646 21.1662C34.8671 21.115 34.9354 21.0637 35.0208 21.0125C35.8067 20.5854 36.5583 20.09 37.2758 19.5775C37.2929 19.5604 37.3271 19.5262 37.3442 19.4921L37.4125 18.8771L37.4979 18.0742C37.515 17.9717 37.515 17.8862 37.5321 17.7667C37.6687 16.0583 37.6346 13.7008 36.0287 11.9242ZM15.2212 9.44708C15.2212 6.54291 15.2212 5.44958 19.2017 5.44958H21.7983C25.7787 5.44958 25.7787 6.54291 25.7787 9.44708V9.51541H15.2212V9.44708ZM20.5 29.4687C17.6812 29.4687 15.3408 27.3504 14.9992 24.6171C14.965 24.395 14.9479 24.1558 14.9479 23.9167C14.9479 20.8587 17.4421 18.3646 20.5 18.3646C23.5579 18.3646 26.0521 20.8587 26.0521 23.9167C26.0521 24.1217 26.035 24.3096 26.0179 24.4975V24.5146C25.7104 27.2992 23.3529 29.4687 20.5 29.4687Z" fill="#C7C7C7"/>
+            <circle cx="20.5" cy="23.9167" r="5.4" fill="#FFFFFF"/>
+            <path d="M20.5 20.2V23.8L17.8 25.5" stroke="#171717" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         @break
 
@@ -145,8 +146,8 @@
     @case('ds-icon-panah')
     @case('arrow-diagonal')
         <svg {{ $attributes->merge(['class' => 'w-8 h-8', 'viewBox' => '0 0 35 35', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
-            <path opacity="0.4" d="M23.6104 2.91666H11.3896C6.08127 2.91666 2.91669 6.08124 2.91669 11.3896V23.5958C2.91669 28.9187 6.08127 32.0833 11.3896 32.0833H23.5959C28.9042 32.0833 32.0688 28.9187 32.0688 23.6104V11.3896C32.0834 6.08124 28.9188 2.91666 23.6104 2.91666Z" fill="#E7E7E7"/>
-            <path d="M24.4242 10.2083H17.3805C16.7825 10.2083 16.2867 10.7042 16.2867 11.3021C16.2867 11.9 16.7825 12.3958 17.3805 12.3958H21.7846L10.5263 23.6542C10.1034 24.0771 10.1034 24.7771 10.5263 25.2C10.745 25.4188 11.0221 25.5208 11.2992 25.5208C11.5763 25.5208 11.8534 25.4188 12.0721 25.2L23.3305 13.9417V18.3458C23.3305 18.9438 23.8263 19.4396 24.4242 19.4396C25.0221 19.4396 25.518 18.9438 25.518 18.3458V11.3021C25.518 10.7042 25.0221 10.2083 24.4242 10.2083Z" fill="#4F4F4F"/>
+            <path class="fill-[#E7E7E7] dark:fill-[#383C40]" opacity="0.9" d="M23.6104 2.91666H11.3896C6.08127 2.91666 2.91669 6.08124 2.91669 11.3896V23.5958C2.91669 28.9187 6.08127 32.0833 11.3896 32.0833H23.5959C28.9042 32.0833 32.0688 28.9187 32.0688 23.6104V11.3896C32.0834 6.08124 28.9188 2.91666 23.6104 2.91666Z"/>
+            <path class="fill-[#4F4F4F] dark:fill-white" d="M24.4242 10.2083H17.3805C16.7825 10.2083 16.2867 10.7042 16.2867 11.3021C16.2867 11.9 16.7825 12.3958 17.3805 12.3958H21.7846L10.5263 23.6542C10.1034 24.0771 10.1034 24.7771 10.5263 25.2C10.745 25.4188 11.0221 25.5208 11.2992 25.5208C11.5763 25.5208 11.8534 25.4188 12.0721 25.2L23.3305 13.9417V18.3458C23.3305 18.9438 23.8263 19.4396 24.4242 19.4396C25.0221 19.4396 25.518 18.9438 25.518 18.3458V11.3021C25.518 10.7042 25.0221 10.2083 24.4242 10.2083Z"/>
         </svg>
         @break
 
@@ -210,6 +211,31 @@
         </svg>
         @break
 
+    @case('nav-report')
+    @case('nav-laporan')
+        <svg {{ $attributes->merge(['class' => 'w-5 h-5', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 17H15M9 13H15M9 9H11M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H14L21 10V19C21 20.1046 20.1046 21 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 3V10H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        @break
+
+    @case('nav-add')
+    @case('nav-plus')
+    @case('plus-square')
+        <svg {{ $attributes->merge(['class' => 'w-5 h-5', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        @break
+
+    @case('x-mark')
+    @case('icon-close')
+    @case('close')
+        <svg {{ $attributes->merge(['class' => 'w-5 h-5', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        @break
+
     @case('dots-vertical')
     @case('more-vertical')
         <svg {{ $attributes->merge(['class' => 'w-4 h-4', 'viewBox' => '0 0 24 24', 'fill' => 'currentColor']) }} xmlns="http://www.w3.org/2000/svg">
@@ -220,13 +246,21 @@
         @break
 
     @case('moon')
-        <svg {{ $attributes->merge(['class' => 'w-6 h-6', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+        <svg {{ $attributes->merge(['viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
             <path d="M2.03 12.42C2.39 17.57 6.76 21.76 11.99 21.99C15.68 22.15 18.98 20.43 20.96 17.72C21.78 16.61 21.34 15.87 19.97 16.12C19.3 16.24 18.61 16.29 17.89 16.26C13 16.06 9 11.97 8.98 7.14001C8.97 5.84001 9.24 4.61001 9.73 3.49001C10.27 2.25001 9.62 1.66001 8.37 2.19001C4.41 3.86001 1.7 7.85001 2.03 12.42Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         @break
 
+    @case('sun')
+    @case('icon-sun')
+        <svg {{ $attributes->merge(['viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 18.5C15.5899 18.5 18.5 15.5899 18.5 12C18.5 8.41015 15.5899 5.5 12 5.5C8.41015 5.5 5.5 8.41015 5.5 12C5.5 15.5899 8.41015 18.5 12 18.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path opacity="0.4" d="M19.14 19.14L19.01 19.01M19.01 4.99L19.14 4.86L19.01 4.99ZM4.86 19.14L4.99 19.01L4.86 19.14ZM12 2.08V2V2.08ZM12 22V21.92V22ZM2.08 12H2H2.08ZM22 12H21.92H22ZM4.99 4.99L4.86 4.86L4.99 4.99Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        @break
+
     @case('notification')
-        <svg {{ $attributes->merge(['class' => 'w-6 h-6', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+        <svg {{ $attributes->merge(['viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
             <path d="M12.02 2.91C8.71 2.91 6.02 5.6 6.02 8.91V11.8C6.02 12.41 5.76 13.34 5.45 13.86L4.3 15.77C3.59 16.95 4.08 18.26 5.38 18.7C9.69 20.14 14.34 20.14 18.65 18.7C19.86 18.3 20.39 16.87 19.73 15.77L18.58 13.86C18.28 13.34 18.02 12.41 18.02 11.8V8.91C18.02 5.61 15.32 2.91 12.02 2.91Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
             <path d="M13.87 3.2C13.56 3.11 13.24 3.04 12.91 3C11.95 2.88 11.03 2.95 10.17 3.2C10.46 2.46 11.18 1.94 12.02 1.94C12.86 1.94 13.58 2.46 13.87 3.2Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
             <path opacity="0.4" d="M15.02 19.06C15.02 20.71 13.67 22.06 12.02 22.06C11.2 22.06 10.44 21.72 9.89999 21.18C9.35999 20.64 9.01999 19.88 9.01999 19.06" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"/>
@@ -234,7 +268,7 @@
         @break
 
     @case('profile-circle')
-        <svg {{ $attributes->merge(['class' => 'w-6 h-6', 'viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+        <svg {{ $attributes->merge(['viewBox' => '0 0 24 24', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
             <path opacity="0.4" d="M12.12 12.78C12.05 12.77 11.96 12.77 11.88 12.78C10.12 12.72 8.71997 11.28 8.71997 9.51001C8.71997 7.70001 10.18 6.23001 12 6.23001C13.81 6.23001 15.28 7.70001 15.28 9.51001C15.27 11.28 13.88 12.72 12.12 12.78Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <path opacity="0.34" d="M18.74 19.38C16.96 21.01 14.6 22 12 22C9.40001 22 7.04001 21.01 5.26001 19.38C5.36001 18.44 5.96001 17.52 7.03001 16.8C9.77001 14.98 14.25 14.98 16.97 16.8C18.04 17.52 18.64 18.44 18.74 19.38Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -294,12 +328,12 @@
 
     @case('filter-peta')
         <svg {{ $attributes->merge(['class' => 'w-6 h-6', 'viewBox' => '0 0 40 40', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
-            <path d="M31.1111 13.8889H24.4445" stroke="#111827" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M31.1111 13.8889H24.4445" stroke="currentColor" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
             <g>
                 <path d="M13.3332 13.8889H8.88879" stroke="#8E8E8E" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M17.7777 17.7778C19.9255 17.7778 21.6666 16.0367 21.6666 13.8889C21.6666 11.7411 19.9255 10 17.7777 10C15.6299 10 13.8888 11.7411 13.8888 13.8889C13.8888 16.0367 15.6299 17.7778 17.7777 17.7778Z" stroke="#8E8E8E" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
             </g>
-            <path d="M15.5555 26.1111H8.88879" stroke="#111827" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15.5555 26.1111H8.88879" stroke="currentColor" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
             <g>
                 <path d="M31.1111 26.1111H26.6666" stroke="#8E8E8E" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M22.2221 30C24.3699 30 26.111 28.2589 26.111 26.1111C26.111 23.9633 24.3699 22.2222 22.2221 22.2222C20.0744 22.2222 18.3333 23.9633 18.3333 26.1111C18.3333 28.2589 20.0744 30 22.2221 30Z" stroke="#8E8E8E" stroke-width="2.6" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>

@@ -3,59 +3,68 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Jatuh Tempo — KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Anti-FOUC Theme Script -->
+    <script>
+        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 </head>
 
-<body class="min-h-screen bg-[#F6F7F9] font-sans antialiased text-gray-900 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between">
+<body class="min-h-screen bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between transition-colors duration-200">
 
     {{-- Top Navbar --}}
     <x-navbar active="due-dates" />
 
     {{-- Main Content --}}
-    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-6 pb-24 lg:pb-8 flex flex-col gap-4 sm:gap-5">
+    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-6 pb-28 lg:pb-8 flex flex-col gap-4 sm:gap-5">
 
         {{-- Page Header --}}
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
-            <h1 class="text-2xl sm:text-[30px] font-bold tracking-tight text-gray-950">
+            <h1 class="text-xl sm:text-[30px] font-bold tracking-tight text-gray-950 dark:text-white">
                 Jatuh Tempo
             </h1>
 
             {{-- Header Action Buttons --}}
             <div class="flex items-center gap-2 self-start sm:self-auto">
-                <button id="btn-filter-jt" type="button" class="flex items-center gap-2 rounded-xl bg-[#0066FF] hover:bg-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-xs transition cursor-pointer">
-                    <x-icon name="filter-icon" class="w-4 h-4 text-white" />
+                <button id="btn-filter-jt" type="button" class="flex items-center gap-1.5 sm:gap-2 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition cursor-pointer">
+                    <x-icon name="filter-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                     <span>Filter</span>
                 </button>
 
-                <a href="{{ route('due-dates.index') }}" class="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 shadow-xs transition cursor-pointer" title="Reset">
-                    <x-icon name="refresh" class="w-4.5 h-4.5 text-gray-600" />
+                <a href="{{ route('due-dates.index') }}" class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg lg:rounded-[10px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#2D3034] hover:bg-gray-50 dark:hover:bg-white/10 text-gray-700 dark:text-white shadow-xs transition cursor-pointer" title="Reset">
+                    <x-icon name="refresh" class="w-4 h-4 sm:w-4.5 sm:h-4.5 text-gray-600 dark:text-white" />
                 </a>
             </div>
         </div>
 
         {{-- Unified Card Container: Filter Bar + Bordered Table --}}
-        <div class="rounded-2xl sm:rounded-3xl bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-gray-100/90 flex flex-col gap-4">
+        <div class="rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-gray-100/90 dark:border-white/10 flex flex-col gap-2.5 sm:gap-4 transition-colors">
 
             {{-- Filter Bar --}}
-            <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
 
                 {{-- Search --}}
-                <div class="relative w-[170px] sm:w-[185px] h-[38px] sm:h-[40px]">
-                    <x-icon name="search" class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <div class="relative w-full sm:w-[185px] h-[32px] sm:h-[38px]">
+                    <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     <input
                         id="search-jt"
                         type="text"
                         placeholder="Search"
-                        class="w-full h-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#0066FF] text-gray-700 placeholder-gray-400 transition"
+                        class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
                     >
                 </div>
 
@@ -64,16 +73,16 @@
                     $tenantList = $contracts->map(fn($c) => $c->tenant?->fullname)->filter()->unique()->values();
                 @endphp
                 <div class="relative custom-filter-container">
-                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[38px] sm:h-[40px] bg-white border border-gray-200 hover:border-gray-300 rounded-xl px-3.5 py-2 transition cursor-pointer">
-                        <span id="label-penyewa" class="text-gray-400 font-normal text-xs sm:text-sm select-none">Nama Penyewa</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 ml-2 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
+                        <span id="label-penyewa" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Nama Penyewa</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] min-w-[180px] max-h-[280px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-2 sm:p-2.5 flex flex-col gap-1">
-                        <button type="button" onclick="filterJtClient('penyewa', '', 'Nama Penyewa')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="filterJtClient('penyewa', '', 'Nama Penyewa')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>Semua Penyewa</span>
                         </button>
                         @foreach($tenantList as $t)
-                            <button type="button" onclick="filterJtClient('penyewa', '{{ $t }}', '{{ $t }}')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                            <button type="button" onclick="filterJtClient('penyewa', '{{ $t }}', '{{ $t }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>{{ $t }}</span>
                             </button>
                         @endforeach
@@ -82,16 +91,16 @@
 
                 {{-- Filter Status Customer (Dinamis dari database) --}}
                 <div class="relative custom-filter-container">
-                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[38px] sm:h-[40px] bg-white border border-gray-200 hover:border-gray-300 rounded-xl px-3.5 py-2 transition cursor-pointer">
-                        <span id="label-status" class="text-gray-400 font-normal text-xs sm:text-sm select-none">Status Customer</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 ml-2 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
+                        <span id="label-status" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Status Customer</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] min-w-[175px] max-h-[280px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-2 sm:p-2.5 flex flex-col gap-1">
-                        <button type="button" onclick="filterJtClient('status', '', 'Status Customer')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="filterJtClient('status', '', 'Status Customer')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>Semua Status</span>
                         </button>
                         @foreach($statusCustomerOptions as $opt)
-                            <button type="button" onclick="filterJtClient('status', '{{ $opt }}', '{{ $opt }}')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                            <button type="button" onclick="filterJtClient('status', '{{ $opt }}', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>{{ $opt }}</span>
                             </button>
                         @endforeach
@@ -100,24 +109,24 @@
 
                 {{-- Filter Nilai Kontrak --}}
                 <div class="relative custom-filter-container">
-                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[38px] sm:h-[40px] bg-white border border-gray-200 hover:border-gray-300 rounded-xl px-3.5 py-2 transition cursor-pointer">
-                        <span id="label-nilai" class="text-gray-400 font-normal text-xs sm:text-sm select-none">Nilai Kontrak</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 ml-2 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
+                        <span id="label-nilai" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Nilai Kontrak</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] min-w-[180px] max-h-[280px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-2 sm:p-2.5 flex flex-col gap-1">
-                        <button type="button" onclick="filterJtClient('nilai', '', 'Nilai Kontrak')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="filterJtClient('nilai', '', 'Nilai Kontrak')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>Semua Nilai Kontrak</span>
                         </button>
-                        <button type="button" onclick="filterJtClient('nilai', 'lt_50jt', '< Rp 50 jt')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="filterJtClient('nilai', 'lt_50jt', '< Rp 50 jt')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>< Rp 50 jt</span>
                         </button>
-                        <button type="button" onclick="filterJtClient('nilai', 'gt_50jt', '> Rp 50 jt')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="filterJtClient('nilai', 'gt_50jt', '> Rp 50 jt')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>> Rp 50 jt</span>
                         </button>
-                        <button type="button" onclick="filterJtClient('nilai', 'gt_100jt', '> Rp 100 jt')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="filterJtClient('nilai', 'gt_100jt', '> Rp 100 jt')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>> Rp 100 jt</span>
                         </button>
-                        <button type="button" onclick="filterJtClient('nilai', 'gt_500jt', '> Rp 500 jt')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="filterJtClient('nilai', 'gt_500jt', '> Rp 500 jt')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>> Rp 500 jt</span>
                         </button>
                     </div>
@@ -125,16 +134,16 @@
 
                 {{-- Filter Semua Jenis Aset --}}
                 <div class="relative custom-filter-container">
-                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[38px] sm:h-[40px] bg-white border border-gray-200 hover:border-gray-300 rounded-xl px-3.5 py-2 transition cursor-pointer">
-                        <span id="label-jenis" class="text-gray-400 font-normal text-xs sm:text-sm select-none">Semua Jenis Aset</span>
-                        <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 ml-2 pointer-events-none" />
+                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
+                        <span id="label-jenis" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Semua Jenis Aset</span>
+                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1.5 z-[100] min-w-[180px] max-h-[280px] overflow-y-auto rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-2 sm:p-2.5 flex flex-col gap-1">
-                        <button type="button" onclick="filterJtClient('jenis', '', 'Semua Jenis Aset')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer">
+                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="filterJtClient('jenis', '', 'Semua Jenis Aset')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                             <span>Semua Jenis Aset</span>
                         </button>
                         @foreach($jenisAssetOptions as $opt)
-                            <button type="button" onclick="filterJtClient('jenis', '{{ $opt }}', '{{ $opt }}')" class="flex items-center justify-between w-full px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer">
+                            <button type="button" onclick="filterJtClient('jenis', '{{ $opt }}', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>{{ $opt }}</span>
                             </button>
                         @endforeach
@@ -143,24 +152,103 @@
 
             </div>
 
-            {{-- Table Wrapper Ber-Stroke --}}
-            <div class="border border-gray-200 rounded-xl overflow-hidden bg-white">
+            {{-- MOBILE CARD LIST VIEW (sm:hidden - Mobile-First Card View) --}}
+            <div id="mobile-cards-jt" class="sm:hidden flex flex-col gap-3">
+                @forelse($contracts as $item)
+                    @php
+                        $penyewa = $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono';
+                        $brand = $item->tenant?->brand ?? 'Apotek K-24';
+                        $statusCust = $item->tenant?->status_customer ?? 'Aktif';
+                        $jenisAset = $item->asset?->jenis_asset ?? 'Tanah';
+                        $selesaiLama = $item->end_datetime ? \Carbon\Carbon::parse($item->end_datetime)->format('d/m/Y') : '10/01/2026';
+                        $selesaiBaru = $item->end_datetime_baru ? \Carbon\Carbon::parse($item->end_datetime_baru)->format('d/m/Y') : '10/01/2027';
+                    @endphp
+                    <div class="jt-card-item rounded-xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-3.5 shadow-2xs flex flex-col gap-2.5 transition-colors"
+                         data-penyewa="{{ strtolower($penyewa) }}"
+                         data-status="{{ strtolower($statusCust) }}"
+                         data-jenis="{{ strtolower($jenisAset) }}"
+                         data-price="{{ (float)($item->price ?? 0) }}"
+                    >
+                        {{-- Card Header: No Aset + Status Badge --}}
+                        <div class="flex items-start justify-between gap-2 border-b border-gray-100 dark:border-white/10 pb-2">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] font-semibold text-gray-400 dark:text-[#9AA0A6] uppercase tracking-wider">No Aset</span>
+                                <span class="text-xs font-bold text-gray-900 dark:text-white leading-snug">{{ $item->asset_number ?? 'AST-SMG-PCL-001' }}</span>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold {{ strtolower($statusCust) === 'aktif' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800' : 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-200/60 dark:border-blue-800' }}">
+                                {{ $statusCust }}
+                            </span>
+                        </div>
+
+                        {{-- Tenant Info & Brand --}}
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight">
+                                {{ $penyewa }}
+                            </h3>
+                            <p class="text-xs text-[#0066FF] dark:text-[#3B82F6] font-semibold mt-0.5">Brand: {{ $brand }}</p>
+                        </div>
+
+                        {{-- 2-Cols Meta Grid --}}
+                        <div class="grid grid-cols-2 gap-2 bg-gray-50/90 dark:bg-[#2D3034] rounded-lg p-2.5 text-xs">
+                            <div>
+                                <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Selesai Kontrak</span>
+                                <span class="font-semibold text-gray-900 dark:text-white text-[11px]">{{ $selesaiLama }}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Kontrak Baru</span>
+                                <span class="font-semibold text-gray-900 dark:text-white text-[11px]">{{ $selesaiBaru }}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Sisa Masa Sewa</span>
+                                <span class="font-medium text-amber-600 dark:text-amber-400 text-[11px]">{{ $item->contract_duration ?? '12 Bulan' }}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Keterangan</span>
+                                <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $item->keterangan ?? 'RKA' }}</span>
+                            </div>
+                            <div class="col-span-2">
+                                <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">SPV</span>
+                                <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $item->spv_name ?? 'Sales Executive Area 1 Pekalongan' }}</span>
+                            </div>
+                        </div>
+
+                        {{-- Card Actions Footer --}}
+                        <div class="flex items-center justify-end gap-2 pt-1 border-t border-gray-100 dark:border-white/10">
+                            <a href="{{ route('asset.detail', $item->asset_number) }}" class="flex-1 min-h-[40px] inline-flex items-center justify-center gap-1.5 rounded-lg lg:rounded-[10px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#2D3034] hover:bg-gray-50 dark:hover:bg-white/10 text-xs font-semibold text-gray-700 dark:text-white shadow-2xs transition">
+                                <x-icon name="icon-lihat" class="w-4 h-4 text-gray-500 dark:text-white" />
+                                <span>Lihat Detail</span>
+                            </a>
+                            <a href="{{ route('due-dates.edit', $item->asset_number) }}" class="flex-1 min-h-[40px] inline-flex items-center justify-center gap-1.5 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 text-xs font-semibold text-white shadow-2xs transition">
+                                <x-icon name="icon-edit-detail-peta" class="w-4 h-4 text-white" />
+                                <span>Edit</span>
+                            </a>
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-center py-8 text-xs text-gray-400 dark:text-[#9AA0A6] bg-gray-50 dark:bg-[#2D3034] rounded-xl">
+                        Tidak ada data jatuh tempo yang tersedia.
+                    </div>
+                @endforelse
+            </div>
+
+            {{-- DESKTOP TABLE VIEW (hidden sm:block) --}}
+            <div class="hidden sm:block border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden bg-white dark:bg-[#1F2123]">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-[#F8F9FA] border-b border-gray-200">
-                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">No Aset</th>
-                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">Nama Penyewa</th>
-                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">Brand</th>
-                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">Selesai Kontrak</th>
-                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">Selesai Kontrak Baru</th>
-                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">Sisa Masa Sewa</th>
-                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">SPV</th>
-                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap">Keterangan</th>
-                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 whitespace-nowrap text-center">Aksi</th>
+                            <tr class="bg-[#F8F9FA] dark:bg-[#282A2C] border-b border-gray-200 dark:border-white/10">
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">No Aset</th>
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Nama Penyewa</th>
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Brand</th>
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Selesai Kontrak</th>
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Selesai Kontrak Baru</th>
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Sisa Masa Sewa</th>
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">SPV</th>
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Keterangan</th>
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100 text-xs sm:text-[13px] text-gray-800">
+                        <tbody class="divide-y divide-gray-100 dark:divide-white/10 text-[13px] text-gray-800 dark:text-gray-200">
                             @forelse($contracts as $item)
                                 @php
                                     $penyewa = $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono';
@@ -170,34 +258,34 @@
                                     $selesaiLama = $item->end_datetime ? \Carbon\Carbon::parse($item->end_datetime)->format('d/m/Y') : '10/01/2026';
                                     $selesaiBaru = $item->end_datetime_baru ? \Carbon\Carbon::parse($item->end_datetime_baru)->format('d/m/Y') : '10/01/2027';
                                 @endphp
-                                <tr class="hover:bg-gray-50/60 transition-colors"
+                                <tr class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors"
                                     data-penyewa="{{ strtolower($penyewa) }}"
                                     data-status="{{ strtolower($statusCust) }}"
                                     data-jenis="{{ strtolower($jenisAset) }}"
                                     data-price="{{ (float)($item->price ?? 0) }}"
                                 >
-                                    <td class="py-3.5 px-4 font-normal text-gray-900 whitespace-nowrap">
+                                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">
                                         {{ $item->asset_number ?? 'AST-SMG-PCL-001' }}
                                     </td>
-                                    <td class="py-3.5 px-4 text-gray-900 font-medium whitespace-nowrap">
+                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">
                                         {{ $penyewa }}
                                     </td>
-                                    <td class="py-3.5 px-4 text-gray-700 whitespace-nowrap font-normal">
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
                                         {{ $brand }}
                                     </td>
-                                    <td class="py-3.5 px-4 text-gray-700 whitespace-nowrap font-normal">
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
                                         {{ $selesaiLama }}
                                     </td>
-                                    <td class="py-3.5 px-4 text-gray-700 whitespace-nowrap font-normal">
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
                                         {{ $selesaiBaru }}
                                     </td>
-                                    <td class="py-3.5 px-4 text-gray-700 whitespace-nowrap font-normal">
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
                                         {{ $item->contract_duration ?? '1245417' }}
                                     </td>
-                                    <td class="py-3.5 px-4 text-gray-700 whitespace-nowrap font-normal">
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
                                         {{ $item->spv_name ?? 'Sales Executive Area 1 Pekalongan' }}
                                     </td>
-                                    <td class="py-3.5 px-4 text-gray-700 whitespace-nowrap font-normal">
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
                                         {{ $item->keterangan ?? 'RKA' }}
                                     </td>
                                     <td class="py-3.5 px-4 whitespace-nowrap text-center">
@@ -205,7 +293,7 @@
                                              data-asset="{{ $item->asset_number }}">
                                             <button
                                                 type="button"
-                                                class="action-menu-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 transition cursor-pointer"
+                                                class="action-menu-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer"
                                                 title="Aksi"
                                             >
                                                 <x-icon name="dots-vertical" class="w-4 h-4" />
@@ -215,7 +303,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center py-8 text-gray-400">
+                                    <td colspan="9" class="text-center py-8 text-gray-400 dark:text-[#9AA0A6]">
                                         Tidak ada data jatuh tempo yang tersedia.
                                     </td>
                                 </tr>
@@ -230,19 +318,19 @@
     </main>
 
     {{-- Global Dropdown Menu Aksi --}}
-    <div id="global-action-dropdown" class="hidden fixed z-[9999] w-[155px] sm:w-[165px] rounded-2xl bg-white border border-gray-100 shadow-[0_10px_35px_rgba(0,0,0,0.14)] p-2 sm:p-2.5 flex flex-col gap-1">
-        <a id="dd-lihat" href="#" class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition">
-            <x-icon name="icon-lihat" class="w-5 h-5 text-gray-500 shrink-0" />
+    <div id="global-action-dropdown" class="hidden fixed z-[9999] w-[140px] sm:w-[165px] rounded-xl sm:rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.7)] p-1.5 sm:p-2.5 flex flex-col gap-0.5 sm:gap-1">
+        <a id="dd-lihat" href="#" class="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition">
+            <x-icon name="icon-lihat" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-300 shrink-0" />
             <span>Lihat</span>
         </a>
-        <a id="dd-edit" href="#" class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 rounded-xl transition">
-            <x-icon name="edit" class="w-5 h-5 text-gray-500 shrink-0" />
+        <a id="dd-edit" href="#" class="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition">
+            <x-icon name="edit" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-300 shrink-0" />
             <span>Edit</span>
         </a>
         <form id="dd-delete-form" method="POST" onsubmit="return confirm('Hapus aset ini?')">
             @csrf @method('DELETE')
-            <button type="submit" class="flex w-full items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 rounded-xl transition cursor-pointer">
-                <x-icon name="delete" class="w-5 h-5 text-[#EF4444] shrink-0" />
+            <button type="submit" class="flex w-full items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer">
+                <x-icon name="delete" class="w-4 h-4 sm:w-5 sm:h-5 text-[#EF4444] shrink-0" />
                 <span>Hapus</span>
             </button>
         </form>
@@ -328,7 +416,7 @@
                 // Close menus
                 document.querySelectorAll('.filter-dropdown-menu').forEach(m => m.classList.add('hidden'));
 
-                // Apply client-side row filtering
+                // Apply client-side row and mobile card filtering
                 const rows = document.querySelectorAll('tbody tr[data-penyewa]');
                 rows.forEach(row => {
                     const text = row.innerText.toLowerCase();
@@ -348,11 +436,29 @@
                     else if (filters.nilai === 'gt_100jt') matchNilai = rowPrice > 100000000;
                     else if (filters.nilai === 'gt_500jt') matchNilai = rowPrice > 500000000;
 
-                    if (matchSearch && matchPenyewa && matchStatus && matchJenis && matchNilai) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
+                    row.style.display = (matchSearch && matchPenyewa && matchStatus && matchJenis && matchNilai) ? '' : 'none';
+                });
+
+                const cards = document.querySelectorAll('.jt-card-item');
+                cards.forEach(card => {
+                    const text = card.innerText.toLowerCase();
+                    const cardPenyewa = (card.dataset.penyewa || '').toLowerCase();
+                    const cardStatus = (card.dataset.status || '').toLowerCase();
+                    const cardJenis = (card.dataset.jenis || '').toLowerCase();
+                    const cardPrice = parseFloat(card.dataset.price || '0');
+
+                    const matchSearch = !filters.search || text.includes(filters.search.toLowerCase());
+                    const matchPenyewa = !filters.penyewa || cardPenyewa.includes(filters.penyewa.toLowerCase());
+                    const matchStatus = !filters.status || cardStatus === filters.status.toLowerCase();
+                    const matchJenis = !filters.jenis || cardJenis === filters.jenis.toLowerCase();
+
+                    let matchNilai = true;
+                    if (filters.nilai === 'lt_50jt') matchNilai = cardPrice < 50000000;
+                    else if (filters.nilai === 'gt_50jt') matchNilai = cardPrice > 50000000;
+                    else if (filters.nilai === 'gt_100jt') matchNilai = cardPrice > 100000000;
+                    else if (filters.nilai === 'gt_500jt') matchNilai = cardPrice > 500000000;
+
+                    card.style.display = (matchSearch && matchPenyewa && matchStatus && matchJenis && matchNilai) ? '' : 'none';
                 });
             };
 

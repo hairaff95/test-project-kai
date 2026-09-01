@@ -58,39 +58,11 @@ Route::post('/verifikasi-kode', [PasswordResetRequestController::class, 'verifyO
 
 // Step 3: Atur password baru
 Route::get('/ubah-kata-sandi', [AuthController::class, 'showResetPassword'])->name('password.reset');
-Route::post('/ubah-kata-sandi', [PasswordResetRequestController::class, 'resetPassword'])->name('password.reset.post');
 
-// ================= SUPER ADMIN PANEL =================
-Route::prefix('superadmin')->name('superadmin.')->middleware(['auth', 'active_check', 'role:superadmin'])->group(function () {
-
-    // Dashboard
-    Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
-
-    // CRUD Admin
-    Route::prefix('admins')->name('admins.')->group(function () {
-        Route::get('/', [SuperAdminController::class, 'adminIndex'])->name('index');
-        Route::get('/create', [SuperAdminController::class, 'adminCreate'])->name('create');
-        Route::post('/', [SuperAdminController::class, 'adminStore'])->name('store');
-        Route::get('/{admin}/edit', [SuperAdminController::class, 'adminEdit'])->name('edit');
-        Route::put('/{admin}', [SuperAdminController::class, 'adminUpdate'])->name('update');
-        Route::patch('/{admin}/toggle', [SuperAdminController::class, 'adminToggleActive'])->name('toggle');
-        Route::delete('/{admin}', [SuperAdminController::class, 'adminDestroy'])->name('destroy');
-    });
-
-    // Kelola Reset Password Requests
-    Route::get('/reset-requests', [SuperAdminController::class, 'resetRequests'])->name('reset-requests');
-    Route::patch('/reset-requests/{resetRequest}/approve', [SuperAdminController::class, 'approveRequest'])->name('reset-requests.approve');
-    Route::patch('/reset-requests/{resetRequest}/reject', [SuperAdminController::class, 'rejectRequest'])->name('reset-requests.reject');
-
-});
-
-// ================= PENGATURAN =================
+// ================= PENGATURAN (SUPER ADMIN) =================
 Route::get('/pengaturan', function () {
     return view('settings.index', ['active' => 'pengaturan']);
-})->middleware(['auth', 'active_check'])->name('settings.index');
-
-// ================= MAIN APP (semua user, termasuk guest) =================
-Route::middleware(['active_check'])->group(function () {
+})->name('settings.index');
 
     // Dashboard & Map
     Route::get('/', [DashboardController::class, 'index'])->name('welcome');
