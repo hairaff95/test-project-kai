@@ -35,6 +35,11 @@ class User extends Authenticatable
         return $this->hasMany(Asset::class, 'created_by');
     }
 
+    public function passwordResetRequests(): HasMany
+    {
+        return $this->hasMany(PasswordResetRequest::class);
+    }
+
     public function isSuperAdmin(): bool
     {
         return $this->role === 'superadmin';

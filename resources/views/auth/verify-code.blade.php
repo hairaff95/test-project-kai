@@ -22,11 +22,31 @@
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] } } } }</script>
 </head>
 
 <body class="min-h-screen bg-white dark:bg-[#1F2123] font-sans antialiased text-gray-900 dark:text-white selection:bg-blue-100 selection:text-[#0066FF] flex flex-col justify-center items-center px-4 py-12 transition-colors duration-200">
 
     <div class="w-full max-w-[420px] text-center">
+
+        {{-- Logo --}}
+        <div class="mb-8">
+            <span class="text-2xl font-bold italic text-gray-900">KAI <span class="text-[#0066FF]">TrackerApp</span></span>
+        </div>
+
+        {{-- Error messages --}}
+        @if($errors->any())
+            <div class="mb-5 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm text-left">
+                {{ $errors->first() }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="mb-5 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm text-left">
+                {{ session('error') }}
+            </div>
+        @endif
 
         {{-- Heading 'Verifikasi Kode' --}}
         <h1 class="text-3xl sm:text-[36px] font-bold text-gray-950 dark:text-white tracking-tight mb-3">
@@ -35,12 +55,16 @@
 
         {{-- Subtitle --}}
         <p class="text-xs sm:text-[13px] text-gray-500 dark:text-[#9AA0A6] font-normal leading-relaxed mb-8">
-            Masukan kode 6 digit yang di kirimkan di email admin
+            Masukan kode 6 digit yang dikirimkan ke email admin
         </p>
 
         {{-- Form Verifikasi Kode --}}
-        <form method="GET" action="{{ route('password.reset') }}" class="space-y-6" id="otp-form">
-            
+        <form method="POST" action="{{ route('password.verify.post') }}" class="space-y-6" id="otp-form">
+            @csrf
+
+            {{-- Hidden input untuk OTP yang dikumpulkan dari 6 kotak --}}
+            <input type="hidden" name="otp" id="otp-combined">
+
             {{-- 6 Digit OTP Inputs --}}
             <div class="flex items-center justify-center gap-2.5 sm:gap-3">
                 @for ($i = 1; $i <= 6; $i++)
@@ -52,17 +76,16 @@
                         id="otp-{{ $i }}"
                         class="otp-input w-11 h-13 sm:w-13 sm:h-15 text-center text-lg sm:text-xl font-semibold text-gray-900 dark:text-white rounded-[14px] border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] focus:border-[#0066FF] dark:focus:border-[#3B82F6] focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/40 focus:outline-none transition shadow-2xs"
                         autocomplete="off"
-                        autofocus="{{ $i === 1 ? 'true' : 'false' }}"
                     >
                 @endfor
             </div>
 
             {{-- Resend Code Link --}}
             <div class="text-xs text-gray-500 dark:text-[#9AA0A6] font-normal">
-                Tidak mendapat kode? 
-                <button type="button" onclick="resendCodeAlert()" class="text-[#0066FF] dark:text-[#3B82F6] font-medium hover:underline transition cursor-pointer">
-                    kirim ulang
-                </button>
+                Tidak mendapat kode?
+                <a href="{{ route('password.request') }}" class="text-[#0066FF] dark:text-[#3B82F6] font-medium hover:underline transition cursor-pointer">
+                    Minta request baru
+                </a>
             </div>
 
             {{-- Submit Button 'Verifikasi' --}}
@@ -90,6 +113,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const inputs = document.querySelectorAll('.otp-input');
+            const combined = document.getElementById('otp-combined');
+
+            function updateCombined() {
+                combined.value = Array.from(inputs).map(i => i.value).join('');
+            }
 
             inputs.forEach((input, index) => {
                 input.addEventListener('input', (e) => {
@@ -100,6 +128,7 @@
                             inputs[index + 1].focus();
                         }
                     }
+                    updateCombined();
                 });
 
                 input.addEventListener('keydown', (e) => {
@@ -114,12 +143,11 @@
                     if (/^\d+$/.test(pasteData)) {
                         const digits = pasteData.slice(0, inputs.length).split('');
                         digits.forEach((digit, i) => {
-                            if (inputs[i]) {
-                                inputs[i].value = digit;
-                            }
+                            if (inputs[i]) inputs[i].value = digit;
                         });
                         const nextFocus = Math.min(digits.length, inputs.length - 1);
                         inputs[nextFocus].focus();
+                        updateCombined();
                     }
                 });
             });
@@ -127,10 +155,6 @@
             const firstInput = document.getElementById('otp-1');
             if (firstInput) firstInput.focus();
         });
-
-        function resendCodeAlert() {
-            alert('Kode OTP baru telah dikirimkan ke email admin. Silakan periksa kotak masuk email Anda.');
-        }
     </script>
 
 </body>
