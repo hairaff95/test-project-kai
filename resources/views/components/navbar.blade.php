@@ -5,10 +5,14 @@
     <nav class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 h-14 sm:h-16 lg:h-20 flex items-center justify-between gap-3">
 
         <!-- Logo KAI TrackerApp -->
-        <a href="{{ route('welcome') }}" class="flex items-center gap-1.5 sm:gap-2 text-[15px] sm:text-[16px] lg:text-[18px] font-bold italic tracking-tight text-gray-950 dark:text-white shrink-0 transition hover:opacity-90">
+        <a href="{{ route('welcome') }}" class="flex items-center sm:gap-2 text-[15px] sm:text-[16px] lg:text-[18px] font-bold italic tracking-tight text-gray-950 dark:text-white shrink-0 transition hover:opacity-90">
             <x-icon name="kai-logo" class="h-[19px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
             <span class="leading-none select-none text-gray-950 dark:text-white">Tracker<span class="text-[#0066FF]">App</span></span>
         </a>
+        <!-- <div class="text-center mb-8 flex items-center justify-center">
+            <x-icon name="kai-logo" class="h-[19px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
+            <p class="text-black font-bold italic">Tracker<span class="text-[#0066FF]">App</span></p>
+        </div> -->
 
         <!-- Menu Navigasi Desktop (lg and above only) -->
         <ul class="hidden lg:flex items-center gap-7 xl:gap-8 text-sm font-medium text-[#4A4A4A] dark:text-[#9AA0A6]">
