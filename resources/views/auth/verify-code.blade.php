@@ -89,12 +89,10 @@
             {{-- Resend Code --}}
             <div class="text-xs text-gray-500 dark:text-[#9AA0A6] font-normal">
                 Tidak mendapat kode?
-                <form method="POST" action="{{ route('password.resend-otp') }}" class="inline">
-                    @csrf
-                    <button type="submit" class="text-[#0066FF] dark:text-[#3B82F6] font-medium hover:underline transition cursor-pointer">
-                        kirim ulang
-                    </button>
-                </form>
+                <button type="button" onclick="document.getElementById('form-resend-otp').submit()"
+                    class="text-[#0066FF] dark:text-[#3B82F6] font-medium hover:underline transition cursor-pointer">
+                    kirim ulang
+                </button>
             </div>
 
             {{-- Submit Button 'Verifikasi' --}}
@@ -114,6 +112,11 @@
                 </a>
             </div>
 
+        </form>
+
+        {{-- Form kirim ulang OTP — di luar form utama agar tidak nested --}}
+        <form id="form-resend-otp" method="POST" action="{{ route('password.resend-otp') }}" class="hidden">
+            @csrf
         </form>
 
     </div>
