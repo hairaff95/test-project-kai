@@ -152,4 +152,26 @@ class SuperAdminController extends Controller
         return redirect()->route('settings.index', ['tab' => 'persetujuan-sandi'])
             ->with('success', 'Request berhasil ditolak.');
     }
+
+    // ─── Import Data Excel ─────────────────────────────────────────────────────
+
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv|max:20480',
+        ], [
+            'file.required' => 'Silakan pilih file Excel terlebih dahulu.',
+            'file.mimes'    => 'Format file harus berupa .xlsx, .xls, atau .csv.',
+            'file.max'      => 'Ukuran file maksimal adalah 20 MB.',
+        ]);
+
+        $file = $request->file('file');
+        $fileName = $file->getClientOriginalName();
+
+        // Simpan file sementara di storage/app/imports
+        $path = $file->storeAs('imports', time() . '_' . $fileName);
+
+        return redirect()->route('settings.index', ['tab' => 'import-excel'])
+            ->with('success', "File \"{$fileName}\" berhasil diunggah.");
+    }
 }
