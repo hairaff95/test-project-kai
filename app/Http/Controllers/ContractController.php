@@ -57,13 +57,141 @@ class ContractController extends Controller
             };
         }
 
-        $contracts = $query->get();
+        $contracts = $query->paginate(50)->withQueryString();
 
         // Ambil opsi unik untuk dropdown
         $jenisAssetOptions    = \App\Models\KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset');
         $statusCustomerOptions = \App\Models\Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer');
 
         return view('contracts.index', compact('contracts', 'jenisAssetOptions', 'statusCustomerOptions'));
+    }
+
+    public function create()
+    {
+        $jenisAssetOptions = \App\Models\KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset');
+        $statusCustomerOptions = \App\Models\Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer');
+        $stasiunOptions = \App\Models\KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->pluck('stasiun');
+        $jenisPendapatanOptions = \App\Models\ContractFinancial::select('jenis_pendapatan')->distinct()->whereNotNull('jenis_pendapatan')->pluck('jenis_pendapatan');
+
+        return view('contracts.create', compact('jenisAssetOptions', 'statusCustomerOptions', 'stasiunOptions', 'jenisPendapatanOptions'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'contract_number' => 'required|string|unique:contracts,contract_number',
+            'nama_penyewa'    => 'required|string',
+            'asset_number'    => 'required|string',
+        ]);
+
+        // 1. Create or Find Tenant
+        $tenant = \App\Models\Penyewa::firstOrCreate(
+            ['fullname' => $request->nama_penyewa],
+            [
+                'status_customer' => $request->status_customer ?? 'Swasta',
+                'jenis_perusahaan'=> $request->jenis_perusahaan ?? '-',
+                'brand'           => $request->brand ?? '',
+                'alamat'          => $request->alamat ?? '',
+            ]
+        );
+
+        // 2. Create or Find Asset
+        $asset = \App\Models\KaiAsset::firstOrCreate(
+            ['asset_number' => $request->asset_number],
+            [
+                'asset_block_name' => $request->asset_block_name ?? $request->nama_penyewa,
+                'jenis_asset'      => $request->jenis_asset ?? 'Tanah',
+                'size_area'        => (float) str_replace(',', '.', preg_replace('/[^\d.,]/', '', $request->size_area ?? '0')),
+                'stasiun'          => $request->stasiun ?? 'Semarang',
+                'wilayah_asset'    => $request->wilayah_asset ?? 'Daop 4 Semarang',
+                'peruntukan'       => $request->peruntukan ?? '',
+            ]
+        );
+
+        // Clean Price
+        $cleanedPrice = (float) preg_replace('/[^\d]/', '', $request->price ?? $request->nilai_kontrak ?? '0');
+
+        // Dates parsing helper (supports DD/MM/YY, DD/MM/YYYY, and standard formats)
+        $parseDate = function ($dateStr) {
+            if (!$dateStr) return null;
+            $dateStr = trim($dateStr);
+            if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/', $dateStr, $matches)) {
+                $day = (int)$matches[1];
+                $month = (int)$matches[2];
+                $year = (int)$matches[3];
+                if ($year < 100) $year += 2000;
+                return \Carbon\Carbon::create($year, $month, $day);
+            }
+            try {
+                return \Carbon\Carbon::parse($dateStr);
+            } catch (\Exception $e) {
+                return now();
+            }
+        };
+
+        $contractDate = $parseDate($request->contract_date) ?? now();
+        $startDate = $parseDate($request->start_datetime) ?? now();
+        $endDate = $parseDate($request->end_datetime) ?? now()->addYear();
+        $startDateBaru = $parseDate($request->start_datetime_baru);
+        $endDateBaru = $parseDate($request->end_datetime_baru);
+
+        // 3. Create Contract
+        $contract = \App\Models\KaiContract::create([
+            'contract_number'     => $request->contract_number,
+            'tenant_id'           => $tenant->id,
+            'asset_number'        => $asset->asset_number,
+            'contract_date'       => $contractDate,
+            'jenis_kontrak'       => $request->jenis_kontrak ?? 'Kontrak Sewa',
+            'area_kontrak'        => $request->area_kontrak ?? 'Daop 4 Semarang',
+            'start_datetime'      => $startDate,
+            'end_datetime'        => $endDate,
+            'start_datetime_baru' => $startDateBaru,
+            'end_datetime_baru'   => $endDateBaru,
+            'price'               => $cleanedPrice,
+            'spv'                 => $request->spv ?? 'PIC Daop 4',
+            'keterangan'          => $request->keterangan ?? '',
+        ]);
+
+        // 4. Create Financial
+        $nilai2026 = (float) preg_replace('/[^\d]/', '', $request->nilai_2026 ?? $cleanedPrice);
+        $nilaiBacklog1 = (float) preg_replace('/[^\d]/', '', $request->nilai_backlog ?? 0);
+        $nilaiBacklog2 = (float) preg_replace('/[^\d]/', '', $request->nilai_backlog2 ?? 0);
+        $persentase = (float) str_replace(',', '.', preg_replace('/[^\d.,]/', '', $request->persentase ?? '0.9'));
+
+        \App\Models\ContractFinancial::create([
+            'contract_number'  => $contract->contract_number,
+            'asset_number'     => $asset->asset_number,
+            'jenis_pendapatan' => $request->jenis_pendapatan ?? 'Row',
+            'akun_gl'          => $request->akun_gl ?? '40110000',
+            'form_rka'         => $request->form_rka ?? 'RKA 2026',
+            'tahun_rka'        => $request->tahun_rka ?? '2026',
+            'nilai_2026'       => $nilai2026,
+            'nilai_backlog'    => $nilaiBacklog1,
+            'nilai_backlog2'   => $nilaiBacklog2,
+            'persentase'       => $persentase,
+        ]);
+
+        // 5. Create Monthly Schedules
+        $monthlyPortion = $nilai2026 > 0 ? round($nilai2026 / 12) : 0;
+        \App\Models\MonthlySchedule::create([
+            'contract_number' => $contract->contract_number,
+            'asset_number'    => $asset->asset_number,
+            'januari'         => (float) preg_replace('/[^\d]/', '', $request->januari ?? $monthlyPortion),
+            'febuari'         => (float) preg_replace('/[^\d]/', '', $request->febuari ?? $monthlyPortion),
+            'maret'           => (float) preg_replace('/[^\d]/', '', $request->maret ?? $monthlyPortion),
+            'april'           => (float) preg_replace('/[^\d]/', '', $request->april ?? $monthlyPortion),
+            'mei'             => (float) preg_replace('/[^\d]/', '', $request->mei ?? $monthlyPortion),
+            'juni'            => (float) preg_replace('/[^\d]/', '', $request->juni ?? $monthlyPortion),
+            'juli'            => (float) preg_replace('/[^\d]/', '', $request->juli ?? $monthlyPortion),
+            'agustus'         => (float) preg_replace('/[^\d]/', '', $request->agustus ?? $monthlyPortion),
+            'september'       => (float) preg_replace('/[^\d]/', '', $request->september ?? $monthlyPortion),
+            'oktober'         => (float) preg_replace('/[^\d]/', '', $request->oktober ?? $monthlyPortion),
+            'november'        => (float) preg_replace('/[^\d]/', '', $request->november ?? $monthlyPortion),
+            'desember'        => (float) preg_replace('/[^\d]/', '', $request->desember ?? $monthlyPortion),
+            'jan_des'         => $nilai2026,
+        ]);
+
+        return redirect()->route('contracts.index')->with('success', 'Aset & Kontrak baru berhasil ditambahkan.');
     }
 
     public function edit($identifier)

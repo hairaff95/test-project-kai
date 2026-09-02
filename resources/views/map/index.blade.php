@@ -3,13 +3,15 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
     <title>{{ config('app.name', 'KAI Tracker') }} — Peta</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <!-- Anti-FOUC Theme Script -->
     <script>
@@ -35,6 +37,7 @@
         .tool-active-bg {
             background-color: rgba(229, 231, 235, 0.8) !important;
         }
+
         .dark .tool-active-bg {
             background-color: rgba(255, 255, 255, 0.15) !important;
         }
@@ -43,11 +46,13 @@
             background-color: #F6F7F9 !important;
             cursor: grab !important;
         }
+
         .dark #map {
             background-color: #282A2C !important;
         }
 
-        #map:active, #map.leaflet-drag-target {
+        #map:active,
+        #map.leaflet-drag-target {
             cursor: grabbing !important;
         }
 
@@ -57,11 +62,13 @@
             outline: none;
             cursor: grab !important;
         }
+
         .dark .leaflet-container {
             background: #282A2C !important;
         }
 
-        .leaflet-container:active, .leaflet-container.leaflet-drag-target {
+        .leaflet-container:active,
+        .leaflet-container.leaflet-drag-target {
             cursor: grabbing !important;
         }
 
@@ -131,16 +138,33 @@
         .custom-pin-marker:hover {
             transform: scale(1.2) translateY(-2px);
         }
+
+        .kabupaten-label-wrapper {
+            background: transparent !important;
+            border: none !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            pointer-events: none !important;
+        }
+
+        .kabupaten-label-badge {
+            display: inline-block;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
     </style>
 </head>
 
-<body class="h-screen overflow-hidden bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-600 relative transition-colors duration-200">
+<body
+    class="h-screen overflow-hidden bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-600 relative transition-colors duration-200">
 
     {{-- Navbar --}}
     <x-navbar active="map" />
 
-    {{-- Header: Judul Heatmaps, Tools Zoom, & Tombol Filter (z-30) --}}
-    <div class="relative z-30 w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 pointer-events-none">
+    {{-- Header: Judul Heatmaps, Tools Zoom, & Tombol Filter (z-50) --}}
+    <div class="relative z-50 w-full max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 pointer-events-none">
 
         {{-- Mobile: Left (Title + Tools underneath) and Right (Filter button) --}}
         <div class="flex items-start justify-between lg:hidden">
@@ -148,47 +172,31 @@
                 <h1 class="text-[22px] font-bold text-gray-950 dark:text-white tracking-tight leading-tight">
                     Heatmaps
                 </h1>
-                
+
                 {{-- Zoom tools underneath Heatmaps text --}}
                 <div class="flex items-center gap-1.5">
-                    <button
-                        id="zoomInButton"
-                        type="button"
-                        onclick="if(window.mapZoomIn) window.mapZoomIn();"
+                    <button id="zoomInButton" type="button" onclick="if(window.mapZoomIn) window.mapZoomIn();"
                         class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] dark:border-white/15 bg-white/90 dark:bg-[#34383D]/90 backdrop-blur-sm hover:bg-gray-100 dark:hover:bg-[#40454B] active:bg-gray-200 text-gray-700 dark:text-white transition cursor-pointer shadow-xs"
-                        title="Zoom In"
-                    >
+                        title="Zoom In">
                         <x-icon name="zoom-in" class="w-4 h-4" />
                     </button>
-                    <button
-                        id="zoomOutButton"
-                        type="button"
-                        onclick="if(window.mapZoomOut) window.mapZoomOut();"
+                    <button id="zoomOutButton" type="button" onclick="if(window.mapZoomOut) window.mapZoomOut();"
                         class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] dark:border-white/15 bg-white/90 dark:bg-[#34383D]/90 backdrop-blur-sm hover:bg-gray-100 dark:hover:bg-[#40454B] active:bg-gray-200 text-gray-700 dark:text-white transition cursor-pointer shadow-xs"
-                        title="Zoom Out"
-                    >
+                        title="Zoom Out">
                         <x-icon name="zoom-out" class="w-4 h-4" />
                     </button>
-                    <button
-                        id="panToolButton"
-                        type="button"
-                        onclick="if(window.mapPanTool) window.mapPanTool();"
+                    <button id="panToolButton" type="button" onclick="if(window.mapPanTool) window.mapPanTool();"
                         class="w-9 h-9 flex items-center justify-center rounded-[8px] border border-[#8E8E8E] dark:border-white/15 bg-white/90 dark:bg-[#34383D]/90 backdrop-blur-sm hover:bg-gray-100 dark:hover:bg-[#40454B] active:bg-gray-200 text-gray-700 dark:text-white transition cursor-pointer shadow-xs"
-                        title="Pusatkan Peta Indonesia"
-                    >
+                        title="Pusatkan Peta Jawa Tengah">
                         <x-icon name="hand-pan" class="w-4 h-4 text-gray-600 dark:text-white" />
                     </button>
                 </div>
             </div>
 
             <div class="pointer-events-auto">
-                <button
-                    id="filterButton"
-                    type="button"
-                    class="w-11 h-11 flex items-center justify-center rounded-[10px] bg-white dark:bg-[#1F2123] shadow-[0_4px_12px_rgba(0,0,0,0.08)] dark:shadow-none border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-[#2D3034] active:bg-gray-100 text-gray-800 dark:text-white transition cursor-pointer z-30 relative select-none"
-                    style="cursor: pointer !important;"
-                    title="Filter Peta"
-                >
+                <button id="filterButton" type="button"
+                    class="w-11 h-11 flex items-center justify-center rounded-[10px] bg-white dark:bg-[#1F2123] shadow-[0_4px_12px_rgba(0,0,0,0.08)] dark:shadow-none border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-[#2D3034] active:bg-gray-100 text-gray-800 dark:text-white transition cursor-pointer z-50 relative select-none"
+                    style="cursor: pointer !important;" title="Filter Peta">
                     <x-icon name="filter-peta" class="w-5 h-5 text-gray-800 dark:text-white pointer-events-none" />
                 </button>
             </div>
@@ -202,44 +210,29 @@
                 </h1>
             </div>
 
-            <div class="pointer-events-auto absolute left-1/2 -translate-x-1/2 flex items-center gap-[5px] bg-transparent">
-                <button
-                    id="zoomInButtonDesktop"
-                    type="button"
-                    onclick="if(window.mapZoomIn) window.mapZoomIn();"
+            <div
+                class="pointer-events-auto absolute left-1/2 -translate-x-1/2 flex items-center gap-[5px] bg-transparent">
+                <button id="zoomInButtonDesktop" type="button" onclick="if(window.mapZoomIn) window.mapZoomIn();"
                     class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] dark:border-white/20 bg-transparent hover:bg-gray-200/80 dark:hover:bg-[#34383D] active:bg-gray-300/80 text-gray-700 dark:text-white transition cursor-pointer"
-                    title="Zoom In"
-                >
+                    title="Zoom In">
                     <x-icon name="zoom-in" class="w-6 h-6" />
                 </button>
-                <button
-                    id="zoomOutButtonDesktop"
-                    type="button"
-                    onclick="if(window.mapZoomOut) window.mapZoomOut();"
+                <button id="zoomOutButtonDesktop" type="button" onclick="if(window.mapZoomOut) window.mapZoomOut();"
                     class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] dark:border-white/20 bg-transparent hover:bg-gray-200/80 dark:hover:bg-[#34383D] active:bg-gray-300/80 text-gray-700 dark:text-white transition cursor-pointer"
-                    title="Zoom Out"
-                >
+                    title="Zoom Out">
                     <x-icon name="zoom-out" class="w-6 h-6" />
                 </button>
-                <button
-                    id="panToolButtonDesktop"
-                    type="button"
-                    onclick="if(window.mapPanTool) window.mapPanTool();"
+                <button id="panToolButtonDesktop" type="button" onclick="if(window.mapPanTool) window.mapPanTool();"
                     class="w-11 h-11 flex items-center justify-center rounded-[10px] border-2 border-[#8E8E8E] dark:border-white/20 bg-transparent hover:bg-gray-200/80 dark:hover:bg-[#34383D] active:bg-gray-300/80 text-gray-700 dark:text-white transition cursor-pointer"
-                    title="Pusatkan Peta Indonesia"
-                >
+                    title="Pusatkan Peta Jawa Tengah">
                     <x-icon name="hand-pan" class="w-6 h-6 text-gray-600 dark:text-white" />
                 </button>
             </div>
 
             <div class="pointer-events-auto">
-                <button
-                    id="filterButtonDesktop"
-                    type="button"
+                <button id="filterButtonDesktop" type="button"
                     class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-[10px] bg-white dark:bg-[#1F2123] shadow-[0_4px_12px_rgba(0,0,0,0.06)] dark:shadow-none border border-gray-100 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-[#2D3034] active:bg-gray-100 text-gray-800 dark:text-white transition-transform duration-300 ease-in-out cursor-pointer z-50 relative select-none"
-                    style="cursor: pointer !important;"
-                    title="Filter Peta"
-                >
+                    style="cursor: pointer !important;" title="Filter Peta">
                     <x-icon name="filter-peta" class="w-6 h-6 text-gray-800 dark:text-white pointer-events-none" />
                 </button>
             </div>
@@ -249,14 +242,14 @@
     {{-- Map Canvas --}}
     <div id="map" class="absolute inset-0 z-0 h-screen w-full"></div>
 
-    {{-- Overlay Background Filter (z-30 di bawah tombol) --}}
-    <div id="filterOverlay" class="invisible fixed inset-0 z-30 bg-black/[0.08] opacity-0 transition-all duration-300 pointer-events-auto"></div>
+    {{-- Overlay Background Filter (z-40 di bawah modal z-50 dan tombol z-50) --}}
+    <div id="filterOverlay"
+        class="invisible fixed inset-0 z-40 bg-black/[0.12] opacity-0 transition-all duration-300 pointer-events-auto">
+    </div>
 
     {{-- Modal Filter (Slide in from Right on both Mobile & Desktop, scaled down for Mobile) --}}
-    <aside
-        id="filterModal"
-        class="fixed right-3 sm:right-6 lg:right-10 top-16 sm:top-20 bottom-24 lg:bottom-8 z-40 w-[295px] sm:w-[350px] lg:w-[373px] bg-white dark:bg-[#1F2123] rounded-2xl lg:rounded-[10px] p-4 sm:p-6 lg:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.14)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-gray-100/90 dark:border-white/5 transition-all duration-300 ease-in-out transform translate-x-[140%] opacity-0 pointer-events-none flex flex-col justify-start overflow-y-auto"
-    >
+    <aside id="filterModal"
+        class="fixed right-3 sm:right-6 lg:right-10 top-16 sm:top-20 bottom-24 lg:bottom-8 z-50 w-[295px] sm:w-[350px] lg:w-[373px] bg-white dark:bg-[#1F2123] rounded-2xl lg:rounded-[10px] p-4 sm:p-6 lg:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.14)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-gray-100/90 dark:border-white/5 transition-all duration-300 ease-in-out transform translate-x-[140%] opacity-0 pointer-events-none flex flex-col justify-start overflow-y-auto">
         <div class="mb-3 sm:mb-5 lg:mb-6 flex items-center justify-between">
             <h2 class="text-base sm:text-lg lg:text-[20px] font-bold text-gray-950 dark:text-white tracking-tight">
                 Filter Peta
@@ -268,36 +261,50 @@
 
             {{-- 1. STASIUN --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
-                    <x-icon name="subway" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                <label
+                    class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="subway"
+                        class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Stasiun
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="stasiun" name="stasiun" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Stasiun</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                    <button type="button"
+                        class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span
+                            class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua
+                            Stasiun</span>
+                        <x-icon name="chevron-down"
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('stasiun', '', 'Semua Stasiun')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div
+                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('stasiun', '', 'Semua Stasiun')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Stasiun</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'gambir', 'Gambir')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'gambir', 'Gambir')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Gambir</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'bandung', 'Bandung')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'bandung', 'Bandung')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Bandung</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'surabaya', 'Surabaya')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'surabaya', 'Surabaya')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Surabaya</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'semarang', 'Semarang Poncol')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'semarang', 'Semarang Poncol')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semarang Poncol</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'pekalongan', 'Pekalongan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'pekalongan', 'Pekalongan')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Pekalongan</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('stasiun', 'tegal', 'Tegal')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('stasiun', 'tegal', 'Tegal')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Tegal</span>
                         </button>
                     </div>
@@ -306,24 +313,34 @@
 
             {{-- 2. WILAYAH --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
-                    <x-icon name="explore_nearby" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                <label
+                    class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="explore_nearby"
+                        class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Wilayah
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="wilayah" name="wilayah" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Row & Non Row</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                    <button type="button"
+                        class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span
+                            class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Row
+                            & Non Row</span>
+                        <x-icon name="chevron-down"
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('wilayah', '', 'Row & Non Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div
+                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('wilayah', '', 'Row & Non Row')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Row & Non Row</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('wilayah', 'row', 'Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('wilayah', 'row', 'Row')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Row</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('wilayah', 'non-row', 'Non Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('wilayah', 'non-row', 'Non Row')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Non Row</span>
                         </button>
                     </div>
@@ -332,24 +349,34 @@
 
             {{-- 3. ASET --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
-                    <x-icon name="aset-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                <label
+                    class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="aset-icon"
+                        class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Aset
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="aset" name="aset" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Aset</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                    <button type="button"
+                        class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span
+                            class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua
+                            Aset</span>
+                        <x-icon name="chevron-down"
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('aset', '', 'Semua Aset')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div
+                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('aset', '', 'Semua Aset')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Aset</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('aset', 'tanah', 'Tanah')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('aset', 'tanah', 'Tanah')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Tanah</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('aset', 'bangunan', 'Bangunan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('aset', 'bangunan', 'Bangunan')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Bangunan</span>
                         </button>
                     </div>
@@ -358,24 +385,34 @@
 
             {{-- 4. JENIS KONTRAK --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
-                    <x-icon name="contract-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                <label
+                    class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="contract-icon"
+                        class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Jenis Kontrak
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="jenis_kontrak" name="jenis_kontrak" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Kontrak</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                    <button type="button"
+                        class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span
+                            class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua
+                            Kontrak</span>
+                        <x-icon name="chevron-down"
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('jenis_kontrak', '', 'Semua Kontrak')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div
+                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('jenis_kontrak', '', 'Semua Kontrak')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Kontrak</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'sewa', 'Sewa')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Sewa</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'kerjasama', 'Kerja Sama')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_kontrak', 'kerjasama', 'Kerja Sama')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Kerja Sama</span>
                         </button>
                     </div>
@@ -384,27 +421,38 @@
 
             {{-- 5. JENIS PENDAPATAN --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
-                    <x-icon name="jenis-pendapatan-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                <label
+                    class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="jenis-pendapatan-icon"
+                        class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Jenis Pendapatan
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="jenis_pendapatan" name="jenis_pendapatan" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua Pend...</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                    <button type="button"
+                        class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span
+                            class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua
+                            Pend...</span>
+                        <x-icon name="chevron-down"
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', '', 'Semua Pend...')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div
+                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', '', 'Semua Pend...')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Pend...</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'sewa', 'Sewa')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Sewa</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'iklan', 'Iklan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'iklan', 'Iklan')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Iklan</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'lainnya', 'Lainnya')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'lainnya', 'Lainnya')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Lainnya</span>
                         </button>
                     </div>
@@ -413,24 +461,34 @@
 
             {{-- 6. SPV --}}
             <div class="flex flex-col">
-                <label class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
-                    <x-icon name="spv-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                <label
+                    class="flex items-center gap-1 sm:gap-[6px] text-[11px] sm:text-xs lg:text-sm font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1 sm:mb-[6px]">
+                    <x-icon name="spv-icon"
+                        class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     SPV
                 </label>
                 <div class="relative custom-filter-container">
                     <input type="hidden" id="spv" name="spv" value="">
-                    <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
-                        <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua SPV</span>
-                        <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                    <button type="button"
+                        class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
+                        <span
+                            class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua
+                            SPV</span>
+                        <x-icon name="chevron-down"
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
                     </button>
-                    <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
-                        <button type="button" onclick="selectMapFilter('spv', '', 'Semua SPV')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                    <div
+                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        <button type="button" onclick="selectMapFilter('spv', '', 'Semua SPV')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua SPV</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('spv', 'spv1', 'SPV 1')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('spv', 'spv1', 'SPV 1')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>SPV 1</span>
                         </button>
-                        <button type="button" onclick="selectMapFilter('spv', 'spv2', 'SPV 2')" class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
+                        <button type="button" onclick="selectMapFilter('spv', 'spv2', 'SPV 2')"
+                            class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>SPV 2</span>
                         </button>
                     </div>
@@ -441,20 +499,14 @@
 
         {{-- ACTION BUTTONS --}}
         <div class="mt-4 sm:mt-6 lg:mt-8 flex gap-2 sm:gap-3.5 shrink-0">
-            <button
-                id="applyFilter"
-                type="button"
-                class="h-[38px] sm:h-[44px] lg:h-[48px] flex-1 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-semibold text-white transition flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs cursor-pointer"
-            >
+            <button id="applyFilter" type="button"
+                class="h-[38px] sm:h-[44px] lg:h-[48px] flex-1 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-semibold text-white transition flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs cursor-pointer">
                 <x-icon name="filter-icon" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                 Terapkan Filter
             </button>
 
-            <button
-                id="resetFilter"
-                type="button"
-                class="h-[38px] sm:h-[44px] lg:h-[48px] w-[75px] sm:w-[95px] lg:w-[115px] rounded-lg lg:rounded-[10px] border border-gray-300 dark:border-white/15 bg-white dark:bg-[#2D3034] text-xs sm:text-sm font-semibold text-gray-800 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/10 cursor-pointer"
-            >
+            <button id="resetFilter" type="button"
+                class="h-[38px] sm:h-[44px] lg:h-[48px] w-[75px] sm:w-[95px] lg:w-[115px] rounded-lg lg:rounded-[10px] border border-gray-300 dark:border-white/15 bg-white dark:bg-[#2D3034] text-xs sm:text-sm font-semibold text-gray-800 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/10 cursor-pointer">
                 Reset
             </button>
         </div>
@@ -467,18 +519,19 @@
         // Data aset dari database
         const assets = @json($assets);
 
-        let indonesiaGeojsonLayer = null;
-        let indonesiaBounds = null;
-        let baseIndonesiaZoom = 5;
+        let jatengGeojsonLayer = null;
+        let jatengBounds = null;
+        let baseJatengZoom = 8.5;
+        let kabupatenLabelsLayer = L.layerGroup();
 
-        // Inisialisasi peta Leaflet dengan smooth & responsive zoom
+        // Inisialisasi peta Leaflet berpusat di Jawa Tengah dengan zoom touchpad cepat & bertenaga
         const map = L.map('map', {
-            center: [-2.2, 118.0],
-            zoom: 5,
-            zoomSnap: 0.1,
-            zoomDelta: 0.5,
-            wheelPxPerZoomLevel: 85,
-            wheelDebounceTime: 0,
+            center: [-7.15, 110.14],
+            zoom: 8.5,
+            zoomSnap: 0.25,
+            zoomDelta: 10,
+            wheelPxPerZoomLevel: 100,
+            wheelDebounceTime: 25,
             zoomAnimation: true,
             fadeAnimation: true,
             markerZoomAnimation: true,
@@ -490,11 +543,13 @@
             doubleClickZoom: true
         });
 
-        // Pusatkan peta ke kepulauan Indonesia
-        function fitIndonesiaBounds() {
-            if (indonesiaBounds) {
-                map.fitBounds(indonesiaBounds, {
-                    padding: [10, 10],
+        kabupatenLabelsLayer.addTo(map);
+
+        // Pusatkan peta ke wilayah Jawa Tengah
+        function fitJatengBounds() {
+            if (jatengBounds) {
+                map.fitBounds(jatengBounds, {
+                    padding: [20, 20],
                     animate: true
                 });
             }
@@ -548,29 +603,29 @@
             }
         }
 
-        window.mapZoomIn = function() {
+        window.mapZoomIn = function () {
             flashZoomIn();
             map.setZoom(Math.floor(map.getZoom()) + 1);
         };
 
-        window.mapZoomOut = function() {
+        window.mapZoomOut = function () {
             flashZoomOut();
             map.setZoom(Math.ceil(map.getZoom()) - 1);
         };
 
-        window.mapPanTool = function() {
-            fitIndonesiaBounds();
+        window.mapPanTool = function () {
+            fitJatengBounds();
         };
 
         let lastZoomLevel = map.getZoom();
 
-        map.on('zoomstart', function() {
+        map.on('zoomstart', function () {
             isCurrentlyZooming = true;
             if (panToolButton) panToolButton.classList.remove('tool-active-bg');
             lastZoomLevel = map.getZoom();
         });
 
-        map.on('zoomanim', function(e) {
+        map.on('zoomanim', function (e) {
             isCurrentlyZooming = true;
             if (panToolButton) panToolButton.classList.remove('tool-active-bg');
             if (e.zoom > lastZoomLevel) {
@@ -581,7 +636,7 @@
             lastZoomLevel = e.zoom;
         });
 
-        map.on('zoom', function() {
+        map.on('zoom', function () {
             isCurrentlyZooming = true;
             if (panToolButton) panToolButton.classList.remove('tool-active-bg');
             const currentZoom = map.getZoom();
@@ -593,38 +648,50 @@
             lastZoomLevel = currentZoom;
         });
 
-        map.on('zoomend', function() {
+        map.on('zoomend', function () {
             clearTimeout(zoomEndTimer);
             zoomEndTimer = setTimeout(() => {
                 isCurrentlyZooming = false;
             }, 300);
         });
 
-        map.on('dragstart', function() {
+        map.on('dragstart', function () {
             if (!isCurrentlyZooming) {
                 setPanToolVisual(true);
             }
         });
 
-        map.on('drag', function() {
+        map.on('drag', function () {
             if (!isCurrentlyZooming) {
                 setPanToolVisual(true);
             }
         });
 
-        map.on('dragend', function() {
+        map.on('dragend', function () {
             setPanToolVisual(false);
         });
 
-        window.addEventListener('mouseup', function() {
+        window.addEventListener('mouseup', function () {
             setPanToolVisual(false);
         });
 
-        window.addEventListener('touchend', function() {
+        window.addEventListener('touchend', function () {
             setPanToolVisual(false);
         });
 
-        // Ikon Pin Lokasi
+        // Ikon Titik Minimalist (Saat Tampilan Overview / Zoom Kecil) - Bersih dan Statis Tanpa Kedip
+        const redDotIcon = L.divIcon({
+            className: 'custom-pin-wrapper',
+            html: `
+                <div class="cursor-pointer flex items-center justify-center hover:scale-125 transition-transform select-none">
+                    <span class="inline-flex rounded-full h-3 w-3 bg-[#BE0000] border-2 border-white shadow-[0_2px_5px_rgba(0,0,0,0.3)]"></span>
+                </div>
+            `,
+            iconSize: [12, 12],
+            iconAnchor: [6, 6]
+        });
+
+        // Ikon Pin Penuh (Saat Zoom In / Memperbesar Peta)
         const redPinIcon = L.divIcon({
             className: 'custom-pin-wrapper',
             html: `
@@ -639,68 +706,155 @@
             iconAnchor: [16, 30]
         });
 
+        let assetMarkerInstances = [];
+
+        function getActiveMarkerIcon() {
+            return map.getZoom() >= 9.6 ? redPinIcon : redDotIcon;
+        }
+
+        function refreshMarkerIcons() {
+            const icon = getActiveMarkerIcon();
+            assetMarkerInstances.forEach(marker => {
+                if (marker && marker.setIcon && marker.getIcon() !== icon) {
+                    marker.setIcon(icon);
+                    const popup = marker.getPopup();
+                    if (popup) {
+                        popup.options.offset = (icon === redPinIcon) ? [0, -16] : [0, -8];
+                    }
+                }
+            });
+        }
+
+        map.on('zoom', refreshMarkerIcons);
+        map.on('zoomend', refreshMarkerIcons);
+
         // Function to get current GeoJSON style based on theme
         function getGeoJsonStyle() {
             const isDark = document.documentElement.classList.contains('dark');
             return {
-                fillColor: isDark ? '#4A4E54' : '#757575',
-                fillOpacity: 1,
-                color: isDark ? '#282A2C' : '#F6F7F9',
-                weight: 0.7,
+                fillColor: isDark ? '#383C40' : '#E2E8F0',
+                fillOpacity: 0.95,
+                color: isDark ? '#202225' : '#FFFFFF',
+                weight: 1.2,
                 opacity: 1
             };
         }
 
-        // Load GeoJSON batas wilayah Indonesia
-        fetch('/js/indonesia.json')
+        // Render nama-nama Kabupaten & Kota menempel di peta
+        function createKabupatenLabels() {
+            kabupatenLabelsLayer.clearLayers();
+            if (!jatengGeojsonLayer) return;
+
+            jatengGeojsonLayer.eachLayer(layer => {
+                const feature = layer.feature;
+                if (!feature || !feature.properties) return;
+
+                const name = feature.properties.short_name || feature.properties.name;
+                let center = null;
+                if (layer.getBounds && typeof layer.getBounds === 'function') {
+                    center = layer.getBounds().getCenter();
+                } else if (feature.properties.lat && feature.properties.lon) {
+                    center = L.latLng(feature.properties.lat, feature.properties.lon);
+                }
+
+                if (center) {
+                    // Penyesuaian posisi center presisi agar label berada tepat di daratan masing-masing
+                    if (name.includes('Jepara')) center = L.latLng(-6.62, 110.72);
+                    if (name === 'Kabupaten Batang' || name.includes('Batang')) center = L.latLng(-7.02, 109.88);
+                    if (name === 'Kota Pekalongan') center = L.latLng(-6.8898, 109.6753);
+                    if (name === 'Kabupaten Pekalongan') center = L.latLng(-7.06, 109.62);
+                    if (name === 'Kota Semarang') center = L.latLng(-7.0051, 110.4281);
+                    if (name === 'Kabupaten Semarang') center = L.latLng(-7.20, 110.43);
+                    if (name === 'Kota Tegal') center = L.latLng(-6.8674, 109.1352);
+                    if (name === 'Kabupaten Tegal') center = L.latLng(-7.06, 109.14);
+                    if (name === 'Kota Magelang') center = L.latLng(-7.4706, 110.2178);
+                    if (name === 'Kabupaten Magelang') center = L.latLng(-7.54, 110.25);
+                    if (name === 'Kota Salatiga') center = L.latLng(-7.3305, 110.5084);
+                    if (name.includes('Surakarta') || name.includes('Solo')) center = L.latLng(-7.5666, 110.8249);
+                    if (name === 'Kabupaten Kendal') center = L.latLng(-7.02, 110.17);
+
+                    const labelHtml = `
+                        <div class="kabupaten-label-badge font-bold text-[9px] sm:text-[10px] text-gray-800 dark:text-gray-100 bg-white/80 dark:bg-[#1E2023]/85 px-1.5 py-0.5 rounded shadow-[0_1px_3px_rgba(0,0,0,0.12)] border border-gray-300/60 dark:border-white/10 backdrop-blur-[2px] select-none pointer-events-none whitespace-nowrap">
+                            ${name}
+                        </div>
+                    `;
+                    const labelIcon = L.divIcon({
+                        className: 'kabupaten-label-wrapper',
+                        html: labelHtml,
+                        iconSize: [120, 22],
+                        iconAnchor: [60, 11]
+                    });
+
+                    const labelMarker = L.marker(center, {
+                        icon: labelIcon,
+                        interactive: false,
+                        zIndexOffset: -50
+                    });
+
+                    kabupatenLabelsLayer.addLayer(labelMarker);
+                }
+            });
+        }
+
+        // Load GeoJSON batas wilayah Jawa Tengah (35 Kabupaten & Kota)
+        fetch('/js/jawa-tengah-kabupaten.json')
             .then(response => {
-                if (!response.ok) throw new Error('Failed to load indonesia.json');
+                if (!response.ok) throw new Error('Failed to load jawa-tengah-kabupaten.json');
                 return response.json();
             })
             .then(data => {
-                indonesiaGeojsonLayer = L.geoJSON(data, {
+                jatengGeojsonLayer = L.geoJSON(data, {
                     style: getGeoJsonStyle(),
-                    onEachFeature: function(feature, layer) {
+                    onEachFeature: function (feature, layer) {
                         layer.on({
-                            mouseover: function(e) {
+                            mouseover: function (e) {
                                 const isDark = document.documentElement.classList.contains('dark');
                                 e.target.setStyle({
-                                    fillColor: isDark ? '#5C6269' : '#636363'
+                                    fillColor: isDark ? '#475569' : '#DBEAFE',
+                                    weight: 2,
+                                    color: '#0066FF'
                                 });
+                                if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                                    e.target.bringToFront();
+                                }
                             },
-                            mouseout: function(e) {
-                                const isDark = document.documentElement.classList.contains('dark');
-                                e.target.setStyle({
-                                    fillColor: isDark ? '#4A4E54' : '#757575'
-                                });
+                            mouseout: function (e) {
+                                e.target.setStyle(getGeoJsonStyle());
                             }
                         });
                     }
                 }).addTo(map);
 
-                indonesiaBounds = indonesiaGeojsonLayer.getBounds();
+                jatengBounds = jatengGeojsonLayer.getBounds();
 
-                map.fitBounds(indonesiaBounds, {
-                    padding: [10, 10]
+                map.fitBounds(jatengBounds, {
+                    padding: [20, 20],
+                    animate: false
                 });
 
-                const baseMinZoom = map.getBoundsZoom(indonesiaBounds, false, [10, 10]);
-                baseIndonesiaZoom = baseMinZoom;
-                map.setMinZoom(baseMinZoom);
-                map.setMaxZoom(12);
-                map.setMaxBounds(indonesiaBounds.pad(0.25));
+                const baseMinZoom = map.getBoundsZoom(jatengBounds, false, [20, 20]);
+                baseJatengZoom = baseMinZoom || 8.0;
+                map.setMinZoom(Math.max(6.5, baseJatengZoom - 1));
+                map.setMaxZoom(17);
+                map.setMaxBounds(jatengBounds.pad(0.6));
 
+                createKabupatenLabels();
                 renderMarkers();
+
+                setTimeout(() => {
+                    if (map) map.invalidateSize();
+                }, 100);
             })
             .catch(error => {
                 console.error('GeoJSON error:', error);
             });
 
         // Theme synchronization for map and popups
-        window.updateMapTheme = function() {
-            if (indonesiaGeojsonLayer) {
-                indonesiaGeojsonLayer.setStyle(getGeoJsonStyle());
+        window.updateMapTheme = function () {
+            if (jatengGeojsonLayer) {
+                jatengGeojsonLayer.setStyle(getGeoJsonStyle());
             }
+            createKabupatenLabels();
             if (map) {
                 map.eachLayer(layer => {
                     if (layer instanceof L.Marker && layer._assetData && layer._assetId) {
@@ -714,13 +868,13 @@
         };
 
         // Listen for theme toggle events
-        window.addEventListener('themeChanged', function() {
+        window.addEventListener('themeChanged', function () {
             if (window.updateMapTheme) window.updateMapTheme();
         });
 
         // Hook observer for class changes on documentElement
-        const themeObserver = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
+        const themeObserver = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
                 if (mutation.attributeName === 'class') {
                     if (window.updateMapTheme) window.updateMapTheme();
                 }
@@ -728,11 +882,20 @@
         });
         themeObserver.observe(document.documentElement, { attributes: true });
 
-        window.addEventListener('resize', function() {
-            if (indonesiaBounds) {
-                const baseMinZoom = map.getBoundsZoom(indonesiaBounds, false, [10, 10]);
-                baseIndonesiaZoom = baseMinZoom;
-                map.setMinZoom(baseMinZoom);
+        window.addEventListener('resize', function () {
+            if (map) {
+                map.invalidateSize();
+                if (jatengBounds) {
+                    const baseMinZoom = map.getBoundsZoom(jatengBounds, false, [20, 20]);
+                    baseJatengZoom = baseMinZoom || 8.0;
+                    map.setMinZoom(Math.max(6.5, baseJatengZoom - 1));
+                }
+            }
+        });
+
+        window.addEventListener('load', function () {
+            if (map) {
+                map.invalidateSize();
             }
         });
 
@@ -744,77 +907,77 @@
         const ICON_NILAI = `<svg class="w-full h-full" viewBox="-1 -1 23 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_nl)"><g filter="url(#f1_d_nl)"><path d="M4.2 2.8C4.2 2.03 4.83 1.4 5.6 1.4H16.8C17.57 1.4 18.2 2.03 18.2 2.8V9.1C18.2 9.87 17.57 10.5 16.8 10.5H5.6C4.83 10.5 4.2 9.87 4.2 9.1V2.8Z" fill="url(#p0_lin_nl)"/></g><path d="M3.85 4.25C4.05 3.5 4.82 3.06 5.57 3.26L16.39 6.15C17.13 6.35 17.58 7.12 17.38 7.87L15.75 13.96C15.55 14.7 14.78 15.15 14.03 14.95L3.21 12.05C2.47 11.85 2.02 11.08 2.22 10.33L3.85 4.25Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M1.4 7.35C1.4 6.58 2.03 5.95 2.8 5.95H14C14.77 5.95 15.4 6.58 15.4 7.35V13.65C15.4 14.42 14.77 15.05 14 15.05H2.8C2.03 15.05 1.4 14.42 1.4 13.65V7.35ZM10.5 10.5C10.5 12.24 9.56 13.65 8.4 13.65C7.24 13.65 6.3 12.24 6.3 10.5C6.3 8.76 7.24 7.35 8.4 7.35C9.56 7.35 10.5 8.76 10.5 10.5ZM3.85 7.7C3.85 8.09 3.54 8.4 3.15 8.4C2.76 8.4 2.45 8.09 2.45 7.7C2.45 7.31 2.76 7 3.15 7C3.54 7 3.85 7.31 3.85 7.7ZM14.35 7.7C14.35 8.09 14.04 8.4 13.65 8.4C13.26 8.4 12.95 8.09 12.95 7.7C12.95 7.31 13.26 7 13.65 7C14.04 7 14.35 7.31 14.35 7.7ZM3.15 14C3.54 14 3.85 13.69 3.85 13.3C3.85 12.91 3.54 12.6 3.15 12.6C2.76 12.6 2.45 12.91 2.45 13.3C2.45 13.69 2.76 14 3.15 14ZM14.35 13.3C14.35 13.69 14.04 14 13.65 14C13.26 14 12.95 13.69 12.95 13.3C12.95 12.91 13.26 12.6 13.65 12.6C14.04 12.6 14.35 12.91 14.35 13.3Z" fill="white" fill-opacity="0.4"/></g><defs><filter id="f_d_nl" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#21EB66" flood-opacity="0.4"/></filter><filter id="f1_d_nl" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_nl" x1="11.2" y1="1.4" x2="11.2" y2="10.5" gradientUnits="userSpaceOnUse"><stop stop-color="#21EB66"/><stop offset="1" stop-color="#12D583"/></linearGradient></defs></svg>`;
         const ICON_PERIODE = `<svg class="w-full h-full" viewBox="-1 -1 25 22" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_prd)"><g filter="url(#f1_d_prd)"><path d="M4.57 3.05C4.57 2.21 5.25 1.52 6.09 1.52H18.28C19.12 1.52 19.81 2.21 19.81 3.05V11.43C19.81 12.27 19.12 12.95 18.28 12.95H6.09C5.25 12.95 4.57 12.27 4.57 11.43V3.05Z" fill="url(#p0_lin_prd)"/></g><path d="M1.52 6.09V6.86H16.76V6.09C16.76 5.25 16.08 4.57 15.24 4.57H3.05C2.21 4.57 1.52 5.25 1.52 6.09Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M16.76 7.62V15.24C16.76 16.08 16.08 16.76 15.24 16.76H3.05C2.21 16.76 1.52 16.08 1.52 15.24V7.62H16.76ZM13.71 10.67C14.13 10.67 14.47 10.32 14.47 9.9C14.47 9.48 14.13 9.14 13.71 9.14C13.29 9.14 12.95 9.48 12.95 9.9C12.95 10.32 13.29 10.67 13.71 10.67Z" fill="white" fill-opacity="0.4"/></g><defs><filter id="f_d_prd" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#FFA800" flood-opacity="0.4"/></filter><filter id="f1_d_prd" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_prd" x1="12.2" y1="1.5" x2="12.2" y2="12.9" gradientUnits="userSpaceOnUse"><stop stop-color="#FFA800"/><stop offset="1" stop-color="#FF7A00"/></linearGradient></defs></svg>`;
 
-        // Template HTML untuk kartu popup aset (Responsive: compact di mobile, proporsional di desktop)
+        // Template HTML untuk kartu popup aset persis desain Figma asli
         function createPopupCardHTML(asset, id) {
-            const googleMapsUrl = (asset.latitude && asset.longitude) 
-                ? `https://www.google.com/maps?q=${asset.latitude},${asset.longitude}` 
-                : '#';  
+            const googleMapsUrl = (asset.latitude && asset.longitude)
+                ? `https://www.google.com/maps?q=${asset.latitude},${asset.longitude}`
+                : '#';
 
             return `
-                <div class="w-[260px] sm:w-[360px] rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-5 shadow-[0_16px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.7)] border border-gray-100/90 dark:border-white/10 font-sans text-left relative">
-                    <div class="mb-2 sm:mb-3.5">
-                        <div class="flex items-center gap-2 sm:gap-2.5">
-                            <div class="w-5 h-5 sm:w-6 sm:h-6 shrink-0 text-[#0066FF] flex items-center justify-center">
+                <div class="w-[320px] sm:w-[420px] rounded-[28px] sm:rounded-[36px] bg-white dark:bg-[#1F2123] p-6 sm:p-7 md:p-8 shadow-[0_24px_60px_rgba(0,0,0,0.14)] dark:shadow-[0_24px_60px_rgba(0,0,0,0.7)] border border-gray-100/90 dark:border-white/10 font-sans text-left relative">
+                    <div class="mb-6 sm:mb-7">
+                        <div class="flex items-center gap-2.5 sm:gap-3">
+                            <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 text-[#0066FF] flex items-center justify-center">
                                 ${ICON_CORP}
                             </div>
-                            <h3 class="m-0 text-xs sm:text-base font-bold leading-tight text-gray-950 dark:text-white truncate">${asset.name || '-'}</h3>
+                            <h3 class="m-0 text-base sm:text-[22px] font-bold leading-snug text-gray-950 dark:text-white truncate">${asset.tenant || asset.name || '-'}</h3>
                         </div>
-                        <p class="mt-0.5 sm:mt-1 text-[9.5px] sm:text-xs font-medium text-gray-400 dark:text-[#9AA0A6] pl-7 sm:pl-8.5 truncate">${(asset.code ? asset.code + ' • ' : '') + (asset.location || '')}</p>
+                        <p class="mt-1 sm:mt-1.5 text-xs sm:text-[13px] font-semibold text-gray-400 dark:text-[#9AA0A6] pl-10 sm:pl-11 truncate">${(asset.code ? asset.code + ' • ' : '') + (asset.location || '')}</p>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-x-2 sm:gap-x-4 gap-y-2 sm:gap-y-3 pt-1.5 sm:pt-2.5 border-t sm:border-0 border-gray-100 dark:border-white/10">
-                        <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
-                            <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_ALAMAT}</div>
+                    <div class="grid grid-cols-2 gap-x-6 sm:gap-x-8 gap-y-5 sm:gap-y-6 pt-1">
+                        <div class="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">${ICON_ALAMAT}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight">Alamat</span>
-                                <span class="block text-[9.5px] sm:text-xs text-gray-500 dark:text-white mt-0.5 leading-tight truncate">${asset.address || '-'}</span>
+                                <span class="block text-xs sm:text-[13px] font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight mb-1">Alamat</span>
+                                <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-white leading-relaxed line-clamp-3">${asset.address || '-'}</span>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
-                            <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_LUAS}</div>
+                        <div class="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">${ICON_LUAS}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight">Luas</span>
-                                <span class="block text-[9.5px] sm:text-xs text-gray-500 dark:text-white mt-0.5 leading-tight truncate">${asset.area || '-'}</span>
+                                <span class="block text-xs sm:text-[13px] font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight mb-1">Luas</span>
+                                <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-white leading-relaxed truncate">${asset.area || '-'}</span>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
-                            <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_JENIS}</div>
+                        <div class="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">${ICON_JENIS}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight">Jenis Aset</span>
-                                <span class="block text-[9.5px] sm:text-xs text-gray-500 dark:text-white mt-0.5 leading-tight truncate">${asset.type || '-'}</span>
+                                <span class="block text-xs sm:text-[13px] font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight mb-1">Jenis Aset</span>
+                                <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-white leading-relaxed line-clamp-2">${asset.type || '-'}</span>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
-                            <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_NILAI}</div>
+                        <div class="flex items-center gap-3 sm:gap-3.5 min-w-0">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">${ICON_NILAI}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight">Nilai Aset</span>
-                                <span class="block text-[9.5px] sm:text-xs text-gray-500 dark:text-white mt-0.5 leading-tight truncate">${asset.value || '-'}</span>
+                                <span class="block text-xs sm:text-[13px] font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight mb-1">Nilai Aset</span>
+                                <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-white leading-relaxed truncate">${asset.value || '-'}</span>
                             </div>
                         </div>
 
-                        <div class="col-span-2 flex items-center gap-1.5 sm:gap-2.5 min-w-0">
-                            <div class="w-6 h-6 sm:w-8 sm:h-8 shrink-0 flex items-center justify-center">${ICON_PERIODE}</div>
+                        <div class="col-span-2 flex items-center gap-3 sm:gap-3.5 min-w-0">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">${ICON_PERIODE}</div>
                             <div class="min-w-0 flex-1">
-                                <span class="block text-[9.5px] sm:text-xs font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight">Periode</span>
-                                <span class="block text-[9.5px] sm:text-xs text-gray-500 dark:text-white mt-0.5 leading-tight truncate">${asset.period || '-'}</span>
+                                <span class="block text-xs sm:text-[13px] font-semibold text-gray-900 dark:text-[#9AA0A6] leading-tight mb-1">Periode</span>
+                                <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-white leading-relaxed truncate">${asset.period || '-'}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-2.5 sm:mt-4 flex items-center gap-2">
-                        <a href="/asset/${id}" class="btn-detail-lanjutan flex-1 h-[34px] sm:h-[38px] flex items-center justify-center text-center cursor-pointer rounded-xl bg-[#0066FF] px-2.5 sm:px-4 text-[11px] sm:text-xs font-semibold !text-white transition hover:bg-blue-700 shadow-xs whitespace-nowrap" style="color: #ffffff !important;">Detail Lanjutan</a>
-                        <a href="${googleMapsUrl}" target="_blank" class="btn-buka-maps h-[34px] sm:h-[38px] flex items-center justify-center gap-1.5 text-center cursor-pointer rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#2D3034] px-2.5 sm:px-3 text-[11px] sm:text-xs font-medium text-gray-700 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/10 shrink-0 whitespace-nowrap shadow-xs">
-                            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600 dark:text-white shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div class="mt-7 sm:mt-8 flex items-center gap-3 sm:gap-4">
+                        <a href="/asset/${id}" class="btn-detail-lanjutan flex-1 h-[44px] sm:h-[48px] flex items-center justify-center text-center cursor-pointer rounded-xl sm:rounded-2xl bg-[#0066FF] px-4 text-xs sm:text-sm font-semibold !text-white transition hover:bg-blue-700 shadow-xs whitespace-nowrap" style="color: #ffffff !important;">Detail Lanjutan</a>
+                        <a href="${googleMapsUrl}" target="_blank" class="btn-buka-maps flex-1 h-[44px] sm:h-[48px] flex items-center justify-center gap-2 text-center cursor-pointer rounded-xl sm:rounded-2xl border border-gray-300 dark:border-white/15 bg-white dark:bg-[#2D3034] px-4 text-xs sm:text-sm font-semibold text-gray-700 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/10 shadow-xs whitespace-nowrap">
+                            <svg class="w-4 h-4 text-gray-600 dark:text-white shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M22 9.00002V15C22 17.5 21.5 19.25 20.38 20.38L14 14L21.73 6.27002C21.91 7.06002 22 7.96002 22 9.00002Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M21.73 6.27L6.26999 21.73C3.25999 21.04 2 18.96 2 15V9C2 4 4 2 9 2H15C18.96 2 21.04 3.26 21.73 6.27Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M20.38 20.38C19.25 21.5 17.5 22 15 22H9.00003C7.96003 22 7.06002 21.91 6.27002 21.73L14 14L20.38 20.38Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path opacity="0.4" d="M6.24002 7.97997C6.92002 5.04997 11.32 5.04997 12 7.97997C12.39 9.69997 11.31 11.16 10.36 12.06C9.67001 12.72 8.58003 12.72 7.88003 12.06C6.93003 11.16 5.84002 9.69997 6.24002 7.97997Z" stroke="currentColor" stroke-width="1.5"/>
                                 <path opacity="0.4" d="M9.0946 8.69995H9.10359" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <span class="whitespace-nowrap">Buka Maps</span>
+                            <span>Buka Maps</span>
                         </a>
                     </div>
                 </div>
@@ -823,17 +986,39 @@
 
         // Render marker aset dan popup info
         function renderMarkers() {
-            Object.entries(assets).forEach(([id, asset]) => {
-                const lat = parseFloat(asset.latitude);
-                const lng = parseFloat(asset.longitude);
+            // Bersihkan marker lama jika ada
+            assetMarkerInstances.forEach(m => map.removeLayer(m));
+            assetMarkerInstances = [];
+
+            const coordCounts = {};
+            const activeIcon = getActiveMarkerIcon();
+
+            Object.entries(assets).forEach(([id, asset], index) => {
+                let lat = parseFloat(asset.latitude);
+                let lng = parseFloat(asset.longitude);
 
                 if (!isNaN(lat) && !isNaN(lng)) {
-                    const marker = L.marker([lat, lng], { icon: redPinIcon }).addTo(map);
+                    // Deteksi overlap koordinat identik
+                    const key = `${lat.toFixed(4)},${lng.toFixed(4)}`;
+                    if (!coordCounts[key]) {
+                        coordCounts[key] = 0;
+                    } else {
+                        coordCounts[key]++;
+                        // Sebar perlahan melingkar spiral agar tidak menumpuk di 1 pixel
+                        const angle = (coordCounts[key] * 137.5) * (Math.PI / 180);
+                        const radius = 0.002 * Math.sqrt(coordCounts[key]);
+                        lat += radius * Math.cos(angle);
+                        lng += radius * Math.sin(angle);
+                    }
+
+                    const marker = L.marker([lat, lng], { icon: activeIcon }).addTo(map);
                     marker._assetData = asset;
                     marker._assetId = id;
+                    assetMarkerInstances.push(marker);
 
+                    const popupOffset = (activeIcon === redPinIcon) ? [0, -16] : [0, -8];
                     const popup = L.popup({
-                        offset: [0, -16],
+                        offset: popupOffset,
                         closeButton: false,
                         autoPan: false,
                         className: 'custom-asset-leaflet-popup'
@@ -841,15 +1026,15 @@
 
                     marker.bindPopup(popup);
 
-                    marker.on('click', function(e) {
+                    marker.on('click', function (e) {
                         L.DomEvent.stopPropagation(e);
 
-                        const baseZoom = baseIndonesiaZoom || map.getMinZoom() || 5;
-                        const pointZoomLevel = baseZoom + 1.2;
+                        const baseZoom = baseJatengZoom || map.getMinZoom() || 8.5;
+                        const pointZoomLevel = Math.max(baseZoom + 1.5, 10.5);
 
                         const projected = map.project([lat, lng], pointZoomLevel);
-                        // On mobile: subtract 105px so popup attached to pin is vertically centered
-                        const yOffset = isMobile() ? 105 : 150;
+                        // On mobile: subtract 130px, desktop: 170px so popup attached to pin is vertically centered
+                        const yOffset = isMobile() ? 130 : 170;
                         const targetCenter = map.unproject(projected.subtract([0, yOffset]), pointZoomLevel);
 
                         map.flyTo(targetCenter, pointZoomLevel, {
@@ -863,11 +1048,11 @@
         }
 
 
-        map.on('popupclose', function() {
-            fitIndonesiaBounds();
+        map.on('popupclose', function () {
+            fitJatengBounds();
         });
 
-        map.on('click', function() {
+        map.on('click', function () {
             closeFilterModal();
         });
 
@@ -954,7 +1139,7 @@
         }
 
         // ================= CUSTOM MAP FILTER DROPDOWN LOGIC =================
-        window.selectMapFilter = function(filterId, value, labelText) {
+        window.selectMapFilter = function (filterId, value, labelText) {
             const input = document.getElementById(filterId);
             if (input) {
                 input.value = value;
@@ -991,7 +1176,7 @@
             }
         };
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             const filterBtn = e.target.closest('.filter-dropdown-btn');
             const allFilterMenus = document.querySelectorAll('.filter-dropdown-menu');
 
@@ -1014,27 +1199,27 @@
 
         // Wire up both mobile and desktop filter buttons
         if (filterButton) {
-            filterButton.addEventListener('click', function(e) {
+            filterButton.addEventListener('click', function (e) {
                 e.stopPropagation();
                 toggleFilter();
             });
         }
         if (filterButtonDesktop) {
-            filterButtonDesktop.addEventListener('click', function(e) {
+            filterButtonDesktop.addEventListener('click', function (e) {
                 e.stopPropagation();
                 toggleFilter();
             });
         }
 
-        filterOverlay.addEventListener('click', function() {
+        filterOverlay.addEventListener('click', function () {
             closeFilterModal();
         });
 
-        applyFilter.addEventListener('click', function() {
+        applyFilter.addEventListener('click', function () {
             closeFilterModal();
         });
 
-        resetFilter.addEventListener('click', function() {
+        resetFilter.addEventListener('click', function () {
             selectMapFilter('stasiun', '', 'Semua Stasiun');
             selectMapFilter('wilayah', '', 'Row & Non Row');
             selectMapFilter('aset', '', 'Semua Aset');
@@ -1044,7 +1229,7 @@
             closeFilterModal();
         });
 
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeFilterModal();
                 map.closePopup();
@@ -1052,4 +1237,5 @@
         });
     </script>
 </body>
+
 </html>

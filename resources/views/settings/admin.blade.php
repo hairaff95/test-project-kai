@@ -93,16 +93,10 @@
 
                             <div>
                                 <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white leading-snug" id="display-fullname">
-                                    @auth {{ auth()->user()->name }} @else Haidar Rafi Kosong Enam @endauth
+                                    Haidar Rafi Kosong Enam
                                 </h2>
                                 <p class="text-xs sm:text-sm text-gray-500 dark:text-[#9AA0A6] font-medium mt-1">
-                                    @auth
-                                        @if(auth()->user()->isSuperAdmin()) Super Admin
-                                        @elseif(auth()->user()->isAdmin()) Admin KAI Aset
-                                        @else User @endif
-                                    @else
-                                        Admin KAI Aset
-                                    @endauth
+                                    Admin KAI Aset
                                 </p>
                             </div>
                         </div>
@@ -136,19 +130,19 @@
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8 pt-2">
-                            {{-- Nama Lengkap / Awal --}}
+                            {{-- Nama Awal --}}
                             <div>
-                                <span class="block text-xs font-medium text-gray-400 dark:text-[#9AA0A6] mb-1.5">Nama</span>
+                                <span class="block text-xs font-medium text-gray-400 dark:text-[#9AA0A6] mb-1.5">Nama Awal</span>
                                 <span class="block text-sm sm:text-[15px] font-semibold text-gray-900 dark:text-white" id="display-first-name">
-                                    @auth {{ auth()->user()->name }} @else Haidar Rafi @endauth
+                                    Haidar Rafi
                                 </span>
                             </div>
 
-                            {{-- Username --}}
+                            {{-- Nama Akhir --}}
                             <div>
-                                <span class="block text-xs font-medium text-gray-400 dark:text-[#9AA0A6] mb-1.5">Username</span>
+                                <span class="block text-xs font-medium text-gray-400 dark:text-[#9AA0A6] mb-1.5">Nama Akhir</span>
                                 <span class="block text-sm sm:text-[15px] font-semibold text-gray-900 dark:text-white" id="display-last-name">
-                                    @auth {{ auth()->user()->username }} @else admin.daop4 @endauth
+                                    Kosong Enam
                                 </span>
                             </div>
 
@@ -156,7 +150,7 @@
                             <div class="sm:col-span-2">
                                 <span class="block text-xs font-medium text-gray-400 dark:text-[#9AA0A6] mb-1.5">Alamat Email</span>
                                 <span class="block text-sm sm:text-[15px] font-semibold text-gray-900 dark:text-white" id="display-email">
-                                    @auth {{ auth()->user()->email }} @else admin.kai@daop4.com @endauth
+                                    admin.kai@daop4.com
                                 </span>
                             </div>
                         </div>
@@ -192,22 +186,22 @@
                             </button>
 
                             {{-- Tombol Ajukan Perubahan Kata Sandi --}}
-                            <a
-                                href="{{ route('password.request') }}"
+                            <button
+                                type="button"
+                                onclick="submitResetRequest()"
                                 class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-medium text-white transition shadow-xs cursor-pointer"
                             >
                                 <span>✓</span>
                                 <span>Ajukan Perubahan Kata Sandi</span>
-                            </a>
+                            </button>
                         </div>
 
                     </div>
                 </div>
 
-
                 {{-- ------------------- TAB 3: IMPORT DATA EXCEL ------------------- --}}
                 <div id="panel-import-excel" class="hidden space-y-6">
-                    
+
                     {{-- Alert Messages --}}
                     @if(session('success'))
                         <div class="flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
@@ -234,128 +228,99 @@
                         </div>
                     @endif
 
-                    {{-- Card 1: Form Upload File --}}
-                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-6 max-w-4xl transition-colors">
+                    {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
+                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
                         
-                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-gray-100 dark:border-white/10 pb-6">
-                            <div>
-                                <h2 class="text-xl sm:text-[26px] font-bold text-gray-950 dark:text-white tracking-tight leading-tight">
-                                    Import Data Excel / CSV
-                                </h2>
-                                <p class="text-xs sm:text-sm text-gray-500 dark:text-[#9AA0A6] font-normal mt-1">
-                                    Unggah file spreadsheet untuk otomatis mengisi database aset, penyewa, kontrak, backlog, dan laporan.
-                                </p>
-                            </div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-950 dark:text-white tracking-tight">
+                            Upload File Data
+                        </h2>
 
-                            <a
-                                href="{{ route('settings.download-template') }}"
-                                class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-xs sm:text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] transition shrink-0"
-                            >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                </svg>
-                                <span>Unduh Template CSV</span>
-                            </a>
-                        </div>
-
-                        {{-- Upload Form --}}
-                        <form method="POST" action="{{ route('settings.import-excel') }}" enctype="multipart/form-data" class="space-y-6">
+                        <form id="admin-excel-import-form" method="POST" action="{{ route('settings.import-excel') }}" enctype="multipart/form-data" class="space-y-6">
                             @csrf
 
-                            {{-- Drag & Drop Upload Zone --}}
+                            {{-- Drag & Drop Upload Zone with icon-upload-data.svg --}}
                             <div
-                                id="dropzone-area"
-                                onclick="document.getElementById('excel-file-input').click()"
-                                class="relative border-2 border-dashed border-gray-300 dark:border-white/20 hover:border-[#0066FF] dark:hover:border-[#3B82F6] bg-gray-50/60 dark:bg-[#282A2C]/60 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 rounded-2xl p-8 sm:p-12 text-center transition cursor-pointer group"
+                                id="admin-dropzone-area"
+                                onclick="document.getElementById('admin-excel-file-input').click()"
+                                class="relative border-2 border-dashed border-gray-200 dark:border-white/15 hover:border-[#0066FF] dark:hover:border-[#3B82F6] bg-transparent hover:bg-blue-50/20 dark:hover:bg-blue-900/10 rounded-2xl p-8 sm:p-12 text-center transition cursor-pointer group flex flex-col items-center justify-center"
                             >
                                 <input
                                     type="file"
                                     name="excel_file"
-                                    id="excel-file-input"
+                                    id="admin-excel-file-input"
                                     accept=".csv, .xlsx, .xls, .txt"
                                     class="hidden"
-                                    onchange="handleFileSelected(this)"
+                                    onchange="handleAdminFileSelected(this)"
                                     required
                                 >
 
-                                <div class="flex flex-col items-center justify-center gap-3">
-                                    <div class="w-14 h-14 rounded-2xl bg-blue-100 dark:bg-blue-900/40 text-[#0066FF] dark:text-[#3B82F6] flex items-center justify-center group-hover:scale-105 transition">
-                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">
-                                            Klik untuk memilih file atau seret file ke area ini
-                                        </p>
-                                        <p class="text-xs text-gray-400 dark:text-[#9AA0A6] mt-1">
-                                            Mendukung format: <strong class="text-gray-700 dark:text-gray-300">.CSV, .XLSX, .XLS</strong> (Maksimal 20MB)
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {{-- Selected File Name Display --}}
-                                <div id="selected-file-info" class="hidden mt-4 pt-4 border-t border-gray-200 dark:border-white/10 flex items-center justify-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-400">
-                                    <span>📄</span>
-                                    <span id="selected-file-name">-</span>
-                                    <span id="selected-file-size" class="text-gray-400 dark:text-gray-500 font-normal">(-)</span>
+                                <div class="flex flex-col items-center justify-center pointer-events-none">
+                                    <img src="{{ asset('image/icon-upload-data.svg') }}" alt="Upload Illustration" class="h-32 sm:h-36 w-auto mx-auto mb-4 group-hover:scale-105 transition-transform duration-200">
+                                    <p class="text-sm font-semibold text-gray-900 dark:text-white mb-1">
+                                        Pilih file atau drag & drop ke area ini
+                                    </p>
+                                    <p class="text-xs text-gray-400 dark:text-[#9AA0A6]">
+                                        file mendukung format .csv, .xlsx, .xls
+                                    </p>
                                 </div>
                             </div>
 
-                            {{-- Action Buttons --}}
-                            <div class="flex items-center justify-end gap-3 pt-2">
+                            {{-- Selected File Box (Matching Gambar 1 & Gambar 2) --}}
+                            <div id="admin-selected-file-container" class="hidden rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] p-4 sm:p-5 transition-all">
+                                <div class="flex items-center gap-4">
+                                    {{-- Icon Box (Circular Import or Green Excel Icon) --}}
+                                    <div id="admin-icon-wrapper" class="shrink-0 flex items-center justify-center">
+                                        <img id="admin-preview-excel-icon" src="{{ asset('image/excel-icon.svg') }}" alt="Excel Icon" class="w-9 h-9 object-contain">
+                                    </div>
+
+                                    {{-- Info & Progress Bar --}}
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between gap-2 mb-0.5">
+                                            <span id="admin-selected-file-name" class="font-semibold text-sm text-gray-900 dark:text-white truncate">pk.xlsx</span>
+                                            <span id="admin-upload-percentage" class="text-xs font-semibold text-gray-500 dark:text-gray-400">100%</span>
+                                        </div>
+
+                                        <span id="admin-selected-file-size" class="text-xs text-gray-400 dark:text-gray-500 block mb-2">10 MB</span>
+
+                                        {{-- Progress Bar --}}
+                                        <div id="admin-progress-wrapper" class="w-full bg-gray-100 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden">
+                                            <div id="admin-import-progress-bar" class="bg-[#0066FF] h-full rounded-full transition-all duration-300" style="width: 100%;"></div>
+                                        </div>
+                                    </div>
+
+                                    {{-- Cancel File Selection Button --}}
+                                    <button
+                                        type="button"
+                                        onclick="clearAdminSelectedFile(event)"
+                                        class="p-1.5 text-gray-400 hover:text-gray-700 dark:hover:text-white transition rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer shrink-0"
+                                        title="Hapus file"
+                                    >
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {{-- Action Buttons (Batal & Import) --}}
+                            <div class="flex items-center justify-end gap-3 pt-4">
                                 <button
                                     type="button"
-                                    onclick="switchAdminTab('profil')"
-                                    class="px-5 py-2.5 rounded-[10px] border border-gray-200 dark:border-white/10 text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer"
+                                    onclick="clearAdminSelectedFile(event)"
+                                    class="px-7 py-2.5 rounded-xl bg-[#E00000] hover:bg-red-700 text-sm font-semibold text-white transition shadow-sm hover:shadow active:scale-98 cursor-pointer"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    id="btn-submit-import"
-                                    class="inline-flex items-center gap-2 px-6 py-2.5 rounded-[10px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-semibold text-white transition shadow-sm hover:shadow active:scale-98 cursor-pointer"
+                                    id="btn-admin-submit-import"
+                                    class="px-7 py-2.5 rounded-xl bg-[#0066FF] hover:bg-blue-700 text-sm font-semibold text-white transition shadow-sm hover:shadow active:scale-98 cursor-pointer"
                                 >
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-                                    </svg>
-                                    <span>Mulai Import Data</span>
+                                    Import
                                 </button>
                             </div>
                         </form>
-                    </div>
 
-                    {{-- Card 2: Panduan & Informasi Pemetaan Otomatis --}}
-                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-8 shadow-xs space-y-4 max-w-4xl transition-colors">
-                        <h3 class="text-sm sm:text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                            <span>💡</span>
-                            <span>Informasi Pemetaan Kolom Otomatis</span>
-                        </h3>
-                        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                            Sistem secara cerdas akan memetakan kolom dari 1 baris spreadsheet ke 5 tabel database sekaligus:
-                        </p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2 text-xs">
-                            <div class="p-3 rounded-xl bg-gray-50 dark:bg-[#282A2C] border border-gray-100 dark:border-white/5 space-y-1">
-                                <span class="font-bold text-gray-900 dark:text-white block">1. Master Aset</span>
-                                <span class="text-gray-500 dark:text-[#9AA0A6] block">No Aset, Nama Blok, Luas, Stasiun, Wilayah, Koordinat Peta</span>
-                            </div>
-                            <div class="p-3 rounded-xl bg-gray-50 dark:bg-[#282A2C] border border-gray-100 dark:border-white/5 space-y-1">
-                                <span class="font-bold text-gray-900 dark:text-white block">2. Data Penyewa</span>
-                                <span class="text-gray-500 dark:text-[#9AA0A6] block">Nama Penyewa, Brand Usaha, Status Customer, Jenis PT</span>
-                            </div>
-                            <div class="p-3 rounded-xl bg-gray-50 dark:bg-[#282A2C] border border-gray-100 dark:border-white/5 space-y-1">
-                                <span class="font-bold text-gray-900 dark:text-white block">3. Kontrak & Jatuh Tempo</span>
-                                <span class="text-gray-500 dark:text-[#9AA0A6] block">No Kontrak, Tgl Mulai & Akhir, Nilai Kontrak (Harga), SPV</span>
-                            </div>
-                            <div class="p-3 rounded-xl bg-gray-50 dark:bg-[#282A2C] border border-gray-100 dark:border-white/5 space-y-1">
-                                <span class="font-bold text-gray-900 dark:text-white block">4. Data Backlog</span>
-                                <span class="text-gray-500 dark:text-[#9AA0A6] block">Nilai Backlog 1 & 2, Akun GL, Hari 2026, Nilai Perhari, RKA</span>
-                            </div>
-                            <div class="p-3 rounded-xl bg-gray-50 dark:bg-[#282A2C] border border-gray-100 dark:border-white/5 space-y-1 sm:col-span-2">
-                                <span class="font-bold text-gray-900 dark:text-white block">5. Laporan Bulanan</span>
-                                <span class="text-gray-500 dark:text-[#9AA0A6] block">Invoice, Alokasi Nilai Januari s/d Desember, Total Jan-Des</span>
-                            </div>
-                        </div>
                     </div>
 
                 </div>
@@ -447,7 +412,7 @@
             if (panelReset) panelReset.classList.add('hidden');
             if (panelImport) panelImport.classList.add('hidden');
 
-            // Reset tab button styles
+            // Reset tab styles
             if (btnProfil) btnProfil.className = inactiveClass;
             if (btnReset) btnReset.className = inactiveClass;
             if (btnImport) btnImport.className = inactiveClass;
@@ -464,46 +429,65 @@
             }
         }
 
-        function handleFileSelected(input) {
-            const infoBox = document.getElementById('selected-file-info');
-            const nameEl = document.getElementById('selected-file-name');
-            const sizeEl = document.getElementById('selected-file-size');
+        function handleAdminFileSelected(input) {
+            const container = document.getElementById('admin-selected-file-container');
+            const nameEl = document.getElementById('admin-selected-file-name');
+            const sizeEl = document.getElementById('admin-selected-file-size');
+            const percentEl = document.getElementById('admin-upload-percentage');
+            const barEl = document.getElementById('admin-import-progress-bar');
 
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 nameEl.textContent = file.name;
-                const sizeKb = (file.size / 1024).toFixed(1);
-                sizeEl.textContent = `(${sizeKb} KB)`;
-                infoBox.classList.remove('hidden');
+                const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+                sizeEl.textContent = (sizeMb >= 1) ? `${sizeMb} MB` : `${(file.size / 1024).toFixed(1)} KB`;
+                
+                // Show container
+                container.classList.remove('hidden');
+                
+                // Progress simulation to 100%
+                percentEl.textContent = '100%';
+                barEl.style.width = '100%';
             } else {
-                infoBox.classList.add('hidden');
+                container.classList.add('hidden');
             }
         }
 
+        function clearAdminSelectedFile(e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            const input = document.getElementById('admin-excel-file-input');
+            const container = document.getElementById('admin-selected-file-container');
+            if (input) input.value = '';
+            if (container) container.classList.add('hidden');
+        }
+
         // Support Drag & Drop visuals
-        const dropzone = document.getElementById('dropzone-area');
-        if (dropzone) {
+        const adminDropzone = document.getElementById('admin-dropzone-area');
+        if (adminDropzone) {
             ['dragenter', 'dragover'].forEach(eventName => {
-                dropzone.addEventListener(eventName, (e) => {
+                adminDropzone.addEventListener(eventName, (e) => {
                     e.preventDefault();
-                    dropzone.classList.add('border-[#0066FF]', 'bg-blue-50/50');
+                    adminDropzone.classList.add('border-[#0066FF]', 'bg-blue-50/20');
                 });
             });
 
             ['dragleave', 'drop'].forEach(eventName => {
-                dropzone.addEventListener(eventName, (e) => {
+                adminDropzone.addEventListener(eventName, (e) => {
                     e.preventDefault();
-                    dropzone.classList.remove('border-[#0066FF]', 'bg-blue-50/50');
+                    adminDropzone.classList.remove('border-[#0066FF]', 'bg-blue-50/20');
                 });
             });
 
-            dropzone.addEventListener('drop', (e) => {
+            adminDropzone.addEventListener('drop', (e) => {
                 const dt = e.dataTransfer;
                 const files = dt.files;
                 if (files.length > 0) {
-                    const input = document.getElementById('excel-file-input');
+                    const input = document.getElementById('admin-excel-file-input');
                     input.files = files;
-                    handleFileSelected(input);
+                    handleAdminFileSelected(input);
                 }
             });
         }

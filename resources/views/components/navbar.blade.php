@@ -15,11 +15,11 @@
         </div> -->
 
         <!-- Menu Navigasi Desktop (lg and above only) -->
-        <ul class="hidden lg:flex items-center gap-7 xl:gap-8 text-sm font-medium text-[#4A4A4A] dark:text-[#9AA0A6]">
+        <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm text-[#4A4A4A] dark:text-[#9AA0A6]">
             <li>
                 <a
                     href="{{ route('welcome') }}"
-                    class="inline-block py-2 transition {{ $active === 'dashboard' ? 'rounded-xl bg-[#DCDCDC] dark:bg-[#43484E] px-4 font-semibold text-[#171717] dark:text-white shadow-none' : 'hover:text-[#171717] dark:hover:text-white' }}"
+                    class="inline-block py-1 pb-1.5 transition-all duration-150 {{ $active === 'dashboard' ? 'font-semibold text-[#0066FF] dark:text-[#3B82F6] border-b-2 border-[#0066FF] dark:border-[#3B82F6]' : 'font-medium text-[#4A4A4A] dark:text-[#9AA0A6] hover:text-gray-950 dark:hover:text-white border-b-2 border-transparent' }}"
                 >
                     Dashboard
                 </a>
@@ -27,7 +27,7 @@
             <li>
                 <a
                     href="{{ route('map') }}"
-                    class="inline-block py-2 transition {{ $active === 'map' ? 'rounded-xl bg-[#DCDCDC] dark:bg-[#43484E] px-4 font-semibold text-[#171717] dark:text-white shadow-none' : 'hover:text-[#171717] dark:hover:text-white' }}"
+                    class="inline-block py-1 pb-1.5 transition-all duration-150 {{ $active === 'map' ? 'font-semibold text-[#0066FF] dark:text-[#3B82F6] border-b-2 border-[#0066FF] dark:border-[#3B82F6]' : 'font-medium text-[#4A4A4A] dark:text-[#9AA0A6] hover:text-gray-950 dark:hover:text-white border-b-2 border-transparent' }}"
                 >
                     Peta
                 </a>
@@ -35,7 +35,7 @@
             <li>
                 <a
                     href="{{ route('contracts.index') }}"
-                    class="inline-block py-2 transition {{ $active === 'contracts' ? 'rounded-xl bg-[#DCDCDC] dark:bg-[#43484E] px-4 font-semibold text-[#171717] dark:text-white shadow-none' : 'hover:text-[#171717] dark:hover:text-white' }}"
+                    class="inline-block py-1 pb-1.5 transition-all duration-150 {{ $active === 'contracts' ? 'font-semibold text-[#0066FF] dark:text-[#3B82F6] border-b-2 border-[#0066FF] dark:border-[#3B82F6]' : 'font-medium text-[#4A4A4A] dark:text-[#9AA0A6] hover:text-gray-950 dark:hover:text-white border-b-2 border-transparent' }}"
                 >
                     Daftar Kontrak
                 </a>
@@ -43,7 +43,7 @@
             <li>
                 <a
                     href="{{ route('due-dates.index') }}"
-                    class="inline-block py-2 transition {{ $active === 'due-dates' ? 'rounded-xl bg-[#DCDCDC] dark:bg-[#43484E] px-4 font-semibold text-[#171717] dark:text-white shadow-none' : 'hover:text-[#171717] dark:hover:text-white' }}"
+                    class="inline-block py-1 pb-1.5 transition-all duration-150 {{ $active === 'due-dates' ? 'font-semibold text-[#0066FF] dark:text-[#3B82F6] border-b-2 border-[#0066FF] dark:border-[#3B82F6]' : 'font-medium text-[#4A4A4A] dark:text-[#9AA0A6] hover:text-gray-950 dark:hover:text-white border-b-2 border-transparent' }}"
                 >
                     Jatuh Tempo
                 </a>
@@ -51,7 +51,7 @@
             <li>
                 <a
                     href="{{ route('backlog.index') }}"
-                    class="inline-block py-2 transition {{ in_array($active, ['backlog', 'blacklog']) ? 'rounded-xl bg-[#DCDCDC] dark:bg-[#43484E] px-4 font-semibold text-[#171717] dark:text-white shadow-none' : 'hover:text-[#171717] dark:hover:text-white' }}"
+                    class="inline-block py-1 pb-1.5 transition-all duration-150 {{ in_array($active, ['backlog', 'blacklog']) ? 'font-semibold text-[#0066FF] dark:text-[#3B82F6] border-b-2 border-[#0066FF] dark:border-[#3B82F6]' : 'font-medium text-[#4A4A4A] dark:text-[#9AA0A6] hover:text-gray-950 dark:hover:text-white border-b-2 border-transparent' }}"
                 >
                     Backlog
                 </a>
@@ -59,7 +59,7 @@
             <li>
                 <a
                     href="{{ route('laporan.index') }}"
-                    class="inline-block py-2 transition {{ $active === 'reports' ? 'rounded-xl bg-[#DCDCDC] dark:bg-[#43484E] px-4 font-semibold text-[#171717] dark:text-white shadow-none' : 'hover:text-[#171717] dark:hover:text-white' }}"
+                    class="inline-block py-1 pb-1.5 transition-all duration-150 {{ in_array($active, ['reports', 'laporan']) ? 'font-semibold text-[#0066FF] dark:text-[#3B82F6] border-b-2 border-[#0066FF] dark:border-[#3B82F6]' : 'font-medium text-[#4A4A4A] dark:text-[#9AA0A6] hover:text-gray-950 dark:hover:text-white border-b-2 border-transparent' }}"
                 >
                     Laporan
                 </a>
