@@ -36,7 +36,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Lengkap</label>
                             <input type="text" name="name" value="{{ old('name') }}"
-                                class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('name') border-red-400 @enderror"
+                                class="w-full rounded-lg border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('name') border-red-400 @enderror"
                                 placeholder="Nama lengkap admin">
                             @error('name')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -46,7 +46,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">Username</label>
                             <input type="text" name="username" value="{{ old('username') }}"
-                                class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('username') border-red-400 @enderror"
+                                class="w-full rounded-lg border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('username') border-red-400 @enderror"
                                 placeholder="username.admin">
                             @error('username')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -56,7 +56,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
                             <input type="email" name="email" value="{{ old('email') }}"
-                                class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('email') border-red-400 @enderror"
+                                class="w-full rounded-lg border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('email') border-red-400 @enderror"
                                 placeholder="admin@kai-daop4.id">
                             @error('email')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -66,7 +66,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
                             <input type="password" name="password"
-                                class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('password') border-red-400 @enderror"
+                                class="w-full rounded-lg border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('password') border-red-400 @enderror"
                                 placeholder="Minimal 8 karakter">
                             @error('password')
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -76,7 +76,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">Konfirmasi Password</label>
                             <input type="password" name="password_confirmation"
-                                class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition"
+                                class="w-full rounded-lg border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition"
                                 placeholder="Ulangi password">
                         </div>
 

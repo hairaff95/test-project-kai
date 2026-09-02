@@ -275,10 +275,10 @@
                             class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua
                             Stasiun</span>
                         <x-icon name="chevron-down"
-                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                     </button>
                     <div
-                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
                         <button type="button" onclick="selectMapFilter('stasiun', '', 'Semua Stasiun')"
                             class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Stasiun</span>
@@ -327,10 +327,10 @@
                             class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Row
                             & Non Row</span>
                         <x-icon name="chevron-down"
-                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                     </button>
                     <div
-                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
                         <button type="button" onclick="selectMapFilter('wilayah', '', 'Row & Non Row')"
                             class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Row & Non Row</span>
@@ -363,10 +363,10 @@
                             class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua
                             Aset</span>
                         <x-icon name="chevron-down"
-                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                     </button>
                     <div
-                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
                         <button type="button" onclick="selectMapFilter('aset', '', 'Semua Aset')"
                             class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Aset</span>
@@ -399,10 +399,10 @@
                             class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua
                             Kontrak</span>
                         <x-icon name="chevron-down"
-                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                     </button>
                     <div
-                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
                         <button type="button" onclick="selectMapFilter('jenis_kontrak', '', 'Semua Kontrak')"
                             class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Kontrak</span>
@@ -435,10 +435,10 @@
                             class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua
                             Pend...</span>
                         <x-icon name="chevron-down"
-                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                     </button>
                     <div
-                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
                         <button type="button" onclick="selectMapFilter('jenis_pendapatan', '', 'Semua Pend...')"
                             class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua Pend...</span>
@@ -475,10 +475,10 @@
                             class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-[11px] sm:text-xs lg:text-[13px] truncate select-none">Semua
                             SPV</span>
                         <x-icon name="chevron-down"
-                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none" />
+                            class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                     </button>
                     <div
-                        class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
+                        class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[200px] overflow-y-auto rounded-xl lg:rounded-2xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 sm:p-1.5 flex flex-col gap-0.5">
                         <button type="button" onclick="selectMapFilter('spv', '', 'Semua SPV')"
                             class="filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer">
                             <span>Semua SPV</span>
@@ -1171,29 +1171,52 @@
 
                 const menu = container.querySelector('.filter-dropdown-menu');
                 if (menu) {
-                    menu.classList.add('hidden');
+                    closeSmoothDropdown(menu);
+                }
+                const arrow = container.querySelector('.filter-dropdown-arrow');
+                if (arrow) {
+                    arrow.classList.remove('rotate-180');
                 }
             }
         };
 
+        function openSmoothDropdown(el) {
+            if (!el) return;
+            el.classList.remove('opacity-0', 'invisible', 'scale-95', 'pointer-events-none');
+            el.classList.add('opacity-100', 'visible', 'scale-100', 'pointer-events-auto');
+        }
+        function closeSmoothDropdown(el) {
+            if (!el) return;
+            el.classList.add('opacity-0', 'invisible', 'scale-95', 'pointer-events-none');
+            el.classList.remove('opacity-100', 'visible', 'scale-100', 'pointer-events-auto');
+        }
+        function isSmoothDropdownOpen(el) {
+            return el && !el.classList.contains('invisible');
+        }
+
         document.addEventListener('click', function (e) {
             const filterBtn = e.target.closest('.filter-dropdown-btn');
             const allFilterMenus = document.querySelectorAll('.filter-dropdown-menu');
+            const allFilterArrows = document.querySelectorAll('.filter-dropdown-arrow');
 
             if (filterBtn) {
                 e.stopPropagation();
                 const container = filterBtn.closest('.custom-filter-container');
                 const menu = container ? container.querySelector('.filter-dropdown-menu') : null;
-                const wasHidden = menu ? menu.classList.contains('hidden') : true;
+                const arrow = filterBtn.querySelector('.filter-dropdown-arrow');
+                const wasOpen = isSmoothDropdownOpen(menu);
 
-                // Close all other dropdown menus
-                allFilterMenus.forEach(m => m.classList.add('hidden'));
+                // Close all other dropdown menus & arrows
+                allFilterMenus.forEach(closeSmoothDropdown);
+                allFilterArrows.forEach(a => a.classList.remove('rotate-180'));
 
-                if (wasHidden && menu) {
-                    menu.classList.remove('hidden');
+                if (!wasOpen && menu) {
+                    openSmoothDropdown(menu);
+                    if (arrow) arrow.classList.add('rotate-180');
                 }
             } else if (!e.target.closest('.filter-dropdown-menu')) {
-                allFilterMenus.forEach(m => m.classList.add('hidden'));
+                allFilterMenus.forEach(closeSmoothDropdown);
+                allFilterArrows.forEach(a => a.classList.remove('rotate-180'));
             }
         });
 

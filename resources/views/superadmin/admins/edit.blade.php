@@ -37,21 +37,21 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Lengkap</label>
                             <input type="text" name="name" value="{{ old('name', $admin->name) }}"
-                                class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('name') border-red-400 @enderror">
+                                class="w-full rounded-lg border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('name') border-red-400 @enderror">
                             @error('name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">Username</label>
                             <input type="text" name="username" value="{{ old('username', $admin->username) }}"
-                                class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('username') border-red-400 @enderror">
+                                class="w-full rounded-lg border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('username') border-red-400 @enderror">
                             @error('username')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
                             <input type="email" name="email" value="{{ old('email', $admin->email) }}"
-                                class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('email') border-red-400 @enderror">
+                                class="w-full rounded-lg border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('email') border-red-400 @enderror">
                             @error('email')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
 
@@ -59,7 +59,7 @@
                             <p class="text-xs text-gray-400 mb-3">Kosongkan field password jika tidak ingin mengubah password.</p>
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">Password Baru (opsional)</label>
                             <input type="password" name="password"
-                                class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('password') border-red-400 @enderror"
+                                class="w-full rounded-lg border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition @error('password') border-red-400 @enderror"
                                 placeholder="Minimal 8 karakter">
                             @error('password')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                         </div>
@@ -67,7 +67,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1.5">Konfirmasi Password Baru</label>
                             <input type="password" name="password_confirmation"
-                                class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition"
+                                class="w-full rounded-lg border border-gray-300 py-2.5 px-4 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 focus:outline-none transition"
                                 placeholder="Ulangi password baru">
                         </div>
 

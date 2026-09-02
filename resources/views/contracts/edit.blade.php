@@ -97,7 +97,7 @@
                                     type="text"
                                     name="nama_penyewa"
                                     value="{{ old('nama_penyewa', $contract->tenant?->fullname ?? 'PT Kargo Cepat Pantura') }}"
-                                    class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                    class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     required
                                 >
                             </div>
@@ -111,7 +111,7 @@
                                     type="text"
                                     name="status_customer"
                                     value="{{ old('status_customer', $contract->tenant?->status_customer ?? 'Tidak Aktif') }}"
-                                    class="w-full sm:w-48 max-w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                    class="w-full sm:w-48 max-w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     required
                                 >
                             </div>
@@ -136,7 +136,7 @@
                                         type="text"
                                         name="contract_number"
                                         value="{{ old('contract_number', $contract->contract_number ?? 'KTR-2026-SMG-PCL-001') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -149,7 +149,7 @@
                                         type="text"
                                         name="waktu_kontrak"
                                         value="{{ old('waktu_kontrak', $contract->contract_duration ? $contract->contract_duration . ' Bulan' : '12 Bulan') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -163,7 +163,7 @@
                                 <textarea
                                     name="asset_block_name"
                                     rows="2"
-                                    class="w-full min-h-[44px] sm:min-h-[60px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none shadow-2xs leading-relaxed font-normal"
+                                    class="w-full min-h-[44px] sm:min-h-[60px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none leading-relaxed font-normal"
                                     required
                                 >{{ old('asset_block_name', $contract->asset?->asset_block_name ?? 'PT Kargo Cepat Pantura') }}</textarea>
                             </div>
@@ -178,7 +178,7 @@
                                         type="text"
                                         name="brand"
                                         value="{{ old('brand', $contract->tenant?->brand ?? 'Kargo Cepat') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -191,7 +191,7 @@
                                         type="text"
                                         name="nilai_kontrak"
                                         value="{{ old('nilai_kontrak', $contract->price_formatted ?? 'Rp 45.000.000') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -221,7 +221,7 @@
                                                 name="start_date"
                                                 value="{{ $contract->contract_date ? \Carbon\Carbon::parse($contract->contract_date)->format('d/m/y') : '01/01/25' }}"
                                                 placeholder="DD/MM/YY"
-                                                class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                                class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                             >
                                         </div>
                                     </div>
@@ -243,7 +243,7 @@
                                                 name="end_date"
                                                 value="{{ $contract->end_date ? \Carbon\Carbon::parse($contract->end_date)->format('d/m/y') : '31/12/25' }}"
                                                 placeholder="DD/MM/YY"
-                                                class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                                class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                             >
                                         </div>
                                     </div>

@@ -401,7 +401,7 @@
                             type="text"
                             name="asset_block_name"
                             value="{{ $asset->asset_block_name }}"
-                            class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
@@ -415,7 +415,7 @@
                             type="text"
                             name="subjudul_aset"
                             value="{{ $asset->wilayah_asset ?? 'JL. SLAMET 17 KEL. BENDAN KEC. PEKALONGAN BARAT KAB. PEKALONGAN' }} ({{ $asset->asset_number }})"
-                            class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
@@ -428,7 +428,7 @@
                         <textarea
                             name="description"
                             rows="3"
-                            class="w-full min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none shadow-2xs leading-relaxed font-normal"
+                            class="w-full min-h-[85px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none leading-relaxed font-normal"
                         >{{ $asset->description ?? ($contract?->keterangan ?? '') }}</textarea>
                     </div>
 
@@ -527,7 +527,7 @@
                             type="text"
                             name="size_area"
                             value="{{ $asset->size_area_formatted ?? '2.462,00 m²' }}"
-                            class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -539,7 +539,7 @@
                         <textarea
                             name="full_address"
                             rows="3"
-                            class="w-full min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none shadow-2xs leading-relaxed font-normal"
+                            class="w-full min-h-[85px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none leading-relaxed font-normal"
                         >{{ $asset->description ?? 'Jl. Panggung Timur No. 13, Kel. Panggung, Kec. Tegal Timur, Kota Tegal, Jawa Tengah (Lintas Non Op Tegal - Pelabuhan)' }}</textarea>
                     </div>
 
@@ -552,7 +552,7 @@
                             type="text"
                             name="peruntukan"
                             value="{{ $asset->peruntukan ?? 'Gudang Logistik Komersial' }}"
-                            class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -686,7 +686,7 @@
                                         value="{{ $asset->latitude ?? '-6.88856' }}"
                                         oninput="handleCoordinateInputChange()"
                                         placeholder="-6.88856"
-                                        class="w-full rounded-[8px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
                                 <div>
@@ -698,7 +698,7 @@
                                         value="{{ $asset->longitude ?? '109.67530' }}"
                                         oninput="handleCoordinateInputChange()"
                                         placeholder="109.67530"
-                                        class="w-full rounded-[8px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
                             </div>
@@ -751,7 +751,7 @@
                         type="text"
                         name="gl_account"
                         value="{{ $financial->gl_account ?? '411101 - Sewa Tanah Row' }}"
-                        class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
 
@@ -764,7 +764,7 @@
                         type="text"
                         name="form_rka"
                         value="{{ $financial->form_rka ?? 'RKA' }}"
-                        class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
 
@@ -780,7 +780,7 @@
                                 id="input-tahun-rka"
                                 name="tahun_rka"
                                 value="{{ $financial->tahun_rka ?? '2026' }}"
-                                class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                             <button
                                 type="button"
@@ -800,7 +800,7 @@
                             type="text"
                             name="spv"
                             value="{{ $contract->spv ?? 'SPV Komersial & Non Angkutan Daop 4' }}"
-                            class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
                 </div>
@@ -814,7 +814,7 @@
                         type="text"
                         name="jenis_pendapatan"
                         value="{{ $financial->jenis_pendapatan ?? 'Row' }}"
-                        class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
 
@@ -827,7 +827,7 @@
                         type="text"
                         name="ket_pendapatan"
                         value="{{ $asset->description ?? ($tenant?->fullname ?? 'Aset lahan pergudangan sisi timur stasiun Poncol') }}"
-                        class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
 
@@ -895,7 +895,7 @@
                             type="text"
                             name="price"
                             value="{{ $contract?->price_formatted ?? 'Rp 970.028.000' }}"
-                            class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -907,7 +907,7 @@
                             type="text"
                             name="total_jandes"
                             value="Rp 323.047.645"
-                            class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
                 </div>
@@ -922,7 +922,7 @@
                             type="text"
                             name="jumlah_hari"
                             value="{{ $financial ? number_format($financial->jumlah_hari, 0, ',', '.') . ' hari' : '1.096 hari' }}"
-                            class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -934,7 +934,7 @@
                             type="text"
                             name="nilai_per_hari"
                             value="{{ $financial ? 'Rp ' . number_format($financial->nilai_per_hari, 0, ',', '.') : 'Rp 294.717' }}"
-                            class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
                 </div>
@@ -951,7 +951,7 @@
                                 id="input-hari-berjalan"
                                 name="hari_berjalan"
                                 value="{{ $financial ? number_format($financial->hari_2026, 0, ',', '.') . ' hari' : '365 hari' }}"
-                                class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                             <button
                                 type="button"
@@ -973,7 +973,7 @@
                                 id="input-nilai-tahun-berjalan"
                                 name="nilai_tahun_berjalan"
                                 value="{{ $financial ? 'Rp ' . number_format($financial->nilai_2026, 0, ',', '.') : 'Rp 323.047.645' }}"
-                                class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                             <button
                                 type="button"
@@ -1019,7 +1019,7 @@
                                         type="text"
                                         name="{{ $col }}"
                                         value="{{ $monthly ? number_format((float)$monthly->$col, 0, ',', '.') : $default }}"
-                                        class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
                             @endforeach
@@ -1034,7 +1034,7 @@
                                         type="text"
                                         name="{{ $col }}"
                                         value="{{ $monthly ? number_format((float)$monthly->$col, 0, ',', '.') : $default }}"
-                                        class="w-full rounded-[5px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
                             @endforeach

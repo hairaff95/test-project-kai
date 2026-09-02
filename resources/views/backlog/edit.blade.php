@@ -97,7 +97,7 @@
                                     type="text"
                                     name="nama_penyewa"
                                     value="{{ old('nama_penyewa', $contract->tenant?->fullname ?? ($contract->tenant?->name ?? 'MARDIYAH')) }}"
-                                    class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                    class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     required
                                 >
                             </div>
@@ -111,7 +111,7 @@
                                     type="text"
                                     name="status_customer"
                                     value="{{ old('status_customer', $contract->tenant?->status_customer ?? 'Aktif') }}"
-                                    class="w-full sm:w-48 max-w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                    class="w-full sm:w-48 max-w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     required
                                 >
                             </div>
@@ -136,7 +136,7 @@
                                         type="text"
                                         name="contract_number"
                                         value="{{ old('contract_number', $contract->contract_number ?? '0005/51116/D.4/941/PK/TN/XII/2016') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -149,7 +149,7 @@
                                         type="text"
                                         name="invoice"
                                         value="{{ old('invoice', $schedule->invoice ?? 'SUDAH TERBIT') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -165,7 +165,7 @@
                                         type="text"
                                         name="nilai_backlog"
                                         value="{{ old('nilai_backlog', $financial->nilai_backlog ? number_format((float)$financial->nilai_backlog, 1, '.', '.') : '906.378.0') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -178,7 +178,7 @@
                                         type="text"
                                         name="nilai_backlog2"
                                         value="{{ old('nilai_backlog2', ($financial->nilai_backlog2 ?? $financial->sisa_piutang) ? number_format((float)($financial->nilai_backlog2 ?? $financial->sisa_piutang), 1, '.', '.') : '940.281.9') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -194,7 +194,7 @@
                                         type="text"
                                         name="gl_account"
                                         value="{{ old('gl_account', $financial->gl_account ?? '940.281.9') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -207,7 +207,7 @@
                                         type="text"
                                         name="hari_2026"
                                         value="{{ old('hari_2026', $financial->hari_2026 ?? '365') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -222,7 +222,7 @@
                                     type="text"
                                     name="nilai_perhari"
                                     value="{{ old('nilai_perhari', $financial->nilai_per_hari ? number_format((float)$financial->nilai_per_hari, 0, ',', '.') : '3.102') }}"
-                                    class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                    class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     required
                                 >
                             </div>

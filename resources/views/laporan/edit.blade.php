@@ -96,7 +96,7 @@
                                         type="text"
                                         name="akun_gl"
                                         value="{{ old('akun_gl', $financial->gl_account ?? '3421190010') }}"
-                                        class="w-full rounded-[10px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs"
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition"
                                         required
                                     >
                                 </div>
@@ -109,7 +109,7 @@
                                         type="text"
                                         name="contract_number"
                                         value="{{ old('contract_number', $contract->contract_number ?? ($contract->asset_number ?? '-')) }}"
-                                        class="w-full rounded-[10px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs"
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition"
                                         required
                                     >
                                 </div>
@@ -125,7 +125,7 @@
                                         type="text"
                                         name="form_rka"
                                         value="{{ old('form_rka', $financial->form_rka ?? '0') }}"
-                                        class="w-full rounded-[10px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs"
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition"
                                         required
                                     >
                                 </div>
@@ -138,7 +138,7 @@
                                         type="text"
                                         name="tahun_rka"
                                         value="{{ old('tahun_rka', $financial->tahun_rka ?? '0') }}"
-                                        class="w-full rounded-[10px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs"
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition"
                                         required
                                     >
                                 </div>
@@ -184,7 +184,7 @@
                                         type="text"
                                         name="{{ $key }}"
                                         value="{{ old($key, $val) }}"
-                                        class="w-full rounded-[10px] border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs"
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition"
                                         required
                                     >
                                 </div>

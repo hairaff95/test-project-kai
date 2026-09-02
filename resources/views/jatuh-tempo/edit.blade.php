@@ -95,7 +95,7 @@
                                     type="text"
                                     name="nama_penyewa"
                                     value="{{ old('nama_penyewa', $contract->tenant?->fullname ?? 'Drs. Bambang Sudarsono') }}"
-                                    class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                    class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     required
                                 >
                             </div>
@@ -109,7 +109,7 @@
                                     type="text"
                                     name="status_customer"
                                     value="{{ old('status_customer', $contract->tenant?->status_customer ?? 'Aktif') }}"
-                                    class="w-full sm:w-48 max-w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                    class="w-full sm:w-48 max-w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     required
                                 >
                             </div>
@@ -123,7 +123,7 @@
                                     type="text"
                                     name="brand"
                                     value="{{ old('brand', $contract->tenant?->brand ?? 'Apotek K-24') }}"
-                                    class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                    class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     required
                                 >
                             </div>
@@ -148,7 +148,7 @@
                                         type="text"
                                         name="asset_number"
                                         value="{{ old('asset_number', $contract->asset_number ?? 'AST-SMG-PCL-001') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -161,7 +161,7 @@
                                         type="text"
                                         name="spv"
                                         value="{{ old('spv', $contract->spv ?? 'Sales Executive Area 1 Pekalongan') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -177,7 +177,7 @@
                                         type="text"
                                         name="keterangan"
                                         value="{{ old('keterangan', $contract->keterangan ?? 'RKA') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
                                 </div>
@@ -190,7 +190,7 @@
                                         type="text"
                                         name="sisa_masa_sewa"
                                         value="{{ old('sisa_masa_sewa', $contract->contract_duration ?? '1245417') }}"
-                                        class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
                             </div>
@@ -219,7 +219,7 @@
                                                 name="end_datetime"
                                                 value="{{ $contract->end_datetime ? \Carbon\Carbon::parse($contract->end_datetime)->format('d/m/y') : '10/01/26' }}"
                                                 placeholder="DD/MM/YY"
-                                                class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                                class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                             >
                                         </div>
                                     </div>
@@ -241,7 +241,7 @@
                                                 name="end_datetime_baru"
                                                 value="{{ $contract->end_datetime_baru ? \Carbon\Carbon::parse($contract->end_datetime_baru)->format('d/m/y') : '10/01/27' }}"
                                                 placeholder="DD/MM/YY"
-                                                class="w-full h-[32px] sm:h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                                class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                             >
                                         </div>
                                     </div>

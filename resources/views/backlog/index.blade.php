@@ -73,9 +73,9 @@
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
                             <span id="label-status" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Status Customer</span>
-                            <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none" />
+                            <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
-                        <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
+                        <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
                             <button type="button" onclick="filterBlClient('status', '', 'Status Customer')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Status</span>
                             </button>
@@ -91,9 +91,9 @@
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
                             <span id="label-stasiun" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Semua Stasiun</span>
-                            <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none" />
+                            <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
-                        <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
+                        <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
                             <button type="button" onclick="filterBlClient('stasiun', '', 'Semua Stasiun')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Stasiun</span>
                             </button>
@@ -279,7 +279,7 @@
     </main>
 
     {{-- Global Dropdown Menu Aksi --}}
-    <div id="global-action-dropdown" class="hidden fixed z-[9999] w-[140px] sm:w-[165px] rounded-xl sm:rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.7)] p-1.5 sm:p-2.5 flex flex-col gap-0.5 sm:gap-1">
+    <div id="global-action-dropdown" class="opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-right fixed z-[9999] w-[140px] sm:w-[165px] rounded-xl sm:rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.7)] p-1.5 sm:p-2.5 flex flex-col gap-0.5 sm:gap-1">
         <a id="dd-lihat" href="#" class="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition">
             <x-icon name="icon-lihat" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-300 shrink-0" />
             <span>Lihat</span>
@@ -303,6 +303,20 @@
             const ddLihat      = document.getElementById('dd-lihat');
             const ddEdit       = document.getElementById('dd-edit');
             const ddDeleteForm = document.getElementById('dd-delete-form');
+
+            function openSmoothDropdown(el) {
+                if (!el) return;
+                el.classList.remove('opacity-0', 'invisible', 'scale-95', 'pointer-events-none');
+                el.classList.add('opacity-100', 'visible', 'scale-100', 'pointer-events-auto');
+            }
+            function closeSmoothDropdown(el) {
+                if (!el) return;
+                el.classList.add('opacity-0', 'invisible', 'scale-95', 'pointer-events-none');
+                el.classList.remove('opacity-100', 'visible', 'scale-100', 'pointer-events-auto');
+            }
+            function isSmoothDropdownOpen(el) {
+                return el && !el.classList.contains('invisible');
+            }
 
             const routes = {
                 detail: (id) => `/asset/${id}`,
@@ -334,8 +348,8 @@
                     ddEdit.href         = routes[`edit_${assetId}`] || `/backlog/${assetId}/edit`;
                     ddDeleteForm.action = routes[`delete_${assetId}`] || `/admin/assets/${assetId}`;
 
-                    if (!dropdown.classList.contains('hidden') && dropdown.dataset.open === assetId) {
-                        dropdown.classList.add('hidden');
+                    if (isSmoothDropdownOpen(dropdown) && dropdown.dataset.open === assetId) {
+                        closeSmoothDropdown(dropdown);
                         dropdown.dataset.open = '';
                         return;
                     }
@@ -343,9 +357,9 @@
                     dropdown.style.top    = top + 'px';
                     dropdown.style.left   = left + 'px';
                     dropdown.dataset.open = assetId;
-                    dropdown.classList.remove('hidden');
+                    openSmoothDropdown(dropdown);
                 } else if (!e.target.closest('#global-action-dropdown')) {
-                    dropdown.classList.add('hidden');
+                    closeSmoothDropdown(dropdown);
                     dropdown.dataset.open = '';
                 }
             });
@@ -366,8 +380,9 @@
                     lbl.className = value ? 'text-gray-800 font-semibold text-xs sm:text-sm select-none' : 'text-gray-400 font-normal text-xs sm:text-sm select-none';
                 }
 
-                // Close menus
-                document.querySelectorAll('.filter-dropdown-menu').forEach(m => m.classList.add('hidden'));
+                // Close menus & reset arrows
+                document.querySelectorAll('.filter-dropdown-menu').forEach(closeSmoothDropdown);
+                document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
 
                 // Apply client-side row and mobile card filtering
                 const rows = document.querySelectorAll('tbody tr[data-status]');
@@ -406,21 +421,26 @@
             document.addEventListener('click', function (e) {
                 const filterBtn = e.target.closest('.filter-dropdown-btn');
                 const allFilterMenus = document.querySelectorAll('.filter-dropdown-menu');
+                const allFilterArrows = document.querySelectorAll('.filter-dropdown-arrow');
 
                 if (filterBtn) {
                     e.stopPropagation();
                     const container = filterBtn.closest('.custom-filter-container');
-                    const menu = container.querySelector('.filter-dropdown-menu');
-                    const wasHidden = menu.classList.contains('hidden');
+                    const menu = container ? container.querySelector('.filter-dropdown-menu') : null;
+                    const arrow = filterBtn.querySelector('.filter-dropdown-arrow');
+                    const wasOpen = isSmoothDropdownOpen(menu);
 
-                    allFilterMenus.forEach(m => m.classList.add('hidden'));
-                    dropdown.classList.add('hidden');
+                    allFilterMenus.forEach(closeSmoothDropdown);
+                    allFilterArrows.forEach(a => a.classList.remove('rotate-180'));
+                    closeSmoothDropdown(dropdown);
 
-                    if (wasHidden) {
-                        menu.classList.remove('hidden');
+                    if (!wasOpen && menu) {
+                        openSmoothDropdown(menu);
+                        if (arrow) arrow.classList.add('rotate-180');
                     }
                 } else if (!e.target.closest('.filter-dropdown-menu')) {
-                    allFilterMenus.forEach(m => m.classList.add('hidden'));
+                    allFilterMenus.forEach(closeSmoothDropdown);
+                    allFilterArrows.forEach(a => a.classList.remove('rotate-180'));
                 }
             });
 
@@ -428,9 +448,10 @@
                 if (e.target && e.target.closest && (e.target.closest('.filter-dropdown-menu') || e.target.closest('#global-action-dropdown'))) {
                     return;
                 }
-                dropdown.classList.add('hidden');
+                closeSmoothDropdown(dropdown);
                 dropdown.dataset.open = '';
-                document.querySelectorAll('.filter-dropdown-menu').forEach(m => m.classList.add('hidden'));
+                document.querySelectorAll('.filter-dropdown-menu').forEach(closeSmoothDropdown);
+                document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
             }, true);
         })();
     </script>

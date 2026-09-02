@@ -106,7 +106,7 @@
                             name="nama_penyewa"
                             value="{{ old('nama_penyewa') }}"
                             placeholder="Contoh: PT Kargo Cepat Pantura / Drs. Bambang"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
@@ -118,13 +118,13 @@
                         </label>
                         <div class="relative custom-filter-container w-full">
                             <input type="hidden" name="status_customer" id="input_status_customer" value="{{ old('status_customer', 'Swasta') }}">
-                            <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] bg-white dark:bg-[#282A2C] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-xl px-3 py-1.5 transition cursor-pointer">
+                            <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] bg-white dark:bg-[#282A2C] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg px-3 py-1.5 transition cursor-pointer">
                                 <span class="filter-selected-label text-gray-800 dark:text-white font-normal text-xs select-none truncate">
                                     {{ old('status_customer', 'Swasta') }}
                                 </span>
-                                <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 shrink-0 pointer-events-none" />
+                                <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 shrink-0 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                             </button>
-                            <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[160px] max-h-[220px] overflow-y-auto rounded-xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
+                            <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
                                 <button type="button" onclick="selectCustomDropdown('status_customer', 'Swasta')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-semibold rounded-lg transition text-left cursor-pointer {{ old('status_customer', 'Swasta') == 'Swasta' ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }}">
                                     <span>Swasta</span>
                                 </button>
@@ -151,7 +151,7 @@
                             name="brand"
                             value="{{ old('brand') }}"
                             placeholder="Contoh: Kargo Cepat / Indomaret"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
                 </div>
@@ -176,7 +176,7 @@
                             name="asset_number"
                             value="{{ old('asset_number') }}"
                             placeholder="Contoh: 04.01.00764"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
@@ -188,13 +188,13 @@
                         </label>
                         <div class="relative custom-filter-container w-full">
                             <input type="hidden" name="jenis_asset" id="input_jenis_asset" value="{{ old('jenis_asset', 'Tanah') }}">
-                            <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] bg-white dark:bg-[#282A2C] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-xl px-3 py-1.5 transition cursor-pointer">
+                            <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] bg-white dark:bg-[#282A2C] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg px-3 py-1.5 transition cursor-pointer">
                                 <span class="filter-selected-label text-gray-800 dark:text-white font-normal text-xs select-none truncate">
                                     {{ old('jenis_asset', 'Tanah') }}
                                 </span>
-                                <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 shrink-0 pointer-events-none" />
+                                <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 shrink-0 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                             </button>
-                            <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[160px] max-h-[220px] overflow-y-auto rounded-xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
+                            <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
                                 <button type="button" onclick="selectCustomDropdown('jenis_asset', 'Tanah')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-semibold rounded-lg transition text-left cursor-pointer {{ old('jenis_asset', 'Tanah') == 'Tanah' ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }}">
                                     <span>Tanah</span>
                                 </button>
@@ -222,7 +222,7 @@
                             name="size_area"
                             value="{{ old('size_area', 50) }}"
                             placeholder="Contoh: 120"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -236,7 +236,7 @@
                             name="stasiun"
                             value="{{ old('stasiun', 'Semarang') }}"
                             placeholder="Contoh: Pekalongan / Tegal / Semarang"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -250,7 +250,7 @@
                             name="asset_block_name"
                             value="{{ old('asset_block_name') }}"
                             placeholder="Contoh: SEKITAR KM 2+1/200 LINTAS NON OPERASI KEL. TEGALREJO PEKALONGAN"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
@@ -265,7 +265,7 @@
                             name="wilayah_asset"
                             value="{{ old('wilayah_asset', 'Daop 4 Semarang') }}"
                             placeholder="Daop 4 Semarang"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
                 </div>
@@ -290,7 +290,7 @@
                             name="contract_number"
                             value="{{ old('contract_number') }}"
                             placeholder="Contoh: 0005/51116/D.4/941/PK/TN/XII/2026"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
@@ -304,7 +304,7 @@
                             type="text"
                             name="jenis_kontrak"
                             value="{{ old('jenis_kontrak', 'Kontrak Sewa') }}"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
@@ -321,7 +321,7 @@
                             oninput="syncPriceToRevenue(this.value)"
                             value="{{ old('price') }}"
                             placeholder="Contoh: 15.000.000"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
@@ -345,7 +345,7 @@
                                 name="contract_date"
                                 value="{{ old('contract_date', date('d/m/y')) }}"
                                 placeholder="DD/MM/YY"
-                                class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
                     </div>
@@ -369,7 +369,7 @@
                                 name="start_datetime"
                                 value="{{ old('start_datetime', '01/01/' . date('y')) }}"
                                 placeholder="DD/MM/YY"
-                                class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
                     </div>
@@ -393,7 +393,7 @@
                                 name="end_datetime"
                                 value="{{ old('end_datetime', '31/12/' . date('y')) }}"
                                 placeholder="DD/MM/YY"
-                                class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                 required
                             >
                         </div>
@@ -409,7 +409,7 @@
                             name="spv"
                             value="{{ old('spv', 'PIC Daop 4 Semarang') }}"
                             placeholder="Nama SPV"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -432,7 +432,7 @@
                                 name="start_datetime_baru"
                                 value="{{ old('start_datetime_baru') }}"
                                 placeholder="DD/MM/YY"
-                                class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
                     </div>
@@ -456,7 +456,7 @@
                                 name="end_datetime_baru"
                                 value="{{ old('end_datetime_baru') }}"
                                 placeholder="DD/MM/YY"
-                                class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
                     </div>
@@ -479,13 +479,13 @@
                         </label>
                         <div class="relative custom-filter-container w-full">
                             <input type="hidden" name="jenis_pendapatan" id="input_jenis_pendapatan" value="{{ old('jenis_pendapatan', 'Row') }}">
-                            <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] bg-white dark:bg-[#282A2C] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-xl px-3 py-1.5 transition cursor-pointer">
+                            <button type="button" class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] bg-white dark:bg-[#282A2C] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg px-3 py-1.5 transition cursor-pointer">
                                 <span class="filter-selected-label text-gray-800 dark:text-white font-normal text-xs select-none truncate">
                                     {{ old('jenis_pendapatan', 'Row') }}
                                 </span>
-                                <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 shrink-0 pointer-events-none" />
+                                <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 shrink-0 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                             </button>
-                            <div class="filter-dropdown-menu hidden absolute left-0 top-full mt-1 z-[100] w-full min-w-[180px] max-h-[220px] overflow-y-auto rounded-xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
+                            <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[180px] max-h-[220px] overflow-y-auto rounded-lg bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
                                 <button type="button" onclick="selectCustomDropdown('jenis_pendapatan', 'Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-semibold rounded-lg transition text-left cursor-pointer {{ old('jenis_pendapatan', 'Row') == 'Row' ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }}">
                                     <span>Row</span>
                                 </button>
@@ -515,7 +515,7 @@
                             name="akun_gl"
                             value="{{ old('akun_gl', '40110000') }}"
                             placeholder="40110000"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -530,7 +530,7 @@
                             id="input-nilai-2026"
                             value="{{ old('nilai_2026') }}"
                             placeholder="Otomatis dari Nilai Kontrak"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -544,7 +544,7 @@
                             name="persentase"
                             value="{{ old('persentase', '100') }}"
                             placeholder="100%"
-                            class="w-full h-[36px] rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
                 </div>
@@ -594,7 +594,7 @@
                                 name="{{ $mKey }}"
                                 id="month-{{ $mKey }}"
                                 value="{{ old($mKey, 0) }}"
-                                class="month-input w-full h-[32px] sm:h-[34px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition shadow-2xs font-normal"
+                                class="month-input w-full h-[32px] sm:h-[34px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
                     @endforeach
@@ -874,27 +874,48 @@
                     }
                 });
                 const menu = container.querySelector('.filter-dropdown-menu');
-                if (menu) menu.classList.add('hidden');
+                if (menu) closeSmoothDropdown(menu);
+                const arrow = container.querySelector('.filter-dropdown-arrow');
+                if (arrow) arrow.classList.remove('rotate-180');
             }
         };
+
+        function openSmoothDropdown(el) {
+            if (!el) return;
+            el.classList.remove('opacity-0', 'invisible', 'scale-95', 'pointer-events-none');
+            el.classList.add('opacity-100', 'visible', 'scale-100', 'pointer-events-auto');
+        }
+        function closeSmoothDropdown(el) {
+            if (!el) return;
+            el.classList.add('opacity-0', 'invisible', 'scale-95', 'pointer-events-none');
+            el.classList.remove('opacity-100', 'visible', 'scale-100', 'pointer-events-auto');
+        }
+        function isSmoothDropdownOpen(el) {
+            return el && !el.classList.contains('invisible');
+        }
 
         document.addEventListener('click', function (e) {
             const dropdownBtn = e.target.closest('.filter-dropdown-btn');
             const allDropdownMenus = document.querySelectorAll('.filter-dropdown-menu');
+            const allDropdownArrows = document.querySelectorAll('.filter-dropdown-arrow');
 
             if (dropdownBtn) {
                 e.stopPropagation();
                 const container = dropdownBtn.closest('.custom-filter-container');
                 const menu = container ? container.querySelector('.filter-dropdown-menu') : null;
-                const wasHidden = menu ? menu.classList.contains('hidden') : true;
+                const arrow = dropdownBtn.querySelector('.filter-dropdown-arrow');
+                const wasOpen = isSmoothDropdownOpen(menu);
 
-                allDropdownMenus.forEach(m => m.classList.add('hidden'));
+                allDropdownMenus.forEach(closeSmoothDropdown);
+                allDropdownArrows.forEach(a => a.classList.remove('rotate-180'));
 
-                if (wasHidden && menu) {
-                    menu.classList.remove('hidden');
+                if (!wasOpen && menu) {
+                    openSmoothDropdown(menu);
+                    if (arrow) arrow.classList.add('rotate-180');
                 }
             } else if (!e.target.closest('.filter-dropdown-menu')) {
-                allDropdownMenus.forEach(m => m.classList.add('hidden'));
+                allDropdownMenus.forEach(closeSmoothDropdown);
+                allDropdownArrows.forEach(a => a.classList.remove('rotate-180'));
             }
 
             if (!e.target.closest('#popup-calendar-picker') && !e.target.closest('[onclick*="openCalendarPicker"]')) {
@@ -905,7 +926,8 @@
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeCalendarPicker();
-                document.querySelectorAll('.filter-dropdown-menu').forEach(m => m.classList.add('hidden'));
+                document.querySelectorAll('.filter-dropdown-menu').forEach(closeSmoothDropdown);
+                document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
             }
         });
     </script>

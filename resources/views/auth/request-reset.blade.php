@@ -75,7 +75,7 @@
                     value="{{ old('email') }}"
                     placeholder="masukkan email yang terdaftar"
                     autofocus
-                    class="w-full rounded-[10px] border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-3 px-4 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] dark:focus:border-[#3B82F6] focus:outline-none transition shadow-2xs @error('email') border-red-400 @enderror"
+                    class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-3 px-4 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] dark:focus:border-[#3B82F6] focus:outline-none transition @error('email') border-red-400 @enderror"
                 >
                 @error('email')
                     <p class="mt-1.5 text-xs text-red-500">{{ $message }}</p>

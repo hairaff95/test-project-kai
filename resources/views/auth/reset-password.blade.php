@@ -54,7 +54,7 @@
                         name="password"
                         id="new-password"
                         placeholder="* * * * * * * *"
-                        class="w-full rounded-[10px] border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-3 pl-11 pr-11 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none transition shadow-2xs"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-3 pl-11 pr-11 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none transition"
                         oninput="validatePasswordRules()"
                     >
                     <button
@@ -90,7 +90,7 @@
                         name="password_confirmation"
                         id="confirm-password"
                         placeholder="* * * * * * * *"
-                        class="w-full rounded-[10px] border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-3 pl-11 pr-11 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none transition shadow-2xs"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-3 pl-11 pr-11 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none transition"
                         oninput="validatePasswordRules()"
                     >
                     <button
