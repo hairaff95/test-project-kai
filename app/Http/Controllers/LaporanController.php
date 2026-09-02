@@ -23,33 +23,33 @@ class LaporanController extends Controller
             });
         }
 
-        $contracts = $query->get();
+        $contracts = $query->paginate(50)->withQueryString();
 
-        $items = $contracts->map(function ($c) {
+        $items = $contracts->getCollection()->map(function ($c) {
             $fin = $c->financial;
             $sched = $c->monthlySchedules->first();
 
             return [
                 'asset_number' => $c->asset_number ?? $c->contract_number ?? '-',
-                'januari'      => $sched && $sched->januari ? (string)(int)$sched->januari : '9402819',
-                'februari'     => $sched && $sched->febuari ? (string)(int)$sched->febuari : '9402819',
-                'maret'        => $sched && $sched->maret ? (string)(int)$sched->maret : '9402819',
-                'april'        => $sched && $sched->april ? (string)(int)$sched->april : '9402819',
-                'mei'          => $sched && $sched->mei ? (string)(int)$sched->mei : '9402819',
-                'juni'         => $sched && $sched->juni ? (string)(int)$sched->juni : '9402819',
-                'juli'         => $sched && $sched->juli ? (string)(int)$sched->juli : '9402819',
-                'agustus'      => $sched && $sched->agustus ? (string)(int)$sched->agustus : '9402819',
-                'september'    => $sched && $sched->september ? (string)(int)$sched->september : '9402819',
-                'oktober'      => $sched && $sched->oktober ? (string)(int)$sched->oktober : '9402819',
-                'november'     => $sched && $sched->november ? (string)(int)$sched->november : '9402819',
-                'desember'     => $sched && $sched->desember ? (string)(int)$sched->desember : '9402819',
-                'form_rka'     => $fin && $fin->form_rka !== null ? (string)$fin->form_rka : '0',
-                'tahun_rka'    => $fin && $fin->tahun_rka !== null ? (string)$fin->tahun_rka : '0',
-                'akun_gl'      => $fin && $fin->gl_account ? (string)$fin->gl_account : '3421190010',
+                'januari'      => $sched && $sched->januari !== null ? (string)(int)$sched->januari : '0',
+                'februari'     => $sched && $sched->febuari !== null ? (string)(int)$sched->febuari : '0',
+                'maret'        => $sched && $sched->maret !== null ? (string)(int)$sched->maret : '0',
+                'april'        => $sched && $sched->april !== null ? (string)(int)$sched->april : '0',
+                'mei'          => $sched && $sched->mei !== null ? (string)(int)$sched->mei : '0',
+                'juni'         => $sched && $sched->juni !== null ? (string)(int)$sched->juni : '0',
+                'juli'         => $sched && $sched->juli !== null ? (string)(int)$sched->juli : '0',
+                'agustus'      => $sched && $sched->agustus !== null ? (string)(int)$sched->agustus : '0',
+                'september'    => $sched && $sched->september !== null ? (string)(int)$sched->september : '0',
+                'oktober'      => $sched && $sched->oktober !== null ? (string)(int)$sched->oktober : '0',
+                'november'     => $sched && $sched->november !== null ? (string)(int)$sched->november : '0',
+                'desember'     => $sched && $sched->desember !== null ? (string)(int)$sched->desember : '0',
+                'form_rka'     => $fin && $fin->form_rka !== null && $fin->form_rka !== '' ? (string)$fin->form_rka : '-',
+                'tahun_rka'    => $fin && $fin->tahun_rka !== null ? (string)$fin->tahun_rka : '2026',
+                'akun_gl'      => $fin && $fin->gl_account ? (string)$fin->gl_account : '-',
             ];
         })->toArray();
 
-        return view('laporan.index', compact('items'));
+        return view('laporan.index', compact('items', 'contracts'));
     }
 
     public function edit($identifier)

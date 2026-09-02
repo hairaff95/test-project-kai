@@ -34,32 +34,32 @@ class BacklogController extends Controller
             $query->whereHas('asset', fn($q) => $q->where('stasiun', 'like', "%{$request->stasiun}%"));
         }
 
-        $contracts = $query->get();
+        $contracts = $query->paginate(50)->withQueryString();
 
-        $items = $contracts->map(function ($c) {
+        $items = $contracts->getCollection()->map(function ($c) {
             $fin = $c->financial;
             $sched = $c->monthlySchedules->first();
 
-            $backlog = $fin && is_numeric($fin->nilai_backlog ?? null) && (float)$fin->nilai_backlog > 0
+            $backlog = $fin && is_numeric($fin->nilai_backlog ?? null)
                 ? (float)$fin->nilai_backlog
-                : 906378.0;
+                : 0.0;
 
-            $backlog2 = $fin && is_numeric($fin->nilai_backlog2 ?? ($fin->sisa_piutang ?? null)) && (float)($fin->nilai_backlog2 ?? $fin->sisa_piutang) > 0
-                ? (float)($fin->nilai_backlog2 ?? $fin->sisa_piutang)
-                : 940281.9;
+            $backlog2 = $fin && is_numeric($fin->nilai_backlog2 ?? null)
+                ? (float)$fin->nilai_backlog2
+                : 0.0;
 
             $invoice = $sched->invoice ?? 'SUDAH TERBIT';
-            $glAccount = $fin->gl_account ?? '940.281.9';
+            $glAccount = $fin->gl_account ?? '-';
             $hari2026 = $fin->hari_2026 ?? '365';
-            $nilaiPerhari = $fin->nilai_per_hari ? number_format((float)$fin->nilai_per_hari, 0, ',', '.') : '3.102';
+            $nilaiPerhari = $fin && $fin->nilai_per_hari ? number_format((float)$fin->nilai_per_hari, 0, ',', '.') : '0';
 
             return [
                 'asset_number'   => $c->asset_number ?? $c->contract_number ?? '-',
-                'no_kontrak'     => $c->contract_number ?? '0005/51116/D.4/941/PK/TN/XII/2016',
-                'nama_penyewa'   => $c->tenant->fullname ?? $c->tenant->name ?? 'MARDIYAH',
+                'no_kontrak'     => $c->contract_number ?? '-',
+                'nama_penyewa'   => $c->tenant->fullname ?? '-',
                 'status_customer'=> $c->tenant->status_customer ?? 'Aktif',
-                'nilai_backlog'  => number_format($backlog, 1, '.', '.'),
-                'nilai_backlog2' => number_format($backlog2, 1, '.', '.'),
+                'nilai_backlog'  => number_format($backlog, 0, ',', '.'),
+                'nilai_backlog2' => number_format($backlog2, 0, ',', '.'),
                 'invoice'        => $invoice,
                 'gl_account'     => $glAccount,
                 'hari_2026'      => (string)$hari2026,
@@ -69,7 +69,7 @@ class BacklogController extends Controller
 
         $statusCustomerOptions = Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer');
 
-        return view('backlog.index', compact('items', 'statusCustomerOptions'));
+        return view('backlog.index', compact('items', 'contracts', 'statusCustomerOptions'));
     }
 
     public function edit($identifier)

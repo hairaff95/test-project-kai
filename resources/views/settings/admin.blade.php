@@ -61,6 +61,16 @@
                     >
                         Pengajuan Reset Sandi
                     </button>
+
+                    {{-- 3. Tab Import Data Excel --}}
+                    <button
+                        type="button"
+                        onclick="switchAdminTab('import-excel')"
+                        id="tab-btn-import-excel"
+                        class="shrink-0 text-left text-sm font-medium transition cursor-pointer text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-gray-100/80 dark:bg-[#2D3034] lg:bg-transparent lg:dark:bg-transparent"
+                    >
+                        Import Data Excel
+                    </button>
                 </nav>
             </div>
 
@@ -189,6 +199,132 @@
                     </div>
                 </div>
 
+                {{-- ------------------- TAB 3: IMPORT DATA EXCEL ------------------- --}}
+                <div id="panel-import-excel" class="hidden space-y-6">
+
+                    {{-- Alert Messages --}}
+                    @if(session('success'))
+                        <div class="flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                            <span class="text-base">✅</span>
+                            <span class="font-medium">{{ session('success') }}</span>
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="flex items-center gap-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                            <span class="text-base">❌</span>
+                            <span class="font-medium">{{ session('error') }}</span>
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                            <p class="font-semibold mb-1">Terjadi kesalahan:</p>
+                            <ul class="list-disc list-inside space-y-0.5">
+                                @foreach($errors->all() as $err)
+                                    <li>{{ $err }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
+                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
+                        
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-950 dark:text-white tracking-tight">
+                            Upload File Data
+                        </h2>
+
+                        <form id="admin-excel-import-form" method="POST" action="{{ route('settings.import-excel') }}" enctype="multipart/form-data" class="space-y-6">
+                            @csrf
+
+                            {{-- Drag & Drop Upload Zone with icon-upload-data.svg --}}
+                            <div
+                                id="admin-dropzone-area"
+                                onclick="document.getElementById('admin-excel-file-input').click()"
+                                class="relative border-2 border-dashed border-gray-200 dark:border-white/15 hover:border-[#0066FF] dark:hover:border-[#3B82F6] bg-transparent hover:bg-blue-50/20 dark:hover:bg-blue-900/10 rounded-2xl p-8 sm:p-12 text-center transition cursor-pointer group flex flex-col items-center justify-center"
+                            >
+                                <input
+                                    type="file"
+                                    name="excel_file"
+                                    id="admin-excel-file-input"
+                                    accept=".csv, .xlsx, .xls, .txt"
+                                    class="hidden"
+                                    onchange="handleAdminFileSelected(this)"
+                                    required
+                                >
+
+                                <div class="flex flex-col items-center justify-center pointer-events-none">
+                                    <img src="{{ asset('image/icon-upload-data.svg') }}" alt="Upload Illustration" class="h-32 sm:h-36 w-auto mx-auto mb-4 group-hover:scale-105 transition-transform duration-200">
+                                    <p class="text-sm font-semibold text-gray-900 dark:text-white mb-1">
+                                        Pilih file atau drag & drop ke area ini
+                                    </p>
+                                    <p class="text-xs text-gray-400 dark:text-[#9AA0A6]">
+                                        file mendukung format .csv, .xlsx, .xls
+                                    </p>
+                                </div>
+                            </div>
+
+                            {{-- Selected File Box (Matching Gambar 1 & Gambar 2) --}}
+                            <div id="admin-selected-file-container" class="hidden rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] p-4 sm:p-5 transition-all">
+                                <div class="flex items-center gap-4">
+                                    {{-- Icon Box (Circular Import or Green Excel Icon) --}}
+                                    <div id="admin-icon-wrapper" class="shrink-0 flex items-center justify-center">
+                                        <img id="admin-preview-excel-icon" src="{{ asset('image/excel-icon.svg') }}" alt="Excel Icon" class="w-9 h-9 object-contain">
+                                    </div>
+
+                                    {{-- Info & Progress Bar --}}
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between gap-2 mb-0.5">
+                                            <span id="admin-selected-file-name" class="font-semibold text-sm text-gray-900 dark:text-white truncate">pk.xlsx</span>
+                                            <span id="admin-upload-percentage" class="text-xs font-semibold text-gray-500 dark:text-gray-400">100%</span>
+                                        </div>
+
+                                        <span id="admin-selected-file-size" class="text-xs text-gray-400 dark:text-gray-500 block mb-2">10 MB</span>
+
+                                        {{-- Progress Bar --}}
+                                        <div id="admin-progress-wrapper" class="w-full bg-gray-100 dark:bg-gray-700 h-1.5 rounded-full overflow-hidden">
+                                            <div id="admin-import-progress-bar" class="bg-[#0066FF] h-full rounded-full transition-all duration-300" style="width: 100%;"></div>
+                                        </div>
+                                    </div>
+
+                                    {{-- Cancel File Selection Button --}}
+                                    <button
+                                        type="button"
+                                        onclick="clearAdminSelectedFile(event)"
+                                        class="p-1.5 text-gray-400 hover:text-gray-700 dark:hover:text-white transition rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 cursor-pointer shrink-0"
+                                        title="Hapus file"
+                                    >
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {{-- Action Buttons (Batal & Import) --}}
+                            <div class="flex items-center justify-end gap-3 pt-4">
+                                <button
+                                    type="button"
+                                    onclick="clearAdminSelectedFile(event)"
+                                    class="px-7 py-2.5 rounded-xl bg-[#E00000] hover:bg-red-700 text-sm font-semibold text-white transition shadow-sm hover:shadow active:scale-98 cursor-pointer"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    id="btn-admin-submit-import"
+                                    class="px-7 py-2.5 rounded-xl bg-[#0066FF] hover:bg-blue-700 text-sm font-semibold text-white transition shadow-sm hover:shadow active:scale-98 cursor-pointer"
+                                >
+                                    Import
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
@@ -263,25 +399,105 @@
         function switchAdminTab(tabName) {
             const btnProfil = document.getElementById('tab-btn-profil');
             const btnReset = document.getElementById('tab-btn-reset-sandi');
+            const btnImport = document.getElementById('tab-btn-import-excel');
             const panelProfil = document.getElementById('panel-profil');
             const panelReset = document.getElementById('panel-reset-sandi');
+            const panelImport = document.getElementById('panel-import-excel');
 
             const activeClass = "shrink-0 text-left text-sm font-semibold transition cursor-pointer text-[#0066FF] dark:text-[#3B82F6] px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-blue-50 dark:bg-blue-900/30 lg:bg-transparent lg:dark:bg-transparent";
             const inactiveClass = "shrink-0 text-left text-sm font-medium transition cursor-pointer text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-gray-100/80 dark:bg-[#2D3034] lg:bg-transparent lg:dark:bg-transparent";
 
+            // Sembunyikan semua panel
+            if (panelProfil) panelProfil.classList.add('hidden');
+            if (panelReset) panelReset.classList.add('hidden');
+            if (panelImport) panelImport.classList.add('hidden');
+
+            // Reset tab styles
+            if (btnProfil) btnProfil.className = inactiveClass;
+            if (btnReset) btnReset.className = inactiveClass;
+            if (btnImport) btnImport.className = inactiveClass;
+
             if (tabName === 'profil') {
-                btnProfil.className = activeClass;
-                btnReset.className = inactiveClass;
-                panelProfil.classList.remove('hidden');
-                panelReset.classList.add('hidden');
-            } else {
-                btnProfil.className = inactiveClass;
-                btnReset.className = activeClass;
-                panelProfil.classList.add('hidden');
-                panelReset.classList.remove('hidden');
+                if (btnProfil) btnProfil.className = activeClass;
+                if (panelProfil) panelProfil.classList.remove('hidden');
+            } else if (tabName === 'reset-sandi') {
+                if (btnReset) btnReset.className = activeClass;
+                if (panelReset) panelReset.classList.remove('hidden');
+            } else if (tabName === 'import-excel') {
+                if (btnImport) btnImport.className = activeClass;
+                if (panelImport) panelImport.classList.remove('hidden');
             }
         }
 
+        function handleAdminFileSelected(input) {
+            const container = document.getElementById('admin-selected-file-container');
+            const nameEl = document.getElementById('admin-selected-file-name');
+            const sizeEl = document.getElementById('admin-selected-file-size');
+            const percentEl = document.getElementById('admin-upload-percentage');
+            const barEl = document.getElementById('admin-import-progress-bar');
+
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                nameEl.textContent = file.name;
+                const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+                sizeEl.textContent = (sizeMb >= 1) ? `${sizeMb} MB` : `${(file.size / 1024).toFixed(1)} KB`;
+                
+                // Show container
+                container.classList.remove('hidden');
+                
+                // Progress simulation to 100%
+                percentEl.textContent = '100%';
+                barEl.style.width = '100%';
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        function clearAdminSelectedFile(e) {
+            if (e) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+            const input = document.getElementById('admin-excel-file-input');
+            const container = document.getElementById('admin-selected-file-container');
+            if (input) input.value = '';
+            if (container) container.classList.add('hidden');
+        }
+
+        // Support Drag & Drop visuals
+        const adminDropzone = document.getElementById('admin-dropzone-area');
+        if (adminDropzone) {
+            ['dragenter', 'dragover'].forEach(eventName => {
+                adminDropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    adminDropzone.classList.add('border-[#0066FF]', 'bg-blue-50/20');
+                });
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                adminDropzone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    adminDropzone.classList.remove('border-[#0066FF]', 'bg-blue-50/20');
+                });
+            });
+
+            adminDropzone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length > 0) {
+                    const input = document.getElementById('admin-excel-file-input');
+                    input.files = files;
+                    handleAdminFileSelected(input);
+                }
+            });
+        }
+
+        // Auto switch ke tab import jika ada session success atau error
+        @if(session('success') || session('error') || $errors->any())
+            document.addEventListener('DOMContentLoaded', () => {
+                switchAdminTab('import-excel');
+            });
+        @endif
 
         function openEditProfileModal() {
             const modal = document.getElementById('modal-edit-profile');

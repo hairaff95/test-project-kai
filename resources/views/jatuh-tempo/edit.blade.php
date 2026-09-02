@@ -359,8 +359,8 @@
     </main>
 
 
-    {{-- POPUP CALENDAR PICKER --}}
-    <div id="popup-calendar-picker" class="hidden fixed z-[200] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
+    {{-- POPUP CALENDAR PICKER (Dropdown Style) --}}
+    <div id="popup-calendar-picker" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
         <div class="flex items-center justify-between mb-3.5">
             <button type="button" onclick="calPrevMonth()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
@@ -565,7 +565,8 @@
                 const parts = inputEl.value.split('/');
                 if (parts.length === 3) {
                     const parsedM = parseInt(parts[1], 10) - 1;
-                    const parsedY = parseInt('20' + parts[2], 10);
+                    let parsedY = parseInt(parts[2], 10);
+                    if (parsedY < 100) parsedY += 2000;
                     if (!isNaN(parsedM) && parsedM >= 0 && parsedM <= 11) calCurrentMonth = parsedM;
                     if (!isNaN(parsedY) && parsedY > 2000) calCurrentYear = parsedY;
                 }
@@ -575,11 +576,37 @@
 
             const picker = document.getElementById('popup-calendar-picker');
             const targetBtn = e.currentTarget;
-            const rect = targetBtn.getBoundingClientRect();
+            const container = targetBtn.closest('.relative') || targetBtn.parentElement;
 
-            picker.style.top = (rect.bottom + window.scrollY + 6) + 'px';
-            picker.style.left = Math.min(rect.left + window.scrollX, window.innerWidth - 310) + 'px';
+            // Pindahkan picker langsung ke dalam container input (.relative) agar menempel persis seperti dropdown
+            container.appendChild(picker);
             picker.classList.remove('hidden');
+
+            const containerRect = container.getBoundingClientRect();
+            const popupHeight = picker.offsetHeight || 315;
+            const spaceBelow = window.innerHeight - containerRect.bottom;
+            const spaceAbove = containerRect.top;
+
+            picker.style.position = 'absolute';
+            picker.style.zIndex = '150';
+
+            // Vertikal: Buka di ATAS jika mepet bawah layar, atau di BAWAH secara default
+            if (spaceBelow < popupHeight && spaceAbove > spaceBelow) {
+                picker.style.top = 'auto';
+                picker.style.bottom = 'calc(100% + 4px)';
+            } else {
+                picker.style.bottom = 'auto';
+                picker.style.top = 'calc(100% + 4px)';
+            }
+
+            // Horizontal: Menempel di sisi kiri input (atau sisi kanan jika mentok layar)
+            if (containerRect.left + 295 > window.innerWidth) {
+                picker.style.left = 'auto';
+                picker.style.right = '0';
+            } else {
+                picker.style.left = '0';
+                picker.style.right = 'auto';
+            }
         }
 
         function closeCalendarPicker() {

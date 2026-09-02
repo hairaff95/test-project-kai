@@ -13,10 +13,8 @@ class JatuhTempoController extends Controller
     public function index(Request $request)
     {
         $query = KaiContract::with(['tenant', 'asset', 'financial'])
-            ->whereNotNull('end_datetime_baru')
-            ->where('end_datetime_baru', '>=', now())
-            ->where('end_datetime_baru', '<=', now()->addMonths(6))
-            ->orderBy('end_datetime_baru', 'asc');
+            ->orderBy('end_datetime_baru', 'asc')
+            ->orderBy('end_datetime', 'asc');
 
         // Search
         if ($request->filled('search')) {
@@ -43,14 +41,7 @@ class JatuhTempoController extends Controller
             $query->whereHas('asset', fn($q) => $q->where('jenis_asset', $request->jenis_asset));
         }
 
-        $contracts = $query->get();
-
-        // Jika belum ada data jatuh tempo 6 bulan, ambil semua kontrak
-        if ($contracts->isEmpty() && !$request->filled('search') && !$request->filled('status_customer') && !$request->filled('jenis_asset')) {
-            $contracts = KaiContract::with(['tenant', 'asset', 'financial'])
-                ->orderBy('end_datetime_baru', 'asc')
-                ->get();
-        }
+        $contracts = $query->paginate(50)->withQueryString();
 
         $statusCustomerOptions = Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer');
         $jenisAssetOptions     = KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->where('jenis_asset', '!=', '')->pluck('jenis_asset');

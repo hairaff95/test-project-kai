@@ -1047,8 +1047,8 @@
     </div>
 
 
-    {{-- POPUP CALENDAR PICKER (Matching Figma design) --}}
-    <div id="popup-calendar-picker" class="hidden fixed z-[200] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
+    {{-- POPUP CALENDAR PICKER (Dropdown Style) --}}
+    <div id="popup-calendar-picker" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
         {{-- Header: < [Jun ⌵] [2025 ⌵] > --}}
         <div class="flex items-center justify-between mb-3.5">
             <button type="button" onclick="calPrevMonth()" class="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
@@ -1618,21 +1618,40 @@
             e.stopPropagation();
             calTargetInputId = targetInputId;
             const picker = document.getElementById('popup-calendar-picker');
-            const rect = e.currentTarget.getBoundingClientRect();
+            const targetBtn = e.currentTarget;
+            const container = targetBtn.closest('.relative') || targetBtn.parentElement;
 
             renderCalendar();
 
-            let top = rect.bottom + 6;
-            let left = rect.left - 20;
+            // Pindahkan picker langsung ke dalam container input (.relative) agar menempel persis seperti dropdown
+            container.appendChild(picker);
+            picker.classList.remove('hidden');
 
-            // Ensure picker stays within viewport
-            if (left + 300 > window.innerWidth) {
-                left = window.innerWidth - 310;
+            const containerRect = container.getBoundingClientRect();
+            const popupHeight = picker.offsetHeight || 315;
+            const spaceBelow = window.innerHeight - containerRect.bottom;
+            const spaceAbove = containerRect.top;
+
+            picker.style.position = 'absolute';
+            picker.style.zIndex = '150';
+
+            // Vertikal: Buka di ATAS jika mepet bawah layar, atau di BAWAH secara default
+            if (spaceBelow < popupHeight && spaceAbove > spaceBelow) {
+                picker.style.top = 'auto';
+                picker.style.bottom = 'calc(100% + 4px)';
+            } else {
+                picker.style.bottom = 'auto';
+                picker.style.top = 'calc(100% + 4px)';
             }
 
-            picker.style.top = top + 'px';
-            picker.style.left = left + 'px';
-            picker.classList.remove('hidden');
+            // Horizontal: Menempel di sisi kiri input (atau sisi kanan jika mentok layar)
+            if (containerRect.left + 295 > window.innerWidth) {
+                picker.style.left = 'auto';
+                picker.style.right = '0';
+            } else {
+                picker.style.left = '0';
+                picker.style.right = 'auto';
+            }
         }
 
         function closeCalendarPicker() {

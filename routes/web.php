@@ -23,6 +23,8 @@ Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->nam
 Route::get('/verifikasi-kode', [AuthController::class, 'showVerifyCode'])->name('password.verify');
 Route::get('/ubah-kata-sandi', [AuthController::class, 'showResetPassword'])->name('password.reset');
 
+use App\Http\Controllers\ExcelImportController;
+
 // ================= PENGATURAN =================
 Route::get('/pengaturan', function () {
     return view('settings.admin', ['active' => 'pengaturan']);
@@ -36,6 +38,9 @@ Route::get('/pengaturan-superadmin', function () {
     return view('settings.index', ['active' => 'pengaturan']);
 })->name('settings.superadmin');
 
+Route::post('/pengaturan/import-excel', [ExcelImportController::class, 'import'])->name('settings.import-excel');
+Route::get('/pengaturan/download-template', [ExcelImportController::class, 'downloadTemplate'])->name('settings.download-template');
+
 // ================= DASHBOARD & MAP =================
 Route::get('/', [DashboardController::class, 'index'])->name('welcome');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -43,9 +48,12 @@ Route::get('/map', [MapController::class, 'index'])->name('map');
 
 // ================= DAFTAR KONTRAK =================
 Route::get('/daftar-kontrak', [ContractController::class, 'index'])->name('contracts.index');
+Route::get('/daftar-kontrak/tambah', [ContractController::class, 'create'])->name('contracts.create');
+Route::post('/daftar-kontrak', [ContractController::class, 'store'])->name('contracts.store');
 Route::get('/daftar-kontrak/{asset_number}/edit', [ContractController::class, 'edit'])->name('contracts.edit');
 Route::put('/daftar-kontrak/{asset_number}', [ContractController::class, 'update'])->name('contracts.update');
 Route::get('/contracts', [ContractController::class, 'index'])->name('contracts.alias');
+Route::get('/asset/tambah', [ContractController::class, 'create'])->name('assets.create');
 
 // ================= JATUH TEMPO =================
 Route::get('/jatuh-tempo', [JatuhTempoController::class, 'index'])->name('due-dates.index');

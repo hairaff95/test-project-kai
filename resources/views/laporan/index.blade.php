@@ -55,18 +55,29 @@
         <div class="rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-gray-100/90 dark:border-white/10 flex flex-col gap-2.5 sm:gap-4 transition-colors">
 
             {{-- Filter Bar --}}
-            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2.5 w-full">
 
-                {{-- Search --}}
-                <div class="relative w-full sm:w-[185px] h-[32px] sm:h-[38px]">
-                    <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                    <input
-                        id="search-lap"
-                        type="text"
-                        placeholder="Search"
-                        class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
-                    >
+                <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
+                    {{-- Search --}}
+                    <div class="relative w-full sm:w-[185px] h-[32px] sm:h-[38px]">
+                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <input
+                            id="search-lap"
+                            type="text"
+                            placeholder="Search"
+                            class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
+                        >
+                    </div>
                 </div>
+
+                {{-- Tombol Tambah Aset --}}
+                <a
+                    href="{{ route('contracts.create') }}"
+                    class="inline-flex items-center gap-1.5 sm:gap-2 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white shadow-xs transition active:scale-95 cursor-pointer ml-auto shrink-0"
+                >
+                    <x-icon name="plus-icon" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white fill-white" />
+                    <span>Tambah Aset</span>
+                </a>
 
             </div>
 
@@ -269,6 +280,9 @@
                     </table>
                 </div>
             </div>
+
+            {{-- Pagination 50 Data --}}
+            <x-pagination :paginator="$contracts" />
 
         </div>
 
