@@ -22,4 +22,19 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // Throttle: tampilkan pesan error ramah alih-alih halaman 429 default
+        $exceptions->render(function (\Illuminate\Http\Exceptions\ThrottleRequestsException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return null; // biarkan default JSON untuk API
+            }
+
+            $retryAfter = $e->getHeaders()['Retry-After'] ?? 60;
+            $minutes    = ceil($retryAfter / 60);
+            $message    = $minutes >= 2
+                ? "Terlalu banyak percobaan. Coba lagi dalam {$minutes} menit."
+                : "Terlalu banyak percobaan. Coba lagi dalam {$retryAfter} detik.";
+
+            return back()->with('error', $message);
+        });
     })->create();

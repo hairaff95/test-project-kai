@@ -45,7 +45,9 @@ Route::get('/ubah-kata-sandi/mulai', [PasswordResetRequestController::class, 'ch
 
 // Step 1: Admin klik "Ubah kata sandi" → form request ke super admin
 Route::get('/ubah-kata-sandi/request', [PasswordResetRequestController::class, 'showRequestForm'])->name('password.request');
-Route::post('/ubah-kata-sandi/request', [PasswordResetRequestController::class, 'submitRequest'])->name('password.submit-request');
+Route::post('/ubah-kata-sandi/request', [PasswordResetRequestController::class, 'submitRequest'])
+    ->middleware('throttle:3,10')   // maks 3x per 10 menit per IP
+    ->name('password.submit-request');
 
 // Status request
 Route::get('/ubah-kata-sandi/status', [PasswordResetRequestController::class, 'requestStatus'])
@@ -53,6 +55,7 @@ Route::get('/ubah-kata-sandi/status', [PasswordResetRequestController::class, 'r
 
 // Polling endpoint — cek status request (JSON)
 Route::get('/ubah-kata-sandi/status/poll', [PasswordResetRequestController::class, 'pollStatus'])
+    ->middleware('throttle:30,1')   // maks 30x per menit (polling tiap 3 detik = ~20x/menit)
     ->name('password.request.poll');
 
 // Link dari email: admin akses halaman OTP via token (ID request)
@@ -60,12 +63,18 @@ Route::get('/ubah-kata-sandi/akses/{resetRequest}', [PasswordResetRequestControl
 
 // Step 2: Masukkan OTP
 Route::get('/verifikasi-kode', [AuthController::class, 'showVerifyCode'])->name('password.verify');
-Route::post('/verifikasi-kode', [PasswordResetRequestController::class, 'verifyOtp'])->name('password.verify.post');
-Route::post('/verifikasi-kode/kirim-ulang', [PasswordResetRequestController::class, 'resendOtp'])->name('password.resend-otp');
+Route::post('/verifikasi-kode', [PasswordResetRequestController::class, 'verifyOtp'])
+    ->middleware('throttle:5,1')    // maks 5x per menit — cegah brute force OTP
+    ->name('password.verify.post');
+Route::post('/verifikasi-kode/kirim-ulang', [PasswordResetRequestController::class, 'resendOtp'])
+    ->middleware('throttle:3,10')   // maks 3x per 10 menit per IP
+    ->name('password.resend-otp');
 
 // Step 3: Atur password baru
 Route::get('/ubah-kata-sandi', [AuthController::class, 'showResetPassword'])->name('password.reset');
-Route::post('/ubah-kata-sandi', [PasswordResetRequestController::class, 'resetPassword'])->name('password.reset.post');
+Route::post('/ubah-kata-sandi', [PasswordResetRequestController::class, 'resetPassword'])
+    ->middleware('throttle:5,1')    // maks 5x per menit
+    ->name('password.reset.post');
 
 // ================= PENGATURAN (SUPER ADMIN) =================
 Route::middleware(['auth', 'active_check', 'role:superadmin'])->group(function () {
