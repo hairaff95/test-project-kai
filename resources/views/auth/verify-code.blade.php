@@ -61,7 +61,7 @@
 
         {{-- Subtitle --}}
         <p class="text-xs sm:text-[13px] text-gray-500 dark:text-[#9AA0A6] font-normal leading-relaxed mb-8">
-            Masukan kode 6 digit yang dikirimkan ke email admin
+            Masukan kode 6 digit yang di kirimkan di email admin
         </p>
 
         {{-- Form Verifikasi Kode --}}

@@ -31,16 +31,6 @@
 
     <div class="w-full max-w-[430px]">
 
-        @if($errors->any())
-            <div class="mb-5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl text-sm">
-                {{ $errors->first() }}
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="mb-5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl text-sm">
-                {{ session('error') }}
-            </div>
-        @endif
         {{-- Heading 'Ubah Kata Sandi Baru' --}}
         <h1 class="text-3xl sm:text-[36px] font-bold text-gray-950 dark:text-white tracking-tight text-center mb-8">
             Ubah Kata Sandi Baru

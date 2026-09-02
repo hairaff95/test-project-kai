@@ -38,6 +38,10 @@ Route::get('/pengaturan-superadmin', function () {
     return view('settings.index', ['active' => 'pengaturan']);
 })->name('settings.superadmin');
 
+Route::get('/superadmin/dashboard', function () {
+    return redirect()->route('settings.superadmin');
+})->name('superadmin.dashboard');
+
 Route::post('/pengaturan/import-excel', [ExcelImportController::class, 'import'])->name('settings.import-excel');
 Route::get('/pengaturan/download-template', [ExcelImportController::class, 'downloadTemplate'])->name('settings.download-template');
 
