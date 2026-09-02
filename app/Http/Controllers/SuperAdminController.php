@@ -127,7 +127,7 @@ class SuperAdminController extends Controller
         $resetRequest->update([
             'status'         => 'approved',
             'otp_code'       => $otp,
-            'otp_expires_at' => now()->addMinute(),
+            'otp_expires_at' => now()->addMinutes(10),
             'approved_at'    => now(),
         ]);
 

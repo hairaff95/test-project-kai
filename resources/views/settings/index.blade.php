@@ -391,34 +391,28 @@
                                     <div class="flex items-center gap-4 sm:gap-6 justify-between sm:justify-end">
                                         {{-- Waktu --}}
                                         <span class="text-xs text-gray-500 dark:text-[#9AA0A6]">
-                                            {{ $req->created_at->format('d/m/Y \a\t H.i A') }}
+                                            {{ $req->created_at->setTimezone('Asia/Jakarta')->format('d/m/Y \a\t H:i') }} WIB
                                         </span>
 
                                         {{-- Status badge atau tombol aksi --}}
                                         @if($req->isPending())
                                             <div class="flex items-center gap-2">
                                                 {{-- Tolak --}}
-                                                <form action="{{ route('settings.reset-requests.reject', $req) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        onclick="return confirm('Tolak request reset password dari {{ addslashes($req->user->name ?? '') }}?')"
-                                                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#E00000] hover:bg-red-700 text-xs font-medium text-white shadow-xs transition cursor-pointer"
-                                                    >
-                                                        <span>✕</span>
-                                                        <span>Tolak</span>
-                                                    </button>
-                                                </form>
+                                                <button type="button"
+                                                    onclick="openRejectModal({{ $req->id }}, '{{ addslashes($req->user->name ?? '') }}')"
+                                                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#E00000] hover:bg-red-700 text-xs font-medium text-white shadow-xs transition cursor-pointer"
+                                                >
+                                                    <span>✕</span>
+                                                    <span>Tolak</span>
+                                                </button>
                                                 {{-- Setuju --}}
-                                                <form action="{{ route('settings.reset-requests.approve', $req) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        onclick="return confirm('Setujui request dan kirim OTP ke email {{ addslashes($req->user->email ?? '') }}?')"
-                                                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-medium text-white shadow-xs transition cursor-pointer"
-                                                    >
-                                                        <span>✓</span>
-                                                        <span>Setuju</span>
-                                                    </button>
-                                                </form>
+                                                <button type="button"
+                                                    onclick="openApproveModal({{ $req->id }}, '{{ addslashes($req->user->name ?? '') }}', '{{ addslashes($req->user->email ?? '') }}')"
+                                                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-medium text-white shadow-xs transition cursor-pointer"
+                                                >
+                                                    <span>✓</span>
+                                                    <span>Setuju</span>
+                                                </button>
                                             </div>
                                         @else
                                             @php
@@ -846,6 +840,22 @@
             }
         }
 
+        // ─── Modal Approve / Reject Request ──────────────────────────────────────
+        function openApproveModal(requestId, name, email) {
+            document.getElementById('approve-modal-name').textContent  = name;
+            document.getElementById('approve-modal-email').textContent = email;
+            document.getElementById('form-approve-request').action =
+                `/pengaturan/reset-requests/${requestId}/approve`;
+            document.getElementById('modal-approve-request').classList.remove('hidden');
+        }
+
+        function openRejectModal(requestId, name) {
+            document.getElementById('reject-modal-name').textContent = name;
+            document.getElementById('form-reject-request').action =
+                `/pengaturan/reset-requests/${requestId}/reject`;
+            document.getElementById('modal-reject-request').classList.remove('hidden');
+        }
+
         // ─── Filter Tabel Admin ───────────────────────────────────────────────────
         function filterAdminTable() {
             const query = document.getElementById('search-admin-input').value.toLowerCase();
@@ -931,7 +941,7 @@
             }
 
             // Tutup modal jika klik backdrop
-            ['modal-tambah-admin', 'modal-edit-profile'].forEach(id => {
+            ['modal-tambah-admin', 'modal-edit-profile', 'modal-approve-request', 'modal-reject-request'].forEach(id => {
                 document.getElementById(id)?.addEventListener('click', function(e) {
                     if (e.target === this) closeModal(id);
                 });
@@ -939,6 +949,71 @@
 
         });
     </script>
+
+    {{-- ═══ MODAL KONFIRMASI APPROVE ═══ --}}
+    <div id="modal-approve-request" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div class="w-full max-w-sm rounded-2xl bg-white dark:bg-[#1F2123] p-6 shadow-2xl border border-gray-100 dark:border-white/10 space-y-5">
+            <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center shrink-0 text-xl">✅</div>
+                <div>
+                    <h3 class="text-base font-bold text-gray-900 dark:text-white">Setujui Request?</h3>
+                    <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5">Kode OTP akan dikirim ke email admin.</p>
+                </div>
+            </div>
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl px-4 py-3 text-sm text-blue-800 dark:text-blue-300">
+                <p class="font-semibold" id="approve-modal-name">—</p>
+                <p class="text-xs mt-0.5" id="approve-modal-email">—</p>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-[#9AA0A6]">
+                Setelah disetujui, kode OTP 6 digit akan langsung dikirim ke email admin tersebut. Pastikan email terdaftar aktif.
+            </p>
+            <div class="flex items-center justify-end gap-3 pt-1">
+                <button type="button" onclick="closeModal('modal-approve-request')"
+                    class="px-5 py-2.5 rounded-[8px] border border-gray-200 dark:border-white/10 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer">
+                    Batal
+                </button>
+                <form id="form-approve-request" method="POST" action="">
+                    @csrf
+                    <button type="submit"
+                        class="px-5 py-2.5 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-medium text-white transition shadow-xs cursor-pointer">
+                        Ya, Setujui & Kirim OTP
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- ═══ MODAL KONFIRMASI REJECT ═══ --}}
+    <div id="modal-reject-request" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div class="w-full max-w-sm rounded-2xl bg-white dark:bg-[#1F2123] p-6 shadow-2xl border border-gray-100 dark:border-white/10 space-y-5">
+            <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-full bg-red-100 dark:bg-red-900/40 flex items-center justify-center shrink-0 text-xl">❌</div>
+                <div>
+                    <h3 class="text-base font-bold text-gray-900 dark:text-white">Tolak Request?</h3>
+                    <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5">Admin tidak akan bisa reset password melalui alur ini.</p>
+                </div>
+            </div>
+            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl px-4 py-3 text-sm text-red-800 dark:text-red-300">
+                <p class="font-semibold" id="reject-modal-name">—</p>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-[#9AA0A6]">
+                Request akan ditandai sebagai <strong>Ditolak</strong>. Admin harus mengajukan request baru jika masih ingin mereset password.
+            </p>
+            <div class="flex items-center justify-end gap-3 pt-1">
+                <button type="button" onclick="closeModal('modal-reject-request')"
+                    class="px-5 py-2.5 rounded-[8px] border border-gray-200 dark:border-white/10 text-xs font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer">
+                    Batal
+                </button>
+                <form id="form-reject-request" method="POST" action="">
+                    @csrf
+                    <button type="submit"
+                        class="px-5 py-2.5 rounded-[8px] bg-[#E00000] hover:bg-red-700 text-xs font-medium text-white transition shadow-xs cursor-pointer">
+                        Ya, Tolak Request
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

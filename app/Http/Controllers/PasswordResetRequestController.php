@@ -269,11 +269,11 @@ class PasswordResetRequestController extends Controller
 
         $resetRequest->update([
             'otp_code'       => $otp,
-            'otp_expires_at' => now()->addMinute(),
+            'otp_expires_at' => now()->addMinutes(10),
         ]);
 
         // Update session expiry
-        session(['otp_session_expires_at' => now()->addMinute()->timestamp]);
+        session(['otp_session_expires_at' => now()->addMinutes(10)->timestamp]);
 
         try {
             \Illuminate\Support\Facades\Mail::to($resetRequest->user->email)
