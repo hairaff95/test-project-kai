@@ -227,7 +227,7 @@
                 <div class="otp-label">Kode Verifikasi OTP</div>
                 <div class="otp-code">{{ $otp }}</div>
                 <div class="otp-expires">
-                    Kode ini berlaku selama <strong>1 menit</strong> sejak email ini dikirim.<br>
+                    Kode ini berlaku selama <strong>10 menit</strong> sejak email ini dikirim.<br>
                     Segera masukkan sebelum kedaluwarsa.
                 </div>
             </div>

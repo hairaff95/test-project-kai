@@ -47,27 +47,27 @@
                 </label>
                 <div class="relative">
                     <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none">
-                        <x-icon name="icon-kunci-login" class="w-5 h-5" />
+                        <x-icon name="icon-kunci-login" class="w-4.5 h-4.5 lg:w-5 lg:h-5" />
                     </span>
                     <input
                         type="password"
                         name="password"
                         id="new-password"
                         placeholder="* * * * * * * *"
-                        class="w-full rounded-[10px] border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-3 pl-11 pr-11 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none transition shadow-2xs"
+                        class="w-full rounded-[10px] border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-2.5 sm:py-3 pl-10 lg:pl-11 pr-10 lg:pr-11 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none transition shadow-2xs"
                         oninput="validatePasswordRules()"
                     >
                     <button
                         type="button"
                         onclick="toggleVisibility('new-password', 'eye-new-off', 'eye-new-on')"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer p-1"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer"
                         title="Lihat kata sandi"
                     >
                         <span id="eye-new-off">
-                            <x-icon name="icon-show-kunci-login" class="w-5 h-5" />
+                            <x-icon name="icon-show-kunci-login" class="w-4.5 h-4.5 lg:w-5 lg:h-5" />
                         </span>
                         <span id="eye-new-on" class="hidden">
-                            <x-icon name="off-show-kunci-login" class="w-5 h-5" />
+                            <x-icon name="off-show-kunci-login" class="w-4.5 h-4.5 lg:w-5 lg:h-5" />
                         </span>
                     </button>
                 </div>
@@ -83,27 +83,27 @@
                 </label>
                 <div class="relative">
                     <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none">
-                        <x-icon name="icon-kunci-login" class="w-5 h-5" />
+                        <x-icon name="icon-kunci-login" class="w-4.5 h-4.5 lg:w-5 lg:h-5" />
                     </span>
                     <input
                         type="password"
                         name="password_confirmation"
                         id="confirm-password"
                         placeholder="* * * * * * * *"
-                        class="w-full rounded-[10px] border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-3 pl-11 pr-11 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none transition shadow-2xs"
+                        class="w-full rounded-[10px] border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-2.5 sm:py-3 pl-10 lg:pl-11 pr-10 lg:pr-11 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none transition shadow-2xs"
                         oninput="validatePasswordRules()"
                     >
                     <button
                         type="button"
                         onclick="toggleVisibility('confirm-password', 'eye-confirm-off', 'eye-confirm-on')"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer p-1"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer"
                         title="Lihat kata sandi"
                     >
                         <span id="eye-confirm-off">
-                            <x-icon name="icon-show-kunci-login" class="w-5 h-5" />
+                            <x-icon name="icon-show-kunci-login" class="w-4.5 h-4.5 lg:w-5 lg:h-5" />
                         </span>
                         <span id="eye-confirm-on" class="hidden">
-                            <x-icon name="off-show-kunci-login" class="w-5 h-5" />
+                            <x-icon name="off-show-kunci-login" class="w-4.5 h-4.5 lg:w-5 lg:h-5" />
                         </span>
                     </button>
                 </div>
