@@ -24,7 +24,7 @@
     @endif
 
     <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-    <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] } } } }</script>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] } } } }</script>
 </head>
 
 <body class="min-h-screen bg-white dark:bg-[#1F2123] font-sans antialiased text-gray-900 dark:text-white selection:bg-blue-100 selection:text-[#0066FF] flex flex-col justify-center items-center px-4 py-12 transition-colors duration-200">
@@ -39,17 +39,17 @@
 
         {{-- Error messages --}}
         @if($errors->any())
-            <div class="mb-5 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm text-left">
+            <div class="mb-5 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded-xl text-sm text-left">
                 {{ $errors->first() }}
             </div>
         @endif
         @if(session('error'))
-            <div class="mb-5 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm text-left">
+            <div class="mb-5 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded-xl text-sm text-left">
                 {{ session('error') }}
             </div>
         @endif
         @if(session('success'))
-            <div class="mb-5 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm text-left">
+            <div class="mb-5 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded-xl text-sm text-left">
                 {{ session('success') }}
             </div>
         @endif

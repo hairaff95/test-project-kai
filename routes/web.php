@@ -40,6 +40,9 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ================= ALUR RESET PASSWORD ADMIN =================
+// Entry point utama — smart redirect berdasarkan session (maks 1 jam)
+Route::get('/ubah-kata-sandi/mulai', [PasswordResetRequestController::class, 'changePassword'])->name('password.change');
+
 // Step 1: Admin klik "Ubah kata sandi" → form request ke super admin
 Route::get('/ubah-kata-sandi/request', [PasswordResetRequestController::class, 'showRequestForm'])->name('password.request');
 Route::post('/ubah-kata-sandi/request', [PasswordResetRequestController::class, 'submitRequest'])->name('password.submit-request');

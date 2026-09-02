@@ -258,54 +258,49 @@
                                             <td class="py-4 px-4 text-xs text-gray-500 dark:text-[#9AA0A6]">
                                                 {{ $user->last_login_at ? $user->last_login_at->format('d/m/Y \a\t H.i A') : ($user->updated_at ? $user->updated_at->format('d/m/Y \a\t H.i A') : '-') }}
                                             </td>
-                                            <td class="py-4 px-4 text-center relative">
+                                            <td class="py-4 px-4 text-center">
                                                 <button
                                                     type="button"
-                                                    onclick="toggleAdminActionDropdown('drop-{{ $user->id }}')"
-                                                    class="p-1 text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white transition cursor-pointer text-lg leading-none select-none"
+                                                    class="admin-action-btn p-1 text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white transition cursor-pointer text-lg leading-none select-none"
+                                                    data-dropdown="drop-{{ $user->id }}"
                                                 >
                                                     ⋮
                                                 </button>
 
-                                                {{-- Action Dropdown --}}
-                                                <div id="drop-{{ $user->id }}" class="admin-dropdown absolute right-4 top-10 w-52 bg-white dark:bg-[#1F2123] rounded-2xl shadow-xl border border-gray-100 dark:border-white/10 py-2 z-30 text-left text-xs" style="display:none">
-
+                                                {{-- Dropdown template (hidden, dipindah ke body level via JS) --}}
+                                                <template id="tpl-drop-{{ $user->id }}">
                                                     {{-- Toggle Aktif / Nonaktif --}}
                                                     <form action="{{ route('settings.admins.toggle', $user) }}" method="POST">
                                                         @csrf
-                                                        <button type="submit" class="w-full flex items-center gap-2.5 px-4 py-2 hover:bg-gray-50 dark:hover:bg-white/10 text-gray-700 dark:text-gray-200 transition cursor-pointer">
+                                                        <button type="submit" class="w-full flex items-center gap-2.5 px-4 py-2 hover:bg-gray-50 dark:hover:bg-white/10 text-gray-700 dark:text-gray-200 transition cursor-pointer text-xs">
                                                             <span>👤</span>
                                                             <span>{{ $user->is_active ? 'Non Aktif Profil' : 'Aktifkan Profil' }}</span>
                                                         </button>
                                                     </form>
 
-                                                    {{-- Reset Sandi Sementara (hanya admin, bukan superadmin) --}}
                                                     @if($user->role === 'admin')
-                                                        {{-- Tombol ini trigger POST reset password sementara --}}
                                                         <button
                                                             type="button"
                                                             onclick="confirmResetSandi({{ $user->id }}, '{{ addslashes($user->name) }}')"
-                                                            class="w-full flex items-center gap-2.5 px-4 py-2 hover:bg-gray-50 dark:hover:bg-white/10 text-gray-700 dark:text-gray-200 transition cursor-pointer"
+                                                            class="w-full flex items-center gap-2.5 px-4 py-2 hover:bg-gray-50 dark:hover:bg-white/10 text-gray-700 dark:text-gray-200 transition cursor-pointer text-xs"
                                                         >
                                                             <span>🔑</span>
                                                             <span>Reset Sandi Sementara</span>
                                                         </button>
                                                     @endif
 
-                                                    {{-- Hapus Admin (hanya admin, bukan superadmin, bukan diri sendiri) --}}
                                                     @if($user->role === 'admin' && $user->id !== auth()->id())
                                                         <form action="{{ route('settings.admins.destroy', $user) }}" method="POST"
                                                             onsubmit="return confirm('Yakin ingin menghapus admin {{ addslashes($user->name) }}? Tindakan ini tidak bisa dibatalkan.')">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="w-full flex items-center gap-2.5 px-4 py-2 hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 dark:text-red-400 transition cursor-pointer">
+                                                            <button type="submit" class="w-full flex items-center gap-2.5 px-4 py-2 hover:bg-red-50 dark:hover:bg-red-950/30 text-red-600 dark:text-red-400 transition cursor-pointer text-xs">
                                                                 <span>🗑️</span>
                                                                 <span>Hapus Admin</span>
                                                             </button>
                                                         </form>
                                                     @endif
-
-                                                </div>
+                                                </template>
                                             </td>
                                         </tr>
                                     @empty
@@ -781,14 +776,68 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
         }
 
-        // ─── Dropdown Three-Dots per row ──────────────────────────────────────────
-        function toggleAdminActionDropdown(dropId) {
-            document.querySelectorAll('.admin-dropdown').forEach(d => {
-                if (d.id !== dropId) d.style.display = 'none';
-            });
-            const current = document.getElementById(dropId);
-            if (current) current.style.display = current.style.display === 'none' ? 'block' : 'none';
+        // ─── Dropdown Portal (rendered at body level, positioned via JS) ─────────
+        const portalDropdown = document.createElement('div');
+        portalDropdown.id = 'admin-action-portal';
+        portalDropdown.className = 'fixed z-[9999] w-52 bg-white dark:bg-[#1F2123] rounded-2xl shadow-xl border border-gray-100 dark:border-white/10 py-2 text-left';
+        portalDropdown.style.display = 'none';
+        document.body.appendChild(portalDropdown);
+
+        let activeBtn = null;
+
+        function openAdminDropdown(btn) {
+            const tplId  = 'tpl-' + btn.dataset.dropdown;
+            const tpl    = document.getElementById(tplId);
+            if (!tpl) return;
+
+            // Clone template content into portal
+            portalDropdown.innerHTML = '';
+            portalDropdown.appendChild(tpl.content.cloneNode(true));
+
+            // Position portal relative to button
+            const rect = btn.getBoundingClientRect();
+            const dropW = 208; // w-52 = 13rem = 208px
+            let left = rect.right - dropW;
+            let top  = rect.bottom + 6;
+
+            // Prevent going off left edge
+            if (left < 8) left = 8;
+            // Prevent going off bottom — flip upward if needed
+            if (top + 160 > window.innerHeight) top = rect.top - 160;
+
+            portalDropdown.style.left = left + 'px';
+            portalDropdown.style.top  = top  + 'px';
+            portalDropdown.style.display = 'block';
+            activeBtn = btn;
         }
+
+        function closeAdminDropdown() {
+            portalDropdown.style.display = 'none';
+            activeBtn = null;
+        }
+
+        // Wire up all action buttons
+        document.querySelectorAll('.admin-action-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (activeBtn === btn) {
+                    closeAdminDropdown();
+                } else {
+                    openAdminDropdown(btn);
+                }
+            });
+        });
+
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+            if (!portalDropdown.contains(e.target) && e.target !== activeBtn) {
+                closeAdminDropdown();
+            }
+        });
+
+        // Reposition on scroll/resize
+        window.addEventListener('scroll', closeAdminDropdown, true);
+        window.addEventListener('resize', closeAdminDropdown);
 
         // ─── Reset Sandi Sementara ────────────────────────────────────────────────
         function confirmResetSandi(userId, name) {
@@ -862,9 +911,6 @@
                 }, false);
             }
 
-            // Init semua dropdown tersembunyi
-            document.querySelectorAll('.admin-dropdown').forEach(d => d.style.display = 'none');
-
             // Aktifkan tab
             switchSuperTab(initialTab);
 
@@ -891,12 +937,6 @@
                 });
             });
 
-            // Tutup dropdown jika klik di luar
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('td')) {
-                    document.querySelectorAll('.admin-dropdown').forEach(d => d.style.display = 'none');
-                }
-            });
         });
     </script>
 

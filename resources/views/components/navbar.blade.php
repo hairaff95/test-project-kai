@@ -146,7 +146,7 @@
                         @elseif(auth()->user()->isAdmin())
                             <!-- Reset Password (Admin) -->
                             <a
-                                href="{{ route('password.request') }}"
+                                href="{{ route('password.change') }}"
                                 class="flex items-center gap-2 sm:gap-2.5 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11.5px] sm:text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 active:bg-gray-100 dark:active:bg-white/10 transition"
                             >
                                 <x-icon name="setting" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 dark:text-gray-400 shrink-0" />

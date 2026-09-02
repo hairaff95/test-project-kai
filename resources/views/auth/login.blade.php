@@ -142,7 +142,7 @@
 
                     {{-- Ubah kata sandi link --}}
                     <div class="pt-0.5">
-                        <a href="{{ route('password.verify') }}" class="text-xs text-gray-500 dark:text-[#9AA0A6] hover:text-[#0066FF] dark:hover:text-[#3B82F6] underline transition inline-block cursor-pointer">
+                        <a href="{{ route('password.change') }}" class="text-xs text-gray-500 dark:text-[#9AA0A6] hover:text-[#0066FF] dark:hover:text-[#3B82F6] underline transition inline-block cursor-pointer">
                             Ubah kata sandi
                         </a>
                     </div>
