@@ -32,8 +32,7 @@
     {{-- Navbar --}}
     <x-navbar active="dashboard" />
 
-    <main
-        class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-5 lg:pt-4 pb-28 lg:pb-6 flex flex-col lg:justify-start">
+    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-5 lg:pt-4 pb-28 lg:pb-5 flex flex-col lg:min-h-0 overflow-y-auto lg:overflow-y-hidden">
 
         <!-- Page Header -->
         <div class="mb-3 sm:mb-4 lg:mb-3 shrink-0">
