@@ -33,11 +33,11 @@ class Asset extends Model
     ];
 
     protected $casts = [
-        'land_area'     => 'decimal:2',
-        'building_area' => 'decimal:2',
-        'price'         => 'decimal:2',
-        'latitude'      => 'decimal:7',
-        'longitude'     => 'decimal:7',
+        'land_area'     => 'float',
+        'building_area' => 'float',
+        'price'         => 'float',
+        'latitude'      => 'float',
+        'longitude'     => 'float',
     ];
 
     public function images(): HasMany

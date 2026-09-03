@@ -169,12 +169,12 @@
             <div id="mobile-cards-jt" class="sm:hidden flex flex-col gap-3">
                 @forelse($contracts as $item)
                     @php
-                        $penyewa = $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono';
-                        $brand = $item->tenant?->brand ?? 'Apotek K-24';
+                        $penyewa = $item->tenant?->fullname ?? $item->tenant?->name ?? '-';
+                        $brand = $item->tenant?->brand ?: '(kosong)';
                         $statusCust = $item->tenant?->status_customer ?? 'Aktif';
                         $jenisAset = $item->asset?->jenis_asset ?? 'Tanah';
-                        $selesaiLama = $item->end_datetime ? \Carbon\Carbon::parse($item->end_datetime)->format('d/m/Y') : '10/01/2026';
-                        $selesaiBaru = $item->end_datetime_baru ? \Carbon\Carbon::parse($item->end_datetime_baru)->format('d/m/Y') : '10/01/2027';
+                        $selesaiLama = $item->end_datetime ? \Carbon\Carbon::parse($item->end_datetime)->format('d/m/Y') : '-';
+                        $selesaiBaru = $item->end_datetime_baru ? \Carbon\Carbon::parse($item->end_datetime_baru)->format('d/m/Y') : '-';
                     @endphp
                     <div class="jt-card-item rounded-xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-3.5 shadow-2xs flex flex-col gap-2.5 transition-colors"
                          data-penyewa="{{ strtolower($penyewa) }}"
@@ -186,7 +186,7 @@
                         <div class="flex items-start justify-between gap-2 border-b border-gray-100 dark:border-white/10 pb-2">
                             <div class="flex flex-col">
                                 <span class="text-[10px] font-semibold text-gray-400 dark:text-[#9AA0A6] uppercase tracking-wider">No Aset</span>
-                                <span class="text-xs font-bold text-gray-900 dark:text-white leading-snug">{{ $item->asset_number ?? 'AST-SMG-PCL-001' }}</span>
+                                <span class="text-xs font-bold text-gray-900 dark:text-white leading-snug">{{ $item->asset_number ?? '-' }}</span>
                             </div>
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold {{ strtolower($statusCust) === 'aktif' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800' : 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-200/60 dark:border-blue-800' }}">
                                 {{ $statusCust }}
@@ -198,7 +198,7 @@
                             <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight">
                                 {{ $penyewa }}
                             </h3>
-                            <p class="text-xs text-[#0066FF] dark:text-[#3B82F6] font-semibold mt-0.5">Brand: {{ $brand }}</p>
+                            <p class="text-xs text-gray-500 dark:text-[#9AA0A6] font-normal mt-0.5">Brand: {{ $brand }}</p>
                         </div>
 
                         {{-- 2-Cols Meta Grid --}}
@@ -213,15 +213,15 @@
                             </div>
                             <div>
                                 <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Sisa Masa Sewa</span>
-                                <span class="font-medium text-amber-600 dark:text-amber-400 text-[11px]">{{ $item->contract_duration ?? '12 Bulan' }}</span>
+                                <span class="font-medium text-amber-600 dark:text-amber-400 text-[11px]">{{ $item->due_days ?? '-' }}</span>
                             </div>
                             <div>
                                 <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Keterangan</span>
-                                <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $item->keterangan ?? 'RKA' }}</span>
+                                <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $item->keterangan ?? '-' }}</span>
                             </div>
                             <div class="col-span-2">
                                 <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">SPV</span>
-                                <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $item->spv_name ?? 'Sales Executive Area 1 Pekalongan' }}</span>
+                                <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $item->spv ?? '-' }}</span>
                             </div>
                         </div>
 
@@ -266,26 +266,26 @@
                         <tbody class="divide-y divide-gray-100 dark:divide-white/10 text-[13px] text-gray-800 dark:text-gray-200">
                             @forelse($contracts as $item)
                                 @php
-                                    $penyewa = $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono';
-                                    $brand = $item->tenant?->brand ?? 'Apotek K-24';
+                                    $penyewa = $item->tenant?->fullname ?? $item->tenant?->name ?? '-';
+                                    $brand = $item->tenant?->brand ?: '(kosong)';
                                     $statusCust = $item->tenant?->status_customer ?? 'Aktif';
                                     $jenisAset = $item->asset?->jenis_asset ?? 'Tanah';
-                                    $selesaiLama = $item->end_datetime ? \Carbon\Carbon::parse($item->end_datetime)->format('d/m/Y') : '10/01/2026';
-                                    $selesaiBaru = $item->end_datetime_baru ? \Carbon\Carbon::parse($item->end_datetime_baru)->format('d/m/Y') : '10/01/2027';
+                                    $selesaiLama = $item->end_datetime ? \Carbon\Carbon::parse($item->end_datetime)->format('d/m/Y') : '-';
+                                    $selesaiBaru = $item->end_datetime_baru ? \Carbon\Carbon::parse($item->end_datetime_baru)->format('d/m/Y') : '-';
                                 @endphp
                                 <tr class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors"
                                     data-penyewa="{{ strtolower($penyewa) }}"
                                     data-status="{{ strtolower($statusCust) }}"
                                     data-jenis="{{ strtolower($jenisAset) }}"
                                     data-price="{{ (float)($item->price ?? 0) }}"
-                                >
+                                 >
                                     <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $item->asset_number ?? 'AST-SMG-PCL-001' }}
+                                        {{ $item->asset_number ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">
                                         {{ $penyewa }}
                                     </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                    <td class="py-3.5 px-4 text-gray-600 dark:text-[#9AA0A6] whitespace-nowrap font-normal">
                                         {{ $brand }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
@@ -295,17 +295,17 @@
                                         {{ $selesaiBaru }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->contract_duration ?? '1245417' }}
+                                        {{ $item->due_days ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->spv_name ?? 'Sales Executive Area 1 Pekalongan' }}
+                                        {{ $item->spv ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->keterangan ?? 'RKA' }}
+                                        {{ $item->keterangan ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
-                                             data-asset="{{ $item->asset_number }}">
+                                             data-contract="{{ $item->contract_number }}">
                                             <button
                                                 type="button"
                                                 class="action-menu-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer"
@@ -346,7 +346,7 @@
             <x-icon name="edit" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-300 shrink-0" />
             <span>Edit</span>
         </a>
-        <form id="dd-delete-form" method="POST" onsubmit="return confirm('Hapus aset ini?')">
+        <form id="dd-delete-form" method="POST" onsubmit="event.preventDefault(); return window.confirmDelete(this, 'Apakah Anda yakin ingin menghapus data jatuh tempo ini?');">
             @csrf @method('DELETE')
             <button type="submit" class="flex w-full items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer">
                 <x-icon name="delete" class="w-4 h-4 sm:w-5 sm:h-5 text-[#EF4444] shrink-0" />
@@ -377,16 +377,12 @@
                 return el && !el.classList.contains('invisible');
             }
 
-            const routes = {
-                detail: (id) => `/asset/${id}`,
-                edit:   (id) => `/jatuh-tempo/${id}/edit`,
-                delete: (id) => `/admin/assets/${id}`,
-            };
+            const routes = {};
 
             @foreach($contracts as $item)
-            routes['detail_{{ $item->asset_number }}'] = '{{ route('asset.detail', $item->asset_number) }}';
-            routes['edit_{{ $item->asset_number }}']   = '{{ route('due-dates.edit', $item->asset_number) }}';
-            routes['delete_{{ $item->asset_number }}'] = '{{ route('admin.assets.destroy', $item->asset_number) }}';
+            routes['detail_{{ $item->contract_number }}'] = '{{ route('asset.detail', $item->contract_number) }}';
+            routes['edit_{{ $item->contract_number }}']   = '{{ route('due-dates.edit', $item->contract_number) }}';
+            routes['delete_{{ $item->contract_number }}'] = '{{ route('admin.assets.destroy', $item->contract_number) }}';
             @endforeach
 
             document.addEventListener('click', function (e) {
@@ -395,19 +391,19 @@
                 if (btn) {
                     e.stopPropagation();
 
-                    const wrapper = btn.closest('.action-menu-wrapper');
-                    const assetId = wrapper.dataset.asset;
-                    const rect    = btn.getBoundingClientRect();
-                    const dropW   = 165;
+                    const wrapper    = btn.closest('.action-menu-wrapper');
+                    const contractId = wrapper.dataset.contract;
+                    const rect       = btn.getBoundingClientRect();
+                    const dropW      = 165;
 
                     let left = rect.right - dropW;
                     let top  = rect.bottom + 6;
 
-                    if (ddLihat) ddLihat.href = routes[`detail_${assetId}`] || `/asset/${assetId}`;
-                    if (ddEdit) ddEdit.href = routes[`edit_${assetId}`] || `/jatuh-tempo/${assetId}/edit`;
-                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${assetId}`] || `/admin/assets/${assetId}`;
+                    if (ddLihat) ddLihat.href = routes[`detail_${contractId}`] || `/asset/${encodeURIComponent(contractId)}`;
+                    if (ddEdit) ddEdit.href = routes[`edit_${contractId}`] || `/jatuh-tempo/${encodeURIComponent(contractId)}/edit`;
+                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${contractId}`] || `/admin/assets/${encodeURIComponent(contractId)}`;
 
-                    if (isSmoothDropdownOpen(dropdown) && dropdown.dataset.open === assetId) {
+                    if (isSmoothDropdownOpen(dropdown) && dropdown.dataset.open === contractId) {
                         closeSmoothDropdown(dropdown);
                         dropdown.dataset.open = '';
                         return;
@@ -415,7 +411,7 @@
 
                     dropdown.style.top    = top + 'px';
                     dropdown.style.left   = left + 'px';
-                    dropdown.dataset.open = assetId;
+                    dropdown.dataset.open = contractId;
                     openSmoothDropdown(dropdown);
                 } else if (!e.target.closest('#global-action-dropdown')) {
                     closeSmoothDropdown(dropdown);

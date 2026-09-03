@@ -66,7 +66,7 @@ Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index
 Route::get('/reports', [LaporanController::class, 'index'])->name('reports.alias');
 
 // ================= DETAIL ASET =================
-Route::get('/asset/{asset_number}', [AssetController::class, 'showKai'])->name('asset.detail');
+Route::get('/asset/{asset_number}', [AssetController::class, 'showKai'])->name('asset.detail')->where('asset_number', '.*');
 
 // ================= AUTH PROTECTED CRUD & MUTATIONS (ADMIN ONLY) =================
 Route::middleware('auth')->group(function () {
@@ -77,25 +77,29 @@ Route::middleware('auth')->group(function () {
     // Kontrak / Tambah Aset
     Route::get('/daftar-kontrak/tambah', [ContractController::class, 'create'])->name('contracts.create');
     Route::post('/daftar-kontrak', [ContractController::class, 'store'])->name('contracts.store');
-    Route::get('/daftar-kontrak/{asset_number}/edit', [ContractController::class, 'edit'])->name('contracts.edit');
-    Route::put('/daftar-kontrak/{asset_number}', [ContractController::class, 'update'])->name('contracts.update');
+    Route::get('/daftar-kontrak/{asset_number}/edit', [ContractController::class, 'edit'])->name('contracts.edit')->where('asset_number', '.*');
+    Route::put('/daftar-kontrak/{asset_number}', [ContractController::class, 'update'])->name('contracts.update')->where('asset_number', '.*');
     Route::get('/asset/tambah', [ContractController::class, 'create'])->name('assets.create');
 
     // Jatuh Tempo
-    Route::get('/jatuh-tempo/{asset_number}/edit', [JatuhTempoController::class, 'edit'])->name('due-dates.edit');
-    Route::put('/jatuh-tempo/{asset_number}', [JatuhTempoController::class, 'update'])->name('due-dates.update');
+    Route::get('/jatuh-tempo/{asset_number}/edit', [JatuhTempoController::class, 'edit'])->name('due-dates.edit')->where('asset_number', '.*');
+    Route::put('/jatuh-tempo/{asset_number}', [JatuhTempoController::class, 'update'])->name('due-dates.update')->where('asset_number', '.*');
 
     // Backlog
-    Route::get('/backlog/{asset_number}/edit', [BacklogController::class, 'edit'])->name('backlog.edit');
-    Route::put('/backlog/{asset_number}', [BacklogController::class, 'update'])->name('backlog.update');
+    Route::get('/backlog/{asset_number}/edit', [BacklogController::class, 'edit'])->name('backlog.edit')->where('asset_number', '.*');
+    Route::put('/backlog/{asset_number}', [BacklogController::class, 'update'])->name('backlog.update')->where('asset_number', '.*');
 
     // Laporan
-    Route::get('/laporan/{asset_number}/edit', [LaporanController::class, 'edit'])->name('laporan.edit');
-    Route::put('/laporan/{asset_number}', [LaporanController::class, 'update'])->name('laporan.update');
+    Route::get('/laporan/{asset_number}/edit', [LaporanController::class, 'edit'])->name('laporan.edit')->where('asset_number', '.*');
+    Route::put('/laporan/{asset_number}', [LaporanController::class, 'update'])->name('laporan.update')->where('asset_number', '.*');
 
-    // Hapus Aset
-    Route::delete('/asset/{asset_number}', [AssetController::class, 'destroy'])->name('admin.assets.destroy');
-    Route::delete('/assets/{asset_number}', [AssetController::class, 'destroy'])->name('assets.destroy');
+    // Detail Lanjutan Update
+    Route::put('/asset/{asset_number}', [AssetController::class, 'update'])->name('assets.update')->where('asset_number', '.*');
+    Route::post('/asset/{asset_number}/edit', [AssetController::class, 'update'])->name('assets.update.post')->where('asset_number', '.*');
+
+    // Hapus Aset / Kontrak
+    Route::delete('/asset/{asset_number}', [AssetController::class, 'destroy'])->name('admin.assets.destroy')->where('asset_number', '.*');
+    Route::delete('/assets/{asset_number}', [AssetController::class, 'destroy'])->name('assets.destroy')->where('asset_number', '.*');
 });
 
 // ================= NOTIFIKASI =================

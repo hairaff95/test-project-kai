@@ -257,7 +257,7 @@ class PasswordResetRequestController extends Controller
         session()->forget(['otp_verified', 'reset_request_id']);
 
         return redirect()->route('login')
-            ->with('success', 'Kata sandi berhasil diperbarui. Silakan masuk dengan kata sandi baru.');
+            ->with('success', 'Sukses update kata sandi baru! Silakan masuk dengan kata sandi baru Anda.');
     }
 
     /**

@@ -53,8 +53,13 @@ class JatuhTempoController extends Controller
     {
         $contract = KaiContract::with(['tenant', 'asset', 'financial'])
             ->where('contract_number', $identifier)
-            ->orWhere('asset_number', $identifier)
-            ->firstOrFail();
+            ->first();
+
+        if (!$contract) {
+            $contract = KaiContract::with(['tenant', 'asset', 'financial'])
+                ->where('asset_number', $identifier)
+                ->firstOrFail();
+        }
 
         $asset     = $contract->asset;
         $tenant    = $contract->tenant;
@@ -67,8 +72,13 @@ class JatuhTempoController extends Controller
     {
         $contract = KaiContract::with(['tenant', 'asset', 'financial'])
             ->where('contract_number', $identifier)
-            ->orWhere('asset_number', $identifier)
-            ->firstOrFail();
+            ->first();
+
+        if (!$contract) {
+            $contract = KaiContract::with(['tenant', 'asset', 'financial'])
+                ->where('asset_number', $identifier)
+                ->firstOrFail();
+        }
 
         // Update Penyewa
         if ($contract->tenant) {
@@ -78,8 +88,9 @@ class JatuhTempoController extends Controller
             if ($request->filled('status_customer')) {
                 $contract->tenant->status_customer = $request->status_customer;
             }
-            if ($request->filled('brand')) {
-                $contract->tenant->brand = $request->brand;
+            if ($request->has('brand')) {
+                $b = trim((string)$request->brand);
+                $contract->tenant->brand = ($b === '' || strtolower($b) === 'kosong') ? '(kosong)' : $b;
             }
             $contract->tenant->save();
         }
@@ -107,8 +118,18 @@ class JatuhTempoController extends Controller
             }
         }
 
+        if ($contract->asset) {
+            if ($request->filled('latitude')) {
+                $contract->asset->latitude = (float)$request->latitude;
+            }
+            if ($request->filled('longitude')) {
+                $contract->asset->longitude = (float)$request->longitude;
+            }
+            $contract->asset->save();
+        }
+
         $contract->save();
 
-        return redirect()->route('due-dates.index')->with('success', 'Data jatuh tempo berhasil diperbarui.');
+        return redirect()->route('due-dates.index')->with('success', 'Sukses update data jatuh tempo terbaru!');
     }
 }

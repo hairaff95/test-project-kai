@@ -1751,6 +1751,65 @@
         </svg>
         @break
 
+    @case('toast-sukses')
+    @case('toast-success')
+        <svg {{ $attributes->merge(['class' => 'w-8 h-8 shrink-0', 'viewBox' => '0 0 32 32', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <circle opacity="0.3" cx="16" cy="16" r="16" fill="url(#toast_radial_success)"/>
+            <path d="M16 24.3333C20.6024 24.3333 24.3333 20.6024 24.3333 16C24.3333 11.3976 20.6024 7.66667 16 7.66667C11.3976 7.66667 7.66666 11.3976 7.66666 16C7.66666 20.6024 11.3976 24.3333 16 24.3333Z" fill="url(#toast_linear_success)"/>
+            <path d="M14.8167 18.9833C14.65 18.9833 14.4917 18.9167 14.375 18.8L12.0167 16.4417C11.775 16.2 11.775 15.8 12.0167 15.5583C12.2583 15.3167 12.6583 15.3167 12.9 15.5583L14.8167 17.475L19.1 13.1917C19.3417 12.95 19.7417 12.95 19.9833 13.1917C20.225 13.4333 20.225 13.8333 19.9833 14.075L15.2583 18.8C15.1417 18.9167 14.9833 18.9833 14.8167 18.9833Z" fill="#171717"/>
+            <defs>
+                <radialGradient id="toast_radial_success" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16 16) rotate(90) scale(21)">
+                    <stop offset="0.162337" stop-color="#01E869"/>
+                    <stop offset="1" stop-color="#FDFDFD" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="toast_linear_success" x1="16" y1="7.66667" x2="16" y2="30.5833" gradientUnits="userSpaceOnUse">
+                    <stop offset="0.17299" stop-color="#00D952"/>
+                    <stop offset="0.790678" stop-color="#00EF74"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        @break
+
+    @case('toast-gagal')
+    @case('toast-error')
+    @case('toast-danger')
+        <svg {{ $attributes->merge(['class' => 'w-8 h-8 shrink-0', 'viewBox' => '0 0 32 32', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <circle opacity="0.3" cx="16" cy="16" r="16" fill="url(#toast_radial_error)"/>
+            <path d="M16 24.3333C20.6024 24.3333 24.3333 20.6024 24.3333 16C24.3333 11.3976 20.6024 7.66666 16 7.66666C11.3976 7.66666 7.66666 11.3976 7.66666 16C7.66666 20.6024 11.3976 24.3333 16 24.3333Z" fill="url(#toast_linear_error)"/>
+            <path d="M17.06 15.9956L19.36 13.6956C19.65 13.4056 19.65 12.9256 19.36 12.6356C19.07 12.3456 18.59 12.3456 18.3 12.6356L16 14.9356L13.7 12.6356C13.41 12.3456 12.93 12.3456 12.64 12.6356C12.35 12.9256 12.35 13.4056 12.64 13.6956L14.94 15.9956L12.64 18.2956C12.35 18.5856 12.35 19.0656 12.64 19.3556C12.79 19.5056 12.98 19.5756 13.17 19.5756C13.36 19.5756 13.55 19.5056 13.7 19.3556L16 17.0556L18.3 19.3556C18.45 19.5056 18.64 19.5756 18.83 19.5756C19.02 19.5756 19.21 19.5056 19.36 19.3556C19.65 19.0656 19.65 18.5856 19.36 18.2956L17.06 15.9956Z" fill="#171717"/>
+            <defs>
+                <radialGradient id="toast_radial_error" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16 16) rotate(90) scale(21)">
+                    <stop offset="0.162337" stop-color="#FF4D76"/>
+                    <stop offset="1" stop-color="#FDFDFD" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="toast_linear_error" x1="16" y1="7.66666" x2="16" y2="30.5833" gradientUnits="userSpaceOnUse">
+                    <stop offset="0.17299" stop-color="#EA305B"/>
+                    <stop offset="0.790678" stop-color="#FF4D76"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        @break
+
+    @case('toast-peringatan')
+    @case('toast-warning')
+    @case('toast-info')
+        <svg {{ $attributes->merge(['class' => 'w-8 h-8 shrink-0', 'viewBox' => '0 0 32 32', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <circle opacity="0.3" cx="16" cy="16" r="16" fill="url(#toast_radial_warning)"/>
+            <path d="M14.2679 8.5C15.0377 7.16667 16.9623 7.16667 17.7321 8.5L24.6603 20.5C25.4301 21.8333 24.4678 23.5 22.9282 23.5H9.0718C7.5322 23.5 6.56995 21.8333 7.33975 20.5L14.2679 8.5Z" fill="url(#toast_linear_warning)"/>
+            <path d="M16 13V17M16 19.5V20" stroke="#171717" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs>
+                <radialGradient id="toast_radial_warning" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16 16) rotate(90) scale(21)">
+                    <stop offset="0.162337" stop-color="#FFB800"/>
+                    <stop offset="1" stop-color="#FDFDFD" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="toast_linear_warning" x1="16" y1="7.66666" x2="16" y2="24" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#FF9900"/>
+                    <stop offset="1" stop-color="#FFC000"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        @break
+
     @default
         <!-- Icon {{ $name }} not found -->
 @endswitch

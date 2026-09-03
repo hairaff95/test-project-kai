@@ -204,11 +204,9 @@
                             <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight">
                                 {{ $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono' }}
                             </h3>
-                            @if($item->tenant?->brand)
-                                <p class="text-xs text-[#0066FF] dark:text-[#3B82F6] font-semibold mt-0.5">Brand: {{ $item->tenant->brand }}</p>
-                            @endif
+                            <p class="text-xs text-gray-500 dark:text-[#9AA0A6] font-normal mt-0.5">Brand: {{ $item->tenant?->brand ?: '(kosong)' }}</p>
                             <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-1 line-clamp-2 leading-relaxed">
-                                {{ $item->asset?->asset_block_name ?? 'JL. SLAMET 17 KEL. BENDAN KEC. PEKALONGAN BARAT KAB. PEKALONGAN' }}
+                                {{ $item->asset_block_name ?? $item->asset?->asset_block_name ?? '-' }}
                             </p>
                         </div>
 
@@ -220,7 +218,7 @@
                             </div>
                             <div>
                                 <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Waktu Kontrak</span>
-                                <span class="font-semibold text-gray-800 dark:text-white">{{ $item->contract_duration ?? '12 Bulan' }}</span>
+                                <span class="font-semibold text-gray-800 dark:text-white">{{ $item->contract_date ?? '-' }}</span>
                             </div>
                             <div>
                                 <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Periode</span>
@@ -279,7 +277,7 @@
                                         {{ $item->contract_number ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->contract_duration ?? ($item->contract_date ? $item->contract_date->format('Y') : '42710') }}
+                                        {{ $item->contract_date ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">
                                         {{ $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono' }}
@@ -288,7 +286,7 @@
                                         {{ $item->tenant?->brand ?: '(kosong)' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 font-normal max-w-[280px] leading-snug">
-                                        {{ $item->asset?->asset_block_name ?? 'JL. SLAMET 17 KEL. BENDAN KEC. PEKALONGAN BARAT KAB. PEKALONGAN' }}
+                                        {{ $item->asset_block_name ?? $item->asset?->asset_block_name ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
                                         {{ $item->asset?->jenis_asset ?? 'Tanah' }}
@@ -297,7 +295,7 @@
                                         {{ $item->start_datetime ? $item->start_datetime->format('d/m/y') : '01/01/16' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->end_datetime_baru ? $item->end_datetime_baru->format('m/d/Y') : ($item->end_datetime ? $item->end_datetime->format('m/d/Y') : '12/31/2026') }}
+                                        {{ $item->end_datetime_baru ? $item->end_datetime_baru->format('d/m/y') : ($item->end_datetime ? $item->end_datetime->format('d/m/y') : '-') }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-900 dark:text-white font-normal whitespace-nowrap">
                                         {{ is_numeric($item->price) ? number_format((float)$item->price, 0, ',', '.') : ($item->price_formatted ?? '2.264.394') }}
@@ -307,7 +305,7 @@
                                     </td>
                                     <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
-                                             data-asset="{{ $item->asset_number }}">
+                                             data-contract="{{ $item->contract_number }}">
                                             <button
                                                 type="button"
                                                 class="action-menu-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer"
@@ -320,7 +318,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="11" class="text-center py-8 text-gray-400 dark:text-[#9AA0A6]">
+                                    <td colspan="10" class="text-center py-8 text-gray-400 dark:text-[#9AA0A6]">
                                         Tidak ada data kontrak yang tersedia.
                                     </td>
                                 </tr>
@@ -348,7 +346,7 @@
             <x-icon name="edit" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-300 shrink-0" />
             <span>Edit</span>
         </a>
-        <form id="dd-delete-form" method="POST" onsubmit="return confirm('Hapus kontrak aset ini?')">
+        <form id="dd-delete-form" method="POST" onsubmit="event.preventDefault(); return window.confirmDelete(this, 'Apakah Anda yakin ingin menghapus data kontrak aset ini?');">
             @csrf @method('DELETE')
             <button type="submit" class="flex w-full items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer">
                 <x-icon name="delete" class="w-4 h-4 sm:w-5 sm:h-5 text-[#EF4444] shrink-0" />
@@ -379,16 +377,12 @@
                 return el && !el.classList.contains('invisible');
             }
 
-            const routes = {
-                detail: (id) => `/asset/${id}`,
-                edit:   (id) => `/daftar-kontrak/${id}/edit`,
-                delete: (id) => `/admin/assets/${id}`,
-            };
+            const routes = {};
 
             @foreach($contracts as $item)
-            routes['detail_{{ $item->asset_number }}'] = '{{ route('asset.detail', $item->asset_number) }}';
-            routes['edit_{{ $item->asset_number }}']   = '{{ route('contracts.edit', $item->asset_number) }}';
-            routes['delete_{{ $item->asset_number }}'] = '{{ route('admin.assets.destroy', $item->asset_number) }}';
+            routes['detail_{{ $item->contract_number }}'] = '{{ route('asset.detail', $item->contract_number) }}';
+            routes['edit_{{ $item->contract_number }}']   = '{{ route('contracts.edit', $item->contract_number) }}';
+            routes['delete_{{ $item->contract_number }}'] = '{{ route('admin.assets.destroy', $item->contract_number) }}';
             @endforeach
 
             document.addEventListener('click', function (e) {
@@ -397,19 +391,19 @@
                 if (btn) {
                     e.stopPropagation();
 
-                    const wrapper = btn.closest('.action-menu-wrapper');
-                    const assetId = wrapper.dataset.asset;
-                    const rect    = btn.getBoundingClientRect();
-                    const dropW   = 165;
+                    const wrapper    = btn.closest('.action-menu-wrapper');
+                    const contractId = wrapper.dataset.contract;
+                    const rect       = btn.getBoundingClientRect();
+                    const dropW      = 165;
 
                     let left = rect.right - dropW;
                     let top  = rect.bottom + 6;
 
-                    if (ddLihat) ddLihat.href = routes[`detail_${assetId}`] || `/asset/${assetId}`;
-                    if (ddEdit) ddEdit.href = routes[`edit_${assetId}`] || `/daftar-kontrak/${assetId}/edit`;
-                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${assetId}`] || `/admin/assets/${assetId}`;
+                    if (ddLihat) ddLihat.href = routes[`detail_${contractId}`] || `/asset/${encodeURIComponent(contractId)}`;
+                    if (ddEdit) ddEdit.href = routes[`edit_${contractId}`] || `/daftar-kontrak/${encodeURIComponent(contractId)}/edit`;
+                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${contractId}`] || `/admin/assets/${encodeURIComponent(contractId)}`;
 
-                    if (isSmoothDropdownOpen(dropdown) && dropdown.dataset.open === assetId) {
+                    if (isSmoothDropdownOpen(dropdown) && dropdown.dataset.open === contractId) {
                         closeSmoothDropdown(dropdown);
                         dropdown.dataset.open = '';
                         return;
@@ -417,7 +411,7 @@
 
                     dropdown.style.top    = top + 'px';
                     dropdown.style.left   = left + 'px';
-                    dropdown.dataset.open = assetId;
+                    dropdown.dataset.open = contractId;
                     openSmoothDropdown(dropdown);
                 } else if (!e.target.closest('#global-action-dropdown')) {
                     closeSmoothDropdown(dropdown);

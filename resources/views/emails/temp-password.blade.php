@@ -33,7 +33,7 @@
             </div>
 
             <div class="warning">
-                🔒 Segera ganti password ini setelah berhasil masuk. Password sementara ini hanya berlaku untuk login pertama.
+                <strong>Penting:</strong> Segera ganti password ini setelah berhasil masuk. Password sementara ini hanya berlaku untuk login pertama.
             </div>
 
             <div class="steps">

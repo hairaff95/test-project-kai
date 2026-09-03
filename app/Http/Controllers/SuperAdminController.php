@@ -62,7 +62,7 @@ class SuperAdminController extends Controller
         ]);
 
         return redirect()->route('settings.index', ['tab' => 'profil-saya'])
-            ->with('success', 'Profil berhasil diperbarui.');
+            ->with('success', 'Sukses update profil pengguna!');
     }
 
     // ─── Kelola Admin ──────────────────────────────────────────────────────────
@@ -86,7 +86,7 @@ class SuperAdminController extends Controller
         ]);
 
         return redirect()->route('settings.index')
-            ->with('success', 'Admin berhasil dibuat.');
+            ->with('success', 'Sukses menambahkan admin baru!');
     }
 
     public function adminToggleActive(User $admin)
@@ -99,7 +99,7 @@ class SuperAdminController extends Controller
         $status = $admin->is_active ? 'diaktifkan' : 'dinonaktifkan';
 
         return redirect()->route('settings.index')
-            ->with('success', "Admin {$admin->name} berhasil {$status}.");
+            ->with('success', "Sukses: Admin {$admin->name} berhasil {$status}!");
     }
 
     public function adminDestroy(User $admin)
@@ -110,7 +110,7 @@ class SuperAdminController extends Controller
         $admin->delete();
 
         return redirect()->route('settings.index')
-            ->with('success', 'Admin berhasil dihapus.');
+            ->with('success', 'Sukses menghapus data admin!');
     }
 
     // ─── Kelola Request Reset Password ─────────────────────────────────────────
@@ -119,7 +119,7 @@ class SuperAdminController extends Controller
     {
         if (!$resetRequest->isPending()) {
             return redirect()->route('settings.index', ['tab' => 'persetujuan-sandi'])
-                ->with('error', 'Request ini sudah diproses.');
+                ->with('error', 'Gagal: Permintaan ini sudah diproses sebelumnya.');
         }
 
         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -138,18 +138,19 @@ class SuperAdminController extends Controller
         }
 
         return redirect()->route('settings.index', ['tab' => 'persetujuan-sandi'])
-            ->with('success', 'Request disetujui. OTP telah dikirim ke email admin.');    }
+            ->with('success', 'Sukses menyetujui permintaan! Kode OTP telah dikirim ke email.');
+    }
 
     public function rejectRequest(PasswordResetRequest $resetRequest)
     {
         if (!$resetRequest->isPending()) {
             return redirect()->route('settings.index', ['tab' => 'persetujuan-sandi'])
-                ->with('error', 'Request ini sudah diproses.');
+                ->with('error', 'Gagal: Permintaan ini sudah diproses sebelumnya.');
         }
 
         $resetRequest->update(['status' => 'rejected']);
 
         return redirect()->route('settings.index', ['tab' => 'persetujuan-sandi'])
-            ->with('success', 'Request berhasil ditolak.');
+            ->with('success', 'Sukses menolak permintaan reset kata sandi.');
     }
 }

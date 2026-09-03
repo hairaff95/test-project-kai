@@ -35,48 +35,37 @@
             <p class="text-gray-900 dark:text-white font-bold italic text-lg">Tracker<span class="text-[#0066FF] dark:text-[#3B82F6]">App</span></p>
         </div>
 
-        {{-- Flash messages --}}
-        @if(session('success'))
-            <div class="mb-5 flex items-center gap-3 bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 px-4 py-3 rounded-xl text-sm">
-                ✅ {{ session('success') }}
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="mb-5 flex items-center gap-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-4 py-3 rounded-xl text-sm">
-                ❌ {{ session('error') }}
-            </div>
-        @endif
-        @if($errors->any())
-            <div class="mb-5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-4 py-3 rounded-xl text-sm">
-                {{ $errors->first() }}
-            </div>
-        @endif
-
         {{-- Heading --}}
-        <h1 class="text-3xl font-bold text-gray-950 dark:text-white tracking-tight mb-2">
-            Reset Password
+        <h1 class="text-3xl font-bold text-gray-950 dark:text-white tracking-tight mb-3">
+            Lupa Kata Sandi
         </h1>
-        <p class="text-sm text-gray-500 dark:text-[#9AA0A6] leading-relaxed mb-8">
-            Masukkan email yang terdaftar. Request akan dikirim ke Super Admin untuk disetujui.
+        <p class="text-sm text-gray-500 dark:text-[#9AA0A6] mb-8 leading-relaxed">
+            Masukkan email akun Anda. Permintaan reset akan dikirimkan ke Super Admin untuk disetujui.
         </p>
 
-        {{-- Form input email --}}
-        <form method="POST" action="{{ route('password.submit-request') }}" class="space-y-5">
+        <form action="{{ route('password.request.store') }}" method="POST" class="space-y-5">
             @csrf
 
+            {{-- Email Input --}}
             <div>
-                <label for="email" class="block text-xs font-semibold text-gray-700 dark:text-white mb-2">
-                    Alamat Email
+                <label for="email" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1.5">
+                    Email Terdaftar
                 </label>
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    value="{{ old('email') }}"
-                    placeholder="masukkan email yang terdaftar"
-                    autofocus
-                    class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-3 px-4 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] dark:focus:border-[#3B82F6] focus:outline-none transition @error('email') border-red-400 @enderror"
-                >
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                        <x-icon name="mail" class="w-5 h-5" />
+                    </div>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value="{{ old('email') }}"
+                        required
+                        autofocus
+                        placeholder="contoh: admin@kai.id"
+                        class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-10 pr-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-[#0066FF] focus:outline-none focus:ring-2 focus:ring-[#0066FF]/20 transition"
+                    >
+                </div>
                 @error('email')
                     <p class="mt-1.5 text-xs text-red-500">{{ $message }}</p>
                 @enderror
@@ -84,12 +73,14 @@
 
             {{-- Info alur --}}
             <div class="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/60 rounded-xl p-4 text-xs text-blue-800 dark:text-blue-200">
-                <p class="font-semibold mb-1.5 text-blue-900 dark:text-blue-300">Informasi Proses:</p>
+                <p class="font-semibold mb-1.5 text-blue-900 dark:text-blue-300 flex items-center gap-1.5">
+                    <x-icon name="toast-peringatan" class="w-4 h-4" /> Informasi Proses:
+                </p>
                 <ol class="list-decimal pl-4 space-y-1 text-blue-700 dark:text-blue-300/90">
-                    <li>Masukkan email → request dikirim ke Super Admin</li>
-                    <li>Super Admin menyetujui → kode OTP dikirim ke email Anda</li>
-                    <li>Masukkan OTP → atur password baru</li>
-                    <li>Jika tidak direspon 24 jam → password sementara otomatis dikirim</li>
+                    <li>Masukkan email &mdash; request dikirim ke Super Admin</li>
+                    <li>Super Admin menyetujui &mdash; kode OTP dikirim ke email Anda</li>
+                    <li>Masukkan OTP &mdash; atur password baru</li>
+                    <li>Jika tidak direspon 24 jam &mdash; password sementara otomatis dikirim</li>
                 </ol>
             </div>
 
@@ -109,5 +100,6 @@
 
     </div>
 
+    <x-toast />
 </body>
 </html>

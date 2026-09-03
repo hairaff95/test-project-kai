@@ -56,16 +56,16 @@
                 <div class="lg:hidden mb-3.5 flex flex-col gap-2">
                     <div>
                         <h1 class="text-xl font-bold tracking-tight text-gray-950 dark:text-white leading-tight">
-                            {{ $asset->asset_block_name }}
+                            {{ $contract?->asset_block_name ?? $asset->asset_block_name ?? '-' }}
                         </h1>
                         <p class="mt-1 text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6] uppercase tracking-wide font-normal">
-                            {{ $asset->wilayah_asset ?? 'JL. SLAMET 17 KEL. BENDAN KEC. PEKALONGAN BARAT KAB. PEKALONGAN' }} ({{ $asset->asset_number }})
+                            {{ $asset->stasiun ?? $asset->wilayah_asset ?? '-' }} ({{ $asset->asset_number }})
                         </p>
                     </div>
 
-                    {{-- DESKRIPSI MOBILE --}}
+                    {{-- NAMA PENYEWA (FULLNAME) MOBILE --}}
                     <p class="text-xs leading-relaxed text-gray-500 dark:text-[#9AA0A6] font-normal">
-                        {{ $asset->description ?? ($contract?->keterangan ?? 'Kawasan strategis dekat pusat niaga Tegal') }}
+                        {{ $tenant?->fullname ?? '-' }}
                     </p>
 
                     {{-- TOMBOL EDIT & HAPUS MOBILE (Di bawah teks deskripsi) --}}
@@ -80,12 +80,11 @@
                             <span>Edit</span>
                         </button>
 
-                        <form action="{{ route('admin.assets.destroy', $asset->asset_number) }}" method="POST" id="form-hapus-aset-mobile">
+                        <form action="{{ route('admin.assets.destroy', $asset->asset_number) }}" method="POST" id="form-hapus-aset-mobile" onsubmit="event.preventDefault(); return window.confirmDelete(this, 'Apakah Anda yakin ingin menghapus data aset ini?');">
                             @csrf
                             @method('DELETE')
                             <button
-                                type="button"
-                                onclick="document.getElementById('modal-hapus').classList.remove('hidden')"
+                                type="submit"
                                 class="inline-flex items-center gap-1.5 rounded-lg bg-[#E52500] hover:bg-red-700 px-3 py-1.5 text-xs font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
                             >
                                 <x-icon name="icon-trash-edit-detail-peta" class="w-3.5 h-3.5 text-white" />
@@ -133,11 +132,11 @@
                         </div>
                         <div>
                             <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Tahun RKA</p>
-                            <p class="mt-0.5 text-[10px] sm:text-[11px] font-normal text-gray-800 dark:text-white">{{ $financial->tahun_rka ?? '-' }}</p>
+                            <p class="mt-0.5 text-[10px] sm:text-[11px] font-normal text-gray-800 dark:text-white">{{ $financial->tahun_rka !== null ? $financial->tahun_rka : '-' }}</p>
                         </div>
                         <div>
                             <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Ket. Pendapatan</p>
-                            <p class="mt-0.5 text-[10px] sm:text-[11px] font-normal leading-[1.4] text-gray-800 dark:text-white">{{ $asset->description ?? ($tenant?->fullname ?? '-') }}</p>
+                            <p class="mt-0.5 text-[10px] sm:text-[11px] font-normal leading-[1.4] text-gray-800 dark:text-white">-</p>
                         </div>
                         <div class="col-span-2">
                             <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Keterangan</p>
@@ -161,10 +160,10 @@
 
                         <div>
                             <h1 class="text-xl sm:text-[30px] font-bold tracking-tight text-gray-950 dark:text-white leading-tight">
-                                {{ $asset->asset_block_name }}
+                                {{ $contract?->asset_block_name ?? $asset->asset_block_name ?? '-' }}
                             </h1>
                             <p class="mt-1 text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6] uppercase tracking-wide font-normal">
-                                {{ $asset->wilayah_asset ?? 'JL. SLAMET 17 KEL. BENDAN KEC. PEKALONGAN BARAT KAB. PEKALONGAN' }} ({{ $asset->asset_number }})
+                                {{ $asset->stasiun ?? $asset->wilayah_asset ?? '-' }} ({{ $asset->asset_number }})
                             </p>
                         </div>
 
@@ -181,12 +180,11 @@
                                 <span>Edit</span>
                             </button>
 
-                            <form action="{{ route('admin.assets.destroy', $asset->asset_number) }}" method="POST" id="form-hapus-aset">
+                            <form action="{{ route('admin.assets.destroy', $asset->asset_number) }}" method="POST" id="form-hapus-aset" onsubmit="event.preventDefault(); return window.confirmDelete(this, 'Apakah Anda yakin ingin menghapus data aset ini?');">
                                 @csrf
                                 @method('DELETE')
                                 <button
-                                    type="button"
-                                    onclick="document.getElementById('modal-hapus').classList.remove('hidden')"
+                                    type="submit"
                                     class="inline-flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-[8px] bg-[#E52500] hover:bg-red-700 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
                                 >
                                     <x-icon name="icon-trash-edit-detail-peta" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
@@ -199,9 +197,9 @@
 
                     </div>
 
-                    {{-- DESKRIPSI --}}
+                    {{-- NAMA PENYEWA (FULLNAME) DESKTOP --}}
                     <p class="mt-2.5 sm:mt-4 text-xs sm:text-[13px] leading-relaxed text-gray-500 dark:text-[#9AA0A6] max-w-[850px] font-normal">
-                        {{ $asset->description ?? ($contract?->keterangan ?? 'Lorem ipsum dolor sit amet consectetur. Nisi vitae dolor lectus velit enim lorem. Nam mauris non egestas vitae blandit ultrices hendrerit nunc donec. Amet tellus tristique tortor fringilla enim vitae at. Ornare fermentum morbi ullamcorper ut tortor ut aenean tellus. Vestibulum suspendisse dapibus orci lectus.') }}
+                        {{ $tenant?->fullname ?? '-' }}
                     </p>
                 </div>
 
@@ -215,31 +213,31 @@
                     <div class="sm:hidden overflow-hidden rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] divide-y divide-gray-100 dark:divide-white/10 text-[11px]">
                         <div class="flex items-center justify-between px-3 py-2 bg-white dark:bg-[#1F2123]">
                             <span class="text-gray-400 dark:text-[#9AA0A6]">Wilayah Aset</span>
-                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $asset->wilayah_asset }}</span>
+                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $asset->wilayah_asset ?: '-' }}</span>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 bg-white dark:bg-[#1F2123]">
                             <span class="text-gray-400 dark:text-[#9AA0A6]">Jenis Aset</span>
-                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $asset->jenis_asset }}</span>
+                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $asset->jenis_asset ?: '-' }}</span>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 bg-white dark:bg-[#1F2123]">
                             <span class="text-gray-400 dark:text-[#9AA0A6]">Stasiun</span>
-                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $asset->stasiun }}</span>
+                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $asset->stasiun ?: '-' }}</span>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 bg-white dark:bg-[#1F2123]">
                             <span class="text-gray-400 dark:text-[#9AA0A6]">Luas Area</span>
-                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $asset->size_area_formatted }}</span>
+                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $contract?->size_area_formatted ?? ($asset->size_area ? $asset->size_area_formatted : '-') }}</span>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 bg-white dark:bg-[#1F2123]">
                             <span class="text-gray-400 dark:text-[#9AA0A6]">Jenis Kontrak</span>
-                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $contract?->jenis_kontrak ?? '-' }}</span>
+                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $contract?->jenis_kontrak ?: '-' }}</span>
                         </div>
                         <div class="flex items-center justify-between px-3 py-2 bg-white dark:bg-[#1F2123]">
                             <span class="text-gray-400 dark:text-[#9AA0A6]">Peruntukan</span>
-                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $asset->peruntukan }}</span>
+                            <span class="font-medium text-gray-800 dark:text-white text-right">{{ $contract?->peruntukan ?? ($asset->peruntukan ?: '-') }}</span>
                         </div>
                         <div class="flex flex-col gap-0.5 px-3 py-2 bg-white dark:bg-[#1F2123]">
                             <span class="text-gray-400 dark:text-[#9AA0A6]">Alamat Aset</span>
-                            <span class="font-medium text-gray-800 dark:text-white leading-snug">{{ $asset->description ?? ($asset->wilayah_asset . ', Stasiun ' . $asset->stasiun) }}</span>
+                            <span class="font-medium text-gray-800 dark:text-white leading-snug">{{ $contract?->asset_block_name ?? $asset->asset_block_name ?? ($asset->description ?: '-') }}</span>
                         </div>
                     </div>
 
@@ -248,37 +246,37 @@
                         <div class="grid grid-cols-3">
                             <div class="flex min-h-[52px] items-center border-b border-r border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123]">
                                 <div class="w-[50%] bg-white dark:bg-[#1F2123] px-3.5 py-3 text-[11px] text-gray-900 dark:text-[#9AA0A6] font-normal">Wilayah Aset</div>
-                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $asset->wilayah_asset }}</div>
+                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $asset->wilayah_asset ?: '-' }}</div>
                             </div>
 
                             <div class="flex min-h-[52px] items-center border-b border-r border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123]">
                                 <div class="w-[50%] bg-white dark:bg-[#1F2123] px-3.5 py-3 text-[11px] text-gray-900 dark:text-[#9AA0A6] font-normal">Jenis Aset</div>
-                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $asset->jenis_asset }}</div>
+                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $asset->jenis_asset ?: '-' }}</div>
                             </div>
 
                             <div class="row-span-3 flex items-center border-b border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123]">
                                 <div class="w-[35%] bg-white dark:bg-[#1F2123] px-3.5 py-3 text-[11px] text-gray-900 dark:text-[#9AA0A6] font-normal self-stretch flex items-center border-r border-gray-200 dark:border-white/10">Alamat Aset</div>
-                                <div class="flex w-[65%] items-center px-3.5 py-2 text-[11px] leading-[1.5] text-gray-800 dark:text-white font-normal">{{ $asset->description ?? ($asset->wilayah_asset . ', Stasiun ' . $asset->stasiun) }}</div>
+                                <div class="flex w-[65%] items-center px-3.5 py-2 text-[11px] leading-[1.5] text-gray-800 dark:text-white font-normal">{{ $contract?->asset_block_name ?? $asset->asset_block_name ?? ($asset->description ?: '-') }}</div>
                             </div>
 
                             <div class="flex min-h-[52px] items-center border-b border-r border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123]">
                                 <div class="w-[50%] bg-white dark:bg-[#1F2123] px-3.5 py-3 text-[11px] text-gray-900 dark:text-[#9AA0A6] font-normal">Stasiun</div>
-                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $asset->stasiun }}</div>
+                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $asset->stasiun ?: '-' }}</div>
                             </div>
 
                             <div class="flex min-h-[52px] items-center border-b border-r border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123]">
                                 <div class="w-[50%] bg-white dark:bg-[#1F2123] px-3.5 py-3 text-[11px] text-gray-900 dark:text-[#9AA0A6] font-normal">Luas Area</div>
-                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $asset->size_area_formatted }}</div>
+                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $contract?->size_area_formatted ?? ($asset->size_area ? $asset->size_area_formatted : '-') }}</div>
                             </div>
 
                             <div class="flex min-h-[52px] items-center border-r border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123]">
                                 <div class="w-[50%] bg-white dark:bg-[#1F2123] px-3.5 py-3 text-[11px] text-gray-900 dark:text-[#9AA0A6] font-normal">Jenis Kontrak</div>
-                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $contract?->jenis_kontrak ?? '-' }}</div>
+                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $contract?->jenis_kontrak ?: '-' }}</div>
                             </div>
 
                             <div class="flex min-h-[52px] items-center border-r border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123]">
                                 <div class="w-[50%] bg-white dark:bg-[#1F2123] px-3.5 py-3 text-[11px] text-gray-900 dark:text-[#9AA0A6] font-normal">Peruntukan</div>
-                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $asset->peruntukan }}</div>
+                                <div class="flex w-[50%] items-center justify-end px-3.5 text-right text-[11px] font-normal text-gray-800 dark:text-white">{{ $contract?->peruntukan ?? ($asset->peruntukan ?: '-') }}</div>
                             </div>
                         </div>
                     </div>
@@ -295,32 +293,32 @@
 
                         <div>
                             <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Nilai Kontrak</p>
-                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-semibold text-gray-900 dark:text-white">{{ $contract?->price_formatted ?? '-' }}</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-semibold text-gray-900 dark:text-white">{{ $contract && $contract->price ? 'Rp ' . number_format($contract->price, 0, ',', '.') : '-' }}</p>
                         </div>
 
                         <div>
                             <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Jumlah Hari</p>
-                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $financial ? number_format($financial->jumlah_hari, 0, ',', '.') . ' hari' : '-' }}</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $financial && $financial->jumlah_hari ? number_format($financial->jumlah_hari, 0, ',', '.') . ' hari' : '-' }}</p>
                         </div>
 
                         <div>
                             <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Nilai Per Hari</p>
-                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $financial ? 'Rp ' . number_format($financial->nilai_per_hari, 0, ',', '.') : '-' }}</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $financial && $financial->nilai_per_hari ? 'Rp ' . number_format($financial->nilai_per_hari, 0, ',', '.') : '-' }}</p>
                         </div>
 
                         <div>
                             <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Hari Berjalan</p>
-                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $financial ? number_format($financial->hari_2026, 0, ',', '.') . ' hari' : '-' }}</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $financial && $financial->hari_2026 ? number_format($financial->hari_2026, 0, ',', '.') . ' hari' : '-' }}</p>
                         </div>
 
                         <div>
                             <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Nilai Tahun Berjalan</p>
-                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $financial ? 'Rp ' . number_format($financial->nilai_2026, 0, ',', '.') : '-' }}</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $financial && $financial->nilai_2026 ? 'Rp ' . number_format($financial->nilai_2026, 0, ',', '.') : '-' }}</p>
                         </div>
 
                         <div>
                             <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Total Jan–Des</p>
-                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $financial ? 'Rp ' . number_format($financial->nilai_2026, 0, ',', '.') : '-' }}</p>
+                            <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $monthly && $monthly->jan_des !== null ? 'Rp ' . number_format($monthly->jan_des, 0, ',', '.') : '-' }}</p>
                         </div>
 
                     </div>
@@ -349,7 +347,7 @@
                                     <div class="flex border-b sm:border-b-0 {{ !$isLastRowDesktop ? 'sm:border-b' : '' }} {{ !$isLastRowMobile ? 'border-b' : 'border-b-0' }} border-r {{ $isLastColDesktop ? 'sm:border-r-0' : 'sm:border-r' }} {{ $isLastColMobile ? 'border-r-0' : 'border-r' }} border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123]">
                                         <div class="w-[38%] sm:w-[35%] bg-white dark:bg-[#1F2123] px-2 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-[11px] text-gray-900 dark:text-[#9AA0A6] font-normal border-r border-gray-200 dark:border-white/10">{{ $label }}</div>
                                         <div class="flex flex-1 items-center justify-end px-2 sm:px-3 text-[10px] sm:text-[11px] text-gray-800 dark:text-white font-normal bg-white dark:bg-[#1F2123]">
-                                            {{ $monthly ? number_format((float) $monthly->$col, 0, ',', '.') : '-' }}
+                                            {{ $monthly && $monthly->$col !== null ? number_format((float) $monthly->$col, 0, ',', '.') : '-' }}
                                         </div>
                                     </div>
                                 @endforeach
@@ -378,6 +376,17 @@
             <button type="button" id="tab-btn-admin" onclick="switchEditTab('admin')" class="font-medium text-gray-500 dark:text-white hover:text-gray-800 dark:hover:text-white pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer">Data Administratif</button>
             <button type="button" id="tab-btn-finansial" onclick="switchEditTab('finansial')" class="font-medium text-gray-500 dark:text-white hover:text-gray-800 dark:hover:text-white pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer">Data Finansial</button>
         </div>
+
+        {{-- FORM EDIT DRAWER --}}
+        <form id="form-edit-drawer" action="{{ route('assets.update', $contract?->contract_number ?? $asset->asset_number) }}" method="POST" enctype="multipart/form-data" class="flex-1 flex flex-col justify-between overflow-hidden">
+            @csrf
+            @method('PUT')
+
+            <input type="hidden" name="wilayah_asset" id="hidden-wilayah-asset" value="{{ $asset->wilayah_asset ?? 'Daop 4 Semarang' }}">
+            <input type="hidden" name="jenis_asset" id="hidden-jenis-asset" value="{{ $asset->jenis_asset ?? 'Rumah Perusahaan' }}">
+            <input type="hidden" name="jenis_kontrak" id="hidden-jenis-kontrak" value="{{ $contract?->jenis_kontrak ?? 'Kontrak Sewa' }}">
+            <input type="hidden" name="stasiun" id="hidden-stasiun" value="{{ $asset->stasiun ?? 'Pekalongan' }}">
+            <input type="hidden" name="keterangan" id="hidden-keterangan" value="{{ $contract?->keterangan ?? 'Non RKA' }}">
 
         {{-- ==================== TAB 1: INFORMASI ASET (3 SUB-PAGES) ==================== --}}
         <div id="tab-content-info" class="edit-tab-container flex-1 flex flex-col overflow-hidden">
@@ -419,22 +428,24 @@
                         <input
                             type="text"
                             name="subjudul_aset"
-                            value="{{ $asset->wilayah_asset ?? 'JL. SLAMET 17 KEL. BENDAN KEC. PEKALONGAN BARAT KAB. PEKALONGAN' }} ({{ $asset->asset_number }})"
+                            value="{{ $contract?->asset_block_name ?? $asset->asset_block_name ?? '-' }} ({{ $asset->asset_number }})"
                             class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
 
-                    {{-- Isi Deskripsi --}}
+                    {{-- Nama Penyewa (Fullname) --}}
                     <div>
                         <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
-                            Isi Deskripsi
+                            Nama Penyewa<span class="text-red-500">*</span>
                         </label>
-                        <textarea
-                            name="description"
-                            rows="3"
-                            class="w-full min-h-[85px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none leading-relaxed font-normal"
-                        >{{ $asset->description ?? ($contract?->keterangan ?? '') }}</textarea>
+                        <input
+                            type="text"
+                            name="nama_penyewa"
+                            value="{{ $tenant?->fullname ?? '' }}"
+                            placeholder="Masukkan nama penyewa"
+                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
                     </div>
 
                     {{-- Wilayah Aset (Background Gelap & Corner Radius 5 & DnD) --}}
@@ -442,7 +453,7 @@
                         <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
                             Wilayah Aset<span class="text-red-500">*</span>
                         </label>
-                        <div class="dnd-container min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-[#EFEFEF] dark:bg-[#282A2C] p-2.5 flex flex-wrap content-start gap-2 shadow-2xs">
+                        <div id="dnd-wilayah-container" class="dnd-container min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-[#EFEFEF] dark:bg-[#282A2C] p-2.5 flex flex-wrap content-start gap-2 shadow-2xs">
                             <div draggable="true" class="dnd-pill h-8 w-auto inline-flex items-center gap-2 rounded-[5px] border border-gray-300 dark:border-white/15 bg-white dark:bg-[#383C40] px-2.5 sm:px-3 text-xs text-gray-700 dark:text-white shadow-2xs cursor-grab active:cursor-grabbing select-none transition-all duration-150 shrink-0">
                                 <x-icon name="icon-drag-n-drop" class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 shrink-0 pointer-events-none" />
                                 <span class="font-medium">{{ $asset->wilayah_asset ?? 'Daop 4 Semarang' }}</span>
@@ -467,7 +478,7 @@
                         <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
                             Jenis Aset<span class="text-red-500">*</span>
                         </label>
-                        <div class="dnd-container min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-[#EFEFEF] dark:bg-[#282A2C] p-2.5 flex flex-wrap content-start gap-2 shadow-2xs">
+                        <div id="dnd-jenis-container" class="dnd-container min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-[#EFEFEF] dark:bg-[#282A2C] p-2.5 flex flex-wrap content-start gap-2 shadow-2xs">
                             <div draggable="true" class="dnd-pill h-8 w-auto inline-flex items-center gap-2 rounded-[5px] border border-gray-300 dark:border-white/15 bg-white dark:bg-[#383C40] px-2.5 sm:px-3 text-xs text-gray-700 dark:text-white shadow-2xs cursor-grab active:cursor-grabbing select-none transition-all duration-150 shrink-0">
                                 <x-icon name="icon-drag-n-drop" class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 shrink-0 pointer-events-none" />
                                 <span class="font-medium">Rumah Perusahaan</span>
@@ -531,7 +542,7 @@
                         <input
                             type="text"
                             name="size_area"
-                            value="{{ $asset->size_area_formatted ?? '2.462,00 m²' }}"
+                            value="{{ $contract?->size_area_formatted ?? ($asset->size_area ? $asset->size_area_formatted : '') }}"
                             class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -545,7 +556,7 @@
                             name="full_address"
                             rows="3"
                             class="w-full min-h-[85px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none leading-relaxed font-normal"
-                        >{{ $asset->description ?? 'Jl. Panggung Timur No. 13, Kel. Panggung, Kec. Tegal Timur, Kota Tegal, Jawa Tengah (Lintas Non Op Tegal - Pelabuhan)' }}</textarea>
+                        >{{ $contract?->asset_block_name ?? $asset->asset_block_name ?? ($asset->description ?: '') }}</textarea>
                     </div>
 
                     {{-- Peruntukan --}}
@@ -556,7 +567,7 @@
                         <input
                             type="text"
                             name="peruntukan"
-                            value="{{ $asset->peruntukan ?? 'Gudang Logistik Komersial' }}"
+                            value="{{ $contract?->peruntukan ?? ($asset->peruntukan ?? '') }}"
                             class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -566,7 +577,7 @@
                         <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
                             Jenis Kontrak<span class="text-red-500">*</span>
                         </label>
-                        <div class="dnd-container min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-[#EFEFEF] dark:bg-[#282A2C] p-2.5 flex flex-wrap content-start gap-2 shadow-2xs">
+                        <div id="dnd-kontrak-container" class="dnd-container min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-[#EFEFEF] dark:bg-[#282A2C] p-2.5 flex flex-wrap content-start gap-2 shadow-2xs">
                             <div draggable="true" class="dnd-pill h-8 w-auto inline-flex items-center gap-2 rounded-[5px] border border-gray-300 dark:border-white/15 bg-white dark:bg-[#383C40] px-2.5 sm:px-3 text-xs text-gray-700 dark:text-white shadow-2xs cursor-grab active:cursor-grabbing select-none transition-all duration-150 shrink-0">
                                 <x-icon name="icon-drag-n-drop" class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 shrink-0 pointer-events-none" />
                                 <span class="font-medium">Kontrak Pengawasan</span>
@@ -599,7 +610,7 @@
                         <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
                             Stasiun<span class="text-red-500">*</span>
                         </label>
-                        <div class="dnd-container min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-[#EFEFEF] dark:bg-[#282A2C] p-2.5 flex flex-wrap content-start gap-2 shadow-2xs">
+                        <div id="dnd-stasiun-container" class="dnd-container min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-[#EFEFEF] dark:bg-[#282A2C] p-2.5 flex flex-wrap content-start gap-2 shadow-2xs">
                             @php
                                 $stasiuns = ['Pekalongan', 'Kaliwungu', 'Weleri', 'Batang', 'Ujungnegoro', 'Kendal'];
                             @endphp
@@ -649,7 +660,7 @@
                 <div class="flex-1 overflow-y-auto pr-1 space-y-4 text-left">
                     {{-- Upload Box Dashed (Larger height matching design) --}}
                     <div onclick="document.getElementById('file-upload-input').click()" class="rounded-2xl border-2 border-dashed border-gray-300 dark:border-white/20 bg-transparent hover:bg-gray-50/70 dark:hover:bg-white/5 py-8 px-5 flex flex-col items-center justify-center text-center transition cursor-pointer">
-                        <input type="file" id="file-upload-input" class="hidden" accept="image/jpeg,image/png,image/webp,image/jpg" onchange="handleFileUpload(event)" multiple>
+                        <input type="file" id="file-upload-input" name="images[]" class="hidden" accept="image/jpeg,image/png,image/webp,image/jpg" onchange="handleFileUpload(event)" multiple>
                         <x-icon name="icon-upload-gambar" class="w-16 h-16 mb-2.5 text-[#4F4F4F] dark:text-[#9AA0A6]" />
                         <p class="text-xs sm:text-[13px] font-medium text-black dark:text-white">Klik ikon untuk tambah gambar dibawah 10 MB</p>
                         <p class="text-[11px] text-gray-400 dark:text-[#9AA0A6] mt-0.5 font-normal">pilih dalam format JPEG, JPG, PNG, WEBP</p>
@@ -714,7 +725,7 @@
                     <div class="flex justify-end pt-3">
                         <button
                             type="button"
-                            onclick="closeEditDrawer()"
+                            onclick="saveEditDrawer()"
                             class="inline-flex items-center gap-2 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 px-6 py-2.5 text-sm font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
                         >
                             <svg class="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -736,7 +747,7 @@
                 <h2 class="text-base sm:text-lg font-medium text-black dark:text-white">Data administratif</h2>
                 <button
                     type="button"
-                    onclick="closeEditDrawer()"
+                    onclick="saveEditDrawer()"
                     class="inline-flex items-center gap-1.5 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 px-4 py-1.5 text-xs sm:text-sm font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
                 >
                     <svg class="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -755,7 +766,7 @@
                     <input
                         type="text"
                         name="gl_account"
-                        value="{{ $financial->gl_account ?? '411101 - Sewa Tanah Row' }}"
+                        value="{{ $financial->gl_account ?? '' }}"
                         class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
@@ -768,7 +779,7 @@
                     <input
                         type="text"
                         name="form_rka"
-                        value="{{ $financial->form_rka ?? 'RKA' }}"
+                        value="{{ $financial->form_rka ?? '' }}"
                         class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
@@ -784,7 +795,7 @@
                                 type="text"
                                 id="input-tahun-rka"
                                 name="tahun_rka"
-                                value="{{ $financial->tahun_rka ?? '2026' }}"
+                                value="{{ $financial->tahun_rka !== null ? $financial->tahun_rka : '' }}"
                                 class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                             <button
@@ -804,7 +815,7 @@
                         <input
                             type="text"
                             name="spv"
-                            value="{{ $contract->spv ?? 'SPV Komersial & Non Angkutan Daop 4' }}"
+                            value="{{ $contract->spv ?? '' }}"
                             class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -818,7 +829,7 @@
                     <input
                         type="text"
                         name="jenis_pendapatan"
-                        value="{{ $financial->jenis_pendapatan ?? 'Row' }}"
+                        value="{{ $financial->jenis_pendapatan ?? '' }}"
                         class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
@@ -831,7 +842,7 @@
                     <input
                         type="text"
                         name="ket_pendapatan"
-                        value="{{ $asset->description ?? ($tenant?->fullname ?? 'Aset lahan pergudangan sisi timur stasiun Poncol') }}"
+                        value="{{ $financial->keterangan_pendapatan ?? '' }}"
                         class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
@@ -841,7 +852,7 @@
                     <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
                         Keterangan<span class="text-red-500">*</span>
                     </label>
-                    <div class="dnd-container min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-[#EFEFEF] dark:bg-[#282A2C] p-2.5 flex flex-wrap content-start gap-2 shadow-2xs">
+                    <div id="dnd-keterangan-container" class="dnd-container min-h-[85px] rounded-[5px] border border-gray-200 dark:border-white/10 bg-[#EFEFEF] dark:bg-[#282A2C] p-2.5 flex flex-wrap content-start gap-2 shadow-2xs">
                         <div draggable="true" class="dnd-pill h-8 w-auto inline-flex items-center gap-2 rounded-[5px] border border-gray-300 dark:border-white/15 bg-white dark:bg-[#383C40] px-2.5 sm:px-3 text-xs text-gray-700 dark:text-white shadow-2xs cursor-grab active:cursor-grabbing select-none transition-all duration-150 shrink-0">
                             <x-icon name="icon-drag-n-drop" class="w-3.5 h-3.5 text-gray-500 dark:text-gray-400 shrink-0 pointer-events-none" />
                             <span class="font-medium">Non RKA</span>
@@ -879,7 +890,7 @@
                 <h2 class="text-base sm:text-lg font-medium text-black dark:text-white">Data Finansial</h2>
                 <button
                     type="button"
-                    onclick="closeEditDrawer()"
+                    onclick="saveEditDrawer()"
                     class="inline-flex items-center gap-1.5 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 px-4 py-1.5 text-xs sm:text-sm font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
                 >
                     <svg class="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -899,7 +910,7 @@
                         <input
                             type="text"
                             name="price"
-                            value="{{ $contract?->price_formatted ?? 'Rp 970.028.000' }}"
+                            value="{{ $contract && $contract->price ? 'Rp ' . number_format($contract->price, 0, ',', '.') : '' }}"
                             class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -911,7 +922,7 @@
                         <input
                             type="text"
                             name="total_jandes"
-                            value="Rp 323.047.645"
+                            value="{{ $monthly && $monthly->jan_des !== null ? 'Rp ' . number_format($monthly->jan_des, 0, ',', '.') : '' }}"
                             class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -926,7 +937,7 @@
                         <input
                             type="text"
                             name="jumlah_hari"
-                            value="{{ $financial ? number_format($financial->jumlah_hari, 0, ',', '.') . ' hari' : '1.096 hari' }}"
+                            value="{{ $financial && $financial->jumlah_hari ? number_format($financial->jumlah_hari, 0, ',', '.') . ' hari' : '' }}"
                             class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -938,7 +949,7 @@
                         <input
                             type="text"
                             name="nilai_per_hari"
-                            value="{{ $financial ? 'Rp ' . number_format($financial->nilai_per_hari, 0, ',', '.') : 'Rp 294.717' }}"
+                            value="{{ $financial && $financial->nilai_per_hari ? 'Rp ' . number_format($financial->nilai_per_hari, 0, ',', '.') : '' }}"
                             class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -955,7 +966,7 @@
                                 type="text"
                                 id="input-hari-berjalan"
                                 name="hari_berjalan"
-                                value="{{ $financial ? number_format($financial->hari_2026, 0, ',', '.') . ' hari' : '365 hari' }}"
+                                value="{{ $financial && $financial->hari_2026 ? number_format($financial->hari_2026, 0, ',', '.') . ' hari' : '' }}"
                                 class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                             <button
@@ -977,7 +988,7 @@
                                 type="text"
                                 id="input-nilai-tahun-berjalan"
                                 name="nilai_tahun_berjalan"
-                                value="{{ $financial ? 'Rp ' . number_format($financial->nilai_2026, 0, ',', '.') : 'Rp 323.047.645' }}"
+                                value="{{ $financial && $financial->nilai_2026 ? 'Rp ' . number_format($financial->nilai_2026, 0, ',', '.') : '' }}"
                                 class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                             <button
@@ -997,20 +1008,20 @@
 
                     @php
                         $months1 = [
-                            ['Januari', 'januari', '26.920.637'],
-                            ['Februari', 'febuari', '26.920.637'],
-                            ['Maret', 'maret', '26.920.637'],
-                            ['April', 'april', '26.920.637'],
-                            ['Mei', 'mei', '26.920.637'],
-                            ['Juni', 'juni', '26.920.637'],
+                            ['Januari', 'januari', ''],
+                            ['Februari', 'febuari', ''],
+                            ['Maret', 'maret', ''],
+                            ['April', 'april', ''],
+                            ['Mei', 'mei', ''],
+                            ['Juni', 'juni', ''],
                         ];
                         $months2 = [
-                            ['Juli', 'juli', '26.920.637'],
-                            ['Agu', 'agustus', '26.920.637'],
-                            ['September', 'september', '26.920.637'],
-                            ['Oktober', 'oktober', '26.920.637'],
-                            ['November', 'november', '26.920.637'],
-                            ['Desember', 'desember', '26.920.637'],
+                            ['Juli', 'juli', ''],
+                            ['Agu', 'agustus', ''],
+                            ['September', 'september', ''],
+                            ['Oktober', 'oktober', ''],
+                            ['November', 'november', ''],
+                            ['Desember', 'desember', ''],
                         ];
                     @endphp
 
@@ -1023,7 +1034,7 @@
                                     <input
                                         type="text"
                                         name="{{ $col }}"
-                                        value="{{ $monthly ? number_format((float)$monthly->$col, 0, ',', '.') : $default }}"
+                                        value="{{ $monthly && $monthly->$col !== null ? number_format((float)$monthly->$col, 0, ',', '.') : $default }}"
                                         class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
@@ -1038,7 +1049,7 @@
                                     <input
                                         type="text"
                                         name="{{ $col }}"
-                                        value="{{ $monthly ? number_format((float)$monthly->$col, 0, ',', '.') : $default }}"
+                                        value="{{ $monthly && $monthly->$col !== null ? number_format((float)$monthly->$col, 0, ',', '.') : $default }}"
                                         class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
@@ -1049,6 +1060,7 @@
             </div>
         </div>
 
+        </form>
     </div>
 
 
@@ -1179,6 +1191,38 @@
             drawer.classList.add('translate-x-[120%]');
             backdrop.classList.remove('opacity-100');
             backdrop.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function saveEditDrawer() {
+            const form = document.getElementById('form-edit-drawer');
+            if (!form) return;
+
+            // Helper to get first text from a container
+            const getFirstDndText = (containerId) => {
+                const c = document.getElementById(containerId);
+                if (!c) return '';
+                const pill = c.querySelector('.dnd-pill span');
+                return pill ? pill.textContent.trim() : '';
+            };
+
+            // Update hidden inputs
+            const elWilayah = document.getElementById('hidden-wilayah-asset');
+            const elJenis = document.getElementById('hidden-jenis-asset');
+            const elKontrak = document.getElementById('hidden-jenis-kontrak');
+            const elStasiun = document.getElementById('hidden-stasiun');
+            const elKet = document.getElementById('hidden-keterangan');
+
+            if (elWilayah) elWilayah.value = getFirstDndText('dnd-wilayah-container') || elWilayah.value;
+            if (elJenis) elJenis.value = getFirstDndText('dnd-jenis-container') || elJenis.value;
+            if (elKontrak) elKontrak.value = getFirstDndText('dnd-kontrak-container') || elKontrak.value;
+            if (elStasiun) elStasiun.value = getFirstDndText('dnd-stasiun-container') || elStasiun.value;
+            if (elKet) elKet.value = getFirstDndText('dnd-keterangan-container') || elKet.value;
+
+            if (window.setPendingToast) {
+                window.setPendingToast('Sukses update data aset terbaru!', 'success');
+            }
+
+            form.submit();
         }
 
         // ================= DRAG AND DROP SYSTEM =================

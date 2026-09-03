@@ -194,6 +194,8 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-[#F8F9FA] dark:bg-[#282A2C] border-b border-gray-200 dark:border-white/10">
+                                <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">No Kontrak</th>
+                                <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">No Aset</th>
                                 <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Januari</th>
                                 <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Februari</th>
                                 <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Maret</th>
@@ -206,6 +208,9 @@
                                 <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Oktober</th>
                                 <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">November</th>
                                 <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Desember</th>
+                                <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Jan-Des</th>
+                                <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Jenis Pendapatan</th>
+                                <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Pencapaian</th>
                                 <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Form RKA</th>
                                 <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Tahun RKA</th>
                                 <th scope="col" class="py-3 px-3.5 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Akun GL</th>
@@ -215,6 +220,12 @@
                         <tbody id="table-body-lap" class="divide-y divide-gray-100 dark:divide-white/10 text-xs sm:text-[13px] text-gray-800 dark:text-gray-200">
                             @forelse($items as $row)
                                 <tr class="lap-row-item hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors">
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['contract_number'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['asset_number'] }}
+                                    </td>
                                     <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
                                         {{ $row['januari'] }}
                                     </td>
@@ -251,6 +262,15 @@
                                     <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
                                         {{ $row['desember'] }}
                                     </td>
+                                    <td class="py-3.5 px-3.5 font-semibold text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['jan_des'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $row['jenis_pendapatan'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $row['pencapaian'] }}
+                                    </td>
                                     <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
                                         {{ $row['form_rka'] }}
                                     </td>
@@ -262,7 +282,7 @@
                                     </td>
                                     <td class="py-3.5 px-3.5 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
-                                             data-asset="{{ $row['asset_number'] }}">
+                                             data-contract="{{ $row['contract_number'] }}">
                                             <button
                                                 type="button"
                                                 class="action-menu-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer"
@@ -275,7 +295,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="16" class="text-center py-8 text-gray-400 dark:text-[#9AA0A6]">
+                                    <td colspan="18" class="text-center py-8 text-gray-400 dark:text-[#9AA0A6]">
                                         Tidak ada data laporan yang tersedia.
                                     </td>
                                 </tr>
@@ -303,7 +323,7 @@
             <x-icon name="edit" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
             <span>Edit</span>
         </a>
-        <form id="dd-delete-form" method="POST" onsubmit="return confirm('Hapus aset ini?')">
+        <form id="dd-delete-form" method="POST" onsubmit="event.preventDefault(); return window.confirmDelete(this, 'Apakah Anda yakin ingin menghapus data laporan aset ini?');">
             @csrf @method('DELETE')
             <button type="submit" class="flex w-full items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer">
                 <x-icon name="delete" class="w-5 h-5 text-[#EF4444] shrink-0" />
@@ -342,16 +362,12 @@
             const ddEdit       = document.getElementById('dd-edit');
             const ddDeleteForm = document.getElementById('dd-delete-form');
 
-            const routes = {
-                detail: (id) => `/asset/${id}`,
-                edit:   (id) => `/laporan/${id}/edit`,
-                delete: (id) => `/admin/assets/${id}`,
-            };
+            const routes = {};
 
             @foreach($items as $row)
-            routes['detail_{{ $row['asset_number'] }}'] = '{{ route('asset.detail', $row['asset_number']) }}';
-            routes['edit_{{ $row['asset_number'] }}']   = '{{ route('laporan.edit', $row['asset_number']) }}';
-            routes['delete_{{ $row['asset_number'] }}'] = '{{ route('admin.assets.destroy', $row['asset_number']) }}';
+            routes['detail_{{ $row['contract_number'] }}'] = '{{ route('asset.detail', $row['contract_number']) }}';
+            routes['edit_{{ $row['contract_number'] }}']   = '{{ route('laporan.edit', $row['contract_number']) }}';
+            routes['delete_{{ $row['contract_number'] }}'] = '{{ route('admin.assets.destroy', $row['contract_number']) }}';
             @endforeach
 
             document.addEventListener('click', function (e) {
@@ -360,19 +376,19 @@
                 if (btn) {
                     e.stopPropagation();
 
-                    const wrapper = btn.closest('.action-menu-wrapper');
-                    const assetId = wrapper.dataset.asset;
-                    const rect    = btn.getBoundingClientRect();
-                    const dropW   = 165;
+                    const wrapper    = btn.closest('.action-menu-wrapper');
+                    const contractId = wrapper.dataset.contract;
+                    const rect       = btn.getBoundingClientRect();
+                    const dropW      = 165;
 
                     let left = rect.right - dropW;
                     let top  = rect.bottom + 6;
 
-                    if (ddLihat) ddLihat.href = routes[`detail_${assetId}`] || `/asset/${assetId}`;
-                    if (ddEdit) ddEdit.href = routes[`edit_${assetId}`] || `/laporan/${assetId}/edit`;
-                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${assetId}`] || `/admin/assets/${assetId}`;
+                    if (ddLihat) ddLihat.href = routes[`detail_${contractId}`] || `/asset/${encodeURIComponent(contractId)}`;
+                    if (ddEdit) ddEdit.href = routes[`edit_${contractId}`] || `/laporan/${encodeURIComponent(contractId)}/edit`;
+                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${contractId}`] || `/admin/assets/${encodeURIComponent(contractId)}`;
 
-                    if (!dropdown.classList.contains('hidden') && dropdown.dataset.open === assetId) {
+                    if (!dropdown.classList.contains('hidden') && dropdown.dataset.open === contractId) {
                         dropdown.classList.add('hidden');
                         dropdown.dataset.open = '';
                         return;
@@ -380,11 +396,13 @@
 
                     dropdown.style.top    = top + 'px';
                     dropdown.style.left   = left + 'px';
-                    dropdown.dataset.open = assetId;
+                    dropdown.dataset.open = contractId;
                     dropdown.classList.remove('hidden');
                 } else if (!e.target.closest('#global-action-dropdown')) {
-                    dropdown.classList.add('hidden');
-                    dropdown.dataset.open = '';
+                    if (dropdown) {
+                        dropdown.classList.add('hidden');
+                        dropdown.dataset.open = '';
+                    }
                 }
             });
 
