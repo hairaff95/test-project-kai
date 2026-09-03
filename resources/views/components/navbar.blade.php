@@ -367,6 +367,62 @@
 
     // ===== NOTIFIKASI =====
     let notifLoaded = false;
+    const NOTIF_STORAGE_KEY = 'kai_read_notif_assets';
+
+    /** Ambil set asset_number yang sudah dibaca dari localStorage */
+    function getReadSet() {
+        try {
+            const raw = localStorage.getItem(NOTIF_STORAGE_KEY);
+            return raw ? new Set(JSON.parse(raw)) : new Set();
+        } catch { return new Set(); }
+    }
+
+    /** Simpan set asset_number yang sudah dibaca ke localStorage */
+    function saveReadSet(readSet) {
+        try {
+            localStorage.setItem(NOTIF_STORAGE_KEY, JSON.stringify([...readSet]));
+        } catch {}
+    }
+
+    /**
+     * Tandai semua aset dalam array sebagai sudah dibaca,
+     * lalu sembunyikan badge.
+     */
+    function markAllRead(items) {
+        const readSet = getReadSet();
+        items.forEach(item => readSet.add(item.asset_number));
+        saveReadSet(readSet);
+
+        const badgeEl = document.getElementById('notifBadge');
+        if (badgeEl) {
+            badgeEl.classList.add('hidden');
+            badgeEl.classList.remove('flex');
+        }
+    }
+
+    /** Hitung berapa aset yang belum dibaca */
+    function countUnread(items) {
+        const readSet = getReadSet();
+        return items.filter(item => !readSet.has(item.asset_number)).length;
+    }
+
+    /** Update tampilan badge berdasarkan data item dan status baca */
+    function updateBadge(items) {
+        const badgeEl = document.getElementById('notifBadge');
+        if (!badgeEl) return;
+        const unread = countUnread(items);
+        if (unread > 0) {
+            badgeEl.textContent = unread > 99 ? '99+' : unread;
+            badgeEl.classList.remove('hidden');
+            badgeEl.classList.add('flex');
+        } else {
+            badgeEl.classList.add('hidden');
+            badgeEl.classList.remove('flex');
+        }
+    }
+
+    // Cache data terakhir dari server supaya markAllRead bisa akses saat dropdown dibuka
+    let lastNotifItems = [];
 
     function toggleNotifDropdown() {
         const dropdown = document.getElementById('notifDropdown');
@@ -375,15 +431,20 @@
         const isOpen = !dropdown.classList.contains('invisible');
 
         if (isOpen) {
+            // Tutup dropdown
             dropdown.classList.add('opacity-0', 'invisible', 'scale-95');
             dropdown.classList.remove('opacity-100', 'visible', 'scale-100');
         } else {
+            // Buka dropdown
             dropdown.classList.remove('opacity-0', 'invisible', 'scale-95');
             dropdown.classList.add('opacity-100', 'visible', 'scale-100');
 
-            // Fetch notifikasi sekali per kunjungan halaman
+            // Fetch data jika belum pernah di-load sesi ini
             if (!notifLoaded) {
                 fetchNotifications();
+            } else if (lastNotifItems.length > 0) {
+                // Sudah load — langsung tandai baca & hilangkan badge
+                markAllRead(lastNotifItems);
             }
         }
     }
@@ -392,30 +453,28 @@
         const loadingEl = document.getElementById('notifLoading');
         const emptyEl   = document.getElementById('notifEmpty');
         const itemsEl   = document.getElementById('notifItems');
-        const badgeEl   = document.getElementById('notifBadge');
 
         fetch('{{ route("notifications.new-assets") }}')
             .then(res => res.json())
             .then(data => {
                 notifLoaded = true;
+                lastNotifItems = data.items || [];
                 loadingEl?.classList.add('hidden');
 
                 if (data.count === 0) {
                     emptyEl?.classList.remove('hidden');
                     emptyEl?.classList.add('flex');
                 } else {
-                    // Tampilkan badge
-                    if (badgeEl) {
-                        badgeEl.textContent = data.count > 99 ? '99+' : data.count;
-                        badgeEl.classList.remove('hidden');
-                        badgeEl.classList.add('flex');
-                    }
-
-                    // Render item-item notifikasi
+                    // Render item
                     itemsEl?.classList.remove('hidden');
                     itemsEl.innerHTML = data.items.map(item => `
                         <li>
-                            <a href="${item.url}" class="flex items-start gap-3 px-6 py-3 hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                            <a href="${item.url}" class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                                <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30 text-[#0066FF]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">${item.asset_block_name}</p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">${item.stasiun} · ${item.jenis_asset}</p>
@@ -424,6 +483,9 @@
                             </a>
                         </li>
                     `).join('');
+
+                    // Tandai semua sebagai sudah dibaca → badge hilang
+                    markAllRead(data.items);
                 }
             })
             .catch(() => {
@@ -434,22 +496,24 @@
             });
     }
 
-    // Polling otomatis setiap 60 detik untuk update badge
+    // Polling otomatis setiap 60 detik — hanya update badge, tidak re-render list
     function pollNotifications() {
-        const badgeEl = document.getElementById('notifBadge');
         fetch('{{ route("notifications.new-assets") }}')
             .then(res => res.json())
             .then(data => {
-                if (badgeEl) {
-                    if (data.count > 0) {
-                        badgeEl.textContent = data.count > 99 ? '99+' : data.count;
-                        badgeEl.classList.remove('hidden');
-                        badgeEl.classList.add('flex');
-                    } else {
-                        badgeEl.classList.add('hidden');
-                        badgeEl.classList.remove('flex');
-                    }
+                lastNotifItems = data.items || [];
+
+                // Jika dropdown sedang terbuka saat polling, tandai baca sekalian
+                const dropdown = document.getElementById('notifDropdown');
+                const isOpen = dropdown && !dropdown.classList.contains('invisible');
+                if (isOpen) {
+                    markAllRead(lastNotifItems);
+                } else {
+                    updateBadge(lastNotifItems);
                 }
+
+                // Reset cache notifLoaded agar item baru bisa di-render ulang
+                if (notifLoaded) notifLoaded = false;
             })
             .catch(() => {});
     }
