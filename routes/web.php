@@ -8,6 +8,7 @@ use App\Http\Controllers\JatuhTempoController;
 use App\Http\Controllers\BacklogController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\AssetController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -96,3 +97,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/asset/{asset_number}', [AssetController::class, 'destroy'])->name('admin.assets.destroy');
     Route::delete('/assets/{asset_number}', [AssetController::class, 'destroy'])->name('assets.destroy');
 });
+
+// ================= NOTIFIKASI =================
+Route::get('/api/notifications/new-assets', [NotificationController::class, 'newAssets'])->name('notifications.new-assets');
