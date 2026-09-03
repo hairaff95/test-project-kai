@@ -102,7 +102,6 @@
                     <!-- Header -->
                     <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-white/10">
                         <h3 class="text-sm font-bold text-gray-900 dark:text-white">Notifikasi</h3>
-                        <span class="text-xs text-gray-400 dark:text-gray-500">Aset baru (24 jam terakhir)</span>
                     </div>
 
                     <!-- List Notifikasi -->
