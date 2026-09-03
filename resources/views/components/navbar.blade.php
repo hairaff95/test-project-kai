@@ -9,10 +9,6 @@
             <x-icon name="kai-logo" class="h-[19px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
             <span class="leading-none select-none text-gray-950 dark:text-white">Tracker<span class="text-[#0066FF]">App</span></span>
         </a>
-        <!-- <div class="text-center mb-8 flex items-center justify-center">
-            <x-icon name="kai-logo" class="h-[19px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
-            <p class="text-black font-bold italic">Tracker<span class="text-[#0066FF]">App</span></p>
-        </div> -->
 
         <!-- Menu Navigasi Desktop (lg and above only) -->
         <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm text-[#4A4A4A] dark:text-[#9AA0A6]">
@@ -82,13 +78,54 @@
             </button>
 
             <!-- Notifikasi Bell (mobile & desktop) -->
-            <button
-                type="button"
-                class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-[10px] border border-gray-300/80 dark:border-white/15 bg-transparent text-gray-700 dark:text-white hover:bg-gray-200/70 dark:hover:bg-white/10 active:scale-95 transition shadow-none cursor-pointer"
-                title="Notifikasi"
-            >
-                <x-icon name="notification" class="h-4.5 w-4.5 sm:h-5 sm:w-5 lg:h-[19px] lg:w-[19px] text-[#262626] dark:text-white" />
-            </button>
+            <div class="relative" id="notifWrapper">
+                <button
+                    type="button"
+                    id="notifBtn"
+                    onclick="toggleNotifDropdown()"
+                    class="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-[10px] border border-gray-300/80 dark:border-white/15 bg-transparent text-gray-700 dark:text-white hover:bg-gray-200/70 dark:hover:bg-white/10 active:scale-95 transition shadow-none cursor-pointer"
+                    title="Notifikasi"
+                >
+                    <x-icon name="notification" class="h-4.5 w-4.5 sm:h-5 sm:w-5 lg:h-[19px] lg:w-[19px] text-[#262626] dark:text-white" />
+                    <!-- Badge jumlah notifikasi -->
+                    <span
+                        id="notifBadge"
+                        class="hidden absolute -top-1 -right-1 flex items-center justify-center min-w-[17px] h-[17px] px-[3px] rounded-full bg-red-500 text-white text-[10px] font-bold leading-none"
+                    ></span>
+                </button>
+
+                <!-- Dropdown Notifikasi -->
+                <div
+                    id="notifDropdown"
+                    class="absolute right-0 top-full mt-2 w-[300px] sm:w-[340px] origin-top-right rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.7)] opacity-0 invisible scale-95 transition-all duration-200 bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 z-[110] overflow-hidden"
+                >
+                    <!-- Header -->
+                    <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-white/10">
+                        <h3 class="text-sm font-bold text-gray-900 dark:text-white">Notifikasi</h3>
+                        <span class="text-xs text-gray-400 dark:text-gray-500">Aset baru (24 jam terakhir)</span>
+                    </div>
+
+                    <!-- List Notifikasi -->
+                    <div id="notifList" class="max-h-[340px] overflow-y-auto">
+                        <!-- Skeleton / loading state -->
+                        <div id="notifLoading" class="flex items-center justify-center py-8 text-gray-400 dark:text-gray-500 text-xs gap-2">
+                            <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                            </svg>
+                            Memuat notifikasi...
+                        </div>
+                        <div id="notifEmpty" class="hidden flex-col items-center justify-center py-8 text-center px-4">
+                            <svg class="h-10 w-10 text-gray-300 dark:text-gray-600 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Tidak ada aset baru</p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Belum ada aset yang ditambahkan dalam 24 jam terakhir</p>
+                        </div>
+                        <ul id="notifItems" class="hidden divide-y divide-gray-50 dark:divide-white/5"></ul>
+                    </div>
+                </div>
+            </div>
 
             <!-- Profile (Desktop Only - On Mobile it is moved to the bottom floating navbar) -->
             <div class="relative hidden lg:block">
@@ -327,6 +364,175 @@
         iconOpen?.classList.remove('hidden');
         iconClose?.classList.add('hidden');
     }
+
+    // ===== NOTIFIKASI =====
+    let notifLoaded = false;
+    const NOTIF_STORAGE_KEY = 'kai_read_notif_assets';
+
+    /** Ambil set asset_number yang sudah dibaca dari localStorage */
+    function getReadSet() {
+        try {
+            const raw = localStorage.getItem(NOTIF_STORAGE_KEY);
+            return raw ? new Set(JSON.parse(raw)) : new Set();
+        } catch { return new Set(); }
+    }
+
+    /** Simpan set asset_number yang sudah dibaca ke localStorage */
+    function saveReadSet(readSet) {
+        try {
+            localStorage.setItem(NOTIF_STORAGE_KEY, JSON.stringify([...readSet]));
+        } catch {}
+    }
+
+    /**
+     * Tandai semua aset dalam array sebagai sudah dibaca,
+     * lalu sembunyikan badge.
+     */
+    function markAllRead(items) {
+        const readSet = getReadSet();
+        items.forEach(item => readSet.add(item.asset_number));
+        saveReadSet(readSet);
+
+        const badgeEl = document.getElementById('notifBadge');
+        if (badgeEl) {
+            badgeEl.classList.add('hidden');
+            badgeEl.classList.remove('flex');
+        }
+    }
+
+    /** Hitung berapa aset yang belum dibaca */
+    function countUnread(items) {
+        const readSet = getReadSet();
+        return items.filter(item => !readSet.has(item.asset_number)).length;
+    }
+
+    /** Update tampilan badge berdasarkan data item dan status baca */
+    function updateBadge(items) {
+        const badgeEl = document.getElementById('notifBadge');
+        if (!badgeEl) return;
+        const unread = countUnread(items);
+        if (unread > 0) {
+            badgeEl.textContent = unread > 99 ? '99+' : unread;
+            badgeEl.classList.remove('hidden');
+            badgeEl.classList.add('flex');
+        } else {
+            badgeEl.classList.add('hidden');
+            badgeEl.classList.remove('flex');
+        }
+    }
+
+    // Cache data terakhir dari server supaya markAllRead bisa akses saat dropdown dibuka
+    let lastNotifItems = [];
+
+    function toggleNotifDropdown() {
+        const dropdown = document.getElementById('notifDropdown');
+        if (!dropdown) return;
+
+        const isOpen = !dropdown.classList.contains('invisible');
+
+        if (isOpen) {
+            // Tutup dropdown
+            dropdown.classList.add('opacity-0', 'invisible', 'scale-95');
+            dropdown.classList.remove('opacity-100', 'visible', 'scale-100');
+        } else {
+            // Buka dropdown
+            dropdown.classList.remove('opacity-0', 'invisible', 'scale-95');
+            dropdown.classList.add('opacity-100', 'visible', 'scale-100');
+
+            // Fetch data jika belum pernah di-load sesi ini
+            if (!notifLoaded) {
+                fetchNotifications();
+            } else if (lastNotifItems.length > 0) {
+                // Sudah load — langsung tandai baca & hilangkan badge
+                markAllRead(lastNotifItems);
+            }
+        }
+    }
+
+    function fetchNotifications() {
+        const loadingEl = document.getElementById('notifLoading');
+        const emptyEl   = document.getElementById('notifEmpty');
+        const itemsEl   = document.getElementById('notifItems');
+
+        fetch('{{ route("notifications.new-assets") }}')
+            .then(res => res.json())
+            .then(data => {
+                notifLoaded = true;
+                lastNotifItems = data.items || [];
+                loadingEl?.classList.add('hidden');
+
+                if (data.count === 0) {
+                    emptyEl?.classList.remove('hidden');
+                    emptyEl?.classList.add('flex');
+                } else {
+                    // Render item
+                    itemsEl?.classList.remove('hidden');
+                    itemsEl.innerHTML = data.items.map(item => `
+                        <li>
+                            <a href="${item.url}" class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 transition">
+                                <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30 text-[#0066FF]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">${item.asset_block_name}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">${item.stasiun} · ${item.jenis_asset}</p>
+                                    <p class="text-xs text-blue-500 dark:text-blue-400 mt-0.5">${item.created_at}</p>
+                                </div>
+                            </a>
+                        </li>
+                    `).join('');
+
+                    // Tandai semua sebagai sudah dibaca → badge hilang
+                    markAllRead(data.items);
+                }
+            })
+            .catch(() => {
+                notifLoaded = true;
+                if (loadingEl) {
+                    loadingEl.textContent = 'Gagal memuat notifikasi.';
+                }
+            });
+    }
+
+    // Polling otomatis setiap 60 detik — hanya update badge, tidak re-render list
+    function pollNotifications() {
+        fetch('{{ route("notifications.new-assets") }}')
+            .then(res => res.json())
+            .then(data => {
+                lastNotifItems = data.items || [];
+
+                // Jika dropdown sedang terbuka saat polling, tandai baca sekalian
+                const dropdown = document.getElementById('notifDropdown');
+                const isOpen = dropdown && !dropdown.classList.contains('invisible');
+                if (isOpen) {
+                    markAllRead(lastNotifItems);
+                } else {
+                    updateBadge(lastNotifItems);
+                }
+
+                // Reset cache notifLoaded agar item baru bisa di-render ulang
+                if (notifLoaded) notifLoaded = false;
+            })
+            .catch(() => {});
+    }
+
+    // Tutup dropdown jika klik di luar
+    document.addEventListener('click', function (e) {
+        const wrapper = document.getElementById('notifWrapper');
+        if (wrapper && !wrapper.contains(e.target)) {
+            const dropdown = document.getElementById('notifDropdown');
+            if (dropdown) {
+                dropdown.classList.add('opacity-0', 'invisible', 'scale-95');
+                dropdown.classList.remove('opacity-100', 'visible', 'scale-100');
+            }
+        }
+    });
+
+    // Fetch awal + polling setiap 60 detik
+    pollNotifications();
+    setInterval(pollNotifications, 60000);
 
     // Desktop Profile Dropdown
     const profileButton = document.getElementById('profileButton');
