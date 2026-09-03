@@ -128,28 +128,28 @@
                 </button>
 
 
-                <!-- Dropdown Desktop -->
+                <!-- Dropdown Desktop (Ukuran dan style persis sama dengan dropdown aksi) -->
                 <div
                     id="profileDropdown"
-                    class="absolute right-0 top-full mt-1.5 sm:mt-2 w-44 sm:w-52 origin-top-right rounded-lg lg:rounded-[10px] p-1.5 sm:p-2 shadow-[0_12px_36px_rgba(0,0,0,0.12)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.6)] opacity-0 invisible scale-95 transition-all duration-200 bg-white dark:bg-[#1F2123] border border-gray-100/90 dark:border-white/10 z-[110]"
+                    class="absolute right-0 top-full mt-2 w-[190px] sm:w-[210px] origin-top-right rounded-2xl p-2 sm:p-2.5 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.7)] opacity-0 invisible scale-95 transition-all duration-200 bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 z-[110] flex flex-col gap-1"
                 >
                     @auth
                         @if(auth()->user()->isSuperAdmin())
                             <!-- Panel Super Admin -->
                             <a
                                 href="{{ route('settings.superadmin') }}"
-                                class="flex items-center gap-2 sm:gap-2.5 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11.5px] sm:text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 active:bg-gray-100 dark:active:bg-white/10 transition"
+                                class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
                             >
-                                <x-icon name="setting" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 dark:text-gray-400 shrink-0" />
+                                <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
                                 <span>Panel Super Admin</span>
                             </a>
                         @else
                             <!-- Pengaturan Akun (Admin) -->
                             <a
                                 href="{{ route('settings.index') }}"
-                                class="flex items-center gap-2 sm:gap-2.5 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11.5px] sm:text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 active:bg-gray-100 dark:active:bg-white/10 transition"
+                                class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
                             >
-                                <x-icon name="setting" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 dark:text-gray-400 shrink-0" />
+                                <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
                                 <span>Pengaturan Akun</span>
                             </a>
                         @endif
@@ -159,28 +159,28 @@
                             @csrf
                             <button
                                 type="submit"
-                                class="flex w-full items-center gap-2 sm:gap-2.5 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11.5px] sm:text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 active:bg-gray-100 dark:active:bg-white/10 transition cursor-pointer"
+                                class="flex w-full items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer"
                             >
-                                <x-icon name="logout" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 dark:text-gray-400 shrink-0" />
+                                <x-icon name="logout" class="w-5 h-5 text-[#EF4444] shrink-0" />
                                 <span>Keluar</span>
                             </button>
                         </form>
                     @else
-                        <!-- Pengaturan Akun -->
+                        <!-- Pengaturan Akun (Tamu) -->
                         <a
                             href="{{ route('settings.index') }}"
-                            class="flex items-center gap-2 sm:gap-2.5 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11.5px] sm:text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 active:bg-gray-100 dark:active:bg-white/10 transition"
+                            class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
                         >
-                            <x-icon name="setting" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 dark:text-gray-400 shrink-0" />
+                            <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
                             <span>Pengaturan Akun</span>
                         </a>
 
-                        <!-- Login -->
+                        <!-- Login (Tamu) -->
                         <a
                             href="{{ route('login') }}"
-                            class="flex w-full items-center gap-2 sm:gap-2.5 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11.5px] sm:text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 active:bg-gray-100 dark:active:bg-white/10 transition cursor-pointer"
+                            class="flex w-full items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-xl transition cursor-pointer"
                         >
-                            <x-icon name="logout" class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-500 dark:text-gray-400 shrink-0" />
+                            <x-icon name="icon-masuk" class="w-5 h-5 text-[#0066FF] dark:text-[#3B82F6] shrink-0" />
                             <span>Masuk</span>
                         </a>
                     @endauth

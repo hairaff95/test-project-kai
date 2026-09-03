@@ -52,25 +52,27 @@
                         Profil Saya
                     </button>
 
-                    {{-- 2. Tab Pengajuan Reset Sandi --}}
-                    <button
-                        type="button"
-                        onclick="switchAdminTab('reset-sandi')"
-                        id="tab-btn-reset-sandi"
-                        class="shrink-0 text-left text-sm font-medium transition cursor-pointer text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-gray-100/80 dark:bg-[#2D3034] lg:bg-transparent lg:dark:bg-transparent"
-                    >
-                        Pengajuan Reset Sandi
-                    </button>
+                    @auth
+                        {{-- 2. Tab Pengajuan Reset Sandi --}}
+                        <button
+                            type="button"
+                            onclick="switchAdminTab('reset-sandi')"
+                            id="tab-btn-reset-sandi"
+                            class="shrink-0 text-left text-sm font-medium transition cursor-pointer text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-gray-100/80 dark:bg-[#2D3034] lg:bg-transparent lg:dark:bg-transparent"
+                        >
+                            Pengajuan Reset Sandi
+                        </button>
 
-                    {{-- 3. Tab Import Data Excel --}}
-                    <button
-                        type="button"
-                        onclick="switchAdminTab('import-excel')"
-                        id="tab-btn-import-excel"
-                        class="shrink-0 text-left text-sm font-medium transition cursor-pointer text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-gray-100/80 dark:bg-[#2D3034] lg:bg-transparent lg:dark:bg-transparent"
-                    >
-                        Import Data Excel
-                    </button>
+                        {{-- 3. Tab Import Data Excel --}}
+                        <button
+                            type="button"
+                            onclick="switchAdminTab('import-excel')"
+                            id="tab-btn-import-excel"
+                            class="shrink-0 text-left text-sm font-medium transition cursor-pointer text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-gray-100/80 dark:bg-[#2D3034] lg:bg-transparent lg:dark:bg-transparent"
+                        >
+                            Import Data Excel
+                        </button>
+                    @endauth
                 </nav>
             </div>
 
@@ -93,10 +95,14 @@
 
                             <div>
                                 <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white leading-snug" id="display-fullname">
-                                    Haidar Rafi Kosong Enam
+                                    @auth {{ auth()->user()->name }} @else Tamu @endauth
                                 </h2>
                                 <p class="text-xs sm:text-sm text-gray-500 dark:text-[#9AA0A6] font-medium mt-1">
-                                    Admin KAI Aset
+                                    @auth
+                                        {{ auth()->user()->isSuperAdmin() ? 'Super Admin KAI' : 'Admin KAI Aset' }}
+                                    @else
+                                        Pengunjung / Tamu
+                                    @endauth
                                 </p>
                             </div>
                         </div>
@@ -129,12 +135,20 @@
                             </button>
                         </div>
 
+                        @php
+                            $fullName = auth()->check() ? auth()->user()->name : 'Tamu';
+                            $parts = explode(' ', $fullName, 2);
+                            $firstName = $parts[0] ?? 'Tamu';
+                            $lastName = $parts[1] ?? '';
+                            $email = auth()->check() ? auth()->user()->email : 'tamu@kai.id';
+                        @endphp
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8 pt-2">
                             {{-- Nama Awal --}}
                             <div>
                                 <span class="block text-xs font-medium text-gray-400 dark:text-[#9AA0A6] mb-1.5">Nama Awal</span>
                                 <span class="block text-sm sm:text-[15px] font-semibold text-gray-900 dark:text-white" id="display-first-name">
-                                    Haidar Rafi
+                                    {{ $firstName }}
                                 </span>
                             </div>
 
@@ -142,7 +156,7 @@
                             <div>
                                 <span class="block text-xs font-medium text-gray-400 dark:text-[#9AA0A6] mb-1.5">Nama Akhir</span>
                                 <span class="block text-sm sm:text-[15px] font-semibold text-gray-900 dark:text-white" id="display-last-name">
-                                    Kosong Enam
+                                    {{ $lastName ?: '-' }}
                                 </span>
                             </div>
 
@@ -150,7 +164,7 @@
                             <div class="sm:col-span-2">
                                 <span class="block text-xs font-medium text-gray-400 dark:text-[#9AA0A6] mb-1.5">Alamat Email</span>
                                 <span class="block text-sm sm:text-[15px] font-semibold text-gray-900 dark:text-white" id="display-email">
-                                    admin.kai@daop4.com
+                                    {{ $email }}
                                 </span>
                             </div>
                         </div>
@@ -159,6 +173,7 @@
                 </div>
 
 
+                @auth
                 {{-- ------------------- TAB 2: PENGAJUAN RESET SANDI ------------------- --}}
                 <div id="panel-reset-sandi" class="hidden">
                     <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-6 max-w-3xl transition-colors">
@@ -255,7 +270,7 @@
                                 >
 
                                 <div class="flex flex-col items-center justify-center pointer-events-none">
-                                    <img src="{{ asset('image/icon-upload-data.svg') }}" alt="Upload Illustration" class="h-32 sm:h-36 w-auto mx-auto mb-4 group-hover:scale-105 transition-transform duration-200">
+                                    <x-icon name="icon-upload-data" class="h-32 sm:h-36 w-auto mx-auto mb-4 group-hover:scale-105 transition-transform duration-200" />
                                     <p class="text-sm font-semibold text-gray-900 dark:text-white mb-1">
                                         Pilih file atau drag & drop ke area ini
                                     </p>
@@ -270,7 +285,7 @@
                                 <div class="flex items-center gap-4">
                                     {{-- Icon Box (Circular Import or Green Excel Icon) --}}
                                     <div id="admin-icon-wrapper" class="shrink-0 flex items-center justify-center">
-                                        <img id="admin-preview-excel-icon" src="{{ asset('image/excel-icon.svg') }}" alt="Excel Icon" class="w-9 h-9 object-contain">
+                                        <x-icon id="admin-preview-excel-icon" name="excel-icon" class="w-9 h-9 object-contain" />
                                     </div>
 
                                     {{-- Info & Progress Bar --}}
@@ -324,6 +339,7 @@
                     </div>
 
                 </div>
+                @endauth
 
             </div>
 
@@ -346,7 +362,7 @@
                     <input
                         type="text"
                         id="input-first-name"
-                        value="Haidar Rafi"
+                        value="{{ $firstName }}"
                         class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
@@ -357,9 +373,8 @@
                     <input
                         type="text"
                         id="input-last-name"
-                        value="Kosong Enam"
+                        value="{{ $lastName }}"
                         class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
-                        required
                     >
                 </div>
 
@@ -368,7 +383,7 @@
                     <input
                         type="email"
                         id="input-email"
-                        value="admin.kai@daop4.com"
+                        value="{{ $email }}"
                         class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >

@@ -69,6 +69,7 @@
                     </p>
 
                     {{-- TOMBOL EDIT & HAPUS MOBILE (Di bawah teks deskripsi) --}}
+                    @auth
                     <div class="flex items-center gap-2 pt-0.5">
                         <button
                             type="button"
@@ -92,6 +93,7 @@
                             </button>
                         </form>
                     </div>
+                    @endauth
                 </div>
 
                 {{-- FOTO UTAMA --}}
@@ -167,6 +169,7 @@
                         </div>
 
                         {{-- TOMBOL EDIT & HAPUS (Sejajar di kanan) --}}
+                        @auth
                         <div class="flex shrink-0 items-center gap-2">
 
                             <button
@@ -192,6 +195,7 @@
                             </form>
 
                         </div>
+                        @endauth
 
                     </div>
 
@@ -363,6 +367,7 @@
 
 
     {{-- SLIDE DRAWER EDIT ASET --}}
+    @auth
     <div id="drawer-edit-backdrop" class="opacity-0 pointer-events-none fixed inset-0 top-16 sm:top-20 z-30 bg-black/20 dark:bg-black/60 backdrop-blur-[1px] transition-opacity duration-300" onclick="closeEditDrawer()"></div>
 
     <div id="drawer-edit" class="fixed right-0 sm:right-8 lg:right-10 top-14 sm:top-[100px] bottom-0 sm:bottom-8 z-40 w-full sm:w-[420px] max-w-full sm:max-w-[calc(100vw-40px)] rounded-t-2xl sm:rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.7)] p-4 sm:p-6 flex flex-col justify-between overflow-hidden transform translate-x-[120%] transition-transform duration-300 ease-in-out">
@@ -1108,6 +1113,7 @@
 
         </div>
     </div>
+    @endauth
 
     {{-- SCRIPT DRAWER EDIT & CALENDAR PICKER & DRAG AND DROP --}}
     <script>

@@ -71,6 +71,7 @@
                 </div>
 
                 {{-- Tombol Tambah Aset --}}
+                @auth
                 <a
                     href="{{ route('contracts.create') }}"
                     class="inline-flex items-center gap-1.5 sm:gap-2 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white shadow-xs transition active:scale-95 cursor-pointer ml-auto shrink-0"
@@ -78,6 +79,7 @@
                     <x-icon name="plus-icon" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white fill-white" />
                     <span>Tambah Aset</span>
                 </a>
+                @endauth
 
             </div>
 
@@ -171,10 +173,12 @@
                                 <x-icon name="icon-lihat" class="w-4 h-4 text-gray-500 dark:text-white" />
                                 <span>Lihat Detail</span>
                             </a>
+                            @auth
                             <a href="{{ route('laporan.edit', $row['asset_number']) }}" class="flex-1 min-h-[40px] inline-flex items-center justify-center gap-1.5 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 text-xs font-semibold text-white shadow-2xs transition">
                                 <x-icon name="icon-edit-detail-peta" class="w-4 h-4 text-white" />
                                 <span>Edit</span>
                             </a>
+                            @endauth
                         </div>
                     </div>
                 @empty
@@ -294,6 +298,7 @@
             <x-icon name="icon-lihat" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
             <span>Lihat</span>
         </a>
+        @auth
         <a id="dd-edit" href="#" class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition">
             <x-icon name="edit" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
             <span>Edit</span>
@@ -305,6 +310,7 @@
                 <span>Hapus</span>
             </button>
         </form>
+        @endauth
     </div>
 
     <script>
@@ -362,9 +368,9 @@
                     let left = rect.right - dropW;
                     let top  = rect.bottom + 6;
 
-                    ddLihat.href        = routes[`detail_${assetId}`] || `/asset/${assetId}`;
-                    ddEdit.href         = routes[`edit_${assetId}`] || `/laporan/${assetId}/edit`;
-                    ddDeleteForm.action = routes[`delete_${assetId}`] || `/admin/assets/${assetId}`;
+                    if (ddLihat) ddLihat.href = routes[`detail_${assetId}`] || `/asset/${assetId}`;
+                    if (ddEdit) ddEdit.href = routes[`edit_${assetId}`] || `/laporan/${assetId}/edit`;
+                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${assetId}`] || `/admin/assets/${assetId}`;
 
                     if (!dropdown.classList.contains('hidden') && dropdown.dataset.open === assetId) {
                         dropdown.classList.add('hidden');

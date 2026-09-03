@@ -64,19 +64,15 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return $this->redirectByRole($user);
+        return redirect()->route('dashboard');
     }
 
     /**
-     * Redirect user berdasarkan role.
+     * Redirect user ke dashboard.
      */
     private function redirectByRole(User $user)
     {
-        if ($user->isSuperAdmin()) {
-            return redirect()->route('settings.index');
-        }
-
-        return redirect()->route('welcome');
+        return redirect()->route('dashboard');
     }
 
     /**

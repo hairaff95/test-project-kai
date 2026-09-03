@@ -58,13 +58,12 @@
                 <x-icon name="logo-login-page" class="h-6 sm:h-7 lg:h-11 w-auto" />
             </div>
 
-            {{-- Center: Security Illustration dari public/image/aset-gambar-login-page.svg (Besar, Jelas & Proporsional) --}}
+            {{-- Center: Security Illustration terpusat via <x-icon name="aset-gambar-login-page" /> (Besar, Jelas & Proporsional) --}}
             <div class="relative z-20 my-auto w-full lg:max-w-[86%] flex items-center justify-center py-1 lg:py-6 overflow-hidden">
-                <img
-                    src="{{ asset('image/aset-gambar-login-page.svg') }}"
-                    alt="KAI Login Illustration"
+                <x-icon
+                    name="aset-gambar-login-page"
                     class="h-[140px] sm:h-[175px] lg:h-auto w-auto max-w-[85%] sm:max-w-[340px] lg:max-w-[500px] object-contain select-none pointer-events-none drop-shadow-md lg:drop-shadow-2xl mx-auto transition-transform"
-                >
+                />
             </div>
 
             {{-- Bottom Footer Text (Desktop only) --}}
@@ -147,14 +146,21 @@
                         </a>
                     </div>
 
-                    {{-- 3. Submit Button 'Masuk' --}}
-                    <div class="pt-1.5 sm:pt-2">
+                    {{-- 3. Submit Button 'Masuk' & 'Masuk Tamu' --}}
+                    <div class="pt-1.5 sm:pt-2 space-y-2 sm:space-y-2.5">
                         <button
                             type="submit"
-                            class="w-full rounded-[10px] bg-[#0066FF] hover:bg-blue-700 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-white transition shadow-sm hover:shadow active:scale-98 cursor-pointer flex items-center justify-center tracking-wide"
+                            class="w-full rounded-lg bg-[#0066FF] hover:bg-blue-700 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-white transition active:scale-98 cursor-pointer flex items-center justify-center tracking-wide"
                         >
                             Masuk
                         </button>
+
+                        <a
+                            href="{{ route('dashboard') }}"
+                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] hover:bg-gray-50 dark:hover:bg-white/5 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white transition active:scale-98 cursor-pointer flex items-center justify-center tracking-wide text-center"
+                        >
+                            Masuk Tamu
+                        </a>
                     </div>
 
                 </form>

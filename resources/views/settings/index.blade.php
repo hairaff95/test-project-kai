@@ -226,8 +226,131 @@
                             </div>
                         </div>
 
-                        {{-- Admin Table (Konsisten dengan Desain Tabel Jatuh Tempo) --}}
-                        <div class="border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden bg-white dark:bg-[#1F2123]">
+                        {{-- MOBILE CARDS VIEW (block sm:hidden - Format Card Serupa Daftar Kontrak) --}}
+                        <div class="space-y-3.5 sm:hidden" id="admin-cards-container">
+                            {{-- Card 1 --}}
+                            <div class="admin-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 space-y-3 shadow-2xs transition-all" data-timestamp="2026-08-30T15:30:00">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
+                                            <x-icon name="profile-circle" class="w-5 h-5" />
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight truncate name-col">
+                                                Haidar Rafi kosong enam
+                                            </h3>
+                                            <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate email-col">
+                                                admin.kai@daop4.com
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer shrink-0"
+                                        title="Aksi"
+                                        data-name="Haidar Rafi kosong enam"
+                                        data-email="admin.kai@daop4.com"
+                                        data-can-delete="true"
+                                    >
+                                        <x-icon name="dots-vertical" class="w-4 h-4" />
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2 bg-gray-50/90 dark:bg-[#2D3034] rounded-lg p-2.5 text-xs">
+                                    <div class="role-col">
+                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Role</span>
+                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800">Admin</span>
+                                    </div>
+                                    <div class="date-col">
+                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Terakhir Aktif</span>
+                                        <span class="font-medium text-gray-800 dark:text-white text-[11px]">30/08/2026 at 15.30 PM</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Card 2 (SuperAdmin) --}}
+                            <div class="admin-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 space-y-3 shadow-2xs transition-all" data-timestamp="2026-08-01T14:30:00">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
+                                            <x-icon name="profile-circle" class="w-5 h-5" />
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight truncate name-col">
+                                                Haidar Rafi kosong satu
+                                            </h3>
+                                            <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate email-col">
+                                                superadmin.kai@daop4.com
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer shrink-0"
+                                        title="Aksi"
+                                        data-name="Haidar Rafi kosong satu"
+                                        data-email="superadmin.kai@daop4.com"
+                                        data-can-delete="false"
+                                    >
+                                        <x-icon name="dots-vertical" class="w-4 h-4" />
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2 bg-gray-50/90 dark:bg-[#2D3034] rounded-lg p-2.5 text-xs">
+                                    <div class="role-col">
+                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Role</span>
+                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800">SuperAdmin</span>
+                                    </div>
+                                    <div class="date-col">
+                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Terakhir Aktif</span>
+                                        <span class="font-medium text-gray-800 dark:text-white text-[11px]">01/08/2026 at 14.30 PM</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Card 3 --}}
+                            <div class="admin-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 space-y-3 shadow-2xs transition-all" data-timestamp="2026-08-12T01:30:00">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
+                                            <x-icon name="profile-circle" class="w-5 h-5" />
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight truncate name-col">
+                                                Bambang Sudarsono
+                                            </h3>
+                                            <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate email-col">
+                                                bambang@daop4.com
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer shrink-0"
+                                        title="Aksi"
+                                        data-name="Bambang Sudarsono"
+                                        data-email="bambang@daop4.com"
+                                        data-can-delete="true"
+                                    >
+                                        <x-icon name="dots-vertical" class="w-4 h-4" />
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2 bg-gray-50/90 dark:bg-[#2D3034] rounded-lg p-2.5 text-xs">
+                                    <div class="role-col">
+                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Role</span>
+                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800">Admin</span>
+                                    </div>
+                                    <div class="date-col">
+                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Terakhir Aktif</span>
+                                        <span class="font-medium text-gray-800 dark:text-white text-[11px]">12/08/2026 at 01.30 AM</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- DESKTOP ADMIN TABLE (hidden sm:block - Konsisten dengan Desain Desktop) --}}
+                        <div class="hidden sm:block border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden bg-white dark:bg-[#1F2123]">
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left border-collapse" id="admin-table">
                                     <thead>
@@ -374,36 +497,39 @@
                     <div class="space-y-4" id="requests-list-container">
                         
                         {{-- Card 1 --}}
-                        <div class="approval-card-item rounded-2xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4.5 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition hover:border-gray-300 dark:hover:border-white/20" id="req-card-1" data-timestamp="2026-08-30T15:30:00">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-[#D9D9D9] dark:bg-[#34383D] flex items-center justify-center shrink-0 text-gray-400 dark:text-gray-300">
-                                    <svg class="w-6 h-6 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                    </svg>
+                        <div class="approval-card-item rounded-xl sm:rounded-2xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition hover:border-gray-300 dark:hover:border-white/20 shadow-2xs" id="req-card-1" data-timestamp="2026-08-30T15:30:00">
+                            {{-- Profile & Info Header --}}
+                            <div class="flex items-center gap-3 sm:gap-4">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
+                                    <x-icon name="profile-circle" class="w-5 h-5 sm:w-6 sm:h-6" />
                                 </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900 dark:text-white leading-snug">Haidar Rafi kosong enam</h4>
-                                    <p class="text-xs text-gray-400 dark:text-[#9AA0A6] mt-0.5">admin.kai@daop4.com</p>
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                                        <h4 class="text-sm font-bold sm:font-semibold text-gray-900 dark:text-white leading-tight truncate">Haidar Rafi kosong enam</h4>
+                                        <span class="sm:hidden text-[10px] font-medium text-gray-500 dark:text-[#9AA0A6] bg-gray-100/80 dark:bg-[#2D3034] px-2 py-0.5 rounded-full">30/08/2026 at 15.30 PM</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate">admin.kai@daop4.com</p>
                                 </div>
                             </div>
 
-                            <div class="flex items-center gap-4 sm:gap-6 justify-between sm:justify-end">
-                                <span class="text-xs text-gray-500 dark:text-[#9AA0A6]">30/08/2026 at 15.30 PM</span>
-                                <div class="flex items-center gap-2">
+                            {{-- Actions & Timestamp on Desktop --}}
+                            <div class="flex items-center gap-2 sm:gap-6 justify-between sm:justify-end pt-1 sm:pt-0 border-t border-gray-100 dark:border-white/10 sm:border-t-0">
+                                <span class="hidden sm:inline-block text-xs text-gray-500 dark:text-[#9AA0A6]">30/08/2026 at 15.30 PM</span>
+                                <div class="flex items-center gap-2 w-full sm:w-auto">
                                     <button
                                         type="button"
                                         onclick="rejectApprovalCard(1)"
-                                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#E00000] hover:bg-red-700 text-xs font-medium text-white shadow-xs transition cursor-pointer"
+                                        class="flex-1 sm:flex-none min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] border border-red-200 dark:border-red-900/40 bg-red-50/80 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-xs font-semibold text-red-600 dark:text-red-400 transition cursor-pointer"
                                     >
-                                        <span>✕</span>
+                                        <span class="text-sm leading-none font-bold">✕</span>
                                         <span>Tolak</span>
                                     </button>
                                     <button
                                         type="button"
                                         onclick="approveApprovalCard(1, 'admin.kai@daop4.com')"
-                                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-medium text-white shadow-xs transition cursor-pointer"
+                                        class="flex-1 sm:flex-none min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
                                     >
-                                        <span>✓</span>
+                                        <span class="text-sm leading-none font-bold">✓</span>
                                         <span>Setuju</span>
                                     </button>
                                 </div>
@@ -411,36 +537,39 @@
                         </div>
 
                         {{-- Card 2 --}}
-                        <div class="approval-card-item rounded-2xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4.5 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition hover:border-gray-300 dark:hover:border-white/20" id="req-card-2" data-timestamp="2026-08-30T11:20:00">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-[#D9D9D9] dark:bg-[#34383D] flex items-center justify-center shrink-0 text-gray-400 dark:text-gray-300">
-                                    <svg class="w-6 h-6 text-gray-400 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                    </svg>
+                        <div class="approval-card-item rounded-xl sm:rounded-2xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition hover:border-gray-300 dark:hover:border-white/20 shadow-2xs" id="req-card-2" data-timestamp="2026-08-30T11:20:00">
+                            {{-- Profile & Info Header --}}
+                            <div class="flex items-center gap-3 sm:gap-4">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
+                                    <x-icon name="profile-circle" class="w-5 h-5 sm:w-6 sm:h-6" />
                                 </div>
-                                <div>
-                                    <h4 class="text-sm font-semibold text-gray-900 dark:text-white leading-snug">Siti Rahmawati</h4>
-                                    <p class="text-xs text-gray-400 dark:text-[#9AA0A6] mt-0.5">siti.rahmawati@daop1.com</p>
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                                        <h4 class="text-sm font-bold sm:font-semibold text-gray-900 dark:text-white leading-tight truncate">Siti Rahmawati</h4>
+                                        <span class="sm:hidden text-[10px] font-medium text-gray-500 dark:text-[#9AA0A6] bg-gray-100/80 dark:bg-[#2D3034] px-2 py-0.5 rounded-full">30/08/2026 at 11.20 AM</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate">siti.rahmawati@daop1.com</p>
                                 </div>
                             </div>
 
-                            <div class="flex items-center gap-4 sm:gap-6 justify-between sm:justify-end">
-                                <span class="text-xs text-gray-500 dark:text-[#9AA0A6]">30/08/2026 at 11.20 AM</span>
-                                <div class="flex items-center gap-2">
+                            {{-- Actions & Timestamp on Desktop --}}
+                            <div class="flex items-center gap-2 sm:gap-6 justify-between sm:justify-end pt-1 sm:pt-0 border-t border-gray-100 dark:border-white/10 sm:border-t-0">
+                                <span class="hidden sm:inline-block text-xs text-gray-500 dark:text-[#9AA0A6]">30/08/2026 at 11.20 AM</span>
+                                <div class="flex items-center gap-2 w-full sm:w-auto">
                                     <button
                                         type="button"
                                         onclick="rejectApprovalCard(2)"
-                                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#E00000] hover:bg-red-700 text-xs font-medium text-white shadow-xs transition cursor-pointer"
+                                        class="flex-1 sm:flex-none min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] border border-red-200 dark:border-red-900/40 bg-red-50/80 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-xs font-semibold text-red-600 dark:text-red-400 transition cursor-pointer"
                                     >
-                                        <span>✕</span>
+                                        <span class="text-sm leading-none font-bold">✕</span>
                                         <span>Tolak</span>
                                     </button>
                                     <button
                                         type="button"
                                         onclick="approveApprovalCard(2, 'siti.rahmawati@daop1.com')"
-                                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-medium text-white shadow-xs transition cursor-pointer"
+                                        class="flex-1 sm:flex-none min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
                                     >
-                                        <span>✓</span>
+                                        <span class="text-sm leading-none font-bold">✓</span>
                                         <span>Setuju</span>
                                     </button>
                                 </div>
@@ -510,7 +639,7 @@
                                 >
 
                                 <div class="flex flex-col items-center justify-center pointer-events-none">
-                                    <img src="{{ asset('image/icon-upload-data.svg') }}" alt="Upload Illustration" class="h-32 sm:h-36 w-auto mx-auto mb-4 group-hover:scale-105 transition-transform duration-200">
+                                    <x-icon name="icon-upload-data" class="h-32 sm:h-36 w-auto mx-auto mb-4 group-hover:scale-105 transition-transform duration-200" />
                                     <p class="text-sm font-semibold text-gray-900 dark:text-white mb-1">
                                         Pilih file atau drag & drop ke area ini
                                     </p>
@@ -525,7 +654,7 @@
                                 <div class="flex items-center gap-4">
                                     {{-- Icon Box (Circular Import or Green Excel Icon) --}}
                                     <div id="super-icon-wrapper" class="shrink-0 flex items-center justify-center">
-                                        <img id="super-preview-excel-icon" src="{{ asset('image/excel-icon.svg') }}" alt="Excel Icon" class="w-9 h-9 object-contain">
+                                        <x-icon id="super-preview-excel-icon" name="excel-icon" class="w-9 h-9 object-contain" />
                                     </div>
 
                                     {{-- Info & Progress Bar --}}
@@ -954,7 +1083,15 @@
 
         function actionHapusAdmin(row, name) {
             if (confirm(`Apakah Anda yakin ingin menghapus akun admin ${name}?`)) {
-                if (row) row.remove();
+                if (currentActiveAdmin?.email) {
+                    document.querySelectorAll(`.admin-row, .admin-card`).forEach(el => {
+                        if (el.querySelector('.email-col')?.textContent.trim() === currentActiveAdmin.email) {
+                            el.remove();
+                        }
+                    });
+                } else if (row) {
+                    row.remove();
+                }
             }
         }
 
@@ -963,9 +1100,8 @@
 
         function toggleSortTerakhirAktif() {
             const tbody = document.getElementById('admin-tbody');
-            if (!tbody) return;
+            const mobileContainer = document.getElementById('admin-cards-container');
 
-            const rows = Array.from(tbody.querySelectorAll('.admin-row'));
             const arrowUp = document.getElementById('sort-arrow-up');
             const arrowDown = document.getElementById('sort-arrow-down');
 
@@ -975,17 +1111,30 @@
                 sortDirection = 'desc';
             }
 
-            rows.sort((a, b) => {
-                const timeA = new Date(a.dataset.timestamp || 0).getTime();
-                const timeB = new Date(b.dataset.timestamp || 0).getTime();
-                return sortDirection === 'desc' ? timeB - timeA : timeA - timeB;
-            });
+            // 1. Sort Desktop Rows
+            if (tbody) {
+                const rows = Array.from(tbody.querySelectorAll('.admin-row'));
+                rows.sort((a, b) => {
+                    const timeA = new Date(a.dataset.timestamp || 0).getTime();
+                    const timeB = new Date(b.dataset.timestamp || 0).getTime();
+                    return sortDirection === 'desc' ? timeB - timeA : timeA - timeB;
+                });
+                rows.forEach(r => tbody.appendChild(r));
+            }
 
-            rows.forEach(r => tbody.appendChild(r));
+            // 2. Sort Mobile Cards
+            if (mobileContainer) {
+                const cards = Array.from(mobileContainer.querySelectorAll('.admin-card'));
+                cards.sort((a, b) => {
+                    const timeA = new Date(a.dataset.timestamp || 0).getTime();
+                    const timeB = new Date(b.dataset.timestamp || 0).getTime();
+                    return sortDirection === 'desc' ? timeB - timeA : timeA - timeB;
+                });
+                cards.forEach(c => mobileContainer.appendChild(c));
+            }
 
             // Update status visual panah (satu terang/aktif, satu redup)
             if (sortDirection === 'desc') {
-                // Descending (Terbaru di atas) -> Arrow Down Aktif / Terang
                 if (arrowDown) {
                     arrowDown.setAttribute('class', 'text-[#0066FF] dark:text-[#3B82F6] opacity-100 transition-all duration-200');
                     arrowDown.setAttribute('fill', 'currentColor');
@@ -995,7 +1144,6 @@
                     arrowUp.setAttribute('fill', 'currentColor');
                 }
             } else {
-                // Ascending (Terlama di atas) -> Arrow Up Aktif / Terang
                 if (arrowUp) {
                     arrowUp.setAttribute('class', 'text-[#0066FF] dark:text-[#3B82F6] opacity-100 transition-all duration-200');
                     arrowUp.setAttribute('fill', 'currentColor');
@@ -1028,31 +1176,82 @@
             const canDelete = role !== 'SuperAdmin';
             const now = new Date().toISOString();
 
+            // 1. Prepend to Desktop Table
             const tbody = document.getElementById('admin-tbody');
-            const tr = document.createElement('tr');
-            tr.className = "hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors admin-row";
-            tr.dataset.timestamp = now;
-            tr.innerHTML = `
-                <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap email-col">${email}</td>
-                <td class="py-3.5 px-4 font-medium text-gray-900 dark:text-white whitespace-nowrap name-col">${name}</td>
-                <td class="py-3.5 px-4 whitespace-nowrap role-col">
-                    <span class="inline-block px-3 py-0.5 rounded-full text-xs font-medium ${role === 'SuperAdmin' ? 'text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800' : 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800'}">${role}</span>
-                </td>
-                <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal date-col">Baru saja</td>
-                <td class="py-3.5 px-4 whitespace-nowrap text-center">
-                    <button
-                        type="button"
-                        class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer mx-auto"
-                        title="Aksi"
-                        data-name="${name}"
-                        data-email="${email}"
-                        data-can-delete="${canDelete}"
-                    >
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 6.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm0 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm0 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
-                    </button>
-                </td>
-            `;
-            tbody.prepend(tr);
+            if (tbody) {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors admin-row";
+                tr.dataset.timestamp = now;
+                tr.innerHTML = `
+                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap email-col">${email}</td>
+                    <td class="py-3.5 px-4 font-medium text-gray-900 dark:text-white whitespace-nowrap name-col">${name}</td>
+                    <td class="py-3.5 px-4 whitespace-nowrap role-col">
+                        <span class="inline-block px-3 py-0.5 rounded-full text-xs font-medium ${role === 'SuperAdmin' ? 'text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800' : 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800'}">${role}</span>
+                    </td>
+                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal date-col">Baru saja</td>
+                    <td class="py-3.5 px-4 whitespace-nowrap text-center">
+                        <button
+                            type="button"
+                            class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer mx-auto"
+                            title="Aksi"
+                            data-name="${name}"
+                            data-email="${email}"
+                            data-can-delete="${canDelete}"
+                        >
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 6.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm0 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm0 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
+                        </button>
+                    </td>
+                `;
+                tbody.prepend(tr);
+            }
+
+            // 2. Prepend to Mobile Cards Container
+            const mobileContainer = document.getElementById('admin-cards-container');
+            if (mobileContainer) {
+                const card = document.createElement('div');
+                card.className = "admin-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 space-y-3 shadow-2xs transition-all";
+                card.dataset.timestamp = now;
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight truncate name-col">
+                                    ${name}
+                                </h3>
+                                <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate email-col">
+                                    ${email}
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            type="button"
+                            class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer shrink-0"
+                            title="Aksi"
+                            data-name="${name}"
+                            data-email="${email}"
+                            data-can-delete="${canDelete}"
+                        >
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 6.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm0 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm0 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 bg-gray-50/90 dark:bg-[#2D3034] rounded-lg p-2.5 text-xs">
+                        <div class="role-col">
+                            <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Role</span>
+                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${role === 'SuperAdmin' ? 'text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800' : 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800'}">${role}</span>
+                        </div>
+                        <div class="date-col">
+                            <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Terakhir Aktif</span>
+                            <span class="font-medium text-gray-800 dark:text-white text-[11px]">Baru saja</span>
+                        </div>
+                    </div>
+                `;
+                mobileContainer.prepend(card);
+            }
+
             closeAddAdminModal();
         }
 
@@ -1129,7 +1328,9 @@
             const query = (document.getElementById('search-admin-input')?.value || '').toLowerCase();
             const role = currentRoleFilter.toLowerCase();
             const rows = document.querySelectorAll('.admin-row');
+            const cards = document.querySelectorAll('.admin-card');
 
+            // Filter Desktop Rows
             rows.forEach(r => {
                 const email = (r.querySelector('.email-col')?.textContent || '').toLowerCase();
                 const name = (r.querySelector('.name-col')?.textContent || '').toLowerCase();
@@ -1139,6 +1340,18 @@
                 const matchRole = !role || rRole.includes(role);
 
                 r.style.display = (matchQuery && matchRole) ? '' : 'none';
+            });
+
+            // Filter Mobile Cards
+            cards.forEach(c => {
+                const email = (c.querySelector('.email-col')?.textContent || '').toLowerCase();
+                const name = (c.querySelector('.name-col')?.textContent || '').toLowerCase();
+                const rRole = (c.querySelector('.role-col')?.textContent || '').toLowerCase();
+
+                const matchQuery = !query || email.includes(query) || name.includes(query);
+                const matchRole = !role || rRole.includes(role);
+
+                c.style.display = (matchQuery && matchRole) ? '' : 'none';
             });
         }
 

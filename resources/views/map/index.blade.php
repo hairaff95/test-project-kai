@@ -29,6 +29,30 @@
         ])
     @endif
 
+    <!-- Clean Console Handler (Meredam warning usang Leaflet & error file:// dari ekstensi browser) -->
+    <script>
+        (function () {
+            const origWarn = console.warn;
+            const origError = console.error;
+
+            console.warn = function (...args) {
+                const msg = args.map(a => (typeof a === 'object' ? JSON.stringify(a) : (a || ''))).join(' ');
+                if (msg.includes('mozPressure') || msg.includes('mozInputSource')) {
+                    return;
+                }
+                origWarn.apply(console, args);
+            };
+
+            console.error = function (...args) {
+                const msg = args.map(a => (typeof a === 'object' ? JSON.stringify(a) : (a || ''))).join(' ');
+                if (msg.includes('may not load or link to file') || msg.includes('Security Error') || msg.includes('file:///')) {
+                    return;
+                }
+                origError.apply(console, args);
+            };
+        })();
+    </script>
+
     {{-- Leaflet JS & CSS --}}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -725,7 +749,7 @@
             });
         }
 
-        map.on('zoom', refreshMarkerIcons);
+        // Refresh marker icons hanya saat zoom selesai agar tidak patah-patah di tengah animasi
         map.on('zoomend', refreshMarkerIcons);
 
         // Function to get current GeoJSON style based on theme
@@ -847,6 +871,7 @@
             })
             .catch(error => {
                 console.error('GeoJSON error:', error);
+                renderMarkers(); // Fallback: marker tetap muncul meskipun file geojson gagal dimuat
             });
 
         // Theme synchronization for map and popups
@@ -857,7 +882,7 @@
             createKabupatenLabels();
             if (map) {
                 map.eachLayer(layer => {
-                    if (layer instanceof L.Marker && layer._assetData && layer._assetId) {
+                    if (layer instanceof L.Marker && layer._assetData && layer._assetId && layer.isPopupOpen && layer.isPopupOpen()) {
                         const popup = layer.getPopup();
                         if (popup) {
                             popup.setContent(createPopupCardHTML(layer._assetData, layer._assetId));
@@ -1017,14 +1042,16 @@
                     assetMarkerInstances.push(marker);
 
                     const popupOffset = (activeIcon === redPinIcon) ? [0, -16] : [0, -8];
-                    const popup = L.popup({
+                    
+                    // Lazy Loading: Konten HTML kartu popup baru di-generate saat pin diklik
+                    marker.bindPopup(function () {
+                        return createPopupCardHTML(asset, id);
+                    }, {
                         offset: popupOffset,
                         closeButton: false,
                         autoPan: false,
                         className: 'custom-asset-leaflet-popup'
-                    }).setContent(createPopupCardHTML(asset, id));
-
-                    marker.bindPopup(popup);
+                    });
 
                     marker.on('click', function (e) {
                         L.DomEvent.stopPropagation(e);
@@ -1037,11 +1064,23 @@
                         const yOffset = isMobile() ? 130 : 170;
                         const targetCenter = map.unproject(projected.subtract([0, yOffset]), pointZoomLevel);
 
-                        map.flyTo(targetCenter, pointZoomLevel, {
-                            duration: 0.55
-                        });
+                        // Cek apakah peta sudah berada di posisi target
+                        const currentCenter = map.getCenter();
+                        const isAlreadyNear = Math.abs(currentCenter.lat - targetCenter.lat) < 0.005 &&
+                                              Math.abs(currentCenter.lng - targetCenter.lng) < 0.005 &&
+                                              Math.abs(map.getZoom() - pointZoomLevel) < 0.2;
 
-                        marker.openPopup();
+                        if (isAlreadyNear) {
+                            marker.openPopup();
+                        } else {
+                            map.once('moveend', function () {
+                                marker.openPopup();
+                            });
+                            map.flyTo(targetCenter, pointZoomLevel, {
+                                duration: 0.45,
+                                easeLinearity: 0.25
+                            });
+                        }
                     });
                 }
             });
