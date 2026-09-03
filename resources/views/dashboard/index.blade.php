@@ -29,32 +29,32 @@
     {{-- Navbar --}}
     <x-navbar active="dashboard" />
 
-    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-5 pb-28 lg:pb-5 flex flex-col lg:justify-between lg:min-h-0">
+    <main class="w-full flex-1 max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-10 pt-4 sm:pt-5 lg:pt-4 pb-28 lg:pb-5 flex flex-col lg:min-h-0 overflow-y-auto lg:overflow-y-hidden">
 
         <!-- Page Header -->
-        <div class="mb-3 sm:mb-4 lg:mb-3 shrink-0">
-            <h1 class="text-xl sm:text-[30px] font-bold tracking-tight text-gray-950 dark:text-white">
+        <div class="mb-3 sm:mb-4 lg:mb-2.5 shrink-0">
+            <h1 class="text-xl sm:text-[30px] lg:text-2xl font-bold tracking-tight text-gray-950 dark:text-white">
                 Halo Admin
             </h1>
         </div>
 
         <!-- Dashboard Grid Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 lg:gap-3.5 items-stretch lg:flex-1 lg:min-h-0">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 sm:gap-4 lg:gap-3 items-stretch lg:flex-1 lg:min-h-0">
 
             <!-- Kolom Kiri -->
-            <div class="lg:col-span-8 flex flex-col gap-3.5 sm:gap-4 lg:gap-3.5 lg:min-h-0">
+            <div class="lg:col-span-8 flex flex-col gap-3.5 sm:gap-4 lg:gap-3 lg:min-h-0">
 
                 <!-- 4 Kartu Statistik -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 shrink-0">
 
                     <!-- Kartu 1: Kontrak Aktif -->
-                    <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 flex flex-col justify-between h-[105px] sm:h-[130px] transition hover:shadow-md dark:hover:border-white/10">
+                    <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-4 lg:p-3 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 flex flex-col justify-between h-[105px] sm:h-[130px] lg:h-[100px] transition hover:shadow-md dark:hover:border-white/10">
                         <div class="flex items-start justify-between">
-                            <div class="flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center">
-                                <x-icon name="ds-kontrak-aktif" class="h-7 w-7 sm:h-9 sm:w-9" />
+                            <div class="flex h-7 w-7 sm:h-9 sm:w-9 lg:h-7 lg:w-7 items-center justify-center">
+                                <x-icon name="ds-kontrak-aktif" class="h-7 w-7 sm:h-9 sm:w-9 lg:h-7 lg:w-7" />
                             </div>
-                            <div class="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/15 text-gray-700 dark:text-white transition cursor-pointer">
-                                <x-icon name="ds-icon-panah" class="h-6 w-6 sm:h-8 sm:w-8" />
+                            <div class="flex h-6 w-6 sm:h-8 sm:w-8 lg:h-6 lg:w-6 items-center justify-center rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/15 text-gray-700 dark:text-white transition cursor-pointer">
+                                <x-icon name="ds-icon-panah" class="h-6 w-6 sm:h-8 sm:w-8 lg:h-6 lg:w-6" />
                             </div>
                         </div>
                         <div>
@@ -68,13 +68,13 @@
                     </div>
 
                     <!-- Kartu 2: Total Nilai Kontrak -->
-                    <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 flex flex-col justify-between h-[105px] sm:h-[130px] transition hover:shadow-md dark:hover:border-white/10">
+                    <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-4 lg:p-3 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 flex flex-col justify-between h-[105px] sm:h-[130px] lg:h-[100px] transition hover:shadow-md dark:hover:border-white/10">
                         <div class="flex items-start justify-between">
-                            <div class="flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center">
-                                <x-icon name="ds-total-nilai-kontrak" class="h-7 w-7 sm:h-9 sm:w-9" />
+                            <div class="flex h-7 w-7 sm:h-9 sm:w-9 lg:h-7 lg:w-7 items-center justify-center">
+                                <x-icon name="ds-total-nilai-kontrak" class="h-7 w-7 sm:h-9 sm:w-9 lg:h-7 lg:w-7" />
                             </div>
-                            <div class="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/15 text-gray-700 dark:text-white transition cursor-pointer">
-                                <x-icon name="ds-icon-panah" class="h-6 w-6 sm:h-8 sm:w-8" />
+                            <div class="flex h-6 w-6 sm:h-8 sm:w-8 lg:h-6 lg:w-6 items-center justify-center rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/15 text-gray-700 dark:text-white transition cursor-pointer">
+                                <x-icon name="ds-icon-panah" class="h-6 w-6 sm:h-8 sm:w-8 lg:h-6 lg:w-6" />
                             </div>
                         </div>
                         <div>
@@ -88,13 +88,13 @@
                     </div>
 
                     <!-- Kartu 3: Aset Disewakan -->
-                    <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 flex flex-col justify-between h-[105px] sm:h-[130px] transition hover:shadow-md dark:hover:border-white/10">
+                    <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-4 lg:p-3 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 flex flex-col justify-between h-[105px] sm:h-[130px] lg:h-[100px] transition hover:shadow-md dark:hover:border-white/10">
                         <div class="flex items-start justify-between">
-                            <div class="flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center">
-                                <x-icon name="ds-asset-disewakan" class="h-7 w-7 sm:h-9 sm:w-9" />
+                            <div class="flex h-7 w-7 sm:h-9 sm:w-9 lg:h-7 lg:w-7 items-center justify-center">
+                                <x-icon name="ds-asset-disewakan" class="h-7 w-7 sm:h-9 sm:w-9 lg:h-7 lg:w-7" />
                             </div>
-                            <div class="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/15 text-gray-700 dark:text-white transition cursor-pointer">
-                                <x-icon name="ds-icon-panah" class="h-6 w-6 sm:h-8 sm:w-8" />
+                            <div class="flex h-6 w-6 sm:h-8 sm:w-8 lg:h-6 lg:w-6 items-center justify-center rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/15 text-gray-700 dark:text-white transition cursor-pointer">
+                                <x-icon name="ds-icon-panah" class="h-6 w-6 sm:h-8 sm:w-8 lg:h-6 lg:w-6" />
                             </div>
                         </div>
                         <div>
@@ -108,13 +108,13 @@
                     </div>
 
                     <!-- Kartu 4: Rata-rata Luas Aset -->
-                    <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 flex flex-col justify-between h-[105px] sm:h-[130px] transition hover:shadow-md dark:hover:border-white/10">
+                    <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-4 lg:p-3 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 flex flex-col justify-between h-[105px] sm:h-[130px] lg:h-[100px] transition hover:shadow-md dark:hover:border-white/10">
                         <div class="flex items-start justify-between">
-                            <div class="flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center">
-                                <x-icon name="ds-rata-rata-luas-aset" class="h-7 w-7 sm:h-9 sm:w-9" />
+                            <div class="flex h-7 w-7 sm:h-9 sm:w-9 lg:h-7 lg:w-7 items-center justify-center">
+                                <x-icon name="ds-rata-rata-luas-aset" class="h-7 w-7 sm:h-9 sm:w-9 lg:h-7 lg:w-7" />
                             </div>
-                            <div class="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/15 text-gray-700 dark:text-white transition cursor-pointer">
-                                <x-icon name="ds-icon-panah" class="h-6 w-6 sm:h-8 sm:w-8" />
+                            <div class="flex h-6 w-6 sm:h-8 sm:w-8 lg:h-6 lg:w-6 items-center justify-center rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/15 text-gray-700 dark:text-white transition cursor-pointer">
+                                <x-icon name="ds-icon-panah" class="h-6 w-6 sm:h-8 sm:w-8 lg:h-6 lg:w-6" />
                             </div>
                         </div>
                         <div>
@@ -130,14 +130,14 @@
                 </div>
 
                 <!-- Grafik Distribusi Pendapatan & Tabel Jatuh Tempo -->
-                <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-4 sm:p-5.5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 flex flex-col justify-start gap-2.5 sm:gap-3 lg:flex-1 lg:min-h-0">
+                <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-4 sm:p-5.5 lg:p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 flex flex-col justify-start gap-2.5 sm:gap-3 lg:gap-2 lg:flex-1 lg:min-h-0">
                     <div>
-                        <h2 class="text-xs sm:text-base font-semibold text-gray-900 dark:text-white mb-2">
+                        <h2 class="text-xs sm:text-base font-semibold text-gray-900 dark:text-white mb-2 lg:mb-1.5">
                             Distribusi Pendapatan Jan-Des
                         </h2>
 
                         <!-- Chart Container -->
-                        <div class="relative h-[135px] sm:h-[155px] lg:h-[140px] xl:h-[150px] w-full mb-1">
+                        <div class="relative h-[135px] sm:h-[155px] lg:h-[120px] xl:h-[130px] w-full mb-1">
                             <div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-4">
                                 @foreach($yGridLabels as $yLabel)
                                     <div class="flex items-center gap-2 sm:gap-2.5">
@@ -235,9 +235,9 @@
                                         <th class="pb-1.5 pl-2 font-normal text-right">Sisa</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-100 dark:divide-white/10">
+                                <tbody id="jatuh-tempo-tbody" class="divide-y divide-gray-100 dark:divide-white/10">
                                     @forelse($upcomingContracts as $uc)
-                                        <tr class="whitespace-nowrap">
+                                        <tr class="jatuh-tempo-row whitespace-nowrap">
                                             <td class="py-1 sm:py-1.5 pr-2 font-semibold text-gray-900 dark:text-white truncate max-w-[130px]">{{ $uc['jenis_kontrak'] }}</td>
                                             <td class="py-1 sm:py-1.5 px-2 text-gray-700 dark:text-gray-300 truncate max-w-[150px]">{{ $uc['nama'] }}</td>
                                             <td class="py-1 sm:py-1.5 px-2 text-gray-700 dark:text-gray-300">{{ $uc['jatuh_tempo'] }}</td>
@@ -255,6 +255,31 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Pagination Jatuh Tempo -->
+                        <div id="jatuh-tempo-pagination" class="flex items-center justify-between mt-1.5 pt-1.5 border-t border-gray-100/90 dark:border-white/10">
+                            <span id="jatuh-tempo-info" class="text-[10px] text-gray-400 dark:text-[#787E87]"></span>
+                            <div class="flex items-center gap-1">
+                                <button
+                                    id="jatuh-tempo-prev"
+                                    onclick="jtPaginate(-1)"
+                                    class="flex items-center justify-center h-5 w-5 rounded-md bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                                >
+                                    <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <button
+                                    id="jatuh-tempo-next"
+                                    onclick="jtPaginate(1)"
+                                    class="flex items-center justify-center h-5 w-5 rounded-md bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed transition cursor-pointer"
+                                >
+                                    <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -262,10 +287,10 @@
             </div>
 
             <!-- Kolom Kanan -->
-            <div class="lg:col-span-4 flex flex-col gap-3.5 sm:gap-4 lg:gap-3.5 lg:min-h-0">
+            <div class="lg:col-span-4 flex flex-col gap-3.5 sm:gap-4 lg:gap-3 lg:min-h-0 lg:h-full">
 
                 <!-- Distribusi Jenis Pendapatan -->
-                <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-4 sm:p-5.5 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 shrink-0">
+                <div class="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-4 sm:p-5.5 lg:p-4 shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-none border border-gray-100/90 dark:border-white/5 lg:flex-1 lg:min-h-0">
                     
                     <div class="flex items-center justify-between mb-2.5 sm:mb-3.5">
                         <h2 class="text-xs sm:text-base font-semibold text-gray-950 dark:text-white">
@@ -329,14 +354,14 @@
                 </div>
 
                 <!-- Pencapaian RKA (Donut & Stat Buttons) -->
-                <div class="rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#659DF8] via-[#2F7EF8] to-[#0062F5] p-4 sm:p-6 text-white shadow-[0_4px_20px_rgba(21,112,239,0.2)] flex flex-col justify-between relative lg:flex-1 lg:min-h-0">
+                <div class="rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#659DF8] via-[#2F7EF8] to-[#0062F5] p-4 sm:p-6 lg:p-3.5 text-white shadow-[0_4px_20px_rgba(21,112,239,0.2)] flex flex-col relative w-full shrink-0 overflow-hidden">
                     
-                    <div class="flex items-center justify-between mb-2.5 sm:mb-3 relative z-30">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between mb-3 lg:mb-2.5 relative z-30">
                         <h2 class="text-xs sm:text-base font-semibold text-white tracking-normal">
                             Pencapaian RKA
                         </h2>
                         
-                        <!-- Dropdown Menu dengan Popup Lihat (RKA) -->
                         <div class="relative">
                             <button
                                 type="button"
@@ -359,10 +384,11 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row items-center justify-start gap-3 sm:gap-3.5 my-auto w-full">
+                    <!-- Body: Donut kiri + Tombol kanan -->
+                    <div class="flex flex-row items-center gap-3 w-full min-w-0">
 
                         <!-- Donut Chart -->
-                        <div class="relative flex h-[140px] w-[140px] sm:h-[195px] sm:w-[195px] xl:h-[205px] xl:w-[205px] shrink-0 items-center justify-center">
+                        <div class="relative flex h-[130px] w-[130px] sm:h-[150px] sm:w-[150px] lg:h-[110px] lg:w-[110px] shrink-0 items-center justify-center">
                             <svg viewBox="0 0 100 100" class="h-full w-full overflow-visible">
                                 <path
                                     id="donut-arc-top"
@@ -381,28 +407,26 @@
                                     class="transition-colors duration-300"
                                 />
                             </svg>
-
                             <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <span id="donut-percentage" class="text-[20px] sm:text-[28px] font-semibold tracking-normal text-white transition-all duration-300">
+                                <span id="donut-percentage" class="text-[22px] sm:text-[26px] lg:text-[18px] font-semibold tracking-normal text-white transition-all duration-300">
                                     {{ $rkaPercentage }}%
                                 </span>
                             </div>
                         </div>
 
                         <!-- Tombol Statistik -->
-                        <div class="flex flex-col gap-2 sm:gap-2.5 w-full sm:w-[160px] xl:w-[170px] shrink-0">
-                            
+                        <div class="flex flex-col gap-2 flex-1 min-w-0">
                             <button
                                 type="button"
                                 id="btn-stat-blacklog"
                                 onclick="switchDonutStat('blacklog')"
-                                class="w-full rounded-xl sm:rounded-2xl border-1.5 border-white bg-white/15 p-2.5 sm:px-3.5 sm:py-2.5 text-left transition-all duration-200 shadow-sm cursor-pointer hover:bg-white/25 active:scale-[0.98]"
+                                class="flex flex-col w-full rounded-xl sm:rounded-2xl border-1.5 border-white bg-white/15 px-3 py-2.5 text-left transition-all duration-200 shadow-sm cursor-pointer hover:bg-white/25 active:scale-[0.98]"
                             >
-                                <p class="text-[11px] sm:text-[13px] font-medium text-white flex items-center gap-1.5 leading-snug whitespace-nowrap">
+                                <p class="text-[11px] sm:text-[12px] font-medium text-white flex items-center gap-1.5 leading-snug">
                                     <span class="h-1.5 w-1.5 rounded-full bg-white shrink-0"></span>
                                     Total Backlog
                                 </p>
-                                <p class="text-xs sm:text-[14px] font-normal text-white/90 mt-0.5 pl-3">
+                                <p class="text-[12px] sm:text-[13px] font-normal text-white/90 mt-0.5 pl-3">
                                     {{ $totalBacklogFormatted }}
                                 </p>
                             </button>
@@ -411,17 +435,16 @@
                                 type="button"
                                 id="btn-stat-pendapatan"
                                 onclick="switchDonutStat('pendapatan')"
-                                class="w-full rounded-xl sm:rounded-2xl border border-white/60 bg-transparent p-2.5 sm:px-3.5 sm:py-2.5 text-left transition-all duration-200 cursor-pointer hover:bg-white/15 active:scale-[0.98] opacity-85 hover:opacity-100"
+                                class="w-full rounded-xl sm:rounded-2xl border border-white/60 bg-transparent px-3 py-2.5 text-left transition-all duration-200 cursor-pointer hover:bg-white/15 active:scale-[0.98] opacity-85 hover:opacity-100"
                             >
-                                <p class="text-[11px] sm:text-[13px] font-medium text-white flex items-center gap-1.5 leading-snug whitespace-nowrap">
+                                <p class="text-[11px] sm:text-[12px] font-medium text-white flex items-center gap-1.5 leading-snug">
                                     <span class="h-1.5 w-1.5 rounded-full bg-white shrink-0"></span>
                                     Pendapatan 2026
                                 </p>
-                                <p class="text-xs sm:text-[14px] font-normal text-white/90 mt-0.5 pl-3">
+                                <p class="text-[12px] sm:text-[13px] font-normal text-white/90 mt-0.5 pl-3">
                                     {{ $totalPendapatanFormatted }}
                                 </p>
                             </button>
-
                         </div>
 
                     </div>
@@ -435,6 +458,46 @@
     </main>
 
     <script>
+        // ── Pagination Jatuh Tempo Terdekat ──────────────────────────────
+        (function () {
+            const PER_PAGE = 3;
+            let currentPage = 1;
+
+            const rows = Array.from(document.querySelectorAll('.jatuh-tempo-row'));
+            const totalPages = Math.ceil(rows.length / PER_PAGE);
+
+            const prevBtn = document.getElementById('jatuh-tempo-prev');
+            const nextBtn = document.getElementById('jatuh-tempo-next');
+            const info    = document.getElementById('jatuh-tempo-info');
+            const paginationEl = document.getElementById('jatuh-tempo-pagination');
+
+            // Sembunyikan pagination kalau data <= PER_PAGE
+            if (rows.length <= PER_PAGE) {
+                if (paginationEl) paginationEl.style.display = 'none';
+                return;
+            }
+
+            function render() {
+                const start = (currentPage - 1) * PER_PAGE;
+                const end   = start + PER_PAGE;
+
+                rows.forEach(function (row, idx) {
+                    row.style.display = (idx >= start && idx < end) ? '' : 'none';
+                });
+
+                if (info) info.textContent = currentPage + ' / ' + totalPages;
+                if (prevBtn) prevBtn.disabled = currentPage === 1;
+                if (nextBtn) nextBtn.disabled = currentPage === totalPages;
+            }
+
+            window.jtPaginate = function (dir) {
+                currentPage = Math.max(1, Math.min(totalPages, currentPage + dir));
+                render();
+            };
+
+            render();
+        })();
+
         function toggleDropdownLihat(event) {
             event.stopPropagation();
             const popup = document.getElementById('popup-dropdown-lihat');
