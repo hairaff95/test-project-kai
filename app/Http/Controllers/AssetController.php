@@ -13,7 +13,7 @@ class AssetController extends Controller
     public function showKai(string $identifier, Request $request)
     {
         $contractNumber = $request->query('contract');
-        
+
         $contract = null;
         if ($contractNumber) {
             $contract = \App\Models\KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
@@ -203,13 +203,13 @@ class AssetController extends Controller
      */
     private function cleanNumeric($value): float
     {
-        if ($value === null || trim((string)$value) === '') {
+        if ($value === null || trim((string) $value) === '') {
             return 0.0;
         }
-        
-        $clean = trim((string)$value);
+
+        $clean = trim((string) $value);
         $clean = preg_replace('/[^\d.,]/', '', $clean);
-        
+
         if (substr_count($clean, '.') > 1) {
             $parts = explode('.', $clean);
             $last = array_pop($parts);
@@ -229,7 +229,7 @@ class AssetController extends Controller
         } elseif (str_contains($clean, ',')) {
             $clean = str_replace(',', '.', $clean);
         }
-        
+
         return (float) $clean;
     }
 

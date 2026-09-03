@@ -12,8 +12,8 @@ class KaiContract extends Model
     protected $table = 'contracts';
 
     protected $primaryKey = 'contract_number';
-    public $incrementing  = false;
-    protected $keyType    = 'string';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     public $timestamps = false;
 
@@ -38,13 +38,13 @@ class KaiContract extends Model
     ];
 
     protected $casts = [
-        'start_datetime'      => 'date',
-        'end_datetime'        => 'date',
+        'start_datetime' => 'date',
+        'end_datetime' => 'date',
         'start_datetime_baru' => 'date',
-        'end_datetime_baru'   => 'date',
-        'price'               => 'float',
-        'size_area'           => 'float',
-        'created_at'          => 'datetime',
+        'end_datetime_baru' => 'date',
+        'price' => 'float',
+        'size_area' => 'float',
+        'created_at' => 'datetime',
     ];
 
     public function tenant(): BelongsTo
@@ -80,16 +80,20 @@ class KaiContract extends Model
     // Hitung sisa hari kontrak dari end_datetime_baru
     public function getDueDaysAttribute(): string
     {
-        $end  = $this->end_datetime_baru ?? $this->end_datetime;
-        if (!$end) return '-';
+        $end = $this->end_datetime_baru ?? $this->end_datetime;
+        if (!$end)
+            return '-';
 
-        $diff = (int) floor(now()->diffInDays($end, false));
+        $endCarbon = $end instanceof \Carbon\CarbonInterface ? $end : \Carbon\Carbon::parse((string) $end);
+        $diff = (int) floor(now()->diffInDays($endCarbon, false));
 
-        if ($diff < 0) return 'Sudah berakhir';
-        if ($diff === 0) return 'Hari ini';
+        if ($diff < 0)
+            return 'Sudah berakhir';
+        if ($diff === 0)
+            return 'Hari ini';
 
         $months = intdiv($diff, 30);
-        $days   = $diff % 30;
+        $days = $diff % 30;
 
         if ($months > 0) {
             return $months . ' bulan' . ($days > 0 ? ' ' . $days . ' hari' : '');
@@ -100,7 +104,8 @@ class KaiContract extends Model
     // Accessor: format luas area (e.g. 42 m², 43,5 m²)
     public function getSizeAreaFormattedAttribute(): string
     {
-        if ($this->size_area === null) return '-';
+        if ($this->size_area === null)
+            return '-';
         $formatted = number_format((float) $this->size_area, 2, ',', '.');
         $trimmed = rtrim(rtrim($formatted, '0'), ',');
         return $trimmed . ' m²';

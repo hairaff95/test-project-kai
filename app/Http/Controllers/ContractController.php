@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\KaiContract;
+use App\Models\KaiAsset;
+use App\Models\ContractFinancial;
+use App\Models\Penyewa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -65,10 +68,10 @@ class ContractController extends Controller
 
         // Cache dropdown options — data ini jarang berubah, query distinct bisa berat
         $jenisAssetOptions     = collect(Cache::remember('dropdown_jenis_asset', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')->toArray()
+            fn() => KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')->toArray()
         ));
         $statusCustomerOptions = collect(Cache::remember('dropdown_status_customer', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')->toArray()
+            fn() => Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')->toArray()
         ));
 
         return view('contracts.index', compact('contracts', 'jenisAssetOptions', 'statusCustomerOptions'));
@@ -77,16 +80,16 @@ class ContractController extends Controller
     public function create()
     {
         $jenisAssetOptions = collect(Cache::remember('dropdown_jenis_asset', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')->toArray()
+            fn() => KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')->toArray()
         ));
         $statusCustomerOptions = collect(Cache::remember('dropdown_status_customer', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')->toArray()
+            fn() => Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')->toArray()
         ));
         $stasiunOptions = collect(Cache::remember('dropdown_stasiun', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->pluck('stasiun')->toArray()
+            fn() => KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->pluck('stasiun')->toArray()
         ));
         $jenisPendapatanOptions = collect(Cache::remember('dropdown_jenis_pendapatan', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\ContractFinancial::select('jenis_pendapatan')->distinct()->whereNotNull('jenis_pendapatan')->pluck('jenis_pendapatan')->toArray()
+            fn() => ContractFinancial::select('jenis_pendapatan')->distinct()->whereNotNull('jenis_pendapatan')->pluck('jenis_pendapatan')->toArray()
         ));
 
         return view('contracts.create', compact('jenisAssetOptions', 'statusCustomerOptions', 'stasiunOptions', 'jenisPendapatanOptions'));
@@ -102,7 +105,7 @@ class ContractController extends Controller
 
         // 1. Create or Find Tenant
         $brandInput = trim((string)$request->brand);
-        $tenant = \App\Models\Penyewa::firstOrCreate(
+        $tenant = Penyewa::firstOrCreate(
             ['fullname' => $request->nama_penyewa],
             [
                 'status_customer' => $request->status_customer ?? 'Swasta',
@@ -113,7 +116,7 @@ class ContractController extends Controller
         );
 
         // 2. Create or Find Asset
-        $asset = \App\Models\KaiAsset::firstOrCreate(
+        $asset = KaiAsset::firstOrCreate(
             ['asset_number' => $request->asset_number],
             [
                 'asset_block_name' => $request->asset_block_name ?? $request->nama_penyewa,
@@ -162,7 +165,7 @@ class ContractController extends Controller
         $endDateBaru   = $parseDate($request->end_datetime_baru);
 
         // 3. Create Contract
-        $contract = \App\Models\KaiContract::create([
+        $contract = KaiContract::create([
             'contract_number'     => $request->contract_number,
             'tenant_id'           => $tenant->id,
             'asset_number'        => $asset->asset_number,
