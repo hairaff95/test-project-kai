@@ -471,46 +471,25 @@
 
     // ===== NOTIFIKASI =====
     let notifLoaded = false;
-    const NOTIF_STORAGE_KEY = 'kai_read_notif_assets';
+    const NOTIF_READ_TS_KEY = 'kai_notif_read_at'; // unix timestamp (detik) terakhir user buka notif
 
-    /** Ambil set asset_number yang sudah dibaca dari localStorage */
-    function getReadSet() {
-        try {
-            const raw = localStorage.getItem(NOTIF_STORAGE_KEY);
-            return raw ? new Set(JSON.parse(raw)) : new Set();
-        } catch { return new Set(); }
+    /** Ambil timestamp terakhir baca (detik). Default 0 = belum pernah buka. */
+    function getReadAt() {
+        try { return parseInt(localStorage.getItem(NOTIF_READ_TS_KEY) || '0', 10); } catch { return 0; }
     }
 
-    /** Simpan set asset_number yang sudah dibaca ke localStorage */
-    function saveReadSet(readSet) {
-        try {
-            localStorage.setItem(NOTIF_STORAGE_KEY, JSON.stringify([...readSet]));
-        } catch {}
+    /** Simpan timestamp sekarang sebagai "sudah dibaca". */
+    function saveReadAt() {
+        try { localStorage.setItem(NOTIF_READ_TS_KEY, Math.floor(Date.now() / 1000)); } catch {}
     }
 
-    /**
-     * Tandai semua aset dalam array sebagai sudah dibaca,
-     * lalu sembunyikan badge.
-     */
-    function markAllRead(items) {
-        const readSet = getReadSet();
-        items.forEach(item => readSet.add(item.asset_number));
-        saveReadSet(readSet);
-
-        const badgeEl = document.getElementById('notifBadge');
-        if (badgeEl) {
-            badgeEl.classList.add('hidden');
-            badgeEl.classList.remove('flex');
-        }
-    }
-
-    /** Hitung berapa aset yang belum dibaca */
+    /** Hitung aset yang created_at_ts > readAt (belum dibaca saat terakhir buka) */
     function countUnread(items) {
-        const readSet = getReadSet();
-        return items.filter(item => !readSet.has(item.asset_number)).length;
+        const readAt = getReadAt();
+        return items.filter(item => (item.created_at_ts || 0) > readAt).length;
     }
 
-    /** Update tampilan badge berdasarkan data item dan status baca */
+    /** Update tampilan badge */
     function updateBadge(items) {
         const badgeEl = document.getElementById('notifBadge');
         if (!badgeEl) return;
@@ -525,7 +504,7 @@
         }
     }
 
-    // Cache data terakhir dari server supaya markAllRead bisa akses saat dropdown dibuka
+    // Cache data terakhir dari server
     let lastNotifItems = [];
 
     function toggleNotifDropdown() {
@@ -539,16 +518,17 @@
             dropdown.classList.add('opacity-0', 'invisible', 'scale-95');
             dropdown.classList.remove('opacity-100', 'visible', 'scale-100');
         } else {
-            // Buka dropdown
+            // Buka dropdown — catat waktu baca sekarang
+            saveReadAt();
             dropdown.classList.remove('opacity-0', 'invisible', 'scale-95');
             dropdown.classList.add('opacity-100', 'visible', 'scale-100');
 
-            // Fetch data jika belum pernah di-load sesi ini
+            // Hilangkan badge setelah dibuka
+            const badgeEl = document.getElementById('notifBadge');
+            if (badgeEl) { badgeEl.classList.add('hidden'); badgeEl.classList.remove('flex'); }
+
             if (!notifLoaded) {
                 fetchNotifications();
-            } else if (lastNotifItems.length > 0) {
-                // Sudah load — langsung tandai baca & hilangkan badge
-                markAllRead(lastNotifItems);
             }
         }
     }
@@ -569,7 +549,6 @@
                     emptyEl?.classList.remove('hidden');
                     emptyEl?.classList.add('flex');
                 } else {
-                    // Render item
                     itemsEl?.classList.remove('hidden');
                     itemsEl.innerHTML = data.items.map(item => `
                         <li>
@@ -587,9 +566,6 @@
                             </a>
                         </li>
                     `).join('');
-
-                    // Tandai semua sebagai sudah dibaca → badge hilang
-                    markAllRead(data.items);
                 }
             })
             .catch(() => {
@@ -600,24 +576,20 @@
             });
     }
 
-    // Polling otomatis setiap 60 detik — hanya update badge, tidak re-render list
+    // Polling otomatis setiap 60 detik — hanya update badge
     function pollNotifications() {
         fetch('{{ route("notifications.new-assets") }}')
             .then(res => res.json())
             .then(data => {
                 lastNotifItems = data.items || [];
 
-                // Jika dropdown sedang terbuka saat polling, tandai baca sekalian
                 const dropdown = document.getElementById('notifDropdown');
                 const isOpen = dropdown && !dropdown.classList.contains('invisible');
-                if (isOpen) {
-                    markAllRead(lastNotifItems);
-                } else {
+                if (!isOpen) {
                     updateBadge(lastNotifItems);
                 }
-
-                // Reset cache notifLoaded agar item baru bisa di-render ulang
-                if (notifLoaded) notifLoaded = false;
+                // Reset agar list di-render ulang saat dibuka lagi
+                notifLoaded = false;
             })
             .catch(() => {});
     }
