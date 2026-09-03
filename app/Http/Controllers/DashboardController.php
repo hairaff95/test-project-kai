@@ -126,7 +126,7 @@ class DashboardController extends Controller
         $upcomingContracts = KaiContract::with(['tenant', 'asset'])
             ->orderBy('end_datetime_baru', 'asc')
             ->orderBy('end_datetime', 'asc')
-            ->take(6)
+            ->take(7)
             ->get()
             ->map(function ($c) {
                 $endDate = $c->end_datetime_baru ?? $c->end_datetime ?? now()->addYear();

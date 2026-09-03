@@ -463,7 +463,7 @@
     <script>
         // ── Pagination Jatuh Tempo Terdekat ──────────────────────────────
         (function () {
-            const PER_PAGE = 3;
+            const PER_PAGE = 7;
             let currentPage = 1;
 
             const rows = Array.from(document.querySelectorAll('.jatuh-tempo-row'));
