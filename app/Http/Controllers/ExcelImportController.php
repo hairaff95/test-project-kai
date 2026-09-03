@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class ExcelImportController extends Controller
 {
@@ -325,6 +326,13 @@ class ExcelImportController extends Controller
             }
 
             DB::commit();
+
+            // Invalidasi semua cache yang terpengaruh oleh data yang baru diimpor
+            Cache::forget('map_assets');
+            Cache::forget('dropdown_jenis_asset');
+            Cache::forget('dropdown_status_customer');
+            Cache::forget('dropdown_stasiun');
+            Cache::forget('dropdown_jenis_pendapatan');
 
             return back()->with('success', "Berhasil mengimpor data! ({$importedCount} data baru ditambahkan, {$updatedCount} data diperbarui)");
 

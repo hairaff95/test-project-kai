@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\KaiContract;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ContractController extends Controller
 {
+    // Cache TTL untuk dropdown options yang jarang berubah
+    private const CACHE_DROPDOWN_TTL = 3600; // 1 jam
+
     public function index(Request $request)
     {
         $query = KaiContract::with(['tenant', 'asset', 'financial'])->latest('created_at');
@@ -59,19 +63,31 @@ class ContractController extends Controller
 
         $contracts = $query->paginate(50)->withQueryString();
 
-        // Ambil opsi unik untuk dropdown
-        $jenisAssetOptions    = \App\Models\KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset');
-        $statusCustomerOptions = \App\Models\Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer');
+        // Cache dropdown options — data ini jarang berubah, query distinct bisa berat
+        $jenisAssetOptions     = collect(Cache::remember('dropdown_jenis_asset', self::CACHE_DROPDOWN_TTL,
+            fn() => \App\Models\KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')->toArray()
+        ));
+        $statusCustomerOptions = collect(Cache::remember('dropdown_status_customer', self::CACHE_DROPDOWN_TTL,
+            fn() => \App\Models\Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')->toArray()
+        ));
 
         return view('contracts.index', compact('contracts', 'jenisAssetOptions', 'statusCustomerOptions'));
     }
 
     public function create()
     {
-        $jenisAssetOptions = \App\Models\KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset');
-        $statusCustomerOptions = \App\Models\Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer');
-        $stasiunOptions = \App\Models\KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->pluck('stasiun');
-        $jenisPendapatanOptions = \App\Models\ContractFinancial::select('jenis_pendapatan')->distinct()->whereNotNull('jenis_pendapatan')->pluck('jenis_pendapatan');
+        $jenisAssetOptions = collect(Cache::remember('dropdown_jenis_asset', self::CACHE_DROPDOWN_TTL,
+            fn() => \App\Models\KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')->toArray()
+        ));
+        $statusCustomerOptions = collect(Cache::remember('dropdown_status_customer', self::CACHE_DROPDOWN_TTL,
+            fn() => \App\Models\Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')->toArray()
+        ));
+        $stasiunOptions = collect(Cache::remember('dropdown_stasiun', self::CACHE_DROPDOWN_TTL,
+            fn() => \App\Models\KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->pluck('stasiun')->toArray()
+        ));
+        $jenisPendapatanOptions = collect(Cache::remember('dropdown_jenis_pendapatan', self::CACHE_DROPDOWN_TTL,
+            fn() => \App\Models\ContractFinancial::select('jenis_pendapatan')->distinct()->whereNotNull('jenis_pendapatan')->pluck('jenis_pendapatan')->toArray()
+        ));
 
         return view('contracts.create', compact('jenisAssetOptions', 'statusCustomerOptions', 'stasiunOptions', 'jenisPendapatanOptions'));
     }
@@ -116,9 +132,9 @@ class ContractController extends Controller
             if (!$dateStr) return null;
             $dateStr = trim($dateStr);
             if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/', $dateStr, $matches)) {
-                $day = (int)$matches[1];
-                $month = (int)$matches[2];
-                $year = (int)$matches[3];
+                $day   = (int) $matches[1];
+                $month = (int) $matches[2];
+                $year  = (int) $matches[3];
                 if ($year < 100) $year += 2000;
                 return \Carbon\Carbon::create($year, $month, $day);
             }
@@ -129,11 +145,11 @@ class ContractController extends Controller
             }
         };
 
-        $contractDate = $parseDate($request->contract_date) ?? now();
-        $startDate = $parseDate($request->start_datetime) ?? now();
-        $endDate = $parseDate($request->end_datetime) ?? now()->addYear();
+        $contractDate  = $parseDate($request->contract_date) ?? now();
+        $startDate     = $parseDate($request->start_datetime) ?? now();
+        $endDate       = $parseDate($request->end_datetime) ?? now()->addYear();
         $startDateBaru = $parseDate($request->start_datetime_baru);
-        $endDateBaru = $parseDate($request->end_datetime_baru);
+        $endDateBaru   = $parseDate($request->end_datetime_baru);
 
         // 3. Create Contract
         $contract = \App\Models\KaiContract::create([
@@ -153,10 +169,10 @@ class ContractController extends Controller
         ]);
 
         // 4. Create Financial
-        $nilai2026 = (float) preg_replace('/[^\d]/', '', $request->nilai_2026 ?? $cleanedPrice);
+        $nilai2026     = (float) preg_replace('/[^\d]/', '', $request->nilai_2026 ?? $cleanedPrice);
         $nilaiBacklog1 = (float) preg_replace('/[^\d]/', '', $request->nilai_backlog ?? 0);
         $nilaiBacklog2 = (float) preg_replace('/[^\d]/', '', $request->nilai_backlog2 ?? 0);
-        $persentase = (float) str_replace(',', '.', preg_replace('/[^\d.,]/', '', $request->persentase ?? '0.9'));
+        $persentase    = (float) str_replace(',', '.', preg_replace('/[^\d.,]/', '', $request->persentase ?? '0.9'));
 
         \App\Models\ContractFinancial::create([
             'contract_number'  => $contract->contract_number,
@@ -191,6 +207,13 @@ class ContractController extends Controller
             'jan_des'         => $nilai2026,
         ]);
 
+        // Invalidasi cache peta & dropdown karena aset/kontrak baru mungkin menambah opsi baru
+        Cache::forget('map_assets');
+        Cache::forget('dropdown_jenis_asset');
+        Cache::forget('dropdown_status_customer');
+        Cache::forget('dropdown_stasiun');
+        Cache::forget('dropdown_jenis_pendapatan');
+
         return redirect()->route('contracts.index')->with('success', 'Aset & Kontrak baru berhasil ditambahkan.');
     }
 
@@ -201,8 +224,8 @@ class ContractController extends Controller
             ->orWhere('asset_number', $identifier)
             ->firstOrFail();
 
-        $asset = $contract->asset;
-        $tenant = $contract->tenant;
+        $asset     = $contract->asset;
+        $tenant    = $contract->tenant;
         $financial = $contract->financial;
 
         return view('contracts.edit', compact('contract', 'asset', 'tenant', 'financial'));
@@ -241,6 +264,10 @@ class ContractController extends Controller
         }
 
         $contract->save();
+
+        // Invalidasi cache peta karena data kontrak/aset berubah
+        Cache::forget('map_assets');
+        Cache::forget('dropdown_status_customer');
 
         return redirect()->route('contracts.index')->with('success', 'Kontrak berhasil diperbarui.');
     }

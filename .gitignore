@@ -79,3 +79,7 @@ $RECYCLE.BIN/
 /public/js/
 !/public/js/*.json
 /public/mix-manifest.json
+
+
+.agents
+.kiro
