@@ -333,11 +333,10 @@
 
                     <!-- Tabel Distribusi -->
                     <div>
-                        <div class="flex justify-between items-center px-1 text-[10px] sm:text-xs text-[#7E8B9B] dark:text-[#787E87] font-medium mb-2 pb-1 border-b border-gray-50 dark:border-white/5">
+                        <div class="flex justify-between items-center px-1 text-[8px] sm:text-xs text-[#7E8B9B] dark:text-[#787E87] font-medium mb-2 pb-1 border-b border-gray-50 dark:border-white/5">
                             <span>Jenis Pendapatan</span>
                             <span>Persentase Pencapaian</span>
                         </div>
-
                         <div class="space-y-2 sm:space-y-2.5 px-1 pt-0.5">
                             @foreach($revenueBreakdown as $rb)
                                 <div class="flex items-center justify-between text-[11px] sm:text-sm">
@@ -385,7 +384,7 @@
                     </div>
 
                     <!-- Body: Donut kiri + Tombol kanan -->
-                    <div class="flex flex-col items-center gap-3 w-full min-w-0 ">
+                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full min-w-0 ">
 
                         <!-- Donut Chart -->
                         <div class="relative flex h-[130px] w-[130px] sm:h-[150px] sm:w-[150px] lg:h-[110px] lg:w-[110px] shrink-0 items-center justify-center">
@@ -415,7 +414,7 @@
                         </div>
 
                         <!-- Tombol Statistik -->
-                        <div class="flex flex-col gap-2 flex-1 min-w-full">
+                        <div class="flex flex-col gap-2 flex-1 min-w-0">
                             <button
                                 type="button"
                                 id="btn-stat-blacklog"
