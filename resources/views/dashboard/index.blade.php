@@ -385,7 +385,7 @@
                     </div>
 
                     <!-- Body: Donut kiri + Tombol kanan -->
-                    <div class="flex flex-row items-center gap-3 w-full min-w-0">
+                    <div class="flex flex-col items-center gap-3 w-full min-w-0 ">
 
                         <!-- Donut Chart -->
                         <div class="relative flex h-[130px] w-[130px] sm:h-[150px] sm:w-[150px] lg:h-[110px] lg:w-[110px] shrink-0 items-center justify-center">
@@ -415,7 +415,7 @@
                         </div>
 
                         <!-- Tombol Statistik -->
-                        <div class="flex flex-col gap-2 flex-1 min-w-0">
+                        <div class="flex flex-col gap-2 flex-1 min-w-full">
                             <button
                                 type="button"
                                 id="btn-stat-blacklog"
