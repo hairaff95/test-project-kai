@@ -479,6 +479,7 @@
         })();
     </script>
 
+<x-temp-password-guard />
 </body>
 
 </html>

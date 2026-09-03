@@ -109,6 +109,10 @@ class SuperAdminController extends Controller
 
         $admin->delete();
 
+        if (request()->expectsJson()) {
+            return response()->json(['message' => 'Admin berhasil dihapus.']);
+        }
+
         return redirect()->route('settings.index')
             ->with('success', 'Admin berhasil dihapus.');
     }

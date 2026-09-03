@@ -26,22 +26,23 @@
         </div>
         <div class="body">
             <p>Halo, <strong>{{ $user->name }}</strong>.</p>
-            <p>Karena request reset password Anda belum diproses dalam <strong>24 jam</strong>, sistem secara otomatis mereset password Anda. Berikut adalah password sementara Anda:</p>
+            <p>Karena request reset password Anda belum disetujui Super Admin dalam <strong>1 menit</strong>, sistem secara otomatis mengirimkan password sementara. Berikut adalah password sementara Anda:</p>
 
             <div class="pass-box">
                 <div class="pass-code">{{ $tempPassword }}</div>
             </div>
 
             <div class="warning">
-                🔒 Segera ganti password ini setelah berhasil masuk. Password sementara ini hanya berlaku untuk login pertama.
+                ⏱️ Password sementara ini <strong>hanya berlaku selama 2 menit</strong> sejak email ini dikirim. Setelah habis, ajukan request reset password baru melalui halaman login (maksimal 3x request per siklus).
             </div>
 
             <div class="steps">
                 <strong style="font-size: 13px; color: #15803D;">Langkah selanjutnya:</strong>
                 <ol>
-                    <li>Login menggunakan password sementara di atas</li>
-                    <li>Segera pergi ke menu <strong>Ubah Kata Sandi</strong></li>
+                    <li>Login menggunakan password sementara di atas <strong>sebelum 2 menit habis</strong></li>
+                    <li>Jika sudah login, segera pergi ke menu <strong>Ubah Kata Sandi</strong></li>
                     <li>Buat password baru yang aman</li>
+                    <li>Jika waktu habis, ajukan request baru dari halaman login</li>
                 </ol>
             </div>
 

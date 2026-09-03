@@ -88,6 +88,19 @@
                 <form method="POST" action="{{ route('login.post') }}" class="space-y-3 sm:space-y-4 lg:space-y-5">
                     @csrf
 
+                    {{-- Notif: temp password expired --}}
+                    @if(session('temp_password_expired'))
+                    <div class="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl px-4 py-3 text-xs text-red-700 dark:text-red-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <span>{{ session('error', 'Password sementara Anda sudah tidak valid. Silakan tunggu password sementara berikutnya atau hubungi Super Admin.') }}</span>
+                    </div>
+                    @elseif($errors->has('login'))
+                    <div class="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl px-4 py-3 text-xs text-red-700 dark:text-red-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <span>{{ $errors->first('login') }}</span>
+                    </div>
+                    @endif
+
                     {{-- 1. Alamat Email --}}
                     <div>
                         <label for="email-input" class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5 lg:mb-2">
