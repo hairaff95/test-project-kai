@@ -24,7 +24,7 @@
     @endif
 </head>
 
-<body class="min-h-screen bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between transition-colors duration-200">
+<body class="min-h-screen bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-black flex flex-col justify-between transition-colors duration-200">
 
     {{-- Top Navbar --}}
     <x-navbar active="contracts" />
@@ -66,7 +66,7 @@
                             name="search"
                             id="input-search"
                             value="{{ request('search') }}"
-                            placeholder="Search No Kontrak"
+                            placeholder="Search"
                             class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
                         >
                     </div>
@@ -80,17 +80,17 @@
                     {{-- Filter Jenis Aset --}}
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span class="{{ request('jenis_asset') ? 'text-gray-800 dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
+                            <span id="label-jenis-asset" class="{{ request('jenis_asset') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
                                 {{ request('jenis_asset') ?: 'Jenis Aset' }}
                             </span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="selectFilterOption('jenis_asset', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('jenis_asset') ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="selectFilterOption('jenis_asset', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('jenis_asset') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Jenis Aset</span>
                             </button>
                             @foreach($jenisAssetOptions as $opt)
-                                <button type="button" onclick="selectFilterOption('jenis_asset', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('jenis_asset') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                <button type="button" onclick="selectFilterOption('jenis_asset', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('jenis_asset') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                     <span>{{ $opt }}</span>
                                 </button>
                             @endforeach
@@ -100,17 +100,17 @@
                     {{-- Filter Status Customer --}}
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span class="{{ request('status_customer') ? 'text-gray-800 dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
+                            <span id="label-status-customer" class="{{ request('status_customer') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
                                 {{ request('status_customer') ?: 'Status Customer' }}
                             </span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="selectFilterOption('status_customer', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('status_customer') ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="selectFilterOption('status_customer', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('status_customer') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Status</span>
                             </button>
                             @foreach($statusCustomerOptions as $opt)
-                                <button type="button" onclick="selectFilterOption('status_customer', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('status_customer') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                <button type="button" onclick="selectFilterOption('status_customer', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('status_customer') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                     <span>{{ $opt }}</span>
                                 </button>
                             @endforeach
@@ -132,7 +132,7 @@
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center gap-1 h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
                             <span class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Harga:</span>
-                            <span class="text-gray-800 dark:text-white font-semibold text-[11px] sm:text-xs select-none">{{ $currentHargaLabel }}</span>
+                            <span id="label-harga" class="text-gray-800 dark:text-white font-semibold text-[11px] sm:text-xs select-none">{{ $currentHargaLabel }}</span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-0.5 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
@@ -158,12 +158,12 @@
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center gap-1 h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
                             <span class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Waktu:</span>
-                            <span class="text-gray-800 dark:text-white font-semibold text-[11px] sm:text-xs select-none">{{ $currentWaktuLabel }}</span>
+                            <span id="label-waktu" class="text-gray-800 dark:text-white font-semibold text-[11px] sm:text-xs select-none">{{ $currentWaktuLabel }}</span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-0.5 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
                             @foreach($waktuLabels as $val => $lbl)
-                                <button type="button" onclick="selectFilterOption('waktu', '{{ $val }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('waktu', '') === (string)$val ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                <button type="button" onclick="selectFilterOption('waktu', '{{ $val }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('waktu', '') === (string)$val ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                     <span>{{ $lbl }}</span>
                                 </button>
                             @endforeach
@@ -419,20 +419,53 @@
                 }
             });
 
-            // Custom Filter Dropdown Logic
-            window.selectFilterOption = function (name, value) {
-                const map = {
-                    'jenis_asset': 'input-jenis-asset',
-                    'status_customer': 'input-status-customer',
-                    'harga': 'input-harga',
-                    'waktu': 'input-waktu',
-                };
-                const el = document.getElementById(map[name]);
-                if (el) {
-                    el.value = value;
-                    document.getElementById('filter-form').submit();
-                }
+            // Label defaults & harga/waktu lookup (untuk update label tanpa reload)
+            const hargaLabels = @json($hargaLabels);
+            const waktuLabels = @json($waktuLabels);
+
+            const filterLabelMap = {
+                jenis_asset:     { id: 'label-jenis-asset',     default: 'Jenis Aset',        lookup: null },
+                status_customer: { id: 'label-status-customer', default: 'Status Customer',   lookup: null },
+                harga:           { id: 'label-harga',           default: '> Rp 5 jt',         lookup: hargaLabels },
+                waktu:           { id: 'label-waktu',           default: '6 bulan Terakhir',   lookup: waktuLabels },
             };
+
+            // Simpan ke hidden input + update label, BELUM submit
+            window.selectFilterOption = function (name, value) {
+                const inputMap = {
+                    jenis_asset:     'input-jenis-asset',
+                    status_customer: 'input-status-customer',
+                    harga:           'input-harga',
+                    waktu:           'input-waktu',
+                };
+                const el = document.getElementById(inputMap[name]);
+                if (el) el.value = value;
+
+                const cfg = filterLabelMap[name];
+                if (cfg) {
+                    const lbl = document.getElementById(cfg.id);
+                    if (lbl) {
+                        lbl.textContent = value
+                            ? (cfg.lookup ? (cfg.lookup[value] ?? value) : value)
+                            : cfg.default;
+                        lbl.className = value
+                            ? 'text-black dark:text-white font-semibold text-[11px] sm:text-xs select-none'
+                            : 'text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none';
+                    }
+                }
+
+                // Tutup dropdown setelah pilih
+                document.querySelectorAll('.filter-dropdown-menu').forEach(closeSmoothDropdown);
+                document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
+            };
+
+            // Tombol Filter — baru submit form
+            const btnFilterContracts = document.getElementById('btn-filter-contracts');
+            if (btnFilterContracts) {
+                btnFilterContracts.addEventListener('click', function () {
+                    document.getElementById('filter-form').submit();
+                });
+            }
 
             document.addEventListener('click', function (e) {
                 const filterBtn = e.target.closest('.filter-dropdown-btn');

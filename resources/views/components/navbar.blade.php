@@ -308,13 +308,96 @@
         </div>
 
         <!-- 4. Profil / Pengaturan (Kanan) -->
-        <a href="{{ route('settings.index') }}" class="mobile-nav-item flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full transition {{ in_array($active, ['settings', 'pengaturan', 'admin', 'profile', 'akun']) ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-400 dark:text-[#9AA0A6] hover:text-[#171717] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95' }}" title="Profil & Pengaturan">
+        <button
+            type="button"
+            onclick="toggleMobileProfileSheet()"
+            class="mobile-nav-item flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full transition {{ in_array($active, ['settings', 'pengaturan', 'admin', 'profile', 'akun']) ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-400 dark:text-[#9AA0A6] hover:text-[#171717] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95' }}"
+            title="Profil & Pengaturan"
+        >
             <x-icon name="nav-user" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
-        </a>
+        </button>
 
     </nav>
 </div>
 
+
+<!-- ===== MOBILE PROFILE SHEET (hidden on lg+) ===== -->
+<div id="mobileProfileBackdrop" class="hidden lg:hidden fixed inset-0 z-[130] bg-black/30 backdrop-blur-[2px]" onclick="closeMobileProfileSheet()"></div>
+<div
+    id="mobileProfileSheet"
+    class="hidden lg:hidden fixed bottom-0 inset-x-0 z-[140] px-4 pb-6 transition-all duration-200"
+    style="padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));"
+>
+    <div class="mx-auto max-w-[400px] rounded-[24px] bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_-8px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_-8px_40px_rgba(0,0,0,0.6)] p-3 flex flex-col gap-1">
+
+        <!-- Info Profil -->
+        <div class="flex items-center gap-3 px-3 py-2.5 mb-1 border-b border-gray-100 dark:border-white/10">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 dark:bg-[#43484E] text-gray-600 dark:text-white shrink-0">
+                <x-icon name="profile-circle" class="w-6 h-6" />
+            </div>
+            <div class="leading-tight">
+                <p class="text-sm font-bold text-[#171717] dark:text-white">
+                    @auth {{ auth()->user()->name }} @else Tamu @endauth
+                </p>
+                <p class="text-xs text-gray-400 dark:text-[#9AA0A6] mt-0.5">
+                    @auth
+                        @if(auth()->user()->isSuperAdmin()) Super Admin
+                        @elseif(auth()->user()->isAdmin()) Admin
+                        @else User @endif
+                    @else
+                        Tamu
+                    @endauth
+                </p>
+            </div>
+        </div>
+
+        @auth
+            @if(auth()->user()->isSuperAdmin())
+                <a
+                    href="{{ route('settings.superadmin') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+                >
+                    <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
+                    <span>Panel Super Admin</span>
+                </a>
+            @else
+                <a
+                    href="{{ route('settings.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+                >
+                    <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
+                    <span>Pengaturan Akun</span>
+                </a>
+            @endif
+
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button
+                    type="submit"
+                    class="flex w-full items-center gap-3 px-3 py-2.5 text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer"
+                >
+                    <x-icon name="logout" class="w-5 h-5 text-[#EF4444] shrink-0" />
+                    <span>Keluar</span>
+                </button>
+            </form>
+        @else
+            <a
+                href="{{ route('settings.index') }}"
+                class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+            >
+                <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
+                <span>Pengaturan Akun</span>
+            </a>
+            <a
+                href="{{ route('login') }}"
+                class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-xl transition"
+            >
+                <x-icon name="icon-masuk" class="w-5 h-5 text-[#0066FF] dark:text-[#3B82F6] shrink-0" />
+                <span>Masuk</span>
+            </a>
+        @endauth
+    </div>
+</div>
 
 <script>
     window.addEventListener('scroll', function() {
@@ -363,6 +446,27 @@
         backdrop?.classList.add('hidden');
         iconOpen?.classList.remove('hidden');
         iconClose?.classList.add('hidden');
+    }
+
+    // Mobile Profile Sheet
+    function toggleMobileProfileSheet() {
+        const sheet = document.getElementById('mobileProfileSheet');
+        const backdrop = document.getElementById('mobileProfileBackdrop');
+        if (!sheet) return;
+        const isHidden = sheet.classList.contains('hidden');
+        if (isHidden) {
+            sheet.classList.remove('hidden');
+            backdrop?.classList.remove('hidden');
+            // Tutup FAB submenu jika terbuka
+            closeMobileSubMenu();
+        } else {
+            closeMobileProfileSheet();
+        }
+    }
+
+    function closeMobileProfileSheet() {
+        document.getElementById('mobileProfileSheet')?.classList.add('hidden');
+        document.getElementById('mobileProfileBackdrop')?.classList.add('hidden');
     }
 
     // ===== NOTIFIKASI =====
