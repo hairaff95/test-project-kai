@@ -53,11 +53,16 @@ class BacklogController extends Controller
             $hari2026 = $fin->hari_2026 ?? '365';
             $nilaiPerhari = $fin && $fin->nilai_per_hari ? number_format((float)$fin->nilai_per_hari, 0, ',', '.') : '0';
 
+            $nilai2026 = $fin && $fin->nilai_2026 ? number_format((float)$fin->nilai_2026, 0, ',', '.') : '0';
+            $jumlahHari = $fin && $fin->jumlah_hari ? (string)$fin->jumlah_hari : '-';
+
             return [
                 'asset_number'   => $c->asset_number ?? $c->contract_number ?? '-',
                 'no_kontrak'     => $c->contract_number ?? '-',
                 'nama_penyewa'   => $c->tenant->fullname ?? '-',
                 'status_customer'=> $c->tenant->status_customer ?? 'Aktif',
+                'nilai_2026'     => $nilai2026,
+                'jumlah_hari'    => $jumlahHari,
                 'nilai_backlog'  => number_format($backlog, 0, ',', '.'),
                 'nilai_backlog2' => number_format($backlog2, 0, ',', '.'),
                 'invoice'        => $invoice,
@@ -76,8 +81,13 @@ class BacklogController extends Controller
     {
         $contract = KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
             ->where('contract_number', $identifier)
-            ->orWhere('asset_number', $identifier)
-            ->firstOrFail();
+            ->first();
+
+        if (!$contract) {
+            $contract = KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
+                ->where('asset_number', $identifier)
+                ->firstOrFail();
+        }
 
         $asset     = $contract->asset;
         $tenant    = $contract->tenant;
@@ -91,8 +101,13 @@ class BacklogController extends Controller
     {
         $contract = KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
             ->where('contract_number', $identifier)
-            ->orWhere('asset_number', $identifier)
-            ->firstOrFail();
+            ->first();
+
+        if (!$contract) {
+            $contract = KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
+                ->where('asset_number', $identifier)
+                ->firstOrFail();
+        }
 
         // Update Tenant
         if ($contract->tenant) {
@@ -117,16 +132,16 @@ class BacklogController extends Controller
             $fin->gl_account = $request->gl_account;
         }
         if ($request->filled('hari_2026')) {
-            $fin->hari_2026 = $request->hari_2026;
+            $fin->hari_2026 = (int) preg_replace('/[^\d]/', '', $request->hari_2026);
         }
-        if ($request->filled('nilai_perhari')) {
-            $fin->nilai_per_hari = preg_replace('/[^\d.]/', '', str_replace(',', '.', $request->nilai_perhari));
+        if ($request->has('nilai_perhari')) {
+            $fin->nilai_per_hari = $this->cleanNumeric($request->nilai_perhari);
         }
-        if ($request->filled('nilai_backlog')) {
-            $fin->nilai_backlog = preg_replace('/[^\d.]/', '', str_replace(',', '.', $request->nilai_backlog));
+        if ($request->has('nilai_backlog')) {
+            $fin->nilai_backlog = $this->cleanNumeric($request->nilai_backlog);
         }
-        if ($request->filled('nilai_backlog2')) {
-            $val = preg_replace('/[^\d.]/', '', str_replace(',', '.', $request->nilai_backlog2));
+        if ($request->has('nilai_backlog2')) {
+            $val = $this->cleanNumeric($request->nilai_backlog2);
             $fin->nilai_backlog2 = $val;
             $fin->sisa_piutang = $val;
         }
@@ -142,6 +157,47 @@ class BacklogController extends Controller
             $sched->save();
         }
 
-        return redirect()->route('backlog.index')->with('success', 'Backlog berhasil diperbarui.');
+        // Update Asset coordinates
+        if ($contract->asset) {
+            if ($request->filled('latitude')) {
+                $contract->asset->latitude = (float)$request->latitude;
+            }
+            if ($request->filled('longitude')) {
+                $contract->asset->longitude = (float)$request->longitude;
+            }
+            $contract->asset->save();
+        }
+
+        return redirect()->route('backlog.index')->with('success', 'Sukses update data backlog terbaru!');
+    }
+
+    /**
+     * Clean and parse numeric input safely
+     */
+    private function cleanNumeric($value): float
+    {
+        if ($value === null || trim((string)$value) === '') {
+            return 0.0;
+        }
+        
+        $clean = trim((string)$value);
+        $clean = preg_replace('/[^\d.,]/', '', $clean);
+        
+        if (substr_count($clean, '.') > 1) {
+            $parts = explode('.', $clean);
+            $last = array_pop($parts);
+            if (strlen($last) <= 2 && !str_contains($clean, ',')) {
+                $clean = implode('', $parts) . '.' . $last;
+            } else {
+                $clean = implode('', $parts) . $last;
+            }
+        } elseif (str_contains($clean, '.') && str_contains($clean, ',')) {
+            $clean = str_replace('.', '', $clean);
+            $clean = str_replace(',', '.', $clean);
+        } elseif (str_contains($clean, ',')) {
+            $clean = str_replace(',', '.', $clean);
+        }
+        
+        return is_numeric($clean) ? (float) $clean : 0.0;
     }
 }

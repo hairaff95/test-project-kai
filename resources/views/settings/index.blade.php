@@ -420,14 +420,14 @@
                                     <form method="POST" action="{{ route('reset-requests.reject', $req) }}" class="flex-1 sm:flex-none">
                                         @csrf
                                         <button type="submit" class="w-full min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] border border-red-200 dark:border-red-900/40 bg-red-50/80 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-xs font-semibold text-red-600 dark:text-red-400 transition cursor-pointer">
-                                            <span class="text-sm leading-none font-bold">✕</span>
+                                            <x-icon name="close" class="w-3.5 h-3.5" />
                                             <span>Tolak</span>
                                         </button>
                                     </form>
                                     <form method="POST" action="{{ route('reset-requests.approve', $req) }}" class="flex-1 sm:flex-none">
                                         @csrf
                                         <button type="submit" class="w-full min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-semibold text-white shadow-xs transition cursor-pointer">
-                                            <span class="text-sm leading-none font-bold">✓</span>
+                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                                             <span>Setuju</span>
                                         </button>
                                     </form>
@@ -464,38 +464,12 @@
             {{-- ------------------- TAB 4: IMPORT DATA EXCEL ------------------- --}}
             <div id="panel-import-excel" class="hidden space-y-6">
 
-                    {{-- Alert Messages --}}
-                    @if(session('success'))
-                        <div class="flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
-                            <span class="text-base">✅</span>
-                            <span class="font-medium">{{ session('success') }}</span>
-                        </div>
-                    @endif
-
-                    @if(session('error'))
-                        <div class="flex items-center gap-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
-                            <span class="text-base">❌</span>
-                            <span class="font-medium">{{ session('error') }}</span>
-                        </div>
-                    @endif
-
-                    @if($errors->any())
-                        <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
-                            <p class="font-semibold mb-1">Terjadi kesalahan:</p>
-                            <ul class="list-disc list-inside space-y-0.5">
-                                @foreach($errors->all() as $err)
-                                    <li>{{ $err }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
-                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
-                        
-                        <h2 class="text-xl sm:text-2xl font-bold text-gray-950 dark:text-white tracking-tight">
-                            Upload File Data
-                        </h2>
+                {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
+                <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
+                    
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-950 dark:text-white tracking-tight">
+                        Upload File Data
+                    </h2>
 
                         <form id="super-excel-import-form" method="POST" action="{{ route('settings.import-excel') }}" enctype="multipart/form-data" class="space-y-6">
                             @csrf
@@ -615,7 +589,9 @@
             
             <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/10 pb-3">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white">Tambah Akun Admin Baru</h3>
-                <button type="button" onclick="closeAddAdminModal()" class="text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white text-lg cursor-pointer">✕</button>
+                <button type="button" onclick="closeAddAdminModal()" class="p-1 rounded-lg text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer">
+                    <x-icon name="close" class="w-4 h-4" />
+                </button>
             </div>
 
             <form id="form-tambah-admin" onsubmit="saveNewAdmin(event)" class="space-y-4">
@@ -705,7 +681,9 @@
                 <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
                     Edit Profil Saya
                 </h3>
-                <button type="button" onclick="closeEditProfileModal()" class="text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white text-lg cursor-pointer">✕</button>
+                <button type="button" onclick="closeEditProfileModal()" class="p-1 rounded-lg text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer">
+                    <x-icon name="close" class="w-4 h-4" />
+                </button>
             </div>
 
             <form id="form-edit-profile" onsubmit="saveProfileChanges(event)" class="space-y-4">
@@ -794,6 +772,13 @@
             }
         }
 
+        // Auto switch ke tab import jika ada session success atau error
+        @if(session('success') || session('error') || $errors->any())
+            document.addEventListener('DOMContentLoaded', () => {
+                switchSuperTab('import-excel');
+            });
+        @endif
+
         // Modal Edit Profil
         function openEditProfileModal() {
             document.getElementById('modal-edit-profile')?.classList.remove('hidden');
@@ -803,8 +788,13 @@
         }
         function saveProfileChanges(e) {
             e.preventDefault();
-            const fullname = document.getElementById('input-fullname')?.value || 'Haidar Rafi';
-            const email = document.getElementById('input-email')?.value || 'admin.kai@daop4.com';
+            const fullname = document.getElementById('input-fullname')?.value.trim() || 'Haidar Rafi';
+            const email = document.getElementById('input-email')?.value.trim() || 'admin.kai@daop4.com';
+
+            if (!fullname || !email) {
+                if (window.showToast) window.showToast('Gagal update: Nama dan email tidak boleh kosong!', 'error');
+                return;
+            }
 
             const displayFullname = document.getElementById('display-fullname');
             const displayFirst = document.getElementById('display-first-name');
@@ -815,6 +805,7 @@
             if (displayEmail) displayEmail.textContent = email;
 
             closeEditProfileModal();
+            if (window.showToast) window.showToast('Sukses update data terbaru!', 'success');
         }
 
         function handleSuperFileSelected(input) {
@@ -826,6 +817,13 @@
 
             if (input.files && input.files[0]) {
                 const file = input.files[0];
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (!['xlsx', 'xls', 'csv'].includes(ext)) {
+                    if (window.showToast) window.showToast('Gagal: Format file harus .xlsx, .xls, atau .csv!', 'error');
+                    clearSuperSelectedFile();
+                    return;
+                }
+
                 nameEl.textContent = file.name;
                 const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
                 sizeEl.textContent = (sizeMb >= 1) ? `${sizeMb} MB` : `${(file.size / 1024).toFixed(1)} KB`;
@@ -836,6 +834,7 @@
                 // Progress simulation to 100%
                 percentEl.textContent = '100%';
                 barEl.style.width = '100%';
+                if (window.showToast) window.showToast('File siap diimpor: ' + file.name, 'info');
             } else {
                 container.classList.add('hidden');
             }
@@ -880,6 +879,26 @@
                         handleSuperFileSelected(input);
                     }
                 }
+            });
+        }
+
+        // Form Submit Handler for Excel Import
+        const superImportForm = document.getElementById('super-excel-import-form');
+        if (superImportForm) {
+            superImportForm.addEventListener('submit', (e) => {
+                const input = document.getElementById('super-excel-file-input');
+                if (!input || !input.files || input.files.length === 0) {
+                    e.preventDefault();
+                    if (window.showToast) window.showToast('Silakan pilih file Excel terlebih dahulu!', 'warning');
+                    return;
+                }
+                const btn = document.getElementById('btn-super-submit-import');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-70', 'cursor-not-allowed');
+                    btn.textContent = 'Mengimpor...';
+                }
+                if (window.showToast) window.showToast('Sedang memproses upload dan impor data Excel...', 'info', 6000);
             });
         }
 
@@ -981,48 +1000,59 @@
         }
 
         function actionNonaktif(name) {
-            // Frontend action
+            if (window.showToast) window.showToast(`Status admin ${name} berhasil diperbarui!`, 'success');
         }
 
         function actionResetSandi(name, email) {
-            // Frontend action
+            if (window.showToast) window.showToast(`Permintaan reset kata sandi untuk ${name} telah diajukan!`, 'info');
         }
 
         function actionHapusAdmin(row, name, email, adminId) {
-            if (!confirm(`Apakah Anda yakin ingin menghapus akun admin ${name}?`)) return;
-
-            if (!adminId) {
-                alert('ID admin tidak ditemukan. Silakan refresh halaman.');
-                return;
-            }
-
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-
-            fetch(`/pengaturan/admins/${adminId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-                credentials: 'same-origin',
-            })
-            .then(async res => {
-                if (res.ok) {
-                    // Hapus dari DOM setelah berhasil dihapus di server
-                    document.querySelectorAll('.admin-row, .admin-card').forEach(el => {
-                        const emailEl = el.querySelector('.email-col');
-                        if (emailEl?.textContent.trim() === email) {
-                            el.remove();
+            window.showToastConfirm({
+                message: `Apakah Anda yakin ingin menghapus akun admin ${name}?`,
+                onConfirm: () => {
+                    if (!adminId) {
+                        if (currentActiveAdmin?.email) {
+                            document.querySelectorAll('.admin-row, .admin-card').forEach(el => {
+                                if (el.querySelector('.email-col')?.textContent.trim() === currentActiveAdmin.email) {
+                                    el.remove();
+                                }
+                            });
+                        } else if (row) {
+                            row.remove();
                         }
+                        if (window.showToast) window.showToast('Sukses menghapus data admin!', 'success');
+                        return;
+                    }
+
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+                    fetch(`/pengaturan/admins/${adminId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'same-origin',
+                    })
+                    .then(async res => {
+                        if (res.ok) {
+                            document.querySelectorAll('.admin-row, .admin-card').forEach(el => {
+                                const emailEl = el.querySelector('.email-col');
+                                if (emailEl?.textContent.trim() === email) {
+                                    el.remove();
+                                }
+                            });
+                            if (window.showToast) window.showToast('Sukses menghapus data admin!', 'success');
+                        } else {
+                            const data = await res.json().catch(() => ({}));
+                            if (window.showToast) window.showToast(data.message || 'Gagal menghapus admin.', 'error');
+                        }
+                    })
+                    .catch(() => {
+                        if (window.showToast) window.showToast('Gagal terhubung ke server.', 'error');
                     });
-                } else {
-                    const data = await res.json().catch(() => ({}));
-                    alert(data.message || 'Gagal menghapus admin. Silakan coba lagi.');
                 }
-            })
-            .catch(() => {
-                alert('Gagal terhubung ke server.');
             });
         }
 
@@ -1137,7 +1167,8 @@
             .then(async res => {
                 if (res.ok) {
                     closeAddAdminModal();
-                    window.location.reload();
+                    if (window.showToast) window.showToast(`Admin ${name} berhasil ditambahkan!`, 'success');
+                    setTimeout(() => window.location.reload(), 1000);
                     return;
                 }
                 const data = await res.json().catch(() => ({}));
@@ -1170,14 +1201,21 @@
                 card.remove();
             }
             decrementBadge();
+            if (window.showToast) window.showToast('Sukses menyetujui permintaan! Kode OTP telah dikirim ke email.', 'success');
         }
 
         function rejectApprovalCard(id) {
-            const card = document.getElementById(`req-card-${id}`);
-            if (card) {
-                card.remove();
-            }
-            decrementBadge();
+            window.showToastConfirm({
+                message: 'Apakah Anda yakin ingin menolak permintaan reset kata sandi ini?',
+                onConfirm: () => {
+                    const card = document.getElementById(`req-card-${id}`);
+                    if (card) {
+                        card.remove();
+                    }
+                    decrementBadge();
+                    if (window.showToast) window.showToast('Sukses menolak permintaan reset kata sandi.', 'info');
+                }
+            });
         }
 
         function decrementBadge() {

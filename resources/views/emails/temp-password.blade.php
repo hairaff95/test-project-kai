@@ -33,7 +33,7 @@
             </div>
 
             <div class="warning">
-                ⏱️ Password sementara ini <strong>hanya berlaku selama 2 menit</strong> sejak email ini dikirim. Setelah habis, ajukan request reset password baru melalui halaman login (maksimal 3x request per siklus).
+                <strong>Penting:</strong> Password sementara ini <strong>hanya berlaku selama 2 menit</strong> sejak email ini dikirim. Segera masuk dan ganti kata sandi Anda (maksimal 3x request per siklus).
             </div>
 
             <div class="steps">

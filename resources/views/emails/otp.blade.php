@@ -37,13 +37,13 @@
                 <p style="text-align: center;">Atau klik tombol di bawah untuk langsung ke halaman verifikasi:</p>
                 <div style="text-align: center;">
                     <a href="{{ route('password.access-token', $resetRequest) }}" class="btn-link">
-                        Verifikasi OTP Sekarang →
+                        Verifikasi OTP Sekarang
                     </a>
                 </div>
             @endif
 
             <div class="warning" style="margin-top: 24px;">
-                ⚠️ Jangan bagikan kode ini kepada siapapun, termasuk tim IT. Kode ini bersifat rahasia dan hanya untuk Anda.
+                <strong>Penting:</strong> Jangan bagikan kode ini kepada siapapun, termasuk tim IT. Kode ini bersifat rahasia dan hanya untuk Anda.
             </div>
 
             <p style="margin-top: 20px;">Jika Anda tidak melakukan request ini, abaikan email ini atau hubungi Super Admin segera.</p>

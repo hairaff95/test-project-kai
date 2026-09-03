@@ -35,18 +35,6 @@
             <p class="text-gray-900 dark:text-white font-bold italic text-lg">Tracker<span class="text-[#0066FF] dark:text-[#3B82F6]">App</span></p>
         </div>
 
-        {{-- Flash messages --}}
-        @if(session('success'))
-            <div class="mb-5 flex items-center gap-3 bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 px-4 py-3 rounded-xl text-sm">
-                ✅ {{ session('success') }}
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="mb-5 flex items-center gap-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-4 py-3 rounded-xl text-sm">
-                ❌ {{ session('error') }}
-            </div>
-        @endif
-
         {{-- Heading --}}
         <h1 class="text-3xl font-bold text-gray-950 dark:text-white tracking-tight mb-3">
             Status Request
@@ -118,7 +106,9 @@
 
                 {{-- Info waktu --}}
                 <div class="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/50 rounded-xl p-4 mb-6 text-sm text-blue-800 dark:text-blue-200">
-                    <p class="font-semibold text-xs mb-2 text-blue-900 dark:text-blue-300">ℹ️ Informasi Penting:</p>
+                    <p class="font-semibold text-xs mb-2 text-blue-900 dark:text-blue-300 flex items-center gap-1.5">
+                        <x-icon name="toast-peringatan" class="w-4 h-4" /> Informasi Penting:
+                    </p>
                     <ul class="list-disc pl-4 space-y-1 text-xs text-blue-700 dark:text-blue-300/80">
                         <li>Jika disetujui, kode OTP akan dikirim ke email Anda</li>
                         @if(!$tempSent)
@@ -138,8 +128,8 @@
 
                 {{-- Waktu kedaluwarsa --}}
                 @if($resetRequest->request_expires_at)
-                    <div class="flex items-center gap-2 bg-gray-50 dark:bg-[#282A2C] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 mb-6">
-                        <span class="text-sm">🕒</span>
+                    <div class="flex items-center gap-3 bg-gray-50 dark:bg-[#282A2C] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 mb-6">
+                        <svg class="w-5 h-5 text-gray-400 dark:text-gray-300 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                         <div>
                             <p class="text-xs text-gray-500 dark:text-[#9AA0A6]">Request kedaluwarsa otomatis pada:</p>
                             <p class="text-sm font-semibold text-gray-800 dark:text-white">
@@ -154,8 +144,8 @@
                     <p class="text-xs font-semibold text-gray-500 dark:text-[#9AA0A6] uppercase tracking-wider mb-4">Progress</p>
                     <div class="space-y-3">
                         <div class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0">
-                                <span class="text-white text-xs font-bold">✓</span>
+                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0 text-white">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                             </div>
                             <span class="text-sm text-gray-700 dark:text-gray-200 font-medium">Request dikirim ke Super Admin</span>
                         </div>
@@ -217,8 +207,8 @@
             @elseif($resetRequest->status === 'approved')
                 <div class="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/50 rounded-2xl p-6 mb-6">
                     <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center shrink-0 text-lg">
-                            ✅
+                        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center shrink-0">
+                            <x-icon name="toast-sukses" class="w-6 h-6" />
                         </div>
                         <div>
                             <p class="font-bold text-blue-800 dark:text-blue-300 text-sm mb-1">Request Disetujui!</p>
@@ -252,20 +242,20 @@
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Progress</p>
                     <div class="space-y-3">
                         <div class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0">
-                                <span class="text-white text-xs font-bold">✓</span>
+                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0 text-white">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                             </div>
                             <span class="text-sm text-gray-700 font-medium">Request dikirim ke Super Admin</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0">
-                                <span class="text-white text-xs font-bold">✓</span>
+                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0 text-white">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                             </div>
                             <span class="text-sm text-gray-700 font-medium">Disetujui Super Admin</span>
                         </div>
                         <div class="flex items-center gap-3">
-                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0">
-                                <span class="text-white text-xs font-bold">✓</span>
+                            <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0 text-white">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                             </div>
                             <span class="text-sm text-gray-700 font-medium">OTP tersedia</span>
                         </div>
@@ -280,22 +270,24 @@
 
                 <a href="{{ route('password.verify') }}"
                     class="w-full inline-block text-center rounded-xl bg-[#0066FF] hover:bg-blue-700 py-3.5 text-sm font-semibold text-white transition shadow-sm mb-4">
-                    Masukkan Kode OTP →
+                    Masukkan Kode OTP
                 </a>
 
             @else
                 {{-- Status lain (rejected, completed, auto_reset) --}}
                 <div class="bg-gray-50 dark:bg-[#282A2C] border border-gray-200 dark:border-white/10 rounded-2xl p-6 mb-6 text-center">
                     @if($resetRequest->status === 'rejected')
-                        <div class="text-3xl mb-3">❌</div>
+                        <x-icon name="toast-gagal" class="w-10 h-10 mx-auto mb-3" />
                         <p class="font-bold text-gray-800 dark:text-white text-sm mb-1">Request Ditolak</p>
                         <p class="text-gray-500 dark:text-[#9AA0A6] text-xs">Request reset password Anda ditolak oleh Super Admin. Silakan hubungi Super Admin untuk informasi lebih lanjut.</p>
                     @elseif($resetRequest->status === 'completed')
-                        <div class="text-3xl mb-3">🎉</div>
+                        <x-icon name="toast-sukses" class="w-10 h-10 mx-auto mb-3" />
                         <p class="font-bold text-gray-800 dark:text-white text-sm mb-1">Password Berhasil Diubah</p>
                         <p class="text-gray-500 dark:text-[#9AA0A6] text-xs">Proses reset password telah selesai. Silakan login dengan password baru Anda.</p>
                     @elseif($resetRequest->status === 'auto_reset')
-                        <div class="text-3xl mb-3">🔄</div>
+                        <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/40 flex items-center justify-center mx-auto mb-3 text-[#0066FF] dark:text-[#3B82F6]">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                        </div>
                         <p class="font-bold text-gray-800 dark:text-white text-sm mb-1">Password Sementara Dikirim</p>
                         <p class="text-gray-500 dark:text-[#9AA0A6] text-xs">Karena Super Admin belum memproses dalam 1 menit, sistem telah mengirimkan password sementara ke email Anda. Password berlaku selama 2 menit.</p>
                     @endif
@@ -310,7 +302,9 @@
         @else
             {{-- Tidak ada request aktif --}}
             <div class="bg-gray-50 dark:bg-[#282A2C] border border-gray-200 dark:border-white/10 rounded-2xl p-6 text-center mb-6">
-                <div class="text-3xl mb-3">📭</div>
+                <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center mx-auto mb-3 text-gray-400">
+                    <x-icon name="mail" class="w-6 h-6" />
+                </div>
                 <p class="font-bold text-gray-800 dark:text-white text-sm mb-1">Tidak Ada Request Aktif</p>
                 <p class="text-gray-500 dark:text-[#9AA0A6] text-xs">Anda belum memiliki request reset password yang sedang diproses.</p>
             </div>
@@ -369,11 +363,15 @@
 
                 if (data.status === 'approved' && data.redirect_url) {
                     clearInterval(pollInterval);
-                    document.body.insertAdjacentHTML('afterbegin', `
-                        <div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0066FF;color:white;text-align:center;padding:12px;font-size:14px;font-weight:600;">
-                            ✅ Request disetujui! Mengalihkan ke halaman OTP...
-                        </div>
-                    `);
+                    if (window.showToast) {
+                        window.showToast('Request disetujui! Mengalihkan ke halaman OTP...', 'success');
+                    } else {
+                        document.body.insertAdjacentHTML('afterbegin', `
+                            <div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0066FF;color:white;text-align:center;padding:12px;font-size:14px;font-weight:600;">
+                                ✅ Request disetujui! Mengalihkan ke halaman OTP...
+                            </div>
+                        `);
+                    }
                     setTimeout(() => window.location.href = data.redirect_url, 1500);
                     return;
                 }
@@ -398,5 +396,6 @@
     </script>
     @endif
 
+    <x-toast />
 </body>
 </html>

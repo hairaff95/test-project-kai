@@ -33,9 +33,9 @@ class KaiAsset extends Model
     ];
 
     protected $casts = [
-        'size_area'  => 'decimal:2',
-        'latitude'   => 'decimal:8',
-        'longitude'  => 'decimal:8',
+        'size_area'  => 'float',
+        'latitude'   => 'float',
+        'longitude'  => 'float',
         'created_at' => 'datetime',
     ];
 
@@ -52,6 +52,9 @@ class KaiAsset extends Model
     // Accessor: format luas area
     public function getSizeAreaFormattedAttribute(): string
     {
-        return number_format((float) $this->size_area, 2, ',', '.') . ' m²';
+        if ($this->size_area === null) return '-';
+        $formatted = number_format((float) $this->size_area, 2, ',', '.');
+        $trimmed = rtrim(rtrim($formatted, '0'), ',');
+        return $trimmed . ' m²';
     }
 }
