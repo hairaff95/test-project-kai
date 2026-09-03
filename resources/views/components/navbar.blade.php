@@ -9,10 +9,6 @@
             <x-icon name="kai-logo" class="h-[19px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
             <span class="leading-none select-none text-gray-950 dark:text-white">Tracker<span class="text-[#0066FF]">App</span></span>
         </a>
-        <!-- <div class="text-center mb-8 flex items-center justify-center">
-            <x-icon name="kai-logo" class="h-[19px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
-            <p class="text-black font-bold italic">Tracker<span class="text-[#0066FF]">App</span></p>
-        </div> -->
 
         <!-- Menu Navigasi Desktop (lg and above only) -->
         <ul class="hidden lg:flex items-center gap-6 xl:gap-8 text-sm text-[#4A4A4A] dark:text-[#9AA0A6]">
@@ -419,12 +415,7 @@
                     itemsEl?.classList.remove('hidden');
                     itemsEl.innerHTML = data.items.map(item => `
                         <li>
-                            <a href="${item.url}" class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 transition">
-                                <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/30 text-[#0066FF]">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                    </svg>
-                                </div>
+                            <a href="${item.url}" class="flex items-start gap-3 px-6 py-3 hover:bg-gray-50 dark:hover:bg-white/5 transition">
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">${item.asset_block_name}</p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">${item.stasiun} · ${item.jenis_asset}</p>
