@@ -47,6 +47,13 @@ class AssetController extends Controller
      */
     public function update(Request $request, string $identifier)
     {
+        if ($request->has('contract_number') && trim((string)$request->contract_number) === '') {
+            return back()->with('warning', 'Field Nomor Kontrak wajib diisi dan tidak boleh kosong!');
+        }
+        if ($request->has('asset_number') && trim((string)$request->asset_number) === '') {
+            return back()->with('warning', 'Field Nomor Aset wajib diisi dan tidak boleh kosong!');
+        }
+
         $contract = \App\Models\KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
             ->where('contract_number', $identifier)
             ->first();
@@ -62,6 +69,18 @@ class AssetController extends Controller
             $asset = $contract->asset ?: KaiAsset::where('asset_number', $contract->asset_number)->first();
         } else {
             $asset = KaiAsset::where('asset_number', $identifier)->firstOrFail();
+        }
+
+        if ($contract) {
+            if ($request->filled('contract_number')) {
+                $contract->contract_number = trim((string)$request->contract_number);
+            }
+            if ($request->filled('asset_number')) {
+                $contract->asset_number = trim((string)$request->asset_number);
+            }
+        }
+        if ($asset && $request->filled('asset_number')) {
+            $asset->asset_number = trim((string)$request->asset_number);
         }
 
         // 1. Update Contract if exists

@@ -37,6 +37,7 @@ class LaporanController extends Controller
 
             return [
                 'contract_number'  => $c->contract_number,
+                'raw_contract_number' => $c->contract_number,
                 'asset_number'     => $c->asset_number ?? $c->contract_number ?? '-',
                 'januari'          => $sched ? $formatNum($sched->januari) : '0',
                 'februari'         => $sched ? $formatNum($sched->febuari) : '0',
@@ -54,7 +55,7 @@ class LaporanController extends Controller
                 'pencapaian'       => $fin && $fin->pencapaian !== null ? str_replace('.', ',', (string) $fin->pencapaian) : '-',
                 'jenis_pendapatan' => $fin && $fin->jenis_pendapatan ? (string) $fin->jenis_pendapatan : '-',
                 'form_rka'         => $fin && $fin->form_rka !== null && $fin->form_rka !== '' ? (string) $fin->form_rka : '-',
-                'tahun_rka'        => $fin && $fin->tahun_rka !== null ? (string) $fin->tahun_rka : '2026',
+                'tahun_rka'        => $fin && $fin->tahun_rka !== null ? (string) $fin->tahun_rka : '-',
                 'akun_gl'          => $fin && $fin->gl_account ? (string) $fin->gl_account : '-',
             ];
         })->toArray();
@@ -84,6 +85,13 @@ class LaporanController extends Controller
 
     public function update(Request $request, $identifier)
     {
+        if ($request->has('contract_number') && trim((string)$request->contract_number) === '') {
+            return back()->with('warning', 'Field Nomor Kontrak wajib diisi dan tidak boleh kosong!');
+        }
+        if ($request->has('asset_number') && trim((string)$request->asset_number) === '') {
+            return back()->with('warning', 'Field Nomor Aset wajib diisi dan tidak boleh kosong!');
+        }
+
         $contract = KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
             ->where('contract_number', $identifier)
             ->first();
@@ -92,6 +100,15 @@ class LaporanController extends Controller
             $contract = KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
                 ->where('asset_number', $identifier)
                 ->firstOrFail();
+        }
+
+        if ($request->filled('contract_number')) {
+            $contract->contract_number = trim((string)$request->contract_number);
+            $contract->save();
+        }
+        if ($request->filled('asset_number')) {
+            $contract->asset_number = trim((string)$request->asset_number);
+            $contract->save();
         }
 
         // Update Financial (Akun GL, Form RKA, Tahun RKA)

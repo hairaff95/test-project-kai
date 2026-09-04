@@ -136,8 +136,21 @@
                         </h2>
 
                         <div class="space-y-2 sm:space-y-3">
-                            {{-- No Aset & SPV --}}
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                            {{-- No Kontrak, No Aset & SPV --}}
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+                                <div class="flex flex-col w-full">
+                                    <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-0.5 sm:mb-1">
+                                        No Kontrak<span class="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="contract_number"
+                                        value="{{ old('contract_number', $contract->contract_number ?? '') }}"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                        required
+                                    >
+                                </div>
+
                                 <div class="flex flex-col w-full">
                                     <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-0.5 sm:mb-1">
                                         No Aset<span class="text-red-500">*</span>
@@ -145,7 +158,7 @@
                                     <input
                                         type="text"
                                         name="asset_number"
-                                        value="{{ old('asset_number', $contract->asset_number ?? 'AST-SMG-PCL-001') }}"
+                                        value="{{ old('asset_number', $contract->asset_number ?? '') }}"
                                         class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >

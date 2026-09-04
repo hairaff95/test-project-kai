@@ -1197,6 +1197,19 @@
             const form = document.getElementById('form-edit-drawer');
             if (!form) return;
 
+            const contractInput = form.querySelector('[name="contract_number"]');
+            const assetInput    = form.querySelector('[name="asset_number"]');
+            if (contractInput && contractInput.type !== 'hidden' && !contractInput.readOnly && !contractInput.value.trim()) {
+                window.showToast('Field Nomor Kontrak wajib diisi dan tidak boleh kosong!', 'warning', 4500);
+                contractInput.focus();
+                return;
+            }
+            if (assetInput && assetInput.type !== 'hidden' && !assetInput.readOnly && !assetInput.value.trim()) {
+                window.showToast('Field Nomor Aset wajib diisi dan tidak boleh kosong!', 'warning', 4500);
+                assetInput.focus();
+                return;
+            }
+
             // Helper to get first text from a container
             const getFirstDndText = (containerId) => {
                 const c = document.getElementById(containerId);

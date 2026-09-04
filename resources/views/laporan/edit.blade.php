@@ -97,8 +97,8 @@
                                         type="text"
                                         name="contract_number"
                                         value="{{ old('contract_number', $contract->contract_number) }}"
-                                        readonly
-                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#282A2C]/60 px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-500 dark:text-[#9AA0A6] cursor-not-allowed focus:outline-none transition"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                        required
                                     >
                                 </div>
 
@@ -109,9 +109,9 @@
                                     <input
                                         type="text"
                                         name="asset_number"
-                                        value="{{ old('asset_number', $contract->asset_number ?? '-') }}"
-                                        readonly
-                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#282A2C]/60 px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-500 dark:text-[#9AA0A6] cursor-not-allowed focus:outline-none transition"
+                                        value="{{ old('asset_number', $contract->asset_number ?? '') }}"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                        required
                                     >
                                 </div>
                             </div>

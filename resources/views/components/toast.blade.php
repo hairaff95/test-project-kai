@@ -413,6 +413,44 @@
             }, 60);
         }
 
+        // Global Form Validation Listener for contract_number & asset_number across all CRUD forms
+        document.addEventListener('submit', function (e) {
+            const form = e.target;
+            if (!form || !(form instanceof HTMLFormElement)) return;
+
+            // Skip delete or logout forms
+            if (form.id && (form.id.includes('delete') || form.id.includes('hapus') || form.id.includes('logout'))) return;
+            const methodInput = form.querySelector('input[name="_method"]');
+            if (methodInput && methodInput.value.toUpperCase() === 'DELETE') return;
+
+            const contractInput = form.querySelector('[name="contract_number"], [name="no_kontrak"], #input-contract-number, #contract_number');
+            const assetInput    = form.querySelector('[name="asset_number"], [name="no_aset"], #input-asset-number, #asset_number');
+
+            if (contractInput && contractInput.type !== 'hidden' && !contractInput.readOnly && !contractInput.disabled) {
+                if (!contractInput.value || contractInput.value.trim() === '') {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    contractInput.focus();
+                    contractInput.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+                    setTimeout(() => contractInput.classList.remove('border-red-500', 'ring-1', 'ring-red-500'), 3000);
+                    window.showToast('Field Nomor Kontrak wajib diisi dan tidak boleh kosong!', 'warning', 4500);
+                    return false;
+                }
+            }
+
+            if (assetInput && assetInput.type !== 'hidden' && !assetInput.readOnly && !assetInput.disabled) {
+                if (!assetInput.value || assetInput.value.trim() === '') {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    assetInput.focus();
+                    assetInput.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+                    setTimeout(() => assetInput.classList.remove('border-red-500', 'ring-1', 'ring-red-500'), 3000);
+                    window.showToast('Field Nomor Aset wajib diisi dan tidak boleh kosong!', 'warning', 4500);
+                    return false;
+                }
+            }
+        }, true);
+
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', triggerSessionToasts);
         } else {

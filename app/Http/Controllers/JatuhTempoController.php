@@ -76,6 +76,13 @@ class JatuhTempoController extends Controller
 
     public function update(Request $request, $identifier)
     {
+        if ($request->has('contract_number') && trim((string)$request->contract_number) === '') {
+            return back()->with('warning', 'Field Nomor Kontrak wajib diisi dan tidak boleh kosong!');
+        }
+        if ($request->has('asset_number') && trim((string)$request->asset_number) === '') {
+            return back()->with('warning', 'Field Nomor Aset wajib diisi dan tidak boleh kosong!');
+        }
+
         $contract = KaiContract::with(['tenant', 'asset', 'financial'])
             ->where('contract_number', $identifier)
             ->first();
@@ -84,6 +91,13 @@ class JatuhTempoController extends Controller
             $contract = KaiContract::with(['tenant', 'asset', 'financial'])
                 ->where('asset_number', $identifier)
                 ->firstOrFail();
+        }
+
+        if ($request->filled('contract_number')) {
+            $contract->contract_number = trim((string)$request->contract_number);
+        }
+        if ($request->filled('asset_number')) {
+            $contract->asset_number = trim((string)$request->asset_number);
         }
 
         // Update Penyewa

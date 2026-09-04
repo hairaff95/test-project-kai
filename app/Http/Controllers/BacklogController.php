@@ -103,6 +103,13 @@ class BacklogController extends Controller
 
     public function update(Request $request, $identifier)
     {
+        if ($request->has('contract_number') && trim((string)$request->contract_number) === '') {
+            return back()->with('warning', 'Field Nomor Kontrak wajib diisi dan tidak boleh kosong!');
+        }
+        if ($request->has('asset_number') && trim((string)$request->asset_number) === '') {
+            return back()->with('warning', 'Field Nomor Aset wajib diisi dan tidak boleh kosong!');
+        }
+
         $contract = KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
             ->where('contract_number', $identifier)
             ->first();
@@ -126,7 +133,10 @@ class BacklogController extends Controller
 
         // Update Contract
         if ($request->filled('contract_number')) {
-            $contract->contract_number = $request->contract_number;
+            $contract->contract_number = trim((string)$request->contract_number);
+        }
+        if ($request->filled('asset_number')) {
+            $contract->asset_number = trim((string)$request->asset_number);
         }
         $contract->save();
 

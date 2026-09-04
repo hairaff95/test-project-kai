@@ -94,6 +94,13 @@ class ContractController extends Controller
 
     public function store(Request $request)
     {
+        if (!$request->filled('contract_number') || trim((string)$request->contract_number) === '') {
+            return back()->with('warning', 'Field Nomor Kontrak wajib diisi dan tidak boleh kosong!')->withInput();
+        }
+        if (!$request->filled('asset_number') || trim((string)$request->asset_number) === '') {
+            return back()->with('warning', 'Field Nomor Aset wajib diisi dan tidak boleh kosong!')->withInput();
+        }
+
         $request->validate([
             'contract_number' => 'required|string|unique:contracts,contract_number',
             'nama_penyewa'    => 'required|string',
@@ -298,6 +305,13 @@ class ContractController extends Controller
 
     public function update(Request $request, $identifier)
     {
+        if ($request->has('contract_number') && trim((string)$request->contract_number) === '') {
+            return back()->with('warning', 'Field Nomor Kontrak wajib diisi dan tidak boleh kosong!');
+        }
+        if ($request->has('asset_number') && trim((string)$request->asset_number) === '') {
+            return back()->with('warning', 'Field Nomor Aset wajib diisi dan tidak boleh kosong!');
+        }
+
         $contract = KaiContract::with(['tenant', 'asset', 'financial'])
             ->where('contract_number', $identifier)
             ->first();
@@ -306,6 +320,13 @@ class ContractController extends Controller
             $contract = KaiContract::with(['tenant', 'asset', 'financial'])
                 ->where('asset_number', $identifier)
                 ->firstOrFail();
+        }
+
+        if ($request->filled('contract_number')) {
+            $contract->contract_number = trim((string)$request->contract_number);
+        }
+        if ($request->filled('asset_number')) {
+            $contract->asset_number = trim((string)$request->asset_number);
         }
 
         if ($contract->tenant) {
@@ -367,7 +388,10 @@ class ContractController extends Controller
         }
         if ($request->filled('end_date')) {
             $d = $parseDate($request->end_date);
-            if ($d) $contract->end_datetime_baru = $d;
+            if ($d) {
+                $contract->end_datetime = $d;
+                $contract->end_datetime_baru = $d;
+            }
         }
 
         $contract->save();
