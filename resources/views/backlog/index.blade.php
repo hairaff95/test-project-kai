@@ -222,36 +222,16 @@
                                     data-penyewa="{{ strtolower($row['nama_penyewa'] ?? '') }}"
                                     data-kontrak="{{ strtolower($row['no_kontrak'] ?? '') }}"
                                 >
-                                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['no_kontrak'] }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">
-                                        {{ $row['nama_penyewa'] }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['nilai_2026'] }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['nilai_backlog'] }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['nilai_backlog2'] }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['invoice'] }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['gl_account'] }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['hari_2026'] }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['jumlah_hari'] }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['nilai_perhari'] }}
-                                    </td>
+                                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['no_kontrak'] }}</td>
+                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">{{ $row['nama_penyewa'] }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['nilai_2026'] }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['nilai_backlog'] }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['nilai_backlog2'] }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['invoice'] }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['gl_account'] }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['hari_2026'] }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['jumlah_hari'] }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['nilai_perhari'] }}</td>
                                     <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
                                              data-contract="{{ $row['no_kontrak'] }}">

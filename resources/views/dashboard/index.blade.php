@@ -244,23 +244,10 @@
                                 <tbody id="jatuh-tempo-tbody" class="divide-y divide-gray-100 dark:divide-white/10">
                                     @forelse($upcomingContracts as $uc)
                                         <tr class="jatuh-tempo-row whitespace-nowrap">
-                                            <td
-                                                class="py-1 sm:py-1.5 pr-2 font-semibold text-gray-900 dark:text-white truncate max-w-[130px]">
-                                                {{ $uc['jenis_kontrak'] }}
-                                            </td>
-                                            <td
-                                                class="py-1 sm:py-1.5 px-2 text-gray-700 dark:text-gray-300 truncate max-w-[150px]">
-                                                {{ $uc['nama'] }}
-                                            </td>
-                                            <td class="py-1 sm:py-1.5 px-2 text-gray-700 dark:text-gray-300">
-                                                {{ $uc['jatuh_tempo'] }}
-                                            </td>
-                                            <td class="py-1 sm:py-1.5 pl-2 text-right">
-                                                <span
-                                                    class="inline-block whitespace-nowrap rounded-md bg-[#FFF4E5] dark:bg-[#E5A866] px-1.5 sm:px-2.5 py-0.5 text-[9px] sm:text-xs font-semibold text-[#F79009] dark:text-[#1F2123]">
-                                                    {{ $uc['sisa'] }}
-                                                </span>
-                                            </td>
+                                            <td class="py-1 sm:py-1.5 pr-2 font-semibold text-gray-900 dark:text-white truncate max-w-[130px]">{{ $uc['jenis_kontrak'] }}</td>
+                                            <td class="py-1 sm:py-1.5 px-2 text-gray-700 dark:text-gray-300 truncate max-w-[150px]">{{ $uc['nama'] }}</td>
+                                            <td class="py-1 sm:py-1.5 px-2 text-gray-700 dark:text-gray-300">{{ $uc['jatuh_tempo'] }}</td>
+                                            <td class="py-1 sm:py-1.5 pl-2 text-right"><span class="inline-block whitespace-nowrap rounded-md bg-[#FFF4E5] dark:bg-[#E5A866] px-1.5 sm:px-2.5 py-0.5 text-[9px] sm:text-xs font-semibold text-[#F79009] dark:text-[#1F2123]">{{ $uc['sisa'] }}</span></td>
                                         </tr>
                                     @empty
                                         <tr>

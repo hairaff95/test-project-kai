@@ -58,7 +58,8 @@ class BacklogController extends Controller
 
             return [
                 'asset_number'   => $c->asset_number ?? $c->contract_number ?? '-',
-                'no_kontrak'     => $c->contract_number ?? '-',
+                'no_kontrak'     => $c->clean_contract_number ?? $c->contract_number ?? '-',
+                'raw_contract_number' => $c->contract_number,
                 'nama_penyewa'   => $c->tenant->fullname ?? '-',
                 'status_customer'=> $c->tenant->status_customer ?? 'Aktif',
                 'nilai_2026'     => $nilai2026,
