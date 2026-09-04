@@ -493,26 +493,6 @@
                     <h2 class="text-xl sm:text-2xl font-bold text-gray-950 dark:text-white tracking-tight">
                         Upload File Data
                     </h2>
-                    @endif
-
-                    @if($errors->any())
-                        <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
-                            <p class="font-semibold mb-1">Terjadi kesalahan:</p>
-                            <ul class="list-disc list-inside space-y-0.5">
-                                @foreach($errors->all() as $err)
-                                    <li>{{ $err }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
-                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
-                        
-                        <h2 class="text-xl sm:text-2xl font-bold text-gray-950 dark:text-white tracking-tight">
-                            Upload File Data
-                        </h2>
->>>>>>> Stashed changes
 
                         <form id="super-excel-import-form" method="POST" action="{{ route('settings.import-excel') }}" enctype="multipart/form-data" class="space-y-6">
                             @csrf

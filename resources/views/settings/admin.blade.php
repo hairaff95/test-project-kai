@@ -235,9 +235,6 @@
                                 @endforeach
                             </ul>
                         </div>
-                    @endif
-
->>>>>>> Stashed changes
                     {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
                     <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
                         
