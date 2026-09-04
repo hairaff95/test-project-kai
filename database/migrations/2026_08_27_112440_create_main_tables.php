@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('contract_number', 100)->primary();
             $table->unsignedInteger('tenant_id');
             $table->string('asset_number', 100)->nullable();
-            $table->date('contract_date')->nullable();
+            $table->integer('contract_date')->nullable();
             $table->string('jenis_kontrak', 100)->nullable();
             $table->string('area_kontrak', 100)->nullable();
             $table->date('start_datetime')->nullable();

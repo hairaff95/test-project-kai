@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Daftar Kontrak — KAI Tracker App</title>
+    <title>Daftar Kontrak ΓÇö KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -24,7 +24,7 @@
     @endif
 </head>
 
-<body class="min-h-screen bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between transition-colors duration-200">
+<body class="min-h-screen bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-black flex flex-col justify-between transition-colors duration-200">
 
     {{-- Top Navbar --}}
     <x-navbar active="contracts" />
@@ -59,14 +59,14 @@
 
                 <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
                     {{-- Search No Kontrak --}}
-                    <div class="relative w-full sm:w-[185px] h-[32px] sm:h-[38px]">
-                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                         <input
                             type="text"
                             name="search"
                             id="input-search"
                             value="{{ request('search') }}"
-                            placeholder="Search No Kontrak"
+                            placeholder="Search"
                             class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
                         >
                     </div>
@@ -80,17 +80,17 @@
                     {{-- Filter Jenis Aset --}}
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span class="{{ request('jenis_asset') ? 'text-gray-800 dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
+                            <span id="label-jenis-asset" class="{{ request('jenis_asset') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
                                 {{ request('jenis_asset') ?: 'Jenis Aset' }}
                             </span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="selectFilterOption('jenis_asset', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('jenis_asset') ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="selectFilterOption('jenis_asset', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('jenis_asset') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Jenis Aset</span>
                             </button>
                             @foreach($jenisAssetOptions as $opt)
-                                <button type="button" onclick="selectFilterOption('jenis_asset', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('jenis_asset') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                <button type="button" onclick="selectFilterOption('jenis_asset', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('jenis_asset') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                     <span>{{ $opt }}</span>
                                 </button>
                             @endforeach
@@ -100,17 +100,17 @@
                     {{-- Filter Status Customer --}}
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span class="{{ request('status_customer') ? 'text-gray-800 dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
+                            <span id="label-status-customer" class="{{ request('status_customer') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
                                 {{ request('status_customer') ?: 'Status Customer' }}
                             </span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="selectFilterOption('status_customer', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('status_customer') ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="selectFilterOption('status_customer', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('status_customer') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Status</span>
                             </button>
                             @foreach($statusCustomerOptions as $opt)
-                                <button type="button" onclick="selectFilterOption('status_customer', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('status_customer') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                <button type="button" onclick="selectFilterOption('status_customer', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('status_customer') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                     <span>{{ $opt }}</span>
                                 </button>
                             @endforeach
@@ -132,7 +132,7 @@
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center gap-1 h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
                             <span class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Harga:</span>
-                            <span class="text-gray-800 dark:text-white font-semibold text-[11px] sm:text-xs select-none">{{ $currentHargaLabel }}</span>
+                            <span id="label-harga" class="text-gray-800 dark:text-white font-semibold text-[11px] sm:text-xs select-none">{{ $currentHargaLabel }}</span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-0.5 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
@@ -158,12 +158,12 @@
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center gap-1 h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
                             <span class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Waktu:</span>
-                            <span class="text-gray-800 dark:text-white font-semibold text-[11px] sm:text-xs select-none">{{ $currentWaktuLabel }}</span>
+                            <span id="label-waktu" class="text-gray-800 dark:text-white font-semibold text-[11px] sm:text-xs select-none">{{ $currentWaktuLabel }}</span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-0.5 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
                             @foreach($waktuLabels as $val => $lbl)
-                                <button type="button" onclick="selectFilterOption('waktu', '{{ $val }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('waktu', '') === (string)$val ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                <button type="button" onclick="selectFilterOption('waktu', '{{ $val }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('waktu', '') === (string)$val ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                     <span>{{ $lbl }}</span>
                                 </button>
                             @endforeach
@@ -204,11 +204,9 @@
                             <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight">
                                 {{ $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono' }}
                             </h3>
-                            @if($item->tenant?->brand)
-                                <p class="text-xs text-[#0066FF] dark:text-[#3B82F6] font-semibold mt-0.5">Brand: {{ $item->tenant->brand }}</p>
-                            @endif
+                            <p class="text-xs text-gray-500 dark:text-[#9AA0A6] font-normal mt-0.5">Brand: {{ $item->tenant?->brand ?: '(kosong)' }}</p>
                             <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-1 line-clamp-2 leading-relaxed">
-                                {{ $item->asset?->asset_block_name ?? 'JL. SLAMET 17 KEL. BENDAN KEC. PEKALONGAN BARAT KAB. PEKALONGAN' }}
+                                {{ $item->asset_block_name ?? $item->asset?->asset_block_name ?? '-' }}
                             </p>
                         </div>
 
@@ -220,7 +218,7 @@
                             </div>
                             <div>
                                 <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Waktu Kontrak</span>
-                                <span class="font-semibold text-gray-800 dark:text-white">{{ $item->contract_duration ?? '12 Bulan' }}</span>
+                                <span class="font-semibold text-gray-800 dark:text-white">{{ $item->contract_date ?? '-' }}</span>
                             </div>
                             <div>
                                 <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Periode</span>
@@ -279,7 +277,7 @@
                                         {{ $item->contract_number ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->contract_duration ?? ($item->contract_date ? $item->contract_date->format('Y') : '42710') }}
+                                        {{ $item->contract_date ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">
                                         {{ $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono' }}
@@ -288,7 +286,7 @@
                                         {{ $item->tenant?->brand ?: '(kosong)' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 font-normal max-w-[280px] leading-snug">
-                                        {{ $item->asset?->asset_block_name ?? 'JL. SLAMET 17 KEL. BENDAN KEC. PEKALONGAN BARAT KAB. PEKALONGAN' }}
+                                        {{ $item->asset_block_name ?? $item->asset?->asset_block_name ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
                                         {{ $item->asset?->jenis_asset ?? 'Tanah' }}
@@ -297,7 +295,7 @@
                                         {{ $item->start_datetime ? $item->start_datetime->format('d/m/y') : '01/01/16' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->end_datetime_baru ? $item->end_datetime_baru->format('m/d/Y') : ($item->end_datetime ? $item->end_datetime->format('m/d/Y') : '12/31/2026') }}
+                                        {{ $item->end_datetime_baru ? $item->end_datetime_baru->format('d/m/y') : ($item->end_datetime ? $item->end_datetime->format('d/m/y') : '-') }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-900 dark:text-white font-normal whitespace-nowrap">
                                         {{ is_numeric($item->price) ? number_format((float)$item->price, 0, ',', '.') : ($item->price_formatted ?? '2.264.394') }}
@@ -307,7 +305,7 @@
                                     </td>
                                     <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
-                                             data-asset="{{ $item->asset_number }}">
+                                             data-contract="{{ $item->contract_number }}">
                                             <button
                                                 type="button"
                                                 class="action-menu-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer"
@@ -320,7 +318,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="11" class="text-center py-8 text-gray-400 dark:text-[#9AA0A6]">
+                                    <td colspan="10" class="text-center py-8 text-gray-400 dark:text-[#9AA0A6]">
                                         Tidak ada data kontrak yang tersedia.
                                     </td>
                                 </tr>
@@ -348,7 +346,7 @@
             <x-icon name="edit" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-300 shrink-0" />
             <span>Edit</span>
         </a>
-        <form id="dd-delete-form" method="POST" onsubmit="return confirm('Hapus kontrak aset ini?')">
+        <form id="dd-delete-form" method="POST" onsubmit="event.preventDefault(); return window.confirmDelete(this, 'Apakah Anda yakin ingin menghapus data kontrak aset ini?');">
             @csrf @method('DELETE')
             <button type="submit" class="flex w-full items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer">
                 <x-icon name="delete" class="w-4 h-4 sm:w-5 sm:h-5 text-[#EF4444] shrink-0" />
@@ -379,16 +377,12 @@
                 return el && !el.classList.contains('invisible');
             }
 
-            const routes = {
-                detail: (id) => `/asset/${id}`,
-                edit:   (id) => `/daftar-kontrak/${id}/edit`,
-                delete: (id) => `/admin/assets/${id}`,
-            };
+            const routes = {};
 
             @foreach($contracts as $item)
-            routes['detail_{{ $item->asset_number }}'] = '{{ route('asset.detail', $item->asset_number) }}';
-            routes['edit_{{ $item->asset_number }}']   = '{{ route('contracts.edit', $item->asset_number) }}';
-            routes['delete_{{ $item->asset_number }}'] = '{{ route('admin.assets.destroy', $item->asset_number) }}';
+            routes['detail_{{ $item->contract_number }}'] = '{{ route('asset.detail', $item->contract_number) }}';
+            routes['edit_{{ $item->contract_number }}']   = '{{ route('contracts.edit', $item->contract_number) }}';
+            routes['delete_{{ $item->contract_number }}'] = '{{ route('admin.assets.destroy', $item->contract_number) }}';
             @endforeach
 
             document.addEventListener('click', function (e) {
@@ -397,19 +391,19 @@
                 if (btn) {
                     e.stopPropagation();
 
-                    const wrapper = btn.closest('.action-menu-wrapper');
-                    const assetId = wrapper.dataset.asset;
-                    const rect    = btn.getBoundingClientRect();
-                    const dropW   = 165;
+                    const wrapper    = btn.closest('.action-menu-wrapper');
+                    const contractId = wrapper.dataset.contract;
+                    const rect       = btn.getBoundingClientRect();
+                    const dropW      = 165;
 
                     let left = rect.right - dropW;
                     let top  = rect.bottom + 6;
 
-                    if (ddLihat) ddLihat.href = routes[`detail_${assetId}`] || `/asset/${assetId}`;
-                    if (ddEdit) ddEdit.href = routes[`edit_${assetId}`] || `/daftar-kontrak/${assetId}/edit`;
-                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${assetId}`] || `/admin/assets/${assetId}`;
+                    if (ddLihat) ddLihat.href = routes[`detail_${contractId}`] || `/asset/${encodeURIComponent(contractId)}`;
+                    if (ddEdit) ddEdit.href = routes[`edit_${contractId}`] || `/daftar-kontrak/${encodeURIComponent(contractId)}/edit`;
+                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${contractId}`] || `/admin/assets/${encodeURIComponent(contractId)}`;
 
-                    if (isSmoothDropdownOpen(dropdown) && dropdown.dataset.open === assetId) {
+                    if (isSmoothDropdownOpen(dropdown) && dropdown.dataset.open === contractId) {
                         closeSmoothDropdown(dropdown);
                         dropdown.dataset.open = '';
                         return;
@@ -417,7 +411,7 @@
 
                     dropdown.style.top    = top + 'px';
                     dropdown.style.left   = left + 'px';
-                    dropdown.dataset.open = assetId;
+                    dropdown.dataset.open = contractId;
                     openSmoothDropdown(dropdown);
                 } else if (!e.target.closest('#global-action-dropdown')) {
                     closeSmoothDropdown(dropdown);
@@ -425,20 +419,53 @@
                 }
             });
 
-            // Custom Filter Dropdown Logic
-            window.selectFilterOption = function (name, value) {
-                const map = {
-                    'jenis_asset': 'input-jenis-asset',
-                    'status_customer': 'input-status-customer',
-                    'harga': 'input-harga',
-                    'waktu': 'input-waktu',
-                };
-                const el = document.getElementById(map[name]);
-                if (el) {
-                    el.value = value;
-                    document.getElementById('filter-form').submit();
-                }
+            // Label defaults & harga/waktu lookup (untuk update label tanpa reload)
+            const hargaLabels = @json($hargaLabels);
+            const waktuLabels = @json($waktuLabels);
+
+            const filterLabelMap = {
+                jenis_asset:     { id: 'label-jenis-asset',     default: 'Jenis Aset',        lookup: null },
+                status_customer: { id: 'label-status-customer', default: 'Status Customer',   lookup: null },
+                harga:           { id: 'label-harga',           default: '> Rp 5 jt',         lookup: hargaLabels },
+                waktu:           { id: 'label-waktu',           default: '6 bulan Terakhir',   lookup: waktuLabels },
             };
+
+            // Simpan ke hidden input + update label, BELUM submit
+            window.selectFilterOption = function (name, value) {
+                const inputMap = {
+                    jenis_asset:     'input-jenis-asset',
+                    status_customer: 'input-status-customer',
+                    harga:           'input-harga',
+                    waktu:           'input-waktu',
+                };
+                const el = document.getElementById(inputMap[name]);
+                if (el) el.value = value;
+
+                const cfg = filterLabelMap[name];
+                if (cfg) {
+                    const lbl = document.getElementById(cfg.id);
+                    if (lbl) {
+                        lbl.textContent = value
+                            ? (cfg.lookup ? (cfg.lookup[value] ?? value) : value)
+                            : cfg.default;
+                        lbl.className = value
+                            ? 'text-black dark:text-white font-semibold text-[11px] sm:text-xs select-none'
+                            : 'text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none';
+                    }
+                }
+
+                // Tutup dropdown setelah pilih
+                document.querySelectorAll('.filter-dropdown-menu').forEach(closeSmoothDropdown);
+                document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
+            };
+
+            // Tombol Filter ΓÇö baru submit form
+            const btnFilterContracts = document.getElementById('btn-filter-contracts');
+            if (btnFilterContracts) {
+                btnFilterContracts.addEventListener('click', function () {
+                    document.getElementById('filter-form').submit();
+                });
+            }
 
             document.addEventListener('click', function (e) {
                 const filterBtn = e.target.closest('.filter-dropdown-btn');

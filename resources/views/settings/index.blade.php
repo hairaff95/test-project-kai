@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Pengaturan — Super Admin</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -228,8 +229,13 @@
 
                         {{-- MOBILE CARDS VIEW (block sm:hidden - Format Card Serupa Daftar Kontrak) --}}
                         <div class="space-y-3.5 sm:hidden" id="admin-cards-container">
-                            {{-- Card 1 --}}
-                            <div class="admin-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 space-y-3 shadow-2xs transition-all" data-timestamp="2026-08-30T15:30:00">
+                            @forelse($admins as $admin)
+                            @php
+                                $isSuperAdmin = in_array(strtolower($admin->role), ['superadmin', 'super admin']);
+                                $canDelete    = !$isSuperAdmin;
+                            @endphp
+                            <div class="admin-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 space-y-3 shadow-2xs transition-all"
+                                data-timestamp="{{ $admin->created_at?->toISOString() }}">
                                 <div class="flex items-start justify-between gap-3">
                                     <div class="flex items-center gap-3 min-w-0">
                                         <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
@@ -237,10 +243,10 @@
                                         </div>
                                         <div class="min-w-0 flex-1">
                                             <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight truncate name-col">
-                                                Haidar Rafi kosong enam
+                                                {{ $admin->name }}
                                             </h3>
                                             <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate email-col">
-                                                admin.kai@daop4.com
+                                                {{ $admin->email }}
                                             </p>
                                         </div>
                                     </div>
@@ -248,9 +254,10 @@
                                         type="button"
                                         class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer shrink-0"
                                         title="Aksi"
-                                        data-name="Haidar Rafi kosong enam"
-                                        data-email="admin.kai@daop4.com"
-                                        data-can-delete="true"
+                                        data-id="{{ $admin->id }}"
+                                        data-name="{{ $admin->name }}"
+                                        data-email="{{ $admin->email }}"
+                                        data-can-delete="{{ $canDelete ? 'true' : 'false' }}"
                                     >
                                         <x-icon name="dots-vertical" class="w-4 h-4" />
                                     </button>
@@ -259,94 +266,21 @@
                                 <div class="grid grid-cols-2 gap-2 bg-gray-50/90 dark:bg-[#2D3034] rounded-lg p-2.5 text-xs">
                                     <div class="role-col">
                                         <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Role</span>
-                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800">Admin</span>
+                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold {{ $isSuperAdmin ? 'text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800' : 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800' }}">
+                                            {{ $isSuperAdmin ? 'SuperAdmin' : 'Admin' }}
+                                        </span>
                                     </div>
                                     <div class="date-col">
-                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Terakhir Aktif</span>
-                                        <span class="font-medium text-gray-800 dark:text-white text-[11px]">30/08/2026 at 15.30 PM</span>
+                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Dibuat</span>
+                                        <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $admin->created_at?->format('d/m/Y') ?? '-' }}</span>
                                     </div>
                                 </div>
                             </div>
-
-                            {{-- Card 2 (SuperAdmin) --}}
-                            <div class="admin-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 space-y-3 shadow-2xs transition-all" data-timestamp="2026-08-01T14:30:00">
-                                <div class="flex items-start justify-between gap-3">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
-                                            <x-icon name="profile-circle" class="w-5 h-5" />
-                                        </div>
-                                        <div class="min-w-0 flex-1">
-                                            <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight truncate name-col">
-                                                Haidar Rafi kosong satu
-                                            </h3>
-                                            <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate email-col">
-                                                superadmin.kai@daop4.com
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer shrink-0"
-                                        title="Aksi"
-                                        data-name="Haidar Rafi kosong satu"
-                                        data-email="superadmin.kai@daop4.com"
-                                        data-can-delete="false"
-                                    >
-                                        <x-icon name="dots-vertical" class="w-4 h-4" />
-                                    </button>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-2 bg-gray-50/90 dark:bg-[#2D3034] rounded-lg p-2.5 text-xs">
-                                    <div class="role-col">
-                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Role</span>
-                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800">SuperAdmin</span>
-                                    </div>
-                                    <div class="date-col">
-                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Terakhir Aktif</span>
-                                        <span class="font-medium text-gray-800 dark:text-white text-[11px]">01/08/2026 at 14.30 PM</span>
-                                    </div>
-                                </div>
+                            @empty
+                            <div class="py-8 text-center text-sm text-gray-400 dark:text-[#9AA0A6]">
+                                Belum ada admin terdaftar.
                             </div>
-
-                            {{-- Card 3 --}}
-                            <div class="admin-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 space-y-3 shadow-2xs transition-all" data-timestamp="2026-08-12T01:30:00">
-                                <div class="flex items-start justify-between gap-3">
-                                    <div class="flex items-center gap-3 min-w-0">
-                                        <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
-                                            <x-icon name="profile-circle" class="w-5 h-5" />
-                                        </div>
-                                        <div class="min-w-0 flex-1">
-                                            <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight truncate name-col">
-                                                Bambang Sudarsono
-                                            </h3>
-                                            <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate email-col">
-                                                bambang@daop4.com
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer shrink-0"
-                                        title="Aksi"
-                                        data-name="Bambang Sudarsono"
-                                        data-email="bambang@daop4.com"
-                                        data-can-delete="true"
-                                    >
-                                        <x-icon name="dots-vertical" class="w-4 h-4" />
-                                    </button>
-                                </div>
-
-                                <div class="grid grid-cols-2 gap-2 bg-gray-50/90 dark:bg-[#2D3034] rounded-lg p-2.5 text-xs">
-                                    <div class="role-col">
-                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Role</span>
-                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800">Admin</span>
-                                    </div>
-                                    <div class="date-col">
-                                        <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Terakhir Aktif</span>
-                                        <span class="font-medium text-gray-800 dark:text-white text-[11px]">12/08/2026 at 01.30 AM</span>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforelse
                         </div>
 
                         {{-- DESKTOP ADMIN TABLE (hidden sm:block - Konsisten dengan Desain Desktop) --}}
@@ -381,71 +315,44 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-100 dark:divide-white/10 text-[13px] text-gray-800 dark:text-gray-200" id="admin-tbody">
-                                        {{-- Row 1 --}}
-                                        <tr class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors admin-row" data-timestamp="2026-08-30T15:30:00">
-                                            <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap email-col">admin.kai@daop4.com</td>
-                                            <td class="py-3.5 px-4 font-medium text-gray-900 dark:text-white whitespace-nowrap name-col">Haidar Rafi kosong enam</td>
+                                        @forelse($admins as $admin)
+                                        @php
+                                            $isSuperAdmin = in_array(strtolower($admin->role), ['superadmin', 'super admin']);
+                                            $canDelete    = !$isSuperAdmin;
+                                        @endphp
+                                        <tr class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors admin-row"
+                                            data-timestamp="{{ $admin->created_at?->toISOString() }}">
+                                            <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap email-col">{{ $admin->email }}</td>
+                                            <td class="py-3.5 px-4 font-medium text-gray-900 dark:text-white whitespace-nowrap name-col">{{ $admin->name }}</td>
                                             <td class="py-3.5 px-4 whitespace-nowrap role-col">
-                                                <span class="inline-block px-3 py-0.5 rounded-full text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800">Admin</span>
+                                                <span class="inline-block px-3 py-0.5 rounded-full text-xs font-medium {{ $isSuperAdmin ? 'text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800' : 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800' }}">
+                                                    {{ $isSuperAdmin ? 'SuperAdmin' : 'Admin' }}
+                                                </span>
                                             </td>
-                                            <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal date-col">30/08/2026 at 15.30 PM</td>
+                                            <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal date-col">
+                                                {{ $admin->created_at?->format('d/m/Y') ?? '-' }}
+                                            </td>
                                             <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                                 <button
                                                     type="button"
                                                     class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer mx-auto"
                                                     title="Aksi"
-                                                    data-name="Haidar Rafi kosong enam"
-                                                    data-email="admin.kai@daop4.com"
-                                                    data-can-delete="true"
+                                                    data-id="{{ $admin->id }}"
+                                                    data-name="{{ $admin->name }}"
+                                                    data-email="{{ $admin->email }}"
+                                                    data-can-delete="{{ $canDelete ? 'true' : 'false' }}"
                                                 >
                                                     <x-icon name="dots-vertical" class="w-4 h-4" />
                                                 </button>
                                             </td>
                                         </tr>
-
-                                        {{-- Row 2 (SuperAdmin) --}}
-                                        <tr class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors admin-row" data-timestamp="2026-08-01T14:30:00">
-                                            <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap email-col">superadmin.kai@daop4.com</td>
-                                            <td class="py-3.5 px-4 font-medium text-gray-900 dark:text-white whitespace-nowrap name-col">Haidar Rafi kosong satu</td>
-                                            <td class="py-3.5 px-4 whitespace-nowrap role-col">
-                                                <span class="inline-block px-3 py-0.5 rounded-full text-xs font-medium text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800">SuperAdmin</span>
-                                            </td>
-                                            <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal date-col">01/08/2026 at 14.30 PM</td>
-                                            <td class="py-3.5 px-4 whitespace-nowrap text-center">
-                                                <button
-                                                    type="button"
-                                                    class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer mx-auto"
-                                                    title="Aksi"
-                                                    data-name="Haidar Rafi kosong satu"
-                                                    data-email="superadmin.kai@daop4.com"
-                                                    data-can-delete="false"
-                                                >
-                                                    <x-icon name="dots-vertical" class="w-4 h-4" />
-                                                </button>
+                                        @empty
+                                        <tr>
+                                            <td colspan="5" class="py-10 text-center text-sm text-gray-400 dark:text-[#9AA0A6]">
+                                                Belum ada admin terdaftar.
                                             </td>
                                         </tr>
-
-                                        {{-- Row 3 --}}
-                                        <tr class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors admin-row" data-timestamp="2026-08-12T01:30:00">
-                                            <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap email-col">admin.kai@daop4.com</td>
-                                            <td class="py-3.5 px-4 font-medium text-gray-900 dark:text-white whitespace-nowrap name-col">Bambang Sudarsono</td>
-                                            <td class="py-3.5 px-4 whitespace-nowrap role-col">
-                                                <span class="inline-block px-3 py-0.5 rounded-full text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800">Admin</span>
-                                            </td>
-                                            <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal date-col">12/08/2026 at 01.30 AM</td>
-                                            <td class="py-3.5 px-4 whitespace-nowrap text-center">
-                                                <button
-                                                    type="button"
-                                                    class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer mx-auto"
-                                                    title="Aksi"
-                                                    data-name="Bambang Sudarsono"
-                                                    data-email="bambang@daop4.com"
-                                                    data-can-delete="true"
-                                                >
-                                                    <x-icon name="dots-vertical" class="w-4 h-4" />
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
@@ -740,13 +647,30 @@
                 <button type="button" onclick="closeAddAdminModal()" class="text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white text-lg cursor-pointer">✕</button>
             </div>
 
+            {{-- Error box --}}
+            <div id="tambah-admin-error" class="hidden rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/50 px-4 py-3 text-xs text-red-700 dark:text-red-300"></div>
+
             <form id="form-tambah-admin" onsubmit="saveNewAdmin(event)" class="space-y-4">
+                @csrf
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Nama Lengkap</label>
                     <input
                         type="text"
                         id="new-admin-name"
+                        name="name"
                         placeholder="Contoh: Haidar Rafi"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Username</label>
+                    <input
+                        type="text"
+                        id="new-admin-username"
+                        name="username"
+                        placeholder="Contoh: haidar.rafi"
                         class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
@@ -757,17 +681,43 @@
                     <input
                         type="email"
                         id="new-admin-email"
+                        name="email"
                         placeholder="nama@daop4.com"
                         class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
 
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Password</label>
+                        <input
+                            type="password"
+                            id="new-admin-password"
+                            name="password"
+                            placeholder="Min. 8 karakter"
+                            class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                            required
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Konfirmasi Password</label>
+                        <input
+                            type="password"
+                            id="new-admin-password-confirm"
+                            name="password_confirmation"
+                            placeholder="Ulangi password"
+                            class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                            required
+                        >
+                    </div>
+                </div>
+
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Role Pengguna</label>
-                    <select id="new-admin-role" class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white focus:border-[#0066FF] focus:outline-none transition">
-                        <option value="Admin">Admin</option>
-                        <option value="SuperAdmin">SuperAdmin</option>
+                    <select id="new-admin-role" name="role" class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white focus:border-[#0066FF] focus:outline-none transition">
+                        <option value="admin">Admin</option>
+                        <option value="superadmin">SuperAdmin</option>
                     </select>
                 </div>
 
@@ -781,6 +731,7 @@
                     </button>
                     <button
                         type="submit"
+                        id="btn-simpan-admin"
                         class="px-5 py-2.5 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-medium text-white transition shadow-xs cursor-pointer"
                     >
                         Simpan Admin
@@ -1166,93 +1117,68 @@
             if (modal) modal.classList.add('hidden');
             const form = document.getElementById('form-tambah-admin');
             if (form) form.reset();
+            const errorBox = document.getElementById('tambah-admin-error');
+            if (errorBox) errorBox.classList.add('hidden');
         }
 
-        function saveNewAdmin(e) {
+        async function saveNewAdmin(e) {
             e.preventDefault();
-            const name = document.getElementById('new-admin-name').value;
-            const email = document.getElementById('new-admin-email').value;
-            const role = document.getElementById('new-admin-role').value;
-            const canDelete = role !== 'SuperAdmin';
-            const now = new Date().toISOString();
 
-            // 1. Prepend to Desktop Table
-            const tbody = document.getElementById('admin-tbody');
-            if (tbody) {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors admin-row";
-                tr.dataset.timestamp = now;
-                tr.innerHTML = `
-                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap email-col">${email}</td>
-                    <td class="py-3.5 px-4 font-medium text-gray-900 dark:text-white whitespace-nowrap name-col">${name}</td>
-                    <td class="py-3.5 px-4 whitespace-nowrap role-col">
-                        <span class="inline-block px-3 py-0.5 rounded-full text-xs font-medium ${role === 'SuperAdmin' ? 'text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800' : 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800'}">${role}</span>
-                    </td>
-                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal date-col">Baru saja</td>
-                    <td class="py-3.5 px-4 whitespace-nowrap text-center">
-                        <button
-                            type="button"
-                            class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer mx-auto"
-                            title="Aksi"
-                            data-name="${name}"
-                            data-email="${email}"
-                            data-can-delete="${canDelete}"
-                        >
-                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 6.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm0 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm0 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
-                        </button>
-                    </td>
-                `;
-                tbody.prepend(tr);
+            const btn      = document.getElementById('btn-simpan-admin');
+            const errorBox = document.getElementById('tambah-admin-error');
+            const form     = document.getElementById('form-tambah-admin');
+
+            // Tampilkan loading
+            if (btn) { btn.disabled = true; btn.textContent = 'Menyimpan...'; }
+            if (errorBox) errorBox.classList.add('hidden');
+
+            const formData = new FormData(form);
+
+            try {
+                const res = await fetch('{{ route("admins.store") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]')?.content
+                            || document.querySelector('#form-tambah-admin input[name="_token"]')?.value
+                            || ''),
+                        'Accept': 'application/json',
+                    },
+                    body: formData,
+                });
+
+                const data = await res.json().catch(() => null);
+
+                if (res.ok) {
+                    // Sukses — reload halaman agar tabel terupdate dari DB
+                    if (window.setPendingToast) {
+                        window.setPendingToast('Admin baru berhasil ditambahkan!', 'success');
+                    }
+                    window.location.reload();
+                    return;
+                }
+
+                // Validasi error dari Laravel (422)
+                if (res.status === 422 && data?.errors) {
+                    const msgs = Object.values(data.errors).flat().join(' • ');
+                    if (errorBox) {
+                        errorBox.textContent = msgs;
+                        errorBox.classList.remove('hidden');
+                    }
+                } else {
+                    const msg = data?.message || 'Terjadi kesalahan. Silakan coba lagi.';
+                    if (errorBox) {
+                        errorBox.textContent = msg;
+                        errorBox.classList.remove('hidden');
+                    }
+                }
+            } catch (err) {
+                if (errorBox) {
+                    errorBox.textContent = 'Gagal terhubung ke server. Periksa koneksi Anda.';
+                    errorBox.classList.remove('hidden');
+                }
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = 'Simpan Admin'; }
             }
-
-            // 2. Prepend to Mobile Cards Container
-            const mobileContainer = document.getElementById('admin-cards-container');
-            if (mobileContainer) {
-                const card = document.createElement('div');
-                card.className = "admin-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 space-y-3 shadow-2xs transition-all";
-                card.dataset.timestamp = now;
-                card.innerHTML = `
-                    <div class="flex items-start justify-between gap-3">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
-                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight truncate name-col">
-                                    ${name}
-                                </h3>
-                                <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate email-col">
-                                    ${email}
-                                </p>
-                            </div>
-                        </div>
-                        <button
-                            type="button"
-                            class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer shrink-0"
-                            title="Aksi"
-                            data-name="${name}"
-                            data-email="${email}"
-                            data-can-delete="${canDelete}"
-                        >
-                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 6.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm0 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm0 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2 bg-gray-50/90 dark:bg-[#2D3034] rounded-lg p-2.5 text-xs">
-                        <div class="role-col">
-                            <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Role</span>
-                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${role === 'SuperAdmin' ? 'text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800' : 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800'}">${role}</span>
-                        </div>
-                        <div class="date-col">
-                            <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Terakhir Aktif</span>
-                            <span class="font-medium text-gray-800 dark:text-white text-[11px]">Baru saja</span>
-                        </div>
-                    </div>
-                `;
-                mobileContainer.prepend(card);
-            }
-
-            closeAddAdminModal();
         }
 
         // Persetujuan Cards Actions

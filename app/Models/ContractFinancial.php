@@ -33,12 +33,12 @@ class ContractFinancial extends Model
     protected $casts = [
         'awal'           => 'date',
         'akhir'          => 'date',
-        'nilai_per_hari' => 'decimal:2',
-        'nilai_2026'     => 'decimal:2',
-        'nilai_backlog'  => 'decimal:2',
-        'nilai_backlog2' => 'decimal:2',
-        'persentase'     => 'decimal:2',
-        'pencapaian'     => 'decimal:2',
+        'nilai_per_hari' => 'float',
+        'nilai_2026'     => 'float',
+        'nilai_backlog'  => 'float',
+        'nilai_backlog2' => 'float',
+        'persentase'     => 'float',
+        'pencapaian'     => 'float',
     ];
 
     public function contract(): BelongsTo

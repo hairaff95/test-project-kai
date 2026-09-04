@@ -45,26 +45,54 @@ class AuthController extends Controller
             'password' => $password,
         ];
 
-        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
-            return back()
-                ->withInput($request->only('login'))
-                ->withErrors(['login' => 'Email/username atau kata sandi tidak sesuai.']);
+        // ── Coba login normal terlebih dahulu ──
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            $user = Auth::user();
+
+            if (!$user->is_active) {
+                Auth::logout();
+                return back()
+                    ->withInput($request->only('login'))
+                    ->withErrors(['login' => 'Akun Anda dinonaktifkan. Hubungi Super Admin.']);
+            }
+
+            $request->session()->regenerate();
+            return redirect()->route('dashboard');
         }
 
-        $user = Auth::user();
+        // ── Jika login normal gagal, coba temp password ──
+        $user = \App\Models\User::where($field, $login)
+            ->where('is_active', true)
+            ->first();
 
-        // Cek apakah akun aktif
-        if (!$user->is_active) {
-            Auth::logout();
+        if ($user) {
+            $resetRequest = \App\Models\PasswordResetRequest::where('user_id', $user->id)
+                ->where('status', 'pending')
+                ->whereNotNull('temp_password')
+                ->whereNotNull('temp_password_expires_at')
+                ->where('temp_password_expires_at', '>', now())
+                ->latest('temp_password_sent_at')
+                ->first();
 
-            return back()
-                ->withInput($request->only('login'))
-                ->withErrors(['login' => 'Akun Anda dinonaktifkan. Hubungi Super Admin.']);
+            if ($resetRequest && hash_equals($resetRequest->temp_password, $password)) {
+                // Login berhasil via temp password
+                Auth::login($user, $request->boolean('remember'));
+                $request->session()->regenerate();
+
+                // Simpan flag & waktu expired di session
+                session([
+                    'is_using_temp_password'     => true,
+                    'temp_password_expires_at'   => $resetRequest->temp_password_expires_at->timestamp,
+                    'temp_password_request_id'   => $resetRequest->id,
+                ]);
+
+                return redirect()->route('dashboard');
+            }
         }
 
-        $request->session()->regenerate();
-
-        return redirect()->route('dashboard');
+        return back()
+            ->withInput($request->only('login'))
+            ->withErrors(['login' => 'Email/username atau kata sandi tidak sesuai.']);
     }
 
     /**

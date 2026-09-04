@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Jatuh Tempo — KAI Tracker App</title>
+    <title>Jatuh Tempo ΓÇö KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -59,8 +59,8 @@
 
                 <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
                     {{-- Search --}}
-                    <div class="relative w-full sm:w-[185px] h-[32px] sm:h-[38px]">
-                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                         <input
                             id="search-jt"
                             type="text"
@@ -79,7 +79,7 @@
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="filterJtClient('penyewa', '', 'Nama Penyewa')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="filterJtClient('penyewa', '', 'Nama Penyewa')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Penyewa</span>
                             </button>
                             @foreach($tenantList as $t)
@@ -97,7 +97,7 @@
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="filterJtClient('status', '', 'Status Customer')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="filterJtClient('status', '', 'Status Customer')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Status</span>
                             </button>
                             @foreach($statusCustomerOptions as $opt)
@@ -108,31 +108,6 @@
                         </div>
                     </div>
 
-                    {{-- Filter Nilai Kontrak --}}
-                    <div class="relative custom-filter-container">
-                        <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span id="label-nilai" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Nilai Kontrak</span>
-                            <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
-                        </button>
-                        <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="filterJtClient('nilai', '', 'Nilai Kontrak')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
-                                <span>Semua Nilai Kontrak</span>
-                            </button>
-                            <button type="button" onclick="filterJtClient('nilai', 'lt_50jt', '< Rp 50 jt')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
-                                <span>< Rp 50 jt</span>
-                            </button>
-                            <button type="button" onclick="filterJtClient('nilai', 'gt_50jt', '> Rp 50 jt')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
-                                <span>> Rp 50 jt</span>
-                            </button>
-                            <button type="button" onclick="filterJtClient('nilai', 'gt_100jt', '> Rp 100 jt')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
-                                <span>> Rp 100 jt</span>
-                            </button>
-                            <button type="button" onclick="filterJtClient('nilai', 'gt_500jt', '> Rp 500 jt')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
-                                <span>> Rp 500 jt</span>
-                            </button>
-                        </div>
-                    </div>
-
                     {{-- Filter Semua Jenis Aset --}}
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
@@ -140,7 +115,7 @@
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="filterJtClient('jenis', '', 'Semua Jenis Aset')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="filterJtClient('jenis', '', 'Semua Jenis Aset')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Jenis Aset</span>
                             </button>
                             @foreach($jenisAssetOptions as $opt)
@@ -169,12 +144,12 @@
             <div id="mobile-cards-jt" class="sm:hidden flex flex-col gap-3">
                 @forelse($contracts as $item)
                     @php
-                        $penyewa = $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono';
-                        $brand = $item->tenant?->brand ?? 'Apotek K-24';
+                        $penyewa = $item->tenant?->fullname ?? $item->tenant?->name ?? '-';
+                        $brand = $item->tenant?->brand ?: '(kosong)';
                         $statusCust = $item->tenant?->status_customer ?? 'Aktif';
                         $jenisAset = $item->asset?->jenis_asset ?? 'Tanah';
-                        $selesaiLama = $item->end_datetime ? \Carbon\Carbon::parse($item->end_datetime)->format('d/m/Y') : '10/01/2026';
-                        $selesaiBaru = $item->end_datetime_baru ? \Carbon\Carbon::parse($item->end_datetime_baru)->format('d/m/Y') : '10/01/2027';
+                        $selesaiLama = $item->end_datetime ? \Carbon\Carbon::parse($item->end_datetime)->format('d/m/Y') : '-';
+                        $selesaiBaru = $item->end_datetime_baru ? \Carbon\Carbon::parse($item->end_datetime_baru)->format('d/m/Y') : '-';
                     @endphp
                     <div class="jt-card-item rounded-xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-3.5 shadow-2xs flex flex-col gap-2.5 transition-colors"
                          data-penyewa="{{ strtolower($penyewa) }}"
@@ -186,7 +161,7 @@
                         <div class="flex items-start justify-between gap-2 border-b border-gray-100 dark:border-white/10 pb-2">
                             <div class="flex flex-col">
                                 <span class="text-[10px] font-semibold text-gray-400 dark:text-[#9AA0A6] uppercase tracking-wider">No Aset</span>
-                                <span class="text-xs font-bold text-gray-900 dark:text-white leading-snug">{{ $item->asset_number ?? 'AST-SMG-PCL-001' }}</span>
+                                <span class="text-xs font-bold text-gray-900 dark:text-white leading-snug">{{ $item->asset_number ?? '-' }}</span>
                             </div>
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold {{ strtolower($statusCust) === 'aktif' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800' : 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border border-blue-200/60 dark:border-blue-800' }}">
                                 {{ $statusCust }}
@@ -198,7 +173,7 @@
                             <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight">
                                 {{ $penyewa }}
                             </h3>
-                            <p class="text-xs text-[#0066FF] dark:text-[#3B82F6] font-semibold mt-0.5">Brand: {{ $brand }}</p>
+                            <p class="text-xs text-gray-500 dark:text-[#9AA0A6] font-normal mt-0.5">Brand: {{ $brand }}</p>
                         </div>
 
                         {{-- 2-Cols Meta Grid --}}
@@ -213,15 +188,15 @@
                             </div>
                             <div>
                                 <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Sisa Masa Sewa</span>
-                                <span class="font-medium text-amber-600 dark:text-amber-400 text-[11px]">{{ $item->contract_duration ?? '12 Bulan' }}</span>
+                                <span class="font-medium text-amber-600 dark:text-amber-400 text-[11px]">{{ $item->due_days ?? '-' }}</span>
                             </div>
                             <div>
                                 <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Keterangan</span>
-                                <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $item->keterangan ?? 'RKA' }}</span>
+                                <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $item->keterangan ?? '-' }}</span>
                             </div>
                             <div class="col-span-2">
                                 <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">SPV</span>
-                                <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $item->spv_name ?? 'Sales Executive Area 1 Pekalongan' }}</span>
+                                <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $item->spv ?? '-' }}</span>
                             </div>
                         </div>
 
@@ -266,26 +241,26 @@
                         <tbody class="divide-y divide-gray-100 dark:divide-white/10 text-[13px] text-gray-800 dark:text-gray-200">
                             @forelse($contracts as $item)
                                 @php
-                                    $penyewa = $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono';
-                                    $brand = $item->tenant?->brand ?? 'Apotek K-24';
+                                    $penyewa = $item->tenant?->fullname ?? $item->tenant?->name ?? '-';
+                                    $brand = $item->tenant?->brand ?: '(kosong)';
                                     $statusCust = $item->tenant?->status_customer ?? 'Aktif';
                                     $jenisAset = $item->asset?->jenis_asset ?? 'Tanah';
-                                    $selesaiLama = $item->end_datetime ? \Carbon\Carbon::parse($item->end_datetime)->format('d/m/Y') : '10/01/2026';
-                                    $selesaiBaru = $item->end_datetime_baru ? \Carbon\Carbon::parse($item->end_datetime_baru)->format('d/m/Y') : '10/01/2027';
+                                    $selesaiLama = $item->end_datetime ? \Carbon\Carbon::parse($item->end_datetime)->format('d/m/Y') : '-';
+                                    $selesaiBaru = $item->end_datetime_baru ? \Carbon\Carbon::parse($item->end_datetime_baru)->format('d/m/Y') : '-';
                                 @endphp
                                 <tr class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors"
                                     data-penyewa="{{ strtolower($penyewa) }}"
                                     data-status="{{ strtolower($statusCust) }}"
                                     data-jenis="{{ strtolower($jenisAset) }}"
                                     data-price="{{ (float)($item->price ?? 0) }}"
-                                >
+                                 >
                                     <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $item->asset_number ?? 'AST-SMG-PCL-001' }}
+                                        {{ $item->asset_number ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">
                                         {{ $penyewa }}
                                     </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                    <td class="py-3.5 px-4 text-gray-600 dark:text-[#9AA0A6] whitespace-nowrap font-normal">
                                         {{ $brand }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
@@ -295,17 +270,17 @@
                                         {{ $selesaiBaru }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->contract_duration ?? '1245417' }}
+                                        {{ $item->due_days ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->spv_name ?? 'Sales Executive Area 1 Pekalongan' }}
+                                        {{ $item->spv ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->keterangan ?? 'RKA' }}
+                                        {{ $item->keterangan ?? '-' }}
                                     </td>
                                     <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
-                                             data-asset="{{ $item->asset_number }}">
+                                             data-contract="{{ $item->contract_number }}">
                                             <button
                                                 type="button"
                                                 class="action-menu-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer"
@@ -346,7 +321,7 @@
             <x-icon name="edit" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-300 shrink-0" />
             <span>Edit</span>
         </a>
-        <form id="dd-delete-form" method="POST" onsubmit="return confirm('Hapus aset ini?')">
+        <form id="dd-delete-form" method="POST" onsubmit="event.preventDefault(); return window.confirmDelete(this, 'Apakah Anda yakin ingin menghapus data jatuh tempo ini?');">
             @csrf @method('DELETE')
             <button type="submit" class="flex w-full items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer">
                 <x-icon name="delete" class="w-4 h-4 sm:w-5 sm:h-5 text-[#EF4444] shrink-0" />
@@ -377,16 +352,12 @@
                 return el && !el.classList.contains('invisible');
             }
 
-            const routes = {
-                detail: (id) => `/asset/${id}`,
-                edit:   (id) => `/jatuh-tempo/${id}/edit`,
-                delete: (id) => `/admin/assets/${id}`,
-            };
+            const routes = {};
 
             @foreach($contracts as $item)
-            routes['detail_{{ $item->asset_number }}'] = '{{ route('asset.detail', $item->asset_number) }}';
-            routes['edit_{{ $item->asset_number }}']   = '{{ route('due-dates.edit', $item->asset_number) }}';
-            routes['delete_{{ $item->asset_number }}'] = '{{ route('admin.assets.destroy', $item->asset_number) }}';
+            routes['detail_{{ $item->contract_number }}'] = '{{ route('asset.detail', $item->contract_number) }}';
+            routes['edit_{{ $item->contract_number }}']   = '{{ route('due-dates.edit', $item->contract_number) }}';
+            routes['delete_{{ $item->contract_number }}'] = '{{ route('admin.assets.destroy', $item->contract_number) }}';
             @endforeach
 
             document.addEventListener('click', function (e) {
@@ -395,19 +366,19 @@
                 if (btn) {
                     e.stopPropagation();
 
-                    const wrapper = btn.closest('.action-menu-wrapper');
-                    const assetId = wrapper.dataset.asset;
-                    const rect    = btn.getBoundingClientRect();
-                    const dropW   = 165;
+                    const wrapper    = btn.closest('.action-menu-wrapper');
+                    const contractId = wrapper.dataset.contract;
+                    const rect       = btn.getBoundingClientRect();
+                    const dropW      = 165;
 
                     let left = rect.right - dropW;
                     let top  = rect.bottom + 6;
 
-                    if (ddLihat) ddLihat.href = routes[`detail_${assetId}`] || `/asset/${assetId}`;
-                    if (ddEdit) ddEdit.href = routes[`edit_${assetId}`] || `/jatuh-tempo/${assetId}/edit`;
-                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${assetId}`] || `/admin/assets/${assetId}`;
+                    if (ddLihat) ddLihat.href = routes[`detail_${contractId}`] || `/asset/${encodeURIComponent(contractId)}`;
+                    if (ddEdit) ddEdit.href = routes[`edit_${contractId}`] || `/jatuh-tempo/${encodeURIComponent(contractId)}/edit`;
+                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${contractId}`] || `/admin/assets/${encodeURIComponent(contractId)}`;
 
-                    if (isSmoothDropdownOpen(dropdown) && dropdown.dataset.open === assetId) {
+                    if (isSmoothDropdownOpen(dropdown) && dropdown.dataset.open === contractId) {
                         closeSmoothDropdown(dropdown);
                         dropdown.dataset.open = '';
                         return;
@@ -415,7 +386,7 @@
 
                     dropdown.style.top    = top + 'px';
                     dropdown.style.left   = left + 'px';
-                    dropdown.dataset.open = assetId;
+                    dropdown.dataset.open = contractId;
                     openSmoothDropdown(dropdown);
                 } else if (!e.target.closest('#global-action-dropdown')) {
                     closeSmoothDropdown(dropdown);
@@ -423,85 +394,86 @@
                 }
             });
 
-            // Filter state
-            const filters = { search: '', penyewa: '', status: '', nilai: '', jenis: '' };
+            // Filter state ΓÇö hanya disimpan, belum diapply sampai klik tombol Filter
+            const filters = { search: '', penyewa: '', status: '', jenis: '' };
+            const pending = { search: '', penyewa: '', status: '', jenis: '' };
 
-            window.filterJtClient = function (type, value, label) {
-                filters[type] = value;
+            const labelMap = {
+                penyewa: { el: 'label-penyewa', default: 'Nama Penyewa' },
+                status:  { el: 'label-status',  default: 'Status Customer' },
+                jenis:   { el: 'label-jenis',   default: 'Semua Jenis Aset' },
+            };
 
-                if (type === 'penyewa') {
-                    const lbl = document.getElementById('label-penyewa');
-                    lbl.textContent = value ? label : 'Nama Penyewa';
-                    lbl.className = value ? 'text-gray-800 font-semibold text-xs sm:text-sm select-none' : 'text-gray-400 font-normal text-xs sm:text-sm select-none';
-                } else if (type === 'status') {
-                    const lbl = document.getElementById('label-status');
-                    lbl.textContent = value ? label : 'Status Customer';
-                    lbl.className = value ? 'text-gray-800 font-semibold text-xs sm:text-sm select-none' : 'text-gray-400 font-normal text-xs sm:text-sm select-none';
-                } else if (type === 'nilai') {
-                    const lbl = document.getElementById('label-nilai');
-                    lbl.textContent = value ? label : 'Nilai Kontrak';
-                    lbl.className = value ? 'text-gray-800 font-semibold text-xs sm:text-sm select-none' : 'text-gray-400 font-normal text-xs sm:text-sm select-none';
-                } else if (type === 'jenis') {
-                    const lbl = document.getElementById('label-jenis');
-                    lbl.textContent = value ? label : 'Semua Jenis Aset';
-                    lbl.className = value ? 'text-gray-800 font-semibold text-xs sm:text-sm select-none' : 'text-gray-400 font-normal text-xs sm:text-sm select-none';
-                }
+            function applyFilters() {
+                // Commit pending ke filters
+                Object.assign(filters, pending);
 
-                // Close menus & reset arrows
-                document.querySelectorAll('.filter-dropdown-menu').forEach(closeSmoothDropdown);
-                document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
-
-                // Apply client-side row and mobile card filtering
                 const rows = document.querySelectorAll('tbody tr[data-penyewa]');
                 rows.forEach(row => {
                     const text = row.innerText.toLowerCase();
-                    const rowPenyewa = (row.dataset.penyewa || '').toLowerCase();
-                    const rowStatus = (row.dataset.status || '').toLowerCase();
-                    const rowJenis = (row.dataset.jenis || '').toLowerCase();
-                    const rowPrice = parseFloat(row.dataset.price || '0');
-
-                    const matchSearch = !filters.search || text.includes(filters.search.toLowerCase());
-                    const matchPenyewa = !filters.penyewa || rowPenyewa.includes(filters.penyewa.toLowerCase());
-                    const matchStatus = !filters.status || rowStatus === filters.status.toLowerCase();
-                    const matchJenis = !filters.jenis || rowJenis === filters.jenis.toLowerCase();
-
-                    let matchNilai = true;
-                    if (filters.nilai === 'lt_50jt') matchNilai = rowPrice < 50000000;
-                    else if (filters.nilai === 'gt_50jt') matchNilai = rowPrice > 50000000;
-                    else if (filters.nilai === 'gt_100jt') matchNilai = rowPrice > 100000000;
-                    else if (filters.nilai === 'gt_500jt') matchNilai = rowPrice > 500000000;
-
-                    row.style.display = (matchSearch && matchPenyewa && matchStatus && matchJenis && matchNilai) ? '' : 'none';
+                    row.style.display = checkMatch(text, row.dataset) ? '' : 'none';
                 });
 
                 const cards = document.querySelectorAll('.jt-card-item');
                 cards.forEach(card => {
                     const text = card.innerText.toLowerCase();
-                    const cardPenyewa = (card.dataset.penyewa || '').toLowerCase();
-                    const cardStatus = (card.dataset.status || '').toLowerCase();
-                    const cardJenis = (card.dataset.jenis || '').toLowerCase();
-                    const cardPrice = parseFloat(card.dataset.price || '0');
-
-                    const matchSearch = !filters.search || text.includes(filters.search.toLowerCase());
-                    const matchPenyewa = !filters.penyewa || cardPenyewa.includes(filters.penyewa.toLowerCase());
-                    const matchStatus = !filters.status || cardStatus === filters.status.toLowerCase();
-                    const matchJenis = !filters.jenis || cardJenis === filters.jenis.toLowerCase();
-
-                    let matchNilai = true;
-                    if (filters.nilai === 'lt_50jt') matchNilai = cardPrice < 50000000;
-                    else if (filters.nilai === 'gt_50jt') matchNilai = cardPrice > 50000000;
-                    else if (filters.nilai === 'gt_100jt') matchNilai = cardPrice > 100000000;
-                    else if (filters.nilai === 'gt_500jt') matchNilai = cardPrice > 500000000;
-
-                    card.style.display = (matchSearch && matchPenyewa && matchStatus && matchJenis && matchNilai) ? '' : 'none';
+                    card.style.display = checkMatch(text, card.dataset) ? '' : 'none';
                 });
+
+                // Update tombol Filter: tampilkan jumlah hasil
+                const visibleRows  = document.querySelectorAll('tbody tr[data-penyewa]:not([style*="none"])').length;
+                const hasFilter    = Object.values(filters).some(v => v !== '');
+                const btnFilter    = document.getElementById('btn-filter-jt');
+                const btnSpan      = btnFilter?.querySelector('span');
+                if (btnSpan) btnSpan.textContent = hasFilter ? 'Filter (' + visibleRows + ')' : 'Filter';
+            }
+
+            function checkMatch(text, dataset) {
+                if (filters.search && !text.includes(filters.search.toLowerCase())) return false;
+                if (filters.penyewa && !(dataset.penyewa || '').toLowerCase().includes(filters.penyewa.toLowerCase())) return false;
+                if (filters.status && (dataset.status || '').toLowerCase() !== filters.status.toLowerCase()) return false;
+                if (filters.jenis  && (dataset.jenis  || '').toLowerCase() !== filters.jenis.toLowerCase())  return false;
+                return true;
+            }
+
+            // Simpan pilihan ke pending + update label, tapi BELUM apply
+            window.filterJtClient = function (type, value, label) {
+                pending[type] = value;
+
+                const cfg = labelMap[type];
+                if (cfg) {
+                    const lbl = document.getElementById(cfg.el);
+                    if (lbl) {
+                        lbl.textContent = value ? label : cfg.default;
+                        lbl.className = value
+                            ? 'text-black dark:text-white font-semibold text-[11px] sm:text-xs select-none'
+                            : 'text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none';
+                    }
+                }
+
+                // Tutup dropdown setelah pilih
+                document.querySelectorAll('.filter-dropdown-menu').forEach(closeSmoothDropdown);
+                document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
             };
 
+            // Tombol Filter ΓÇö apply semua filter sekaligus
+            const btnFilter = document.getElementById('btn-filter-jt');
+            if (btnFilter) {
+                btnFilter.addEventListener('click', function () {
+                    pending.search = (document.getElementById('search-jt')?.value || '');
+                    applyFilters();
+                });
+            }
+
+            // Search: simpan ke pending saja, tidak langsung filter
             const searchInput = document.getElementById('search-jt');
             if (searchInput) {
                 searchInput.addEventListener('input', function () {
-                    filters.search = this.value;
-                    filterJtClient('search', this.value, '');
+                    pending.search = this.value;
+                });
+                // Enter di search langsung apply
+                searchInput.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter') { pending.search = this.value; applyFilters(); }
                 });
             }
 

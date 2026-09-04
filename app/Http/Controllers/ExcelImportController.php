@@ -333,6 +333,7 @@ class ExcelImportController extends Controller
             Cache::forget('dropdown_status_customer');
             Cache::forget('dropdown_stasiun');
             Cache::forget('dropdown_jenis_pendapatan');
+            DashboardController::forgetDashboardCache();
 
             return back()->with('success', "Berhasil mengimpor data! ({$importedCount} data baru ditambahkan, {$updatedCount} data diperbarui)");
 

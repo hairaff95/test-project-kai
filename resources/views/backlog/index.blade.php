@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Backlog — KAI Tracker App</title>
+    <title>Backlog ΓÇö KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -59,8 +59,8 @@
 
                 <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
                     {{-- Search --}}
-                    <div class="relative w-full sm:w-[185px] h-[32px] sm:h-[38px]">
-                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                         <input
                             id="search-bl"
                             type="text"
@@ -210,11 +210,13 @@
                             <tr class="bg-[#F8F9FA] dark:bg-[#282A2C] border-b border-gray-200 dark:border-white/10">
                                 <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">No Kontrak</th>
                                 <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Nama Penyewa</th>
-                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Nilai Backog</th>
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Nilai 2026</th>
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Nilai Backlog</th>
                                 <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Nilai Backlog2</th>
                                 <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Invoice</th>
                                 <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">GL Account</th>
                                 <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Hari 2026</th>
+                                <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Jumlah Hari</th>
                                 <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap">Nilai Perhari</th>
                                 <th scope="col" class="py-3 px-4 text-xs font-semibold text-gray-400 dark:text-[#9AA0A6] whitespace-nowrap text-center">Aksi</th>
                             </tr>
@@ -233,6 +235,9 @@
                                         {{ $row['nama_penyewa'] }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $row['nilai_2026'] }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
                                         {{ $row['nilai_backlog'] }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
@@ -248,11 +253,14 @@
                                         {{ $row['hari_2026'] }}
                                     </td>
                                     <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $row['jumlah_hari'] }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
                                         {{ $row['nilai_perhari'] }}
                                     </td>
                                     <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
-                                             data-asset="{{ $row['asset_number'] }}">
+                                             data-contract="{{ $row['no_kontrak'] }}">
                                             <button
                                                 type="button"
                                                 class="action-menu-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer"
@@ -293,7 +301,7 @@
             <x-icon name="edit" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-300 shrink-0" />
             <span>Edit</span>
         </a>
-        <form id="dd-delete-form" method="POST" onsubmit="return confirm('Hapus aset ini?')">
+        <form id="dd-delete-form" method="POST" onsubmit="event.preventDefault(); return window.confirmDelete(this, 'Apakah Anda yakin ingin menghapus data backlog aset ini?');">
             @csrf @method('DELETE')
             <button type="submit" class="flex w-full items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer">
                 <x-icon name="delete" class="w-4 h-4 sm:w-5 sm:h-5 text-[#EF4444] shrink-0" />
@@ -324,16 +332,12 @@
                 return el && !el.classList.contains('invisible');
             }
 
-            const routes = {
-                detail: (id) => `/asset/${id}`,
-                edit:   (id) => `/backlog/${id}/edit`,
-                delete: (id) => `/admin/assets/${id}`,
-            };
+            const routes = {};
 
             @foreach($items as $row)
-            routes['detail_{{ $row['asset_number'] }}'] = '{{ route('asset.detail', $row['asset_number']) }}';
-            routes['edit_{{ $row['asset_number'] }}']   = '{{ route('backlog.edit', $row['asset_number']) }}';
-            routes['delete_{{ $row['asset_number'] }}'] = '{{ route('admin.assets.destroy', $row['asset_number']) }}';
+            routes['detail_{{ $row['no_kontrak'] }}'] = '{{ route('asset.detail', $row['no_kontrak']) }}';
+            routes['edit_{{ $row['no_kontrak'] }}']   = '{{ route('backlog.edit', $row['no_kontrak']) }}';
+            routes['delete_{{ $row['no_kontrak'] }}'] = '{{ route('admin.assets.destroy', $row['no_kontrak']) }}';
             @endforeach
 
             document.addEventListener('click', function (e) {
@@ -342,19 +346,19 @@
                 if (btn) {
                     e.stopPropagation();
 
-                    const wrapper = btn.closest('.action-menu-wrapper');
-                    const assetId = wrapper.dataset.asset;
-                    const rect    = btn.getBoundingClientRect();
-                    const dropW   = 165;
+                    const wrapper    = btn.closest('.action-menu-wrapper');
+                    const contractId = wrapper.dataset.contract;
+                    const rect       = btn.getBoundingClientRect();
+                    const dropW      = 165;
 
                     let left = rect.right - dropW;
                     let top  = rect.bottom + 6;
 
-                    if (ddLihat) ddLihat.href = routes[`detail_${assetId}`] || `/asset/${assetId}`;
-                    if (ddEdit) ddEdit.href = routes[`edit_${assetId}`] || `/backlog/${assetId}/edit`;
-                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${assetId}`] || `/admin/assets/${assetId}`;
+                    if (ddLihat) ddLihat.href = routes[`detail_${contractId}`] || `/asset/${encodeURIComponent(contractId)}`;
+                    if (ddEdit) ddEdit.href = routes[`edit_${contractId}`] || `/backlog/${encodeURIComponent(contractId)}/edit`;
+                    if (ddDeleteForm) ddDeleteForm.action = routes[`delete_${contractId}`] || `/admin/assets/${encodeURIComponent(contractId)}`;
 
-                    if (isSmoothDropdownOpen(dropdown) && dropdown.dataset.open === assetId) {
+                    if (isSmoothDropdownOpen(dropdown) && dropdown.dataset.open === contractId) {
                         closeSmoothDropdown(dropdown);
                         dropdown.dataset.open = '';
                         return;
@@ -362,7 +366,7 @@
 
                     dropdown.style.top    = top + 'px';
                     dropdown.style.left   = left + 'px';
-                    dropdown.dataset.open = assetId;
+                    dropdown.dataset.open = contractId;
                     openSmoothDropdown(dropdown);
                 } else if (!e.target.closest('#global-action-dropdown')) {
                     closeSmoothDropdown(dropdown);

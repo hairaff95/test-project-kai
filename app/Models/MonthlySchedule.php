@@ -22,19 +22,19 @@ class MonthlySchedule extends Model
     ];
 
     protected $casts = [
-        'januari'   => 'decimal:2',
-        'febuari'   => 'decimal:2',
-        'maret'     => 'decimal:2',
-        'april'     => 'decimal:2',
-        'mei'       => 'decimal:2',
-        'juni'      => 'decimal:2',
-        'juli'      => 'decimal:2',
-        'agustus'   => 'decimal:2',
-        'september' => 'decimal:2',
-        'oktober'   => 'decimal:2',
-        'november'  => 'decimal:2',
-        'desember'  => 'decimal:2',
-        'jan_des'   => 'decimal:2',
+        'januari'   => 'float',
+        'febuari'   => 'float',
+        'maret'     => 'float',
+        'april'     => 'float',
+        'mei'       => 'float',
+        'juni'      => 'float',
+        'juli'      => 'float',
+        'agustus'   => 'float',
+        'september' => 'float',
+        'oktober'   => 'float',
+        'november'  => 'float',
+        'desember'  => 'float',
+        'jan_des'   => 'float',
     ];
 
     public function contract(): BelongsTo

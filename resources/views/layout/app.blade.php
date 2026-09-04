@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id" class="h-full">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>@yield('title', 'KAI Daop 4 Semarang — Property Asset Tracker')</title>
+    <title>@yield('title', 'KAI Daop 4 Semarang ΓÇö Property Asset Tracker')</title>
 
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -128,27 +128,8 @@
 
     @if(!request()->routeIs('login'))
         <x-navbar />
-    @endif
-
-    {{-- Flash Notifications --}}
-    @if(session('success'))
-    <div id="flash-toast-success" class="fixed top-[calc(5rem+env(safe-area-inset-top,0px))] right-6 z-50 flex items-center gap-3 bg-white border border-green-200 text-green-800 px-4 py-3 rounded-xl shadow-lg transition-all duration-300 text-sm font-medium">
-        <i data-lucide="check-circle" class="w-5 h-5 text-green-600"></i>
-        <span>{{ session('success') }}</span>
-        <button onclick="document.getElementById('flash-toast-success').remove()" class="text-gray-400 hover:text-gray-600 ml-2">
-            <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-    </div>
-    @endif
-
-    @if(session('error'))
-    <div id="flash-toast-error" class="fixed top-[calc(5rem+env(safe-area-inset-top,0px))] right-6 z-50 flex items-center gap-3 bg-white border border-red-200 text-red-800 px-4 py-3 rounded-xl shadow-lg transition-all duration-300 text-sm font-medium">
-        <i data-lucide="alert-circle" class="w-5 h-5 text-red-600"></i>
-        <span>{{ session('error') }}</span>
-        <button onclick="document.getElementById('flash-toast-error').remove()" class="text-gray-400 hover:text-gray-600 ml-2">
-            <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-    </div>
+    @else
+        <x-toast />
     @endif
 
     <main class="flex-1 pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-0">

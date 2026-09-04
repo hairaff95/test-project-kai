@@ -1,4 +1,4 @@
-@props(['active' => 'dashboard'])
+﻿@props(['active' => 'dashboard'])
 
 <!-- ===== TOP NAVIGATION BAR (Sticky, for all screens) ===== -->
 <header id="mainNavbar" class="sticky top-0 z-[100] w-full bg-[#F6F7F9]/95 dark:bg-[#282A2C]/95 backdrop-blur-md transition-all duration-200 border-b border-transparent">
@@ -102,6 +102,7 @@
                     <!-- Header -->
                     <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-white/10">
                         <h3 class="text-sm font-bold text-gray-900 dark:text-white">Notifikasi</h3>
+                        <span class="text-xs text-gray-400 dark:text-gray-500">Aset baru (24 jam terakhir)</span>
                     </div>
 
                     <!-- List Notifikasi -->
@@ -307,13 +308,96 @@
         </div>
 
         <!-- 4. Profil / Pengaturan (Kanan) -->
-        <a href="{{ route('settings.index') }}" class="mobile-nav-item flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full transition {{ in_array($active, ['settings', 'pengaturan', 'admin', 'profile', 'akun']) ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-400 dark:text-[#9AA0A6] hover:text-[#171717] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95' }}" title="Profil & Pengaturan">
+        <button
+            type="button"
+            onclick="toggleMobileProfileSheet()"
+            class="mobile-nav-item flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full transition {{ in_array($active, ['settings', 'pengaturan', 'admin', 'profile', 'akun']) ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-400 dark:text-[#9AA0A6] hover:text-[#171717] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95' }}"
+            title="Profil & Pengaturan"
+        >
             <x-icon name="nav-user" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
-        </a>
+        </button>
 
     </nav>
 </div>
 
+
+<!-- ===== MOBILE PROFILE SHEET (hidden on lg+) ===== -->
+<div id="mobileProfileBackdrop" class="hidden lg:hidden fixed inset-0 z-[130] bg-black/30 backdrop-blur-[2px]" onclick="closeMobileProfileSheet()"></div>
+<div
+    id="mobileProfileSheet"
+    class="hidden lg:hidden fixed bottom-0 inset-x-0 z-[140] px-4 pb-6 transition-all duration-200"
+    style="padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));"
+>
+    <div class="mx-auto max-w-[400px] rounded-[24px] bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_-8px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_-8px_40px_rgba(0,0,0,0.6)] p-3 flex flex-col gap-1">
+
+        <!-- Info Profil -->
+        <div class="flex items-center gap-3 px-3 py-2.5 mb-1 border-b border-gray-100 dark:border-white/10">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 dark:bg-[#43484E] text-gray-600 dark:text-white shrink-0">
+                <x-icon name="profile-circle" class="w-6 h-6" />
+            </div>
+            <div class="leading-tight">
+                <p class="text-sm font-bold text-[#171717] dark:text-white">
+                    @auth {{ auth()->user()->name }} @else Tamu @endauth
+                </p>
+                <p class="text-xs text-gray-400 dark:text-[#9AA0A6] mt-0.5">
+                    @auth
+                        @if(auth()->user()->isSuperAdmin()) Super Admin
+                        @elseif(auth()->user()->isAdmin()) Admin
+                        @else User @endif
+                    @else
+                        Tamu
+                    @endauth
+                </p>
+            </div>
+        </div>
+
+        @auth
+            @if(auth()->user()->isSuperAdmin())
+                <a
+                    href="{{ route('settings.superadmin') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+                >
+                    <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
+                    <span>Panel Super Admin</span>
+                </a>
+            @else
+                <a
+                    href="{{ route('settings.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+                >
+                    <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
+                    <span>Pengaturan Akun</span>
+                </a>
+            @endif
+
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button
+                    type="submit"
+                    class="flex w-full items-center gap-3 px-3 py-2.5 text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer"
+                >
+                    <x-icon name="logout" class="w-5 h-5 text-[#EF4444] shrink-0" />
+                    <span>Keluar</span>
+                </button>
+            </form>
+        @else
+            <a
+                href="{{ route('settings.index') }}"
+                class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+            >
+                <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
+                <span>Pengaturan Akun</span>
+            </a>
+            <a
+                href="{{ route('login') }}"
+                class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-xl transition"
+            >
+                <x-icon name="icon-masuk" class="w-5 h-5 text-[#0066FF] dark:text-[#3B82F6] shrink-0" />
+                <span>Masuk</span>
+            </a>
+        @endauth
+    </div>
+</div>
 
 <script>
     window.addEventListener('scroll', function() {
@@ -364,48 +448,48 @@
         iconClose?.classList.add('hidden');
     }
 
-    // ===== NOTIFIKASI =====
-    let notifLoaded = false;
-    const NOTIF_STORAGE_KEY = 'kai_read_notif_assets';
-
-    /** Ambil set asset_number yang sudah dibaca dari localStorage */
-    function getReadSet() {
-        try {
-            const raw = localStorage.getItem(NOTIF_STORAGE_KEY);
-            return raw ? new Set(JSON.parse(raw)) : new Set();
-        } catch { return new Set(); }
-    }
-
-    /** Simpan set asset_number yang sudah dibaca ke localStorage */
-    function saveReadSet(readSet) {
-        try {
-            localStorage.setItem(NOTIF_STORAGE_KEY, JSON.stringify([...readSet]));
-        } catch {}
-    }
-
-    /**
-     * Tandai semua aset dalam array sebagai sudah dibaca,
-     * lalu sembunyikan badge.
-     */
-    function markAllRead(items) {
-        const readSet = getReadSet();
-        items.forEach(item => readSet.add(item.asset_number));
-        saveReadSet(readSet);
-
-        const badgeEl = document.getElementById('notifBadge');
-        if (badgeEl) {
-            badgeEl.classList.add('hidden');
-            badgeEl.classList.remove('flex');
+    // Mobile Profile Sheet
+    function toggleMobileProfileSheet() {
+        const sheet = document.getElementById('mobileProfileSheet');
+        const backdrop = document.getElementById('mobileProfileBackdrop');
+        if (!sheet) return;
+        const isHidden = sheet.classList.contains('hidden');
+        if (isHidden) {
+            sheet.classList.remove('hidden');
+            backdrop?.classList.remove('hidden');
+            // Tutup FAB submenu jika terbuka
+            closeMobileSubMenu();
+        } else {
+            closeMobileProfileSheet();
         }
     }
 
-    /** Hitung berapa aset yang belum dibaca */
-    function countUnread(items) {
-        const readSet = getReadSet();
-        return items.filter(item => !readSet.has(item.asset_number)).length;
+    function closeMobileProfileSheet() {
+        document.getElementById('mobileProfileSheet')?.classList.add('hidden');
+        document.getElementById('mobileProfileBackdrop')?.classList.add('hidden');
     }
 
-    /** Update tampilan badge berdasarkan data item dan status baca */
+    // ===== NOTIFIKASI =====
+    let notifLoaded = false;
+    const NOTIF_READ_TS_KEY = 'kai_notif_read_at'; // unix timestamp (detik) terakhir user buka notif
+
+    /** Ambil timestamp terakhir baca (detik). Default 0 = belum pernah buka. */
+    function getReadAt() {
+        try { return parseInt(localStorage.getItem(NOTIF_READ_TS_KEY) || '0', 10); } catch { return 0; }
+    }
+
+    /** Simpan timestamp sekarang sebagai "sudah dibaca". */
+    function saveReadAt() {
+        try { localStorage.setItem(NOTIF_READ_TS_KEY, Math.floor(Date.now() / 1000)); } catch {}
+    }
+
+    /** Hitung aset yang created_at_ts > readAt (belum dibaca saat terakhir buka) */
+    function countUnread(items) {
+        const readAt = getReadAt();
+        return items.filter(item => (item.created_at_ts || 0) > readAt).length;
+    }
+
+    /** Update tampilan badge */
     function updateBadge(items) {
         const badgeEl = document.getElementById('notifBadge');
         if (!badgeEl) return;
@@ -420,7 +504,7 @@
         }
     }
 
-    // Cache data terakhir dari server supaya markAllRead bisa akses saat dropdown dibuka
+    // Cache data terakhir dari server
     let lastNotifItems = [];
 
     function toggleNotifDropdown() {
@@ -434,16 +518,17 @@
             dropdown.classList.add('opacity-0', 'invisible', 'scale-95');
             dropdown.classList.remove('opacity-100', 'visible', 'scale-100');
         } else {
-            // Buka dropdown
+            // Buka dropdown ΓÇö catat waktu baca sekarang
+            saveReadAt();
             dropdown.classList.remove('opacity-0', 'invisible', 'scale-95');
             dropdown.classList.add('opacity-100', 'visible', 'scale-100');
 
-            // Fetch data jika belum pernah di-load sesi ini
+            // Hilangkan badge setelah dibuka
+            const badgeEl = document.getElementById('notifBadge');
+            if (badgeEl) { badgeEl.classList.add('hidden'); badgeEl.classList.remove('flex'); }
+
             if (!notifLoaded) {
                 fetchNotifications();
-            } else if (lastNotifItems.length > 0) {
-                // Sudah load — langsung tandai baca & hilangkan badge
-                markAllRead(lastNotifItems);
             }
         }
     }
@@ -464,7 +549,6 @@
                     emptyEl?.classList.remove('hidden');
                     emptyEl?.classList.add('flex');
                 } else {
-                    // Render item
                     itemsEl?.classList.remove('hidden');
                     itemsEl.innerHTML = data.items.map(item => `
                         <li>
@@ -476,15 +560,12 @@
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">${item.asset_block_name}</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">${item.stasiun} · ${item.jenis_asset}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">${item.stasiun} ┬╖ ${item.jenis_asset}</p>
                                     <p class="text-xs text-blue-500 dark:text-blue-400 mt-0.5">${item.created_at}</p>
                                 </div>
                             </a>
                         </li>
                     `).join('');
-
-                    // Tandai semua sebagai sudah dibaca → badge hilang
-                    markAllRead(data.items);
                 }
             })
             .catch(() => {
@@ -495,24 +576,20 @@
             });
     }
 
-    // Polling otomatis setiap 60 detik — hanya update badge, tidak re-render list
+    // Polling otomatis setiap 60 detik ΓÇö hanya update badge
     function pollNotifications() {
         fetch('{{ route("notifications.new-assets") }}')
             .then(res => res.json())
             .then(data => {
                 lastNotifItems = data.items || [];
 
-                // Jika dropdown sedang terbuka saat polling, tandai baca sekalian
                 const dropdown = document.getElementById('notifDropdown');
                 const isOpen = dropdown && !dropdown.classList.contains('invisible');
-                if (isOpen) {
-                    markAllRead(lastNotifItems);
-                } else {
+                if (!isOpen) {
                     updateBadge(lastNotifItems);
                 }
-
-                // Reset cache notifLoaded agar item baru bisa di-render ulang
-                if (notifLoaded) notifLoaded = false;
+                // Reset agar list di-render ulang saat dibuka lagi
+                notifLoaded = false;
             })
             .catch(() => {});
     }
@@ -563,3 +640,5 @@
         });
     }
 </script>
+
+<x-toast />

@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\KaiContract;
+use App\Models\KaiAsset;
+use App\Models\ContractFinancial;
+use App\Models\Penyewa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class ContractController extends Controller
 {
-    // Cache TTL untuk dropdown options yang jarang berubah
-    private const CACHE_DROPDOWN_TTL = 3600; // 1 jam
-
     public function index(Request $request)
     {
         $query = KaiContract::with(['tenant', 'asset', 'financial'])->latest('created_at');
@@ -63,31 +63,31 @@ class ContractController extends Controller
 
         $contracts = $query->paginate(50)->withQueryString();
 
-        // Cache dropdown options — data ini jarang berubah, query distinct bisa berat
-        $jenisAssetOptions     = collect(Cache::remember('dropdown_jenis_asset', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')->toArray()
-        ));
-        $statusCustomerOptions = collect(Cache::remember('dropdown_status_customer', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')->toArray()
-        ));
+        // Ambil opsi unik untuk dropdown — di-cache 1 jam karena jarang berubah
+        $jenisAssetOptions     = Cache::remember('dropdown_jenis_asset', 3600, fn () =>
+            KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')
+        );
+        $statusCustomerOptions = Cache::remember('dropdown_status_customer', 3600, fn () =>
+            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')
+        );
 
         return view('contracts.index', compact('contracts', 'jenisAssetOptions', 'statusCustomerOptions'));
     }
 
     public function create()
     {
-        $jenisAssetOptions = collect(Cache::remember('dropdown_jenis_asset', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')->toArray()
-        ));
-        $statusCustomerOptions = collect(Cache::remember('dropdown_status_customer', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')->toArray()
-        ));
-        $stasiunOptions = collect(Cache::remember('dropdown_stasiun', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->pluck('stasiun')->toArray()
-        ));
-        $jenisPendapatanOptions = collect(Cache::remember('dropdown_jenis_pendapatan', self::CACHE_DROPDOWN_TTL,
-            fn() => \App\Models\ContractFinancial::select('jenis_pendapatan')->distinct()->whereNotNull('jenis_pendapatan')->pluck('jenis_pendapatan')->toArray()
-        ));
+        $jenisAssetOptions      = Cache::remember('dropdown_jenis_asset', 3600, fn () =>
+            KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')
+        );
+        $statusCustomerOptions  = Cache::remember('dropdown_status_customer', 3600, fn () =>
+            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')
+        );
+        $stasiunOptions         = Cache::remember('dropdown_stasiun', 3600, fn () =>
+            KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->pluck('stasiun')
+        );
+        $jenisPendapatanOptions = Cache::remember('dropdown_jenis_pendapatan', 3600, fn () =>
+            ContractFinancial::select('jenis_pendapatan')->distinct()->whereNotNull('jenis_pendapatan')->pluck('jenis_pendapatan')
+        );
 
         return view('contracts.create', compact('jenisAssetOptions', 'statusCustomerOptions', 'stasiunOptions', 'jenisPendapatanOptions'));
     }
@@ -101,18 +101,19 @@ class ContractController extends Controller
         ]);
 
         // 1. Create or Find Tenant
-        $tenant = \App\Models\Penyewa::firstOrCreate(
+        $brandInput = trim((string)$request->brand);
+        $tenant = Penyewa::firstOrCreate(
             ['fullname' => $request->nama_penyewa],
             [
                 'status_customer' => $request->status_customer ?? 'Swasta',
                 'jenis_perusahaan'=> $request->jenis_perusahaan ?? '-',
-                'brand'           => $request->brand ?? '',
+                'brand'           => ($brandInput === '' || strtolower($brandInput) === 'kosong') ? '(kosong)' : $brandInput,
                 'alamat'          => $request->alamat ?? '',
             ]
         );
 
         // 2. Create or Find Asset
-        $asset = \App\Models\KaiAsset::firstOrCreate(
+        $asset = KaiAsset::firstOrCreate(
             ['asset_number' => $request->asset_number],
             [
                 'asset_block_name' => $request->asset_block_name ?? $request->nama_penyewa,
@@ -121,38 +122,47 @@ class ContractController extends Controller
                 'stasiun'          => $request->stasiun ?? 'Semarang',
                 'wilayah_asset'    => $request->wilayah_asset ?? 'Daop 4 Semarang',
                 'peruntukan'       => $request->peruntukan ?? '',
+                'latitude'         => $request->filled('latitude') ? (float)$request->latitude : -6.8887,
+                'longitude'        => $request->filled('longitude') ? (float)$request->longitude : 109.6738,
             ]
         );
 
-        // Clean Price
+        if ($request->filled('latitude') || $request->filled('longitude')) {
+            if ($request->filled('latitude')) $asset->latitude = (float)$request->latitude;
+            if ($request->filled('longitude')) $asset->longitude = (float)$request->longitude;
+            $asset->save();
+        }
+
+        // Clean Price & Size Area
         $cleanedPrice = (float) preg_replace('/[^\d]/', '', $request->price ?? $request->nilai_kontrak ?? '0');
+        $cleanSizeArea = (float) str_replace(',', '.', preg_replace('/[^\d.,]/', '', $request->size_area ?? '0'));
 
         // Dates parsing helper (supports DD/MM/YY, DD/MM/YYYY, and standard formats)
         $parseDate = function ($dateStr) {
             if (!$dateStr) return null;
             $dateStr = trim($dateStr);
             if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/', $dateStr, $matches)) {
-                $day   = (int) $matches[1];
-                $month = (int) $matches[2];
-                $year  = (int) $matches[3];
+                $day = (int)$matches[1];
+                $month = (int)$matches[2];
+                $year = (int)$matches[3];
                 if ($year < 100) $year += 2000;
                 return \Carbon\Carbon::create($year, $month, $day);
             }
             try {
                 return \Carbon\Carbon::parse($dateStr);
             } catch (\Exception $e) {
-                return now();
+                return null;
             }
         };
 
-        $contractDate  = $parseDate($request->contract_date) ?? now();
-        $startDate     = $parseDate($request->start_datetime) ?? now();
-        $endDate       = $parseDate($request->end_datetime) ?? now()->addYear();
+        $contractDate = $request->contract_date ?: '42710';
+        $startDate = $parseDate($request->start_datetime) ?? now();
+        $endDate = $parseDate($request->end_datetime) ?? now()->addYear();
         $startDateBaru = $parseDate($request->start_datetime_baru);
-        $endDateBaru   = $parseDate($request->end_datetime_baru);
+        $endDateBaru = $parseDate($request->end_datetime_baru);
 
         // 3. Create Contract
-        $contract = \App\Models\KaiContract::create([
+        $contract = KaiContract::create([
             'contract_number'     => $request->contract_number,
             'tenant_id'           => $tenant->id,
             'asset_number'        => $asset->asset_number,
@@ -165,67 +175,122 @@ class ContractController extends Controller
             'end_datetime_baru'   => $endDateBaru,
             'price'               => $cleanedPrice,
             'spv'                 => $request->spv ?? 'PIC Daop 4',
-            'keterangan'          => $request->keterangan ?? '',
+            'asset_block_name'    => $request->asset_block_name ?? $request->nama_penyewa,
+            'size_area'           => $cleanSizeArea,
+            'peruntukan'          => $request->peruntukan ?? '',
+            'keterangan'          => $request->keterangan ?? 'RKA',
         ]);
 
         // 4. Create Financial
-        $nilai2026     = (float) preg_replace('/[^\d]/', '', $request->nilai_2026 ?? $cleanedPrice);
-        $nilaiBacklog1 = (float) preg_replace('/[^\d]/', '', $request->nilai_backlog ?? 0);
-        $nilaiBacklog2 = (float) preg_replace('/[^\d]/', '', $request->nilai_backlog2 ?? 0);
-        $persentase    = (float) str_replace(',', '.', preg_replace('/[^\d.,]/', '', $request->persentase ?? '0.9'));
+        $cleanNum = function($val, $default = 0.0) {
+            if ($val === null || trim((string)$val) === '') return (float)$default;
+            $c = trim((string)$val);
+            $c = preg_replace('/[^\d.,]/', '', $c);
+            if (substr_count($c, '.') > 1 || preg_match('/\.\d{3}$/', $c)) {
+                $c = str_replace('.', '', $c);
+            }
+            if (str_contains($c, ',')) {
+                $c = (preg_match('/,\d{3}$/', $c)) ? str_replace(',', '', $c) : str_replace(',', '.', $c);
+            }
+            return is_numeric($c) ? (float)$c : (float)$default;
+        };
+
+        $nilai2026 = $cleanNum($request->nilai_2026, $cleanedPrice);
+        $nilaiBacklog1 = $cleanNum($request->nilai_backlog, 0);
+        $nilaiBacklog2 = $cleanNum($request->nilai_backlog2, 0);
+        $pencapaian = $cleanNum($request->pencapaian ?? $request->persentase, 0.9);
+        $jumlahHari = (int) preg_replace('/[^\d]/', '', $request->jumlah_hari ?? 730);
+        $nilaiPerHari = $cleanNum($request->nilai_per_hari, 0);
+        $hari2026 = (int) preg_replace('/[^\d]/', '', $request->hari_2026 ?? 365);
 
         \App\Models\ContractFinancial::create([
             'contract_number'  => $contract->contract_number,
             'asset_number'     => $asset->asset_number,
-            'jenis_pendapatan' => $request->jenis_pendapatan ?? 'Row',
-            'akun_gl'          => $request->akun_gl ?? '40110000',
-            'form_rka'         => $request->form_rka ?? 'RKA 2026',
-            'tahun_rka'        => $request->tahun_rka ?? '2026',
+            'jenis_pendapatan' => $request->jenis_pendapatan ?? 'Non Row',
+            'gl_account'       => $request->akun_gl ?? '3421190010',
+            'form_rka'         => $request->form_rka ?? '-',
+            'tahun_rka'        => $request->tahun_rka ?? '0',
             'nilai_2026'       => $nilai2026,
             'nilai_backlog'    => $nilaiBacklog1,
             'nilai_backlog2'   => $nilaiBacklog2,
-            'persentase'       => $persentase,
+            'pencapaian'       => $pencapaian,
+            'jumlah_hari'      => $jumlahHari,
+            'nilai_per_hari'   => $nilaiPerHari,
+            'hari_2026'        => $hari2026,
         ]);
 
         // 5. Create Monthly Schedules
         $monthlyPortion = $nilai2026 > 0 ? round($nilai2026 / 12) : 0;
+        $jan = $cleanNum($request->januari, $monthlyPortion);
+        $feb = $cleanNum($request->febuari, $monthlyPortion);
+        $mar = $cleanNum($request->maret, $monthlyPortion);
+        $apr = $cleanNum($request->april, $monthlyPortion);
+        $mei = $cleanNum($request->mei, $monthlyPortion);
+        $jun = $cleanNum($request->juni, $monthlyPortion);
+        $jul = $cleanNum($request->juli, $monthlyPortion);
+        $agu = $cleanNum($request->agustus, $monthlyPortion);
+        $sep = $cleanNum($request->september, $monthlyPortion);
+        $okt = $cleanNum($request->oktober, $monthlyPortion);
+        $nov = $cleanNum($request->november, $monthlyPortion);
+        $des = $cleanNum($request->desember, $monthlyPortion);
+        $janDes = $jan + $feb + $mar + $apr + $mei + $jun + $jul + $agu + $sep + $okt + $nov + $des;
+
         \App\Models\MonthlySchedule::create([
             'contract_number' => $contract->contract_number,
             'asset_number'    => $asset->asset_number,
-            'januari'         => (float) preg_replace('/[^\d]/', '', $request->januari ?? $monthlyPortion),
-            'febuari'         => (float) preg_replace('/[^\d]/', '', $request->febuari ?? $monthlyPortion),
-            'maret'           => (float) preg_replace('/[^\d]/', '', $request->maret ?? $monthlyPortion),
-            'april'           => (float) preg_replace('/[^\d]/', '', $request->april ?? $monthlyPortion),
-            'mei'             => (float) preg_replace('/[^\d]/', '', $request->mei ?? $monthlyPortion),
-            'juni'            => (float) preg_replace('/[^\d]/', '', $request->juni ?? $monthlyPortion),
-            'juli'            => (float) preg_replace('/[^\d]/', '', $request->juli ?? $monthlyPortion),
-            'agustus'         => (float) preg_replace('/[^\d]/', '', $request->agustus ?? $monthlyPortion),
-            'september'       => (float) preg_replace('/[^\d]/', '', $request->september ?? $monthlyPortion),
-            'oktober'         => (float) preg_replace('/[^\d]/', '', $request->oktober ?? $monthlyPortion),
-            'november'        => (float) preg_replace('/[^\d]/', '', $request->november ?? $monthlyPortion),
-            'desember'        => (float) preg_replace('/[^\d]/', '', $request->desember ?? $monthlyPortion),
-            'jan_des'         => $nilai2026,
+            'tahun'           => 2026,
+            'januari'         => $jan,
+            'febuari'         => $feb,
+            'maret'           => $mar,
+            'april'           => $apr,
+            'mei'             => $mei,
+            'juni'            => $jun,
+            'juli'            => $jul,
+            'agustus'         => $agu,
+            'september'       => $sep,
+            'oktober'         => $okt,
+            'november'        => $nov,
+            'desember'        => $des,
+            'jan_des'         => $janDes,
         ]);
 
-        // Invalidasi cache peta & dropdown karena aset/kontrak baru mungkin menambah opsi baru
+        // Invalidasi cache setelah kontrak/aset baru dibuat
+        self::forgetContractCache();
+
+        return redirect()->route('contracts.index')
+            ->with('success', 'Aset dan kontrak baru berhasil ditambahkan!')
+            ->with('created_asset_number', $asset->asset_number)
+            ->with('created_asset_url', route('asset.detail', urlencode($asset->asset_number)));
+    }
+
+    /**
+     * Invalidasi semua cache yang terkait data kontrak/aset.
+     */
+    public static function forgetContractCache(): void
+    {
         Cache::forget('map_assets');
         Cache::forget('dropdown_jenis_asset');
         Cache::forget('dropdown_status_customer');
         Cache::forget('dropdown_stasiun');
         Cache::forget('dropdown_jenis_pendapatan');
-
-        return redirect()->route('contracts.index')->with('success', 'Aset & Kontrak baru berhasil ditambahkan.');
+        Cache::forget('notification_new_assets');
+        DashboardController::forgetDashboardCache();
     }
 
     public function edit($identifier)
     {
         $contract = KaiContract::with(['tenant', 'asset', 'financial'])
             ->where('contract_number', $identifier)
-            ->orWhere('asset_number', $identifier)
-            ->firstOrFail();
+            ->first();
 
-        $asset     = $contract->asset;
-        $tenant    = $contract->tenant;
+        if (!$contract) {
+            $contract = KaiContract::with(['tenant', 'asset', 'financial'])
+                ->where('asset_number', $identifier)
+                ->firstOrFail();
+        }
+
+        $asset = $contract->asset;
+        $tenant = $contract->tenant;
         $financial = $contract->financial;
 
         return view('contracts.edit', compact('contract', 'asset', 'tenant', 'financial'));
@@ -235,8 +300,13 @@ class ContractController extends Controller
     {
         $contract = KaiContract::with(['tenant', 'asset', 'financial'])
             ->where('contract_number', $identifier)
-            ->orWhere('asset_number', $identifier)
-            ->firstOrFail();
+            ->first();
+
+        if (!$contract) {
+            $contract = KaiContract::with(['tenant', 'asset', 'financial'])
+                ->where('asset_number', $identifier)
+                ->firstOrFail();
+        }
 
         if ($contract->tenant) {
             if ($request->filled('nama_penyewa')) {
@@ -245,30 +315,66 @@ class ContractController extends Controller
             if ($request->filled('status_customer')) {
                 $contract->tenant->status_customer = $request->status_customer;
             }
-            if ($request->filled('brand')) {
-                $contract->tenant->brand = $request->brand;
+            if ($request->has('brand')) {
+                $b = trim((string)$request->brand);
+                $contract->tenant->brand = ($b === '' || strtolower($b) === 'kosong') ? '(kosong)' : $b;
             }
             $contract->tenant->save();
         }
 
-        if ($contract->asset && $request->filled('asset_block_name')) {
-            $contract->asset->asset_block_name = $request->asset_block_name;
+        if ($contract->asset) {
+            if ($request->filled('asset_block_name')) {
+                $contract->asset->asset_block_name = $request->asset_block_name;
+            }
+            if ($request->filled('latitude')) {
+                $contract->asset->latitude = (float)$request->latitude;
+            }
+            if ($request->filled('longitude')) {
+                $contract->asset->longitude = (float)$request->longitude;
+            }
             $contract->asset->save();
         }
 
+        // Update contract fields
+        if ($request->filled('asset_block_name')) {
+            $contract->asset_block_name = $request->asset_block_name;
+        }
         if ($request->filled('nilai_kontrak')) {
             $cleanedPrice = preg_replace('/[^\d]/', '', $request->nilai_kontrak);
             if ($cleanedPrice) {
-                $contract->price = $cleanedPrice;
+                $contract->price = (float)$cleanedPrice;
             }
+        }
+        if ($request->filled('waktu_kontrak')) {
+            $contract->contract_date = $request->waktu_kontrak;
+        }
+
+        // Parse helper untuk format d/m/y atau d/m/Y
+        $parseDate = function ($dateStr) {
+            if (!$dateStr) return null;
+            $dateStr = trim($dateStr);
+            if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/', $dateStr, $m)) {
+                $year = (int)$m[3];
+                if ($year < 100) $year += 2000;
+                return \Carbon\Carbon::create($year, (int)$m[2], (int)$m[1])->format('Y-m-d');
+            }
+            try { return \Carbon\Carbon::parse($dateStr)->format('Y-m-d'); } catch (\Exception $e) { return null; }
+        };
+
+        if ($request->filled('start_date')) {
+            $d = $parseDate($request->start_date);
+            if ($d) $contract->start_datetime = $d;
+        }
+        if ($request->filled('end_date')) {
+            $d = $parseDate($request->end_date);
+            if ($d) $contract->end_datetime_baru = $d;
         }
 
         $contract->save();
 
-        // Invalidasi cache peta karena data kontrak/aset berubah
-        Cache::forget('map_assets');
-        Cache::forget('dropdown_status_customer');
+        // Invalidasi cache setelah data kontrak diperbarui
+        self::forgetContractCache();
 
-        return redirect()->route('contracts.index')->with('success', 'Kontrak berhasil diperbarui.');
+        return redirect()->route('contracts.index')->with('success', 'Sukses update data kontrak terbaru!');
     }
 }
