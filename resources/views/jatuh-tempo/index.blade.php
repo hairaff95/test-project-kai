@@ -1,17 +1,23 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Jatuh Tempo — KAI Tracker App</title>
+    <title>Jatuh Tempo ΓÇö KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Anti-FOUC Auto Theme Script (WIB 17:00 - 07:00 Auto Dark Mode) -->
-    <x-theme-script />
+    <!-- Anti-FOUC Theme Script -->
+    <script>
+        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -53,8 +59,8 @@
 
                 <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
                     {{-- Search --}}
-                    <div class="relative w-full sm:w-[185px] h-[32px] sm:h-[38px]">
-                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                         <input
                             id="search-jt"
                             type="text"
@@ -248,14 +254,30 @@
                                     data-jenis="{{ strtolower($jenisAset) }}"
                                     data-price="{{ (float)($item->price ?? 0) }}"
                                  >
-                                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $item->asset_number ?? '-' }}</td>
-                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">{{ $penyewa }}</td>
-                                    <td class="py-3.5 px-4 text-gray-600 dark:text-[#9AA0A6] whitespace-nowrap font-normal">{{ $brand }}</td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $selesaiLama }}</td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $selesaiBaru }}</td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->due_days ?? '-' }}</td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->spv ?? '-' }}</td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->keterangan ?? '-' }}</td>
+                                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $item->asset_number ?? '-' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">
+                                        {{ $penyewa }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-600 dark:text-[#9AA0A6] whitespace-nowrap font-normal">
+                                        {{ $brand }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $selesaiLama }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $selesaiBaru }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $item->due_days ?? '-' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $item->spv ?? '-' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $item->keterangan ?? '-' }}
+                                    </td>
                                     <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
                                              data-contract="{{ $item->contract_number }}">
@@ -372,7 +394,7 @@
                 }
             });
 
-            // Filter state — hanya disimpan, belum diapply sampai klik tombol Filter
+            // Filter state ΓÇö hanya disimpan, belum diapply sampai klik tombol Filter
             const filters = { search: '', penyewa: '', status: '', jenis: '' };
             const pending = { search: '', penyewa: '', status: '', jenis: '' };
 
@@ -434,7 +456,7 @@
                 document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
             };
 
-            // Tombol Filter — apply semua filter sekaligus
+            // Tombol Filter ΓÇö apply semua filter sekaligus
             const btnFilter = document.getElementById('btn-filter-jt');
             if (btnFilter) {
                 btnFilter.addEventListener('click', function () {

@@ -426,6 +426,7 @@ class ExcelImportController extends Controller
             Cache::forget('dropdown_status_customer');
             Cache::forget('dropdown_stasiun');
             Cache::forget('dropdown_jenis_pendapatan');
+            DashboardController::forgetDashboardCache();
 
             // Format Pesan Toast Sesuai Hasil Import
             if ($importedCount === 0 && $updatedCount === 0 && $identicalCount > 0) {

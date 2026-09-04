@@ -7,6 +7,7 @@ use App\Models\ContractFinancial;
 use App\Models\MonthlySchedule;
 use App\Models\Penyewa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class BacklogController extends Controller
 {
@@ -73,7 +74,9 @@ class BacklogController extends Controller
             ];
         })->toArray();
 
-        $statusCustomerOptions = Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer');
+        $statusCustomerOptions = Cache::remember('dropdown_status_customer', 3600, fn () =>
+            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer')
+        );
 
         return view('backlog.index', compact('items', 'contracts', 'statusCustomerOptions'));
     }
@@ -168,6 +171,9 @@ class BacklogController extends Controller
             }
             $contract->asset->save();
         }
+
+        // Invalidasi cache karena data keuangan/kontrak/aset berubah
+        ContractController::forgetContractCache();
 
         return redirect()->route('backlog.index')->with('success', 'Sukses update data backlog terbaru!');
     }

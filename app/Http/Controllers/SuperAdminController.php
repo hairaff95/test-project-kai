@@ -6,15 +6,28 @@ use App\Models\PasswordResetRequest;
 use App\Models\User;
 use App\Mail\OtpMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class SuperAdminController extends Controller
 {
+    // TTL pendingCount — lebih sering berubah, cache 1 menit
+    private const CACHE_PENDING_TTL = 60;
+
+    // ─── Invalidasi cache settings ────────────────────────────────────────────
+    private static function forgetSettingsCache(): void
+    {
+        Cache::forget('settings_pending_count');
+    }
+
     // ─── Halaman /pengaturan (gabungan Manajemen Admin + Reset Requests) ───────
 
     public function settingsIndex(Request $request)
     {
+        // Paginator Eloquent tidak aman di-cache karena objek model tidak bisa
+        // di-serialize/deserialize dengan andal oleh semua driver cache.
+        // Query ini ringan (hanya tabel users, filter role admin/superadmin) — langsung query.
         $admins = User::whereIn('role', ['admin', 'superadmin'])
             ->latest()
             ->paginate(20)
@@ -32,9 +45,11 @@ class SuperAdminController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        $pendingCount = PasswordResetRequest::where('status', 'pending')->count();
+        // pendingCount di-cache pendek (1 menit) — ditampilkan di badge notifikasi
+        $pendingCount = Cache::remember('settings_pending_count', self::CACHE_PENDING_TTL, function () {
+            return PasswordResetRequest::where('status', 'pending')->count();
+        });
 
-        // Tab aktif: bisa di-pass lewat query string ?tab=persetujuan-sandi
         $activeTab = $request->query('tab', 'profil-saya');
 
         return view('settings.index', compact('admins', 'requests', 'pendingCount', 'activeTab'));
@@ -74,16 +89,26 @@ class SuperAdminController extends Controller
             'username' => 'required|string|max:50|unique:users,username',
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'role'     => 'nullable|string|in:admin,superadmin',
         ]);
 
-        User::create([
+        $user = User::create([
             'name'      => $validated['name'],
             'username'  => $validated['username'],
             'email'     => $validated['email'],
             'password'  => Hash::make($validated['password']),
-            'role'      => 'admin',
+            'role'      => $validated['role'] ?? 'admin',
             'is_active' => true,
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Admin berhasil dibuat.',
+                'user'    => ['id' => $user->id, 'name' => $user->name, 'email' => $user->email, 'role' => $user->role],
+            ], 201);
+        }
+
+        self::forgetSettingsCache();
 
         return redirect()->route('settings.index')
             ->with('success', 'Sukses menambahkan admin baru!');
@@ -97,6 +122,7 @@ class SuperAdminController extends Controller
         $admin->save();
 
         $status = $admin->is_active ? 'diaktifkan' : 'dinonaktifkan';
+        self::forgetSettingsCache();
 
         return redirect()->route('settings.index')
             ->with('success', "Sukses: Admin {$admin->name} berhasil {$status}!");
@@ -135,6 +161,9 @@ class SuperAdminController extends Controller
             'approved_at'    => now(),
         ]);
 
+        // Invalidasi cache polling user ybs agar status langsung diperbarui
+        Cache::forget("poll_status_user_{$resetRequest->user_id}");
+
         try {
             Mail::to($resetRequest->user->email)->send(new OtpMail($resetRequest->user, $otp, $resetRequest));
         } catch (\Exception $e) {
@@ -153,6 +182,9 @@ class SuperAdminController extends Controller
         }
 
         $resetRequest->update(['status' => 'rejected']);
+
+        // Invalidasi cache polling user ybs
+        Cache::forget("poll_status_user_{$resetRequest->user_id}");
 
         return redirect()->route('settings.index', ['tab' => 'persetujuan-sandi'])
             ->with('success', 'Sukses menolak permintaan reset kata sandi.');

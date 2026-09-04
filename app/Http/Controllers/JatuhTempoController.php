@@ -6,6 +6,7 @@ use App\Models\KaiContract;
 use App\Models\KaiAsset;
 use App\Models\Penyewa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 
 class JatuhTempoController extends Controller
@@ -43,8 +44,13 @@ class JatuhTempoController extends Controller
 
         $contracts = $query->paginate(50)->withQueryString();
 
-        $statusCustomerOptions = Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer');
-        $jenisAssetOptions     = KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->where('jenis_asset', '!=', '')->pluck('jenis_asset');
+        // Dropdown options — di-cache 1 jam karena jarang berubah
+        $statusCustomerOptions = Cache::remember('dropdown_status_customer', 3600, fn () =>
+            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer')
+        );
+        $jenisAssetOptions = Cache::remember('dropdown_jenis_asset', 3600, fn () =>
+            KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->where('jenis_asset', '!=', '')->pluck('jenis_asset')
+        );
 
         return view('jatuh-tempo.index', compact('contracts', 'statusCustomerOptions', 'jenisAssetOptions'));
     }
@@ -129,6 +135,9 @@ class JatuhTempoController extends Controller
         }
 
         $contract->save();
+
+        // Invalidasi cache karena data kontrak/aset berubah
+        ContractController::forgetContractCache();
 
         return redirect()->route('due-dates.index')->with('success', 'Sukses update data jatuh tempo terbaru!');
     }

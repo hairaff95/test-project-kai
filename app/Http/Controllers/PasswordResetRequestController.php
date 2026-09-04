@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class PasswordResetRequestController extends Controller
@@ -236,12 +237,11 @@ class PasswordResetRequestController extends Controller
             }
         }
 
-        // Jika ada request aktif, set session agar ketika klik "Verifikasi Sekarang" langsung valid
-        if ($resetRequest) {
+        // Jika sudah approved, set session
+        if ($resetRequest && $resetRequest->status === 'approved') {
             session([
                 'reset_request_id'       => $resetRequest->id,
-                'otp_session_expires_at' => $resetRequest->otp_expires_at?->timestamp ?? now()->addMinutes(15)->timestamp,
-                'pending_reset_user_id'  => $resetRequest->user_id,
+                'otp_session_expires_at' => $resetRequest->otp_expires_at?->timestamp,
             ]);
         }
 
@@ -251,6 +251,9 @@ class PasswordResetRequestController extends Controller
     /**
      * Polling endpoint — return JSON status request untuk auto-redirect di frontend.
      * Juga trigger pengiriman temp password langsung (tanpa butuh scheduler).
+     *
+     * Di-cache 5 detik per user agar polling agresif dari frontend tidak membebani DB.
+     * Cache di-invalidasi jika ada perubahan status (approved / temp_password dikirim).
      */
     public function pollStatus()
     {
@@ -260,36 +263,59 @@ class PasswordResetRequestController extends Controller
             return response()->json(['status' => 'none']);
         }
 
-        $resetRequest = PasswordResetRequest::where('user_id', $userId)
-            ->whereIn('status', ['pending', 'approved'])
-            ->latest()
-            ->first();
+        // Cache hasil poll per user selama 5 detik
+        $cacheKey = "poll_status_user_{$userId}";
 
-        if (!$resetRequest) {
-            return response()->json(['status' => 'none']);
-        }
+        $result = Cache::remember($cacheKey, 5, function () use ($userId) {
+            $resetRequest = PasswordResetRequest::where('user_id', $userId)
+                ->whereIn('status', ['pending', 'approved'])
+                ->latest()
+                ->first();
 
-        if ($resetRequest->status === 'approved' && $resetRequest->isOtpValid()) {
+            if (!$resetRequest) {
+                return ['status' => 'none'];
+            }
+
+            if ($resetRequest->status === 'approved' && $resetRequest->isOtpValid()) {
+                return [
+                    'status'       => 'approved',
+                    'redirect_url' => route('password.verify'),
+                    '_request_id'  => $resetRequest->id, // dipakai untuk set session di bawah
+                    '_otp_expires' => $resetRequest->otp_expires_at->timestamp,
+                ];
+            }
+
+            if ($resetRequest->status === 'pending') {
+                $sent = $this->trySendTempPassword($resetRequest);
+
+                // Jika baru saja kirim temp password, invalidasi cache agar next poll langsung fresh
+                if ($sent) {
+                    Cache::forget("poll_status_user_{$userId}");
+                }
+
+                return [
+                    'status'        => 'pending',
+                    'temp_pwd_sent' => $sent,
+                ];
+            }
+
+            return ['status' => $resetRequest->status];
+        });
+
+        // Set session untuk redirect (dilakukan di luar cache agar tidak disimpan di cache)
+        if (($result['status'] ?? '') === 'approved') {
             session([
-                'reset_request_id'      => $resetRequest->id,
-                'otp_session_expires_at' => $resetRequest->otp_expires_at->timestamp,
+                'reset_request_id'       => $result['_request_id'],
+                'otp_session_expires_at' => $result['_otp_expires'],
             ]);
+            // Kembalikan respons tanpa field internal
             return response()->json([
                 'status'       => 'approved',
-                'redirect_url' => route('password.verify'),
+                'redirect_url' => $result['redirect_url'],
             ]);
         }
 
-        // Jika masih pending, coba kirim temp password (jika sudah waktunya)
-        if ($resetRequest->status === 'pending') {
-            $sent = $this->trySendTempPassword($resetRequest);
-            return response()->json([
-                'status'          => 'pending',
-                'temp_pwd_sent'   => $sent,
-            ]);
-        }
-
-        return response()->json(['status' => $resetRequest->status]);
+        return response()->json($result);
     }
 
     /**
@@ -472,7 +498,7 @@ class PasswordResetRequestController extends Controller
         session()->forget(['otp_verified', 'reset_request_id']);
 
         return redirect()->route('login')
-            ->with('success', 'Sukses update kata sandi baru! Silakan masuk dengan kata sandi baru Anda.');
+            ->with('success', 'Kata sandi berhasil diperbarui. Silakan masuk dengan kata sandi baru.');
     }
 
     /**

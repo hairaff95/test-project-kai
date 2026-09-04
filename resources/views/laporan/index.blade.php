@@ -1,17 +1,23 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Laporan — KAI Tracker App</title>
+    <title>Laporan ΓÇö KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Anti-FOUC Auto Theme Script (WIB 17:00 - 07:00 Auto Dark Mode) -->
-    <x-theme-script />
+    <!-- Anti-FOUC Theme Script -->
+    <script>
+        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -53,8 +59,8 @@
 
                 <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
                     {{-- Search --}}
-                    <div class="relative w-full sm:w-[185px] h-[32px] sm:h-[38px]">
-                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                         <input
                             id="search-lap"
                             type="text"
@@ -214,26 +220,66 @@
                         <tbody id="table-body-lap" class="divide-y divide-gray-100 dark:divide-white/10 text-xs sm:text-[13px] text-gray-800 dark:text-gray-200">
                             @forelse($items as $row)
                                 <tr class="lap-row-item hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors">
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['contract_number'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['asset_number'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['januari'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['februari'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['maret'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['april'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['mei'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['juni'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['juli'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['agustus'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['september'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['oktober'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['november'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['desember'] }}</td>
-                                    <td class="py-3.5 px-3.5 font-semibold text-gray-900 dark:text-white whitespace-nowrap">{{ $row['jan_des'] }}</td>
-                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['jenis_pendapatan'] }}</td>
-                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['pencapaian'] }}</td>
-                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['form_rka'] }}</td>
-                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['tahun_rka'] }}</td>
-                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['akun_gl'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['contract_number'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['asset_number'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['januari'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['februari'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['maret'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['april'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['mei'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['juni'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['juli'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['agustus'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['september'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['oktober'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['november'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['desember'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 font-semibold text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $row['jan_des'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $row['jenis_pendapatan'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $row['pencapaian'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $row['form_rka'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $row['tahun_rka'] }}
+                                    </td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $row['akun_gl'] }}
+                                    </td>
                                     <td class="py-3.5 px-3.5 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
                                              data-contract="{{ $row['contract_number'] }}">
@@ -370,7 +416,6 @@
         })();
     </script>
 
-<x-temp-password-guard />
 </body>
 
 </html>

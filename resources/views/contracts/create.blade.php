@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Tambah Aset & Kontrak — KAI Tracker App</title>
+    <title>Tambah Aset & Kontrak ΓÇö KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -222,7 +222,7 @@
                     {{-- Luas Aset --}}
                     <div class="flex flex-col">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Luas Aset (m²)
+                            Luas Aset (m┬▓)
                         </label>
                         <input
                             type="text"
@@ -813,7 +813,7 @@
 
     {{-- POPUP CALENDAR PICKER (Dropdown Style) --}}
     <div id="popup-calendar-picker" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
-        {{-- Header: < [Jun ⌵] [2025 ⌵] > --}}
+        {{-- Header: < [Jun Γî╡] [2025 Γî╡] > --}}
         <div class="flex items-center justify-between mb-3.5">
             <button type="button" onclick="calPrevMonth()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>

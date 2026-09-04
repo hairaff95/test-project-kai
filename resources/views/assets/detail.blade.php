@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -8,8 +8,14 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Anti-FOUC Auto Theme Script (WIB 17:00 - 07:00 Auto Dark Mode) -->
-    <x-theme-script />
+    <!-- Anti-FOUC Theme Script -->
+    <script>
+        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -311,7 +317,7 @@
                         </div>
 
                         <div>
-                            <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Total Jan–Des</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Total JanΓÇôDes</p>
                             <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $monthly && $monthly->jan_des !== null ? 'Rp ' . number_format($monthly->jan_des, 0, ',', '.') : '-' }}</p>
                         </div>
 
@@ -911,7 +917,7 @@
 
                     <div>
                         <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
-                            Total Jan–Des<span class="text-red-500">*</span>
+                            Total JanΓÇôDes<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
@@ -1060,7 +1066,7 @@
 
     {{-- POPUP CALENDAR PICKER (Dropdown Style) --}}
     <div id="popup-calendar-picker" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
-        {{-- Header: < [Jun ⌵] [2025 ⌵] > --}}
+        {{-- Header: < [Jun Γî╡] [2025 Γî╡] > --}}
         <div class="flex items-center justify-between mb-3.5">
             <button type="button" onclick="calPrevMonth()" class="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>

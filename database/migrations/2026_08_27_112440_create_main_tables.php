@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('contract_number', 100)->primary();
             $table->unsignedInteger('tenant_id');
             $table->string('asset_number', 100)->nullable();
-            $table->string('contract_date', 100)->nullable();
+            $table->integer('contract_date')->nullable();
             $table->string('jenis_kontrak', 100)->nullable();
             $table->string('area_kontrak', 100)->nullable();
             $table->date('start_datetime')->nullable();
@@ -35,9 +35,6 @@ return new class extends Migration
             $table->date('end_datetime_baru')->nullable();
             $table->decimal('price', 15, 2)->default(0);
             $table->string('spv', 150)->nullable();
-            $table->text('asset_block_name')->nullable();
-            $table->decimal('size_area', 10, 2)->nullable();
-            $table->string('peruntukan', 100)->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamp('created_at')->useCurrent();
 

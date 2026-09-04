@@ -6,6 +6,7 @@ use App\Models\KaiContract;
 use App\Models\ContractFinancial;
 use App\Models\MonthlySchedule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class LaporanController extends Controller
 {
@@ -26,36 +27,35 @@ class LaporanController extends Controller
         $contracts = $query->paginate(50)->withQueryString();
 
         $items = $contracts->getCollection()->map(function ($c) {
-            $fin = $c->financial;
+            $fin   = $c->financial;
             $sched = $c->monthlySchedules->first();
 
             $formatNum = function ($val) {
                 if ($val === null) return '0';
-                return number_format((float)$val, 0, ',', '.');
+                return number_format((float) $val, 0, ',', '.');
             };
 
             return [
-                'contract_number' => $c->clean_contract_number ?? $c->contract_number,
-                'raw_contract_number' => $c->contract_number,
-                'asset_number'    => $c->asset_number ?? $c->contract_number ?? '-',
-                'januari'         => $sched ? $formatNum($sched->januari) : '0',
-                'februari'        => $sched ? $formatNum($sched->febuari) : '0',
-                'maret'           => $sched ? $formatNum($sched->maret) : '0',
-                'april'           => $sched ? $formatNum($sched->april) : '0',
-                'mei'             => $sched ? $formatNum($sched->mei) : '0',
-                'juni'            => $sched ? $formatNum($sched->juni) : '0',
-                'juli'            => $sched ? $formatNum($sched->juli) : '0',
-                'agustus'         => $sched ? $formatNum($sched->agustus) : '0',
-                'september'       => $sched ? $formatNum($sched->september) : '0',
-                'oktober'         => $sched ? $formatNum($sched->oktober) : '0',
-                'november'        => $sched ? $formatNum($sched->november) : '0',
-                'desember'        => $sched ? $formatNum($sched->desember) : '0',
-                'jan_des'         => $sched ? $formatNum($sched->jan_des) : '0',
-                'pencapaian'      => $fin && $fin->pencapaian !== null ? str_replace('.', ',', (string)$fin->pencapaian) : '-',
-                'jenis_pendapatan' => $fin && $fin->jenis_pendapatan ? (string)$fin->jenis_pendapatan : '-',
-                'form_rka'        => $fin && $fin->form_rka !== null && $fin->form_rka !== '' ? (string)$fin->form_rka : '-',
-                'tahun_rka'       => $fin && $fin->tahun_rka !== null ? (string)$fin->tahun_rka : '2026',
-                'akun_gl'         => $fin && $fin->gl_account ? (string)$fin->gl_account : '-',
+                'contract_number'  => $c->contract_number,
+                'asset_number'     => $c->asset_number ?? $c->contract_number ?? '-',
+                'januari'          => $sched ? $formatNum($sched->januari) : '0',
+                'februari'         => $sched ? $formatNum($sched->febuari) : '0',
+                'maret'            => $sched ? $formatNum($sched->maret) : '0',
+                'april'            => $sched ? $formatNum($sched->april) : '0',
+                'mei'              => $sched ? $formatNum($sched->mei) : '0',
+                'juni'             => $sched ? $formatNum($sched->juni) : '0',
+                'juli'             => $sched ? $formatNum($sched->juli) : '0',
+                'agustus'          => $sched ? $formatNum($sched->agustus) : '0',
+                'september'        => $sched ? $formatNum($sched->september) : '0',
+                'oktober'          => $sched ? $formatNum($sched->oktober) : '0',
+                'november'         => $sched ? $formatNum($sched->november) : '0',
+                'desember'         => $sched ? $formatNum($sched->desember) : '0',
+                'jan_des'          => $sched ? $formatNum($sched->jan_des) : '0',
+                'pencapaian'       => $fin && $fin->pencapaian !== null ? str_replace('.', ',', (string) $fin->pencapaian) : '-',
+                'jenis_pendapatan' => $fin && $fin->jenis_pendapatan ? (string) $fin->jenis_pendapatan : '-',
+                'form_rka'         => $fin && $fin->form_rka !== null && $fin->form_rka !== '' ? (string) $fin->form_rka : '-',
+                'tahun_rka'        => $fin && $fin->tahun_rka !== null ? (string) $fin->tahun_rka : '2026',
+                'akun_gl'          => $fin && $fin->gl_account ? (string) $fin->gl_account : '-',
             ];
         })->toArray();
 
@@ -107,20 +107,20 @@ class LaporanController extends Controller
         }
         $fin->save();
 
-        // Update MonthlySchedule (Januari s/d Desember)
+        // Update MonthlySchedule (Januari s/d Desember), hitung jan_des otomatis
         $sched = $contract->monthlySchedules->first() ?: new MonthlySchedule([
             'contract_number' => $contract->contract_number,
-            'tahun' => 2026,
+            'tahun'           => 2026,
         ]);
 
         $months = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'];
-        $sum = 0.0;
+        $sum    = 0.0;
         foreach ($months as $m) {
             $dbCol = ($m === 'februari') ? 'febuari' : $m;
             if ($request->has($m)) {
                 $sched->$dbCol = $this->cleanNumeric($request->input($m));
             }
-            $sum += (float) $sched->$dbCol;
+            $sum += (float) ($sched->$dbCol ?? 0);
         }
         $sched->jan_des = $sum;
         $sched->save();
@@ -128,29 +128,33 @@ class LaporanController extends Controller
         // Update Asset coordinates
         if ($contract->asset) {
             if ($request->filled('latitude')) {
-                $contract->asset->latitude = (float)$request->latitude;
+                $contract->asset->latitude = (float) $request->latitude;
             }
             if ($request->filled('longitude')) {
-                $contract->asset->longitude = (float)$request->longitude;
+                $contract->asset->longitude = (float) $request->longitude;
             }
             $contract->asset->save();
         }
+
+        // Invalidasi cache dashboard karena data monthly schedule berubah (mempengaruhi chart bulanan & RKA)
+        Cache::forget('map_assets');
+        DashboardController::forgetDashboardCache();
 
         return redirect()->route('laporan.index')->with('success', 'Sukses update data laporan terbaru!');
     }
 
     /**
-     * Clean and parse numeric input safely (supports both "105775", "105.775", "1.245.417,00")
+     * Clean and parse numeric input safely (supports "105775", "105.775", "1.245.417,00")
      */
     private function cleanNumeric($value): float
     {
-        if ($value === null || trim((string)$value) === '') {
+        if ($value === null || trim((string) $value) === '') {
             return 0.0;
         }
-        
-        $clean = trim((string)$value);
+
+        $clean = trim((string) $value);
         $clean = preg_replace('/[^\d.,]/', '', $clean);
-        
+
         if (str_contains($clean, '.') && str_contains($clean, ',')) {
             $clean = str_replace('.', '', $clean);
             $clean = str_replace(',', '.', $clean);
@@ -165,7 +169,7 @@ class LaporanController extends Controller
                 $clean = str_replace(',', '.', $clean);
             }
         }
-        
+
         return is_numeric($clean) ? (float) $clean : 0.0;
     }
 }

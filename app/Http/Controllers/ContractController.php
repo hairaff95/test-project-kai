@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Cache;
 
 class ContractController extends Controller
 {
-    // Cache TTL untuk dropdown options yang jarang berubah
-    private const CACHE_DROPDOWN_TTL = 3600; // 1 jam
-
     public function index(Request $request)
     {
         $query = KaiContract::with(['tenant', 'asset', 'financial'])->latest('created_at');
@@ -66,31 +63,31 @@ class ContractController extends Controller
 
         $contracts = $query->paginate(50)->withQueryString();
 
-        // Cache dropdown options — data ini jarang berubah, query distinct bisa berat
-        $jenisAssetOptions     = collect(Cache::remember('dropdown_jenis_asset', self::CACHE_DROPDOWN_TTL,
-            fn() => KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')->toArray()
-        ));
-        $statusCustomerOptions = collect(Cache::remember('dropdown_status_customer', self::CACHE_DROPDOWN_TTL,
-            fn() => Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')->toArray()
-        ));
+        // Ambil opsi unik untuk dropdown — di-cache 1 jam karena jarang berubah
+        $jenisAssetOptions     = Cache::remember('dropdown_jenis_asset', 3600, fn () =>
+            KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')
+        );
+        $statusCustomerOptions = Cache::remember('dropdown_status_customer', 3600, fn () =>
+            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')
+        );
 
         return view('contracts.index', compact('contracts', 'jenisAssetOptions', 'statusCustomerOptions'));
     }
 
     public function create()
     {
-        $jenisAssetOptions = collect(Cache::remember('dropdown_jenis_asset', self::CACHE_DROPDOWN_TTL,
-            fn() => KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')->toArray()
-        ));
-        $statusCustomerOptions = collect(Cache::remember('dropdown_status_customer', self::CACHE_DROPDOWN_TTL,
-            fn() => Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')->toArray()
-        ));
-        $stasiunOptions = collect(Cache::remember('dropdown_stasiun', self::CACHE_DROPDOWN_TTL,
-            fn() => KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->pluck('stasiun')->toArray()
-        ));
-        $jenisPendapatanOptions = collect(Cache::remember('dropdown_jenis_pendapatan', self::CACHE_DROPDOWN_TTL,
-            fn() => ContractFinancial::select('jenis_pendapatan')->distinct()->whereNotNull('jenis_pendapatan')->pluck('jenis_pendapatan')->toArray()
-        ));
+        $jenisAssetOptions      = Cache::remember('dropdown_jenis_asset', 3600, fn () =>
+            KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')
+        );
+        $statusCustomerOptions  = Cache::remember('dropdown_status_customer', 3600, fn () =>
+            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')
+        );
+        $stasiunOptions         = Cache::remember('dropdown_stasiun', 3600, fn () =>
+            KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->pluck('stasiun')
+        );
+        $jenisPendapatanOptions = Cache::remember('dropdown_jenis_pendapatan', 3600, fn () =>
+            ContractFinancial::select('jenis_pendapatan')->distinct()->whereNotNull('jenis_pendapatan')->pluck('jenis_pendapatan')
+        );
 
         return view('contracts.create', compact('jenisAssetOptions', 'statusCustomerOptions', 'stasiunOptions', 'jenisPendapatanOptions'));
     }
@@ -145,9 +142,9 @@ class ContractController extends Controller
             if (!$dateStr) return null;
             $dateStr = trim($dateStr);
             if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/', $dateStr, $matches)) {
-                $day   = (int) $matches[1];
-                $month = (int) $matches[2];
-                $year  = (int) $matches[3];
+                $day = (int)$matches[1];
+                $month = (int)$matches[2];
+                $year = (int)$matches[3];
                 if ($year < 100) $year += 2000;
                 return \Carbon\Carbon::create($year, $month, $day);
             }
@@ -158,11 +155,11 @@ class ContractController extends Controller
             }
         };
 
-        $contractDate = $parseDate($request->contract_date) ?? $request->contract_date ?? '42710';
-        $startDate     = $parseDate($request->start_datetime) ?? now();
-        $endDate       = $parseDate($request->end_datetime) ?? now()->addYear();
+        $contractDate = $request->contract_date ?: '42710';
+        $startDate = $parseDate($request->start_datetime) ?? now();
+        $endDate = $parseDate($request->end_datetime) ?? now()->addYear();
         $startDateBaru = $parseDate($request->start_datetime_baru);
-        $endDateBaru   = $parseDate($request->end_datetime_baru);
+        $endDateBaru = $parseDate($request->end_datetime_baru);
 
         // 3. Create Contract
         $contract = KaiContract::create([
@@ -257,17 +254,27 @@ class ContractController extends Controller
             'jan_des'         => $janDes,
         ]);
 
-        // Invalidasi cache peta & dropdown karena aset/kontrak baru mungkin menambah opsi baru
-        Cache::forget('map_assets');
-        Cache::forget('dropdown_jenis_asset');
-        Cache::forget('dropdown_status_customer');
-        Cache::forget('dropdown_stasiun');
-        Cache::forget('dropdown_jenis_pendapatan');
+        // Invalidasi cache setelah kontrak/aset baru dibuat
+        self::forgetContractCache();
 
         return redirect()->route('contracts.index')
             ->with('success', 'Aset dan kontrak baru berhasil ditambahkan!')
             ->with('created_asset_number', $asset->asset_number)
             ->with('created_asset_url', route('asset.detail', urlencode($asset->asset_number)));
+    }
+
+    /**
+     * Invalidasi semua cache yang terkait data kontrak/aset.
+     */
+    public static function forgetContractCache(): void
+    {
+        Cache::forget('map_assets');
+        Cache::forget('dropdown_jenis_asset');
+        Cache::forget('dropdown_status_customer');
+        Cache::forget('dropdown_stasiun');
+        Cache::forget('dropdown_jenis_pendapatan');
+        Cache::forget('notification_new_assets');
+        DashboardController::forgetDashboardCache();
     }
 
     public function edit($identifier)
@@ -282,8 +289,8 @@ class ContractController extends Controller
                 ->firstOrFail();
         }
 
-        $asset     = $contract->asset;
-        $tenant    = $contract->tenant;
+        $asset = $contract->asset;
+        $tenant = $contract->tenant;
         $financial = $contract->financial;
 
         return view('contracts.edit', compact('contract', 'asset', 'tenant', 'financial'));
@@ -328,18 +335,45 @@ class ContractController extends Controller
             $contract->asset->save();
         }
 
+        // Update contract fields
+        if ($request->filled('asset_block_name')) {
+            $contract->asset_block_name = $request->asset_block_name;
+        }
         if ($request->filled('nilai_kontrak')) {
             $cleanedPrice = preg_replace('/[^\d]/', '', $request->nilai_kontrak);
             if ($cleanedPrice) {
-                $contract->price = $cleanedPrice;
+                $contract->price = (float)$cleanedPrice;
             }
+        }
+        if ($request->filled('waktu_kontrak')) {
+            $contract->contract_date = $request->waktu_kontrak;
+        }
+
+        // Parse helper untuk format d/m/y atau d/m/Y
+        $parseDate = function ($dateStr) {
+            if (!$dateStr) return null;
+            $dateStr = trim($dateStr);
+            if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/', $dateStr, $m)) {
+                $year = (int)$m[3];
+                if ($year < 100) $year += 2000;
+                return \Carbon\Carbon::create($year, (int)$m[2], (int)$m[1])->format('Y-m-d');
+            }
+            try { return \Carbon\Carbon::parse($dateStr)->format('Y-m-d'); } catch (\Exception $e) { return null; }
+        };
+
+        if ($request->filled('start_date')) {
+            $d = $parseDate($request->start_date);
+            if ($d) $contract->start_datetime = $d;
+        }
+        if ($request->filled('end_date')) {
+            $d = $parseDate($request->end_date);
+            if ($d) $contract->end_datetime_baru = $d;
         }
 
         $contract->save();
 
-        // Invalidasi cache peta karena data kontrak/aset berubah
-        Cache::forget('map_assets');
-        Cache::forget('dropdown_status_customer');
+        // Invalidasi cache setelah data kontrak diperbarui
+        self::forgetContractCache();
 
         return redirect()->route('contracts.index')->with('success', 'Sukses update data kontrak terbaru!');
     }

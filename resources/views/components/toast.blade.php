@@ -1,4 +1,4 @@
-{{-- Global Toast Notification & Confirmation Component --}}
+﻿{{-- Global Toast Notification & Confirmation Component --}}
 <div id="toast-container" class="fixed top-5 right-5 z-[99999] flex flex-col gap-2.5 pointer-events-none max-w-[92vw] sm:max-w-[420px] w-full px-2 sm:px-0"></div>
 
 {{-- Template Icon SVGs for Javascript cloning --}}

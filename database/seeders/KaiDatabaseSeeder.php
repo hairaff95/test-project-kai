@@ -9,175 +9,152 @@ class KaiDatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // ── 1. Tenants ───────────────────────────────────────────
-        DB::table('tenants')->updateOrInsert(
-            ['id' => 1],
-            [
-                'fullname'         => 'MARDIYAH',
-                'status_customer'  => 'Swasta',
-                'jenis_perusahaan' => 'Perorangan',
-                'brand'            => '(kosong)',
-                'created_at'       => now(),
-            ]
-        );
+        // ── Tenants ────────────────────────────────────────────
+        DB::table('tenants')->insert([
+            ['id' => 1, 'fullname' => 'PT Kargo Cepat Pantura',     'status_customer' => 'Aktif',  'jenis_perusahaan' => 'PT',         'brand' => 'KCP Logistics', 'created_at' => now()],
+            ['id' => 2, 'fullname' => 'Drs. Bambang Sudarsono',      'status_customer' => 'Aktif',  'jenis_perusahaan' => 'Perorangan', 'brand' => null,            'created_at' => now()],
+            ['id' => 3, 'fullname' => 'CV Sumber Rejeki Semarang',   'status_customer' => 'Aktif',  'jenis_perusahaan' => 'CV',         'brand' => 'Sumber Rejeki', 'created_at' => now()],
+        ]);
 
-        DB::table('tenants')->updateOrInsert(
-            ['id' => 2],
+        // ── Assets ─────────────────────────────────────────────
+        DB::table('assets')->insert([
             [
-                'fullname'         => 'ARIF KHUZAINI',
-                'status_customer'  => 'Swasta',
-                'jenis_perusahaan' => 'Perorangan',
-                'brand'            => '(kosong)',
-                'created_at'       => now(),
-            ]
-        );
-
-        // ── 2. Assets ────────────────────────────────────────────
-        DB::table('assets')->updateOrInsert(
-            ['asset_number' => '04.01.00764'],
-            [
-                'asset_block_name' => 'LAHAN BARU BLOK B PEKALONGAN',
-                'sub_title'        => 'Pekalongan Barat, Kota Pekalongan',
-                'description'      => 'Aset Lahan Komersial KAI Daop 4 Pekalongan',
-                'size_area'        => 50.00,
-                'peruntukan'       => 'Tanah',
+                'asset_number'     => 'AST-SMG-PCL-005',
+                'asset_block_name' => 'PT Kargo Cepat Pantura',
+                'size_area'        => 850.00,
+                'peruntukan'       => 'Depo Logistik & Kantor Ekspedisi',
                 'jenis_asset'      => 'Tanah',
-                'stasiun'          => 'Pekalongan',
+                'stasiun'          => 'Semarang Poncol',
                 'wilayah_asset'    => 'Daop 4 Semarang',
-                'latitude'         => -6.88620000,
-                'longitude'        => 109.67380000,
-                'images'           => json_encode([]),
+                'latitude'         => -6.96970000,
+                'longitude'        => 110.41370000,
                 'created_at'       => now(),
-            ]
-        );
-
-        // ── 3. Contracts ─────────────────────────────────────────
-        DB::table('contracts')->updateOrInsert(
-            ['contract_number' => '0005/51116/D.4/941/PK/TN/XII/2016'],
+            ],
             [
+                'asset_number'     => 'AST-TGL-GDG-002',
+                'asset_block_name' => 'Gudang Logistik Tegal Timur',
+                'size_area'        => 2462.00,
+                'peruntukan'       => 'Gudang Logistik Komersial & Pergudangan Pelabuhan',
+                'jenis_asset'      => 'Bangunan Dinas',
+                'stasiun'          => 'Tegal',
+                'wilayah_asset'    => 'Daop 4 Semarang',
+                'latitude'         => -6.87900000,
+                'longitude'        => 109.12500000,
+                'created_at'       => now(),
+            ],
+            [
+                'asset_number'     => 'AST-SMG-TWG-001',
+                'asset_block_name' => 'Eks Gudang Kaligawe',
+                'size_area'        => 2500.00,
+                'peruntukan'       => 'Pergudangan & Industri Ringan',
+                'jenis_asset'      => 'Gudang',
+                'stasiun'          => 'Semarang Tawang',
+                'wilayah_asset'    => 'Daop 4 Semarang',
+                'latitude'         => -6.95530000,
+                'longitude'        => 110.45610000,
+                'created_at'       => now(),
+            ],
+        ]);
+
+        // ── Contracts ──────────────────────────────────────────
+        DB::table('contracts')->insert([
+            [
+                'contract_number'      => 'KTR-2026-SMG-PCL-001',
                 'tenant_id'            => 1,
-                'asset_number'         => '04.01.00764',
-                'contract_date'        => '42710',
-                'jenis_kontrak'        => 'Kontrak Sewa',
+                'asset_number'         => 'AST-SMG-PCL-005',
+                'contract_date'        => '51267',
+                'jenis_kontrak'        => 'Baru',
                 'area_kontrak'         => 'Non Row',
-                'start_datetime'       => '2016-01-01',
-                'end_datetime'         => '2017-12-31',
-                'start_datetime_baru'  => '2018-01-01',
-                'end_datetime_baru'    => '2026-12-31',
-                'price'                => 2264394.00,
-                'spv'                  => 'Sales Executive Area 1 Pekalongan',
-                'asset_block_name'     => 'SEKITAR 2+1/200 LINTAS NON OPERASI - WONOPRINGGO KEL. TEGALREJO RT/RW.01/02 KEC. PEKALONGAN BARAT KOTA PEKALONGAN (5/51116/PK/TN/941)',
-                'size_area'            => 42.00,
-                'peruntukan'           => 'Tanah',
-                'keterangan'           => 'Pendapatan Sewa Tanah Non Row',
+                'start_datetime'       => '2026-01-01',
+                'end_datetime'         => '2027-12-31',
+                'start_datetime_baru'  => '2026-01-01',
+                'end_datetime_baru'    => '2027-12-31',
+                'price'                => 380000000.00,
+                'spv'                  => 'SPV Komersial Daop 4',
+                'keterangan'           => 'Aset lahan pergudangan sisi timur stasiun Poncol',
                 'created_at'           => now(),
-            ]
-        );
-
-        DB::table('contracts')->updateOrInsert(
-            ['contract_number' => '0004/51116/D.4/941/PK/TN/XI/2016'],
+            ],
             [
+                'contract_number'      => 'KTR-2026-TGL-GDG-001',
                 'tenant_id'            => 2,
-                'asset_number'         => '04.01.00764',
-                'contract_date'        => '42678',
-                'jenis_kontrak'        => 'Kontrak Sewa',
-                'area_kontrak'         => 'Daop 4 Semarang',
-                'start_datetime'       => '2016-04-01',
-                'end_datetime'         => '2018-08-31',
-                'start_datetime_baru'  => '2018-09-01',
+                'asset_number'         => 'AST-TGL-GDG-002',
+                'contract_date'        => '42617',
+                'jenis_kontrak'        => 'Perpanjangan',
+                'area_kontrak'         => 'Row',
+                'start_datetime'       => '2026-01-21',
+                'end_datetime'         => '2026-12-31',
+                'start_datetime_baru'  => '2026-01-21',
                 'end_datetime_baru'    => '2026-12-31',
-                'price'                => 1887604.00,
-                'spv'                  => 'Sales Executive Area 1 Pekalongan',
-                'asset_block_name'     => 'SEKITAR KM. 2+533 S.D KM. 3+533 KEL. PRINGREJO KEC. PEKALONGAN BARAT KOTA PEKALONGAN LINTAS NON OPERASI PEKALONGAN - WONOSOBO (4/51116/PK/TN/941)',
-                'size_area'            => 43.50,
-                'peruntukan'           => 'RUMAH TINGGAL',
-                'keterangan'           => 'RKA',
+                'price'                => 970028000.00,
+                'spv'                  => 'SPV Komersial & Non Angkutan Daop 4',
+                'keterangan'           => 'Kawasan strategis dekat pusat niaga Tegal',
                 'created_at'           => now(),
-            ]
-        );
+            ],
+        ]);
 
-        // ── 4. Contract Financials ───────────────────────────────
-        DB::table('contract_financials')->updateOrInsert(
-            ['contract_number' => '0005/51116/D.4/941/PK/TN/XII/2016'],
+        // ── Contract Financials ────────────────────────────────
+        DB::table('contract_financials')->insert([
             [
+                'id'               => 1,
+                'contract_number'  => 'KTR-2026-SMG-PCL-001',
                 'jumlah_hari'      => 730,
-                'nilai_per_hari'   => 3102.00,
+                'nilai_per_hari'   => 520547.95,
                 'awal'             => '2026-01-01',
-                'akhir'            => '2026-12-31',
+                'akhir'            => '2027-12-31',
                 'hari_2026'        => 365,
-                'nilai_2026'       => 1132197.00,
-                'nilai_backlog'    => 9063780.00,
-                'nilai_backlog2'   => 9402819.00,
-                'gl_account'       => '3421190010',
+                'nilai_2026'       => 190000000.00,
+                'nilai_backlog'    => 0.00,
+                'nilai_backlog2'   => 0.00,
+                'gl_account'       => '411101 - Sewa Tanah ROW',
                 'form_rka'         => 'RKA',
                 'tahun_rka'        => 2026,
-                'jenis_pendapatan' => 'Pendapatan Non Angkutan',
-                'persentase'       => 0.90,
-                'pencapaian'       => 0.90,
-                'ket'              => 'AKTIF',
-            ]
-        );
-
-        DB::table('contract_financials')->updateOrInsert(
-            ['contract_number' => '0004/51116/D.4/941/PK/TN/XI/2016'],
+                'jenis_pendapatan' => 'Row',
+                'persentase'       => 100.00,
+                'pencapaian'       => 75.00,
+                'ket'              => 'Berjalan normal',
+            ],
             [
-                'jumlah_hari'      => 882,
-                'nilai_per_hari'   => 2140.00,
-                'awal'             => '2026-01-01',
+                'id'               => 2,
+                'contract_number'  => 'KTR-2026-TGL-GDG-001',
+                'jumlah_hari'      => 344,
+                'nilai_per_hari'   => 2820430.23,
+                'awal'             => '2026-01-21',
                 'akhir'            => '2026-12-31',
-                'hari_2026'        => 365,
-                'nilai_2026'       => 781151.00,
-                'nilai_backlog'    => 5733437.00,
-                'nilai_backlog2'   => 6019359.00,
-                'gl_account'       => '3421190010',
+                'hari_2026'        => 344,
+                'nilai_2026'       => 970028000.00,
+                'nilai_backlog'    => 0.00,
+                'nilai_backlog2'   => 0.00,
+                'gl_account'       => '411102 - Sewa Bangunan',
                 'form_rka'         => 'RKA',
                 'tahun_rka'        => 2026,
-                'jenis_pendapatan' => 'Pendapatan Non Angkutan',
-                'persentase'       => 0.90,
-                'pencapaian'       => 0.90,
-                'ket'              => 'AKTIF',
-            ]
-        );
+                'jenis_pendapatan' => 'Non Row',
+                'persentase'       => 100.00,
+                'pencapaian'       => 60.00,
+                'ket'              => 'Perpanjangan tahun ke-2',
+            ],
+        ]);
 
-        // ── 5. Monthly Schedules ─────────────────────────────────
-        DB::table('monthly_schedules')->updateOrInsert(
-            ['contract_number' => '0005/51116/D.4/941/PK/TN/XII/2016', 'tahun' => 2026],
+        // ── Monthly Schedules ──────────────────────────────────
+        DB::table('monthly_schedules')->insert([
             [
-                'invoice'         => 'SUDAH TERBIT',
-                'januari'         => 105775.00,
-                'febuari'         => 95539.00,
-                'maret'           => 105775.00,
-                'april'           => 102363.00,
-                'mei'             => 105775.00,
-                'juni'            => 102363.00,
-                'juli'            => 105775.00,
-                'agustus'         => 105775.00,
-                'september'       => 102363.00,
-                'oktober'         => 105775.00,
-                'november'        => 102363.00,
-                'desember'        => 105775.00,
-                'jan_des'         => 1245417.00,
-            ]
-        );
-
-        DB::table('monthly_schedules')->updateOrInsert(
-            ['contract_number' => '0004/51116/D.4/941/PK/TN/XI/2016', 'tahun' => 2026],
-            [
-                'invoice'         => 'SUDAH TERBIT',
-                'januari'         => 72979.00,
-                'febuari'         => 65916.00,
-                'maret'           => 72979.00,
-                'april'           => 70625.00,
-                'mei'             => 72979.00,
-                'juni'            => 70625.00,
-                'juli'            => 72979.00,
-                'agustus'         => 72979.00,
-                'september'       => 70625.00,
-                'oktober'         => 72979.00,
-                'november'        => 70625.00,
-                'desember'        => 72979.00,
-                'jan_des'         => 859266.00,
-            ]
-        );
+                'id'              => 1,
+                'contract_number' => 'KTR-2026-TGL-GDG-001',
+                'tahun'           => 2026,
+                'invoice'         => 'INV-2026-001',
+                'januari'         => 26920637.00,
+                'febuari'         => 26920637.00,
+                'maret'           => 26920637.00,
+                'april'           => 26920637.00,
+                'mei'             => 26920637.00,
+                'juni'            => 26920637.00,
+                'juli'            => 26920637.00,
+                'agustus'         => 26920637.00,
+                'september'       => 26920637.00,
+                'oktober'         => 26920637.00,
+                'november'        => 26920637.00,
+                'desember'        => 26920637.00,
+                'jan_des'         => 323047644.00,
+            ],
+        ]);
     }
 }

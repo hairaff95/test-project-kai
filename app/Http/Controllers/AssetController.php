@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\KaiAsset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AssetController extends Controller
 {
@@ -28,7 +29,9 @@ class AssetController extends Controller
         }
 
         if ($contract) {
-            $asset = $contract->asset ?: \App\Models\KaiAsset::where('asset_number', $contract->asset_number)->first() ?: new \App\Models\KaiAsset(['asset_number' => $contract->asset_number]);
+            $asset = $contract->asset
+                ?: \App\Models\KaiAsset::where('asset_number', $contract->asset_number)->first()
+                ?: new \App\Models\KaiAsset(['asset_number' => $contract->asset_number]);
             $asset->setRelation('contract', $contract);
         } else {
             $asset = KaiAsset::with(['contract.tenant', 'contract.financial', 'contract.monthlySchedules'])
@@ -125,7 +128,7 @@ class AssetController extends Controller
             // 4. Update MonthlySchedule
             $sched = $contract->monthlySchedules->first() ?: new \App\Models\MonthlySchedule([
                 'contract_number' => $contract->contract_number,
-                'tahun' => 2026,
+                'tahun'           => 2026,
             ]);
 
             $months = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'];
@@ -188,6 +191,12 @@ class AssetController extends Controller
             $asset->save();
         }
 
+        // Invalidasi cache karena data aset/kontrak/keuangan berubah
+        Cache::forget('map_assets');
+        Cache::forget('dropdown_jenis_asset');
+        Cache::forget('dropdown_status_customer');
+        DashboardController::forgetDashboardCache();
+
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
@@ -199,7 +208,7 @@ class AssetController extends Controller
     }
 
     /**
-     * Clean and parse numeric input safely
+     * Clean and parse numeric input safely (supports "105775", "105.775", "1.245.417,00")
      */
     private function cleanNumeric($value): float
     {
@@ -212,7 +221,7 @@ class AssetController extends Controller
 
         if (substr_count($clean, '.') > 1) {
             $parts = explode('.', $clean);
-            $last = array_pop($parts);
+            $last  = array_pop($parts);
             if (strlen($last) <= 2 && !str_contains($clean, ',')) {
                 $clean = implode('', $parts) . '.' . $last;
             } else {
@@ -242,6 +251,7 @@ class AssetController extends Controller
         if ($contract) {
             $assetNumber = $contract->asset_number;
             $contract->delete();
+            // Hapus aset juga jika tidak ada kontrak lain yang mereferensikannya
             if ($assetNumber && \App\Models\KaiContract::where('asset_number', $assetNumber)->count() === 0) {
                 \App\Models\KaiAsset::where('asset_number', $assetNumber)->delete();
             }
@@ -251,6 +261,12 @@ class AssetController extends Controller
                 $asset->delete();
             }
         }
+
+        // Invalidasi cache karena aset/kontrak dihapus
+        Cache::forget('map_assets');
+        Cache::forget('dropdown_jenis_asset');
+        Cache::forget('dropdown_status_customer');
+        DashboardController::forgetDashboardCache();
 
         return redirect()->back()->with('success', 'Sukses menghapus data!');
     }

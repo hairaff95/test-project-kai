@@ -1,4 +1,4 @@
-@props(['active' => 'dashboard'])
+﻿@props(['active' => 'dashboard'])
 
 <!-- ===== TOP NAVIGATION BAR (Sticky, for all screens) ===== -->
 <header id="mainNavbar" class="sticky top-0 z-[100] w-full bg-[#F6F7F9]/95 dark:bg-[#282A2C]/95 backdrop-blur-md transition-all duration-200 border-b border-transparent">
@@ -518,7 +518,7 @@
             dropdown.classList.add('opacity-0', 'invisible', 'scale-95');
             dropdown.classList.remove('opacity-100', 'visible', 'scale-100');
         } else {
-            // Buka dropdown — catat waktu baca sekarang
+            // Buka dropdown ΓÇö catat waktu baca sekarang
             saveReadAt();
             dropdown.classList.remove('opacity-0', 'invisible', 'scale-95');
             dropdown.classList.add('opacity-100', 'visible', 'scale-100');
@@ -560,7 +560,7 @@
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">${item.asset_block_name}</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">${item.stasiun} · ${item.jenis_asset}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">${item.stasiun} ┬╖ ${item.jenis_asset}</p>
                                     <p class="text-xs text-blue-500 dark:text-blue-400 mt-0.5">${item.created_at}</p>
                                 </div>
                             </a>
@@ -576,7 +576,7 @@
             });
     }
 
-    // Polling otomatis setiap 60 detik — hanya update badge
+    // Polling otomatis setiap 60 detik ΓÇö hanya update badge
     function pollNotifications() {
         fetch('{{ route("notifications.new-assets") }}')
             .then(res => res.json())

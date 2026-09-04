@@ -1,17 +1,23 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Daftar Kontrak — KAI Tracker App</title>
+    <title>Daftar Kontrak ΓÇö KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Anti-FOUC Auto Theme Script (WIB 17:00 - 07:00 Auto Dark Mode) -->
-    <x-theme-script />
+    <!-- Anti-FOUC Theme Script -->
+    <script>
+        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -53,8 +59,8 @@
 
                 <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
                     {{-- Search No Kontrak --}}
-                    <div class="relative w-full sm:w-[185px] h-[32px] sm:h-[38px]">
-                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                        <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                         <input
                             type="text"
                             name="search"
@@ -267,16 +273,36 @@
                         <tbody class="divide-y divide-gray-100 dark:divide-white/10 text-[13px] text-gray-800 dark:text-gray-200">
                             @forelse($contracts as $item)
                                 <tr class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors">
-                                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $item->clean_contract_number ?? $item->contract_number ?? '-' }}</td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->contract_date ?? '-' }}</td>
-                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">{{ $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono' }}</td>
-                                    <td class="py-3.5 px-4 text-gray-600 dark:text-[#9AA0A6] whitespace-nowrap font-normal">{{ $item->tenant?->brand ?: '(kosong)' }}</td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 font-normal max-w-[280px] leading-snug">{{ $item->asset_block_name ?? $item->asset?->asset_block_name ?? '-' }}</td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->asset?->jenis_asset ?? 'Tanah' }}</td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->start_datetime ? $item->start_datetime->format('d/m/y') : '01/01/16' }}</td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->end_datetime_baru ? $item->end_datetime_baru->format('d/m/y') : ($item->end_datetime ? $item->end_datetime->format('d/m/y') : '-') }}</td>
-                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-normal whitespace-nowrap">{{ is_numeric($item->price) ? number_format((float)$item->price, 0, ',', '.') : ($item->price_formatted ?? '2.264.394') }}</td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->tenant?->status_customer ?? 'Swasta' }}</td>
+                                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">
+                                        {{ $item->contract_number ?? '-' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $item->contract_date ?? '-' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">
+                                        {{ $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-600 dark:text-[#9AA0A6] whitespace-nowrap font-normal">
+                                        {{ $item->tenant?->brand ?: '(kosong)' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 font-normal max-w-[280px] leading-snug">
+                                        {{ $item->asset_block_name ?? $item->asset?->asset_block_name ?? '-' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $item->asset?->jenis_asset ?? 'Tanah' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $item->start_datetime ? $item->start_datetime->format('d/m/y') : '01/01/16' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $item->end_datetime_baru ? $item->end_datetime_baru->format('d/m/y') : ($item->end_datetime ? $item->end_datetime->format('d/m/y') : '-') }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-normal whitespace-nowrap">
+                                        {{ is_numeric($item->price) ? number_format((float)$item->price, 0, ',', '.') : ($item->price_formatted ?? '2.264.394') }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
+                                        {{ $item->tenant?->status_customer ?? 'Swasta' }}
+                                    </td>
                                     <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
                                              data-contract="{{ $item->contract_number }}">
@@ -433,7 +459,7 @@
                 document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
             };
 
-            // Tombol Filter — baru submit form
+            // Tombol Filter ΓÇö baru submit form
             const btnFilterContracts = document.getElementById('btn-filter-contracts');
             if (btnFilterContracts) {
                 btnFilterContracts.addEventListener('click', function () {
