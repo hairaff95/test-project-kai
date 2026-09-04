@@ -156,12 +156,13 @@ class DashboardController extends Controller
             ['name' => 'Iklan / Lainnya',     'color' => '#00C49F', 'sub' => 'iklan'],
         ];
 
-        $totalRevenue = (float) (ContractFinancial::sum('nilai_2026') ?: 1);
+        $rawTotalRevenue = (float) ContractFinancial::sum('nilai_2026');
+        $totalRevenue = $rawTotalRevenue > 0 ? $rawTotalRevenue : 1.0;
         $revenueBreakdown = [];
 
         foreach ($revenueCategories as $cat) {
             $catSum = (float) ContractFinancial::where('jenis_pendapatan', 'like', "%{$cat['sub']}%")->sum('nilai_2026');
-            $pct = round(($catSum / $totalRevenue) * 100);
+            $pct = $rawTotalRevenue > 0 ? round(($catSum / $totalRevenue) * 100) : 0;
 
             // Hitung rata-rata persentase pencapaian riil dari database
             $rawPct = (float) ContractFinancial::where('jenis_pendapatan', 'like', "%{$cat['sub']}%")->avg('persentase');
