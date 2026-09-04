@@ -46,10 +46,10 @@ class JatuhTempoController extends Controller
 
         // Dropdown options — di-cache 1 jam karena jarang berubah
         $statusCustomerOptions = Cache::remember('dropdown_status_customer', 3600, fn () =>
-            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer')
+            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer')->toArray()
         );
         $jenisAssetOptions = Cache::remember('dropdown_jenis_asset', 3600, fn () =>
-            KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->where('jenis_asset', '!=', '')->pluck('jenis_asset')
+            KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->where('jenis_asset', '!=', '')->pluck('jenis_asset')->toArray()
         );
 
         return view('jatuh-tempo.index', compact('contracts', 'statusCustomerOptions', 'jenisAssetOptions'));

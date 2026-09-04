@@ -65,10 +65,10 @@ class ContractController extends Controller
 
         // Ambil opsi unik untuk dropdown — di-cache 1 jam karena jarang berubah
         $jenisAssetOptions     = Cache::remember('dropdown_jenis_asset', 3600, fn () =>
-            KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')
+            KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->where('jenis_asset', '!=', '')->pluck('jenis_asset')->toArray()
         );
         $statusCustomerOptions = Cache::remember('dropdown_status_customer', 3600, fn () =>
-            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')
+            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer')->toArray()
         );
 
         return view('contracts.index', compact('contracts', 'jenisAssetOptions', 'statusCustomerOptions'));
@@ -77,16 +77,16 @@ class ContractController extends Controller
     public function create()
     {
         $jenisAssetOptions      = Cache::remember('dropdown_jenis_asset', 3600, fn () =>
-            KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->pluck('jenis_asset')
+            KaiAsset::select('jenis_asset')->distinct()->whereNotNull('jenis_asset')->where('jenis_asset', '!=', '')->pluck('jenis_asset')->toArray()
         );
         $statusCustomerOptions  = Cache::remember('dropdown_status_customer', 3600, fn () =>
-            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->pluck('status_customer')
+            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer')->toArray()
         );
         $stasiunOptions         = Cache::remember('dropdown_stasiun', 3600, fn () =>
-            KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->pluck('stasiun')
+            KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->where('stasiun', '!=', '')->pluck('stasiun')->toArray()
         );
         $jenisPendapatanOptions = Cache::remember('dropdown_jenis_pendapatan', 3600, fn () =>
-            ContractFinancial::select('jenis_pendapatan')->distinct()->whereNotNull('jenis_pendapatan')->pluck('jenis_pendapatan')
+            ContractFinancial::select('jenis_pendapatan')->distinct()->whereNotNull('jenis_pendapatan')->where('jenis_pendapatan', '!=', '')->pluck('jenis_pendapatan')->toArray()
         );
 
         return view('contracts.create', compact('jenisAssetOptions', 'statusCustomerOptions', 'stasiunOptions', 'jenisPendapatanOptions'));

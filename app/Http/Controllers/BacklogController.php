@@ -75,7 +75,7 @@ class BacklogController extends Controller
         })->toArray();
 
         $statusCustomerOptions = Cache::remember('dropdown_status_customer', 3600, fn () =>
-            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer')
+            Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer')->toArray()
         );
 
         return view('backlog.index', compact('items', 'contracts', 'statusCustomerOptions'));
