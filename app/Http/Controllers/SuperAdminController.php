@@ -157,12 +157,13 @@ class SuperAdminController extends Controller
         $resetRequest->update([
             'status'         => 'approved',
             'otp_code'       => $otp,
-            'otp_expires_at' => now()->addMinute(),
+            'otp_expires_at' => now()->addMinutes(PasswordResetRequest::OTP_SESSION_LIFETIME_MINS),
             'approved_at'    => now(),
         ]);
 
         // Invalidasi cache polling user ybs agar status langsung diperbarui
         Cache::forget("poll_status_user_{$resetRequest->user_id}");
+        self::forgetSettingsCache();
 
         try {
             Mail::to($resetRequest->user->email)->send(new OtpMail($resetRequest->user, $otp, $resetRequest));
@@ -185,6 +186,7 @@ class SuperAdminController extends Controller
 
         // Invalidasi cache polling user ybs
         Cache::forget("poll_status_user_{$resetRequest->user_id}");
+        self::forgetSettingsCache();
 
         return redirect()->route('settings.index', ['tab' => 'persetujuan-sandi'])
             ->with('success', 'Sukses menolak permintaan reset kata sandi.');

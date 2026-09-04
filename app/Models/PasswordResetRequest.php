@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PasswordResetRequest extends Model
 {
     // ── Konstanta siklus ──────────────────────────────────────────────────────
-    const TEMP_PASSWORD_DELAY_SECONDS  = 60;   // Kirim temp password setelah 1 menit pending
+    const TEMP_PASSWORD_DELAY_SECONDS  = 120;  // Kirim temp password setelah 2 menit pending jika belum di-approve/reject
     const TEMP_PASSWORD_LIFETIME_MINS  = 2;    // Temp password berlaku 2 menit
     const OTP_SESSION_LIFETIME_MINS    = 2;    // Session OTP setelah approve berlaku 2 menit
     const MAX_REQUESTS_PER_CYCLE       = 3;    // Maks 3 request sebelum di-block
@@ -85,9 +85,9 @@ class PasswordResetRequest extends Model
 
     /**
      * Apakah sudah waktunya kirim temp password:
-     * - Belum pernah kirim: cek apakah request sudah pending > 1 menit
-     * - Sudah pernah kirim: hanya kirim lagi jika admin submit request BARU
-     *   (ini dikontrol dari luar — shouldSendTempPassword hanya untuk request pertama)
+     * - Status pending
+     * - Belum pernah kirim temp password pada request ini
+     * - Request sudah pending >= TEMP_PASSWORD_DELAY_SECONDS (2 menit)
      */
     public function shouldSendTempPassword(): bool
     {
@@ -95,13 +95,10 @@ class PasswordResetRequest extends Model
             return false;
         }
 
-        // Hanya kirim sekali per request (per baris DB).
-        // Jika sudah pernah kirim, tidak kirim lagi kecuali admin buat request baru.
         if ($this->temp_password_sent_at !== null) {
             return false;
         }
 
-        // Kirim jika sudah pending > 1 menit dan belum pernah kirim
         return $this->created_at->diffInSeconds(now()) >= self::TEMP_PASSWORD_DELAY_SECONDS;
     }
 
@@ -109,7 +106,6 @@ class PasswordResetRequest extends Model
 
     /**
      * Apakah user sedang di-block (request_count >= MAX di request ini)?
-     * Block berlaku selama request ini masih pending dan sudah mencapai batas.
      */
     public function isBlocked(): bool
     {
@@ -126,49 +122,13 @@ class PasswordResetRequest extends Model
     }
 
     /**
-     * Apakah user boleh membuat request baru (untuk siklus baru)?
-     * Boleh jika tidak ada request pending/approved yang sedang aktif,
-     * atau request aktif sudah expired/rejected/completed.
-     */
-    public static function canUserSubmitNewRequest(int $userId): bool
-    {
-        $active = self::where('user_id', $userId)
-            ->whereIn('status', ['pending', 'approved'])
-            ->latest()
-            ->first();
-
-        // Tidak ada request aktif → boleh submit
-        if (!$active) {
-            return true;
-        }
-
-        // Ada request approved yang masih berlaku → tidak boleh submit baru
-        if ($active->status === 'approved' && $active->isOtpValid()) {
-            return false;
-        }
-
-        // Ada request pending yang sudah di-block → tidak boleh submit baru (harus tunggu approve/reject)
-        if ($active->isPending() && $active->isBlocked()) {
-            return false;
-        }
-
-        // Ada request pending yang belum di-block → tidak perlu submit baru, masih bisa diproses
-        if ($active->isPending() && !$active->isBlocked()) {
-            return false;
-        }
-
-        return false;
-    }
-
-    /**
      * Ambil request aktif milik user (pending atau approved).
-     * Jika expired/rejected/completed, return null.
      */
     public static function getActiveRequest(int $userId): ?self
     {
         return self::where('user_id', $userId)
             ->whereIn('status', ['pending', 'approved'])
-            ->latest()
+            ->latest('id')
             ->first();
     }
 }

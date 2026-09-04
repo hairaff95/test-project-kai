@@ -376,81 +376,96 @@
                         </div>
                     </div>
 
-                    {{-- Cards List of Reset Password Requests per Figma --}}
+                    {{-- Cards List of Reset Password Requests --}}
                     <div class="space-y-4" id="requests-list-container">
                         @forelse($requests as $req)
-                        <div class="approval-card-item rounded-xl sm:rounded-2xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition hover:border-gray-300 dark:hover:border-white/20 shadow-2xs {{ $req->isPending() && $req->isBlocked() ? 'border-red-300 dark:border-red-800/60' : '' }}" id="req-card-{{ $req->id }}" data-timestamp="{{ $req->created_at->toISOString() }}">
-                            {{-- Profile & Info --}}
-                            <div class="flex items-center gap-3 sm:gap-4">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
-                                    <x-icon name="profile-circle" class="w-5 h-5 sm:w-6 sm:h-6" />
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                                        <h4 class="text-sm font-semibold text-gray-900 dark:text-white leading-tight truncate">{{ $req->user->name ?? '-' }}</h4>
-                                        @if($req->isPending() && $req->isBlocked())
-                                            <span class="inline-flex items-center gap-1 text-[10px] font-semibold bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 px-2 py-0.5 rounded-full">
-                                                <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-                                                <span>Terblokir ({{ $req->request_count }}/{{ \App\Models\PasswordResetRequest::MAX_REQUESTS_PER_CYCLE }}x)</span>
-                                            </span>
-                                        @elseif($req->isPending())
-                                            <span class="text-[10px] font-medium bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-800 px-2 py-0.5 rounded-full">Request ke-{{ $req->request_count }}/{{ \App\Models\PasswordResetRequest::MAX_REQUESTS_PER_CYCLE }}</span>
-                                        @endif
-                                        <span class="sm:hidden text-[10px] font-medium text-gray-500 dark:text-[#9AA0A6] bg-gray-100/80 dark:bg-[#2D3034] px-2 py-0.5 rounded-full">{{ $req->created_at->format('d/m/Y H:i') }} WIB</span>
+                            <div class="approval-card-item rounded-xl sm:rounded-2xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition hover:border-gray-300 dark:hover:border-white/20 shadow-2xs" id="req-card-{{ $req->id }}" data-timestamp="{{ $req->created_at->toISOString() }}">
+                                {{-- Profile & Info Header --}}
+                                <div class="flex items-center gap-3 sm:gap-4">
+                                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
+                                        <x-icon name="profile-circle" class="w-5 h-5 sm:w-6 sm:h-6" />
                                     </div>
-                                    <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate">{{ $req->user->email ?? '-' }}</p>
-                                    @if($req->isPending() && $req->isBlocked())
-                                        <p class="text-[10px] text-red-500 dark:text-red-400 mt-0.5">Admin ini tidak bisa mengajukan request baru sampai disetujui/ditolak.</p>
-                                    @elseif($req->isPending() && $req->temp_password_sent_at)
-                                        <p class="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">Password sementara dikirim {{ $req->temp_password_sent_at->diffForHumans() }}
-                                            @if($req->isTempPasswordValid()) — masih berlaku @else — sudah kedaluwarsa @endif
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                                            <h4 class="text-sm font-bold sm:font-semibold text-gray-900 dark:text-white leading-tight truncate">
+                                                {{ $req->user->name ?? 'Admin #' . $req->user_id }}
+                                            </h4>
+                                            <span class="sm:hidden text-[10px] font-medium text-gray-500 dark:text-[#9AA0A6] bg-gray-100/80 dark:bg-[#2D3034] px-2 py-0.5 rounded-full">
+                                                {{ $req->created_at->format('d/m/Y \at H.i A') }}
+                                            </span>
+                                            @if($req->request_count > 1)
+                                                <span class="text-[10px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded-full">
+                                                    Request ke-{{ $req->request_count }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate">
+                                            {{ $req->user->email ?? '-' }}
                                         </p>
+                                    </div>
+                                </div>
+
+                                {{-- Actions & Timestamp on Desktop --}}
+                                <div class="flex items-center gap-2 sm:gap-6 justify-between sm:justify-end pt-1 sm:pt-0 border-t border-gray-100 dark:border-white/10 sm:border-t-0">
+                                    <span class="hidden sm:inline-block text-xs text-gray-500 dark:text-[#9AA0A6]">
+                                        {{ $req->created_at->format('d/m/Y \at H.i A') }}
+                                    </span>
+
+                                    @if($req->status === 'pending')
+                                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                                            <form action="{{ route('reset-requests.reject', $req->id) }}" method="POST" class="inline flex-1 sm:flex-none">
+                                                @csrf
+                                                <button
+                                                    type="submit"
+                                                    class="w-full sm:w-auto min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] border border-red-200 dark:border-red-900/40 bg-red-50/80 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-xs font-semibold text-red-600 dark:text-red-400 transition cursor-pointer"
+                                                >
+                                                    <span class="text-sm leading-none font-bold">✕</span>
+                                                    <span>Tolak</span>
+                                                </button>
+                                            </form>
+
+                                            <form action="{{ route('reset-requests.approve', $req->id) }}" method="POST" class="inline flex-1 sm:flex-none">
+                                                @csrf
+                                                <button
+                                                    type="submit"
+                                                    class="w-full sm:w-auto min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
+                                                >
+                                                    <span class="text-sm leading-none font-bold">✓</span>
+                                                    <span>Setuju</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @elseif($req->status === 'approved')
+                                        <span class="px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
+                                            ✓ Disetujui
+                                        </span>
+                                    @elseif($req->status === 'rejected')
+                                        <span class="px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 text-xs font-semibold">
+                                            ✕ Ditolak
+                                        </span>
+                                    @elseif($req->status === 'auto_reset')
+                                        <span class="px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 text-xs font-semibold">
+                                            ⚡ Password Sementara Dikirim
+                                        </span>
+                                    @else
+                                        <span class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs font-semibold">
+                                            {{ ucfirst($req->status) }}
+                                        </span>
                                     @endif
                                 </div>
                             </div>
-
-                            {{-- Actions & Timestamp --}}
-                            <div class="flex items-center gap-2 sm:gap-6 justify-between sm:justify-end pt-1 sm:pt-0 border-t border-gray-100 dark:border-white/10 sm:border-t-0">
-                                <span class="hidden sm:inline-block text-xs text-gray-500 dark:text-[#9AA0A6]">{{ $req->created_at->format('d/m/Y H:i') }} WIB</span>
-                                @if($req->status === 'pending')
-                                <div class="flex items-center gap-2 w-full sm:w-auto">
-                                    <form method="POST" action="{{ route('reset-requests.reject', $req) }}" class="flex-1 sm:flex-none">
-                                        @csrf
-                                        <button type="submit" class="w-full min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] border border-red-200 dark:border-red-900/40 bg-red-50/80 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-xs font-semibold text-red-600 dark:text-red-400 transition cursor-pointer">
-                                            <x-icon name="close" class="w-3.5 h-3.5" />
-                                            <span>Tolak</span>
-                                        </button>
-                                    </form>
-                                    <form method="POST" action="{{ route('reset-requests.approve', $req) }}" class="flex-1 sm:flex-none">
-                                        @csrf
-                                        <button type="submit" class="w-full min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-semibold text-white shadow-xs transition cursor-pointer">
-                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                                            <span>Setuju</span>
-                                        </button>
-                                    </form>
-                                </div>
-                                @else
-                                <span class="text-xs font-medium px-3 py-1 rounded-full
-                                    {{ $req->status === 'approved' ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800' : '' }}
-                                    {{ $req->status === 'rejected' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800' : '' }}
-                                    {{ in_array($req->status, ['completed','auto_reset']) ? 'bg-gray-100 dark:bg-[#2D3034] text-gray-500 dark:text-[#9AA0A6] border border-gray-200 dark:border-white/10' : '' }}
-                                ">
-                                    {{ match($req->status) {
-                                        'approved'   => 'Disetujui',
-                                        'rejected'   => 'Ditolak',
-                                        'completed'  => 'Selesai',
-                                        'auto_reset' => 'Auto Reset',
-                                        default      => ucfirst($req->status),
-                                    } }}
-                                </span>
-                                @endif
-                            </div>
-                        </div>
                         @empty
-                        <div class="py-10 text-center text-sm text-gray-400 dark:text-[#9AA0A6]">
-                            Tidak ada permintaan reset sandi saat ini.
-                        </div>
+                            <div class="text-center py-12 text-gray-400 dark:text-[#9AA0A6]">
+                                <x-icon name="icon-mail" class="w-10 h-10 mx-auto mb-2 opacity-50" />
+                                <p class="text-sm font-medium">Belum ada permintaan reset kata sandi</p>
+                            </div>
                         @endforelse
+
+                        @if($requests->hasPages())
+                            <div class="pt-4">
+                                {{ $requests->links() }}
+                            </div>
+                        @endif
                     </div>
 
                 </div>
@@ -1362,6 +1377,11 @@
                 c.style.display = (!query || text.includes(query)) ? '' : 'none';
             });
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlTab = new URLSearchParams(window.location.search).get('tab') || "{{ $activeTab ?? 'profil' }}";
+            switchSuperTab(urlTab === 'profil-saya' ? 'profil' : urlTab);
+        });
     </script>
 
 <x-temp-password-guard />
