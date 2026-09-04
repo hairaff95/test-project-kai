@@ -107,36 +107,23 @@ test-project-kai/
 ### 1. Clone & Install Dependensi
 
 ```bash
-# Clone repository (jika dari git)
 git clone <url-repository>
 cd test-project-kai
 
-# Install dependensi PHP
 composer install
-
-# Install dependensi JavaScript
 npm install
 ```
 
 ### 2. Konfigurasi Environment
 
 ```bash
-# Salin file environment
 cp .env.example .env
-
-# Generate application key
 php artisan key:generate
 ```
 
-Edit file `.env` sesuai kebutuhan, terutama konfigurasi database:
+Edit `.env` sesuai kebutuhan:
 
-**Menggunakan SQLite (default):**
-```env
-DB_CONNECTION=sqlite
-```
-File database SQLite akan dibuat otomatis di `database/database.sqlite`.
-
-**Menggunakan MySQL:**
+**MySQL (rekomendasi):**
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -144,34 +131,34 @@ DB_PORT=3306
 DB_DATABASE=nama_database
 DB_USERNAME=root
 DB_PASSWORD=password_anda
+
+SESSION_DRIVER=database
+CACHE_STORE=database
 ```
+
+**Mail (untuk fitur OTP email — opsional untuk development):**
+```env
+MAIL_MAILER=log
+```
+> Dengan `MAIL_MAILER=log`, OTP tidak dikirim via email tapi tetap ditampilkan langsung di halaman status.
 
 ### 3. Setup Database
 
 ```bash
-# Buat file SQLite (jika menggunakan SQLite)
-touch database/database.sqlite
-
 # Jalankan migrasi
 php artisan migrate
 
-# (Opsional) Jalankan seeder untuk data awal
+# Jalankan seeder untuk data awal
 php artisan db:seed --class=DatabaseSeeder
-```
-
-Atau gunakan file SQL dump yang tersedia:
-```bash
-# Import SQL dump (untuk MySQL)
-mysql -u root -p nama_database < database/test_project_kai.sql
 ```
 
 ### 4. Build Assets Frontend
 
 ```bash
-# Development (dengan hot reload)
+# Development
 npm run dev
 
-# Production build
+# Production
 npm run build
 ```
 
@@ -181,7 +168,7 @@ npm run build
 php artisan serve
 ```
 
-Aplikasi akan berjalan di: **http://localhost:8000**
+Aplikasi berjalan di: **http://localhost:8000**
 
 ---
 

@@ -77,4 +77,18 @@ $RECYCLE.BIN/
 ###########################
 /public/css/
 /public/js/
+!/public/js/*.json
 /public/mix-manifest.json
+
+###########################
+# Kiro / AI agents
+###########################
+.agents
+.kiro
+
+###########################
+# Dokumen internal / notes
+###########################
+caching.md
+*.md
+!README.md

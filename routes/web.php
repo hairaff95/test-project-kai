@@ -1,7 +1,116 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MapController;
+use App\Http\Controllers\ContractController;
+use App\Http\Controllers\JatuhTempoController;
+use App\Http\Controllers\BacklogController;
+use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\AssetController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\PasswordResetRequestController;
+use App\Http\Controllers\ExcelImportController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+/*
+|--------------------------------------------------------------------------
+| Web Routes — KAI Tracker App
+|--------------------------------------------------------------------------
+*/
+
+// ================= AUTHENTICATION =================
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
+
+// ================= ALUR RESET PASSWORD =================
+Route::get('/ubah-kata-sandi/request', [PasswordResetRequestController::class, 'showRequestForm'])->name('password.request');
+Route::post('/ubah-kata-sandi/request', [PasswordResetRequestController::class, 'submitRequest'])->name('password.submit-request');
+Route::get('/ubah-kata-sandi/status', [PasswordResetRequestController::class, 'requestStatus'])->name('password.request.status');
+Route::get('/ubah-kata-sandi/status/poll', [PasswordResetRequestController::class, 'pollStatus'])->name('password.request.poll');
+Route::get('/ubah-kata-sandi/akses/{resetRequest}', [PasswordResetRequestController::class, 'accessViaToken'])->name('password.access-token');
+Route::get('/verifikasi-kode', [AuthController::class, 'showVerifyCode'])->name('password.verify');
+Route::post('/verifikasi-kode', [PasswordResetRequestController::class, 'verifyOtp'])->name('password.verify.post');
+Route::post('/verifikasi-kode/kirim-ulang', [PasswordResetRequestController::class, 'resendOtp'])->name('password.resend-otp');
+Route::get('/ubah-kata-sandi', [AuthController::class, 'showResetPassword'])->name('password.reset');
+
+// ================= PENGATURAN =================
+Route::get('/pengaturan', [SuperAdminController::class, 'settingsIndex'])->middleware(['auth', 'temp_pwd_expiry'])->name('settings.index');
+Route::get('/pengaturan-admin', function () {
+    return view('settings.admin', ['active' => 'pengaturan']);
+})->middleware(['auth', 'temp_pwd_expiry'])->name('settings.admin');
+Route::get('/pengaturan-superadmin', [SuperAdminController::class, 'settingsIndex'])->middleware(['auth', 'temp_pwd_expiry'])->name('settings.superadmin');
+Route::get('/superadmin/dashboard', function () {
+    return redirect()->route('settings.superadmin');
+})->name('superadmin.dashboard');
+
+// POST routes SuperAdmin
+Route::middleware(['auth', 'temp_pwd_expiry'])->group(function () {
+    Route::post('/pengaturan/admins', [SuperAdminController::class, 'adminStore'])->name('admins.store');
+    Route::post('/pengaturan/admins/{admin}/toggle', [SuperAdminController::class, 'adminToggleActive'])->name('admins.toggle');
+    Route::delete('/pengaturan/admins/{admin}', [SuperAdminController::class, 'adminDestroy'])->name('admins.destroy');
+    Route::post('/pengaturan/profile', [SuperAdminController::class, 'profileUpdate'])->name('settings.profile.update');
+    Route::post('/pengaturan/reset-requests/{resetRequest}/approve', [SuperAdminController::class, 'approveRequest'])->name('reset-requests.approve');
+    Route::post('/pengaturan/reset-requests/{resetRequest}/reject', [SuperAdminController::class, 'rejectRequest'])->name('reset-requests.reject');
 });
+
+// ================= DASHBOARD & MAP =================
+Route::get('/', [DashboardController::class, 'index'])->middleware('temp_pwd_expiry')->name('welcome');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('temp_pwd_expiry')->name('dashboard');
+Route::get('/map', [MapController::class, 'index'])->middleware('temp_pwd_expiry')->name('map');
+
+// ================= DAFTAR KONTRAK =================
+Route::get('/daftar-kontrak', [ContractController::class, 'index'])->middleware('temp_pwd_expiry')->name('contracts.index');
+Route::get('/contracts', [ContractController::class, 'index'])->middleware('temp_pwd_expiry')->name('contracts.alias');
+
+// ================= JATUH TEMPO =================
+Route::get('/jatuh-tempo', [JatuhTempoController::class, 'index'])->middleware('temp_pwd_expiry')->name('due-dates.index');
+
+// ================= BACKLOG =================
+Route::get('/backlog', [BacklogController::class, 'index'])->middleware('temp_pwd_expiry')->name('backlog.index');
+
+// ================= LAPORAN =================
+Route::get('/laporan', [LaporanController::class, 'index'])->middleware('temp_pwd_expiry')->name('laporan.index');
+Route::get('/reports', [LaporanController::class, 'index'])->middleware('temp_pwd_expiry')->name('reports.alias');
+
+// ================= DETAIL ASET =================
+Route::get('/asset/{asset_number}', [AssetController::class, 'showKai'])->middleware('temp_pwd_expiry')->name('asset.detail')->where('asset_number', '.*');
+
+// ================= AUTH PROTECTED CRUD & MUTATIONS =================
+Route::middleware(['auth', 'temp_pwd_expiry'])->group(function () {
+    // Import Excel
+    Route::post('/pengaturan/import-excel', [ExcelImportController::class, 'import'])->name('settings.import-excel');
+    Route::get('/pengaturan/download-template', [ExcelImportController::class, 'downloadTemplate'])->name('settings.download-template');
+
+    // Kontrak / Tambah Aset
+    Route::get('/daftar-kontrak/tambah', [ContractController::class, 'create'])->name('contracts.create');
+    Route::post('/daftar-kontrak', [ContractController::class, 'store'])->name('contracts.store');
+    Route::get('/daftar-kontrak/{asset_number}/edit', [ContractController::class, 'edit'])->name('contracts.edit')->where('asset_number', '.*');
+    Route::put('/daftar-kontrak/{asset_number}', [ContractController::class, 'update'])->name('contracts.update')->where('asset_number', '.*');
+    Route::get('/asset/tambah', [ContractController::class, 'create'])->name('assets.create');
+
+    // Jatuh Tempo
+    Route::get('/jatuh-tempo/{asset_number}/edit', [JatuhTempoController::class, 'edit'])->name('due-dates.edit')->where('asset_number', '.*');
+    Route::put('/jatuh-tempo/{asset_number}', [JatuhTempoController::class, 'update'])->name('due-dates.update')->where('asset_number', '.*');
+
+    // Backlog
+    Route::get('/backlog/{asset_number}/edit', [BacklogController::class, 'edit'])->name('backlog.edit')->where('asset_number', '.*');
+    Route::put('/backlog/{asset_number}', [BacklogController::class, 'update'])->name('backlog.update')->where('asset_number', '.*');
+
+    // Laporan
+    Route::get('/laporan/{asset_number}/edit', [LaporanController::class, 'edit'])->name('laporan.edit')->where('asset_number', '.*');
+    Route::put('/laporan/{asset_number}', [LaporanController::class, 'update'])->name('laporan.update')->where('asset_number', '.*');
+
+    // Detail Lanjutan Update (dari halaman detail aset)
+    Route::put('/asset/{asset_number}', [AssetController::class, 'update'])->name('assets.update')->where('asset_number', '.*');
+    Route::post('/asset/{asset_number}/edit', [AssetController::class, 'update'])->name('assets.update.post')->where('asset_number', '.*');
+
+    // Hapus Aset / Kontrak
+    Route::delete('/asset/{asset_number}', [AssetController::class, 'destroy'])->name('admin.assets.destroy')->where('asset_number', '.*');
+    Route::delete('/assets/{asset_number}', [AssetController::class, 'destroy'])->name('assets.destroy')->where('asset_number', '.*');
+});
+
+// ================= NOTIFIKASI =================
+Route::get('/api/notifications/new-assets', [NotificationController::class, 'newAssets'])->name('notifications.new-assets');
