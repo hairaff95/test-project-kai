@@ -319,18 +319,6 @@
                     <h2 class="text-xs sm:text-sm font-bold text-gray-950 dark:text-white">
                         Tambah Gambar<span class="text-red-500">*</span>
                     </h2>
-                    <div class="flex items-center gap-1.5">
-                        <button type="button" class="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#7F7F7F] dark:bg-[#383C40] text-white hover:bg-gray-600 dark:hover:bg-[#4A4E54] transition cursor-pointer shadow-xs" title="Sebelumnya">
-                            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M15 18l-6-6 6-6"/>
-                            </svg>
-                        </button>
-                        <button type="button" class="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#7F7F7F] dark:bg-[#383C40] text-white hover:bg-gray-600 dark:hover:bg-[#4A4E54] transition cursor-pointer shadow-xs" title="Selanjutnya">
-                            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 18l6-6-6-6"/>
-                            </svg>
-                        </button>
-                    </div>
                 </div>
 
                 <div class="space-y-4 text-left">
@@ -1363,6 +1351,8 @@
                 document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
             }
         });
+    </script>
+
     {{-- Global Shared Datalists --}}
     <datalist id="list_wilayah">
         <option value="Daop 4 Semarang"></option>
@@ -1375,7 +1365,5 @@
         <option value="Daop 8 Surabaya"></option>
         <option value="Daop 9 Jember"></option>
     </datalist>
-
-    <x-temp-password-guard />
 </body>
 </html>

@@ -85,20 +85,21 @@ class KaiContract extends Model
             return '-';
 
         $endCarbon = $end instanceof \Carbon\CarbonInterface ? $end : \Carbon\Carbon::parse((string) $end);
-        $diff = (int) floor(now()->diffInDays($endCarbon, false));
+        $today = now()->startOfDay();
+        $endDay = $endCarbon->copy()->startOfDay();
 
-        if ($diff < 0)
+        if ($endDay->lt($today))
             return 'Sudah berakhir';
-        if ($diff === 0)
+        if ($endDay->eq($today))
             return 'Hari ini';
 
-        $months = intdiv($diff, 30);
-        $days = $diff % 30;
+        $months = (int) $today->diffInMonths($endDay);
+        $days   = (int) $today->copy()->addMonths($months)->diffInDays($endDay);
 
         if ($months > 0) {
             return $months . ' bulan' . ($days > 0 ? ' ' . $days . ' hari' : '');
         }
-        return $diff . ' hari';
+        return $days . ' hari';
     }
 
     // Accessor: format luas area (e.g. 42 m², 43,5 m²)

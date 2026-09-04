@@ -29,6 +29,9 @@ class NotificationController extends Controller
                 'created_at'       => $asset->created_at
                     ? $asset->created_at->diffForHumans()
                     : '-',
+                'created_at_ts'    => $asset->created_at
+                    ? $asset->created_at->timestamp
+                    : 0,
                 'url'              => route('asset.detail', $asset->asset_number),
             ];
         });
