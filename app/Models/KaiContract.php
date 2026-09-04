@@ -111,4 +111,11 @@ class KaiContract extends Model
         $trimmed = rtrim(rtrim($formatted, '0'), ',');
         return $trimmed . ' m²';
     }
+
+    // Accessor: format nomor kontrak bersih tanpa suffix angka duplikat (e.g. "KL.701/IX/41/DO.4-2024 (7)" -> "KL.701/IX/41/DO.4-2024")
+    public function getCleanContractNumberAttribute(): string
+    {
+        if (!$this->contract_number) return '-';
+        return preg_replace('/\s*\(\d+\)$/', '', (string) $this->contract_number);
+    }
 }

@@ -35,7 +35,8 @@ class LaporanController extends Controller
             };
 
             return [
-                'contract_number' => $c->contract_number,
+                'contract_number' => $c->clean_contract_number ?? $c->contract_number,
+                'raw_contract_number' => $c->contract_number,
                 'asset_number'    => $c->asset_number ?? $c->contract_number ?? '-',
                 'januari'         => $sched ? $formatNum($sched->januari) : '0',
                 'februari'        => $sched ? $formatNum($sched->febuari) : '0',

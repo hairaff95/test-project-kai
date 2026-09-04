@@ -214,66 +214,26 @@
                         <tbody id="table-body-lap" class="divide-y divide-gray-100 dark:divide-white/10 text-xs sm:text-[13px] text-gray-800 dark:text-gray-200">
                             @forelse($items as $row)
                                 <tr class="lap-row-item hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors">
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['contract_number'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['asset_number'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['januari'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['februari'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['maret'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['april'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['mei'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['juni'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['juli'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['agustus'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['september'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['oktober'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['november'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['desember'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 font-semibold text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $row['jan_des'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['jenis_pendapatan'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['pencapaian'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['form_rka'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['tahun_rka'] }}
-                                    </td>
-                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $row['akun_gl'] }}
-                                    </td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['contract_number'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['asset_number'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['januari'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['februari'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['maret'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['april'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['mei'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['juni'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['juli'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['agustus'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['september'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['oktober'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['november'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $row['desember'] }}</td>
+                                    <td class="py-3.5 px-3.5 font-semibold text-gray-900 dark:text-white whitespace-nowrap">{{ $row['jan_des'] }}</td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['jenis_pendapatan'] }}</td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['pencapaian'] }}</td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['form_rka'] }}</td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['tahun_rka'] }}</td>
+                                    <td class="py-3.5 px-3.5 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $row['akun_gl'] }}</td>
                                     <td class="py-3.5 px-3.5 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
                                              data-contract="{{ $row['contract_number'] }}">

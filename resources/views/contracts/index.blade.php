@@ -267,36 +267,16 @@
                         <tbody class="divide-y divide-gray-100 dark:divide-white/10 text-[13px] text-gray-800 dark:text-gray-200">
                             @forelse($contracts as $item)
                                 <tr class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors">
-                                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $item->contract_number ?? '-' }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->contract_date ?? '-' }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">
-                                        {{ $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono' }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-600 dark:text-[#9AA0A6] whitespace-nowrap font-normal">
-                                        {{ $item->tenant?->brand ?: '(kosong)' }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 font-normal max-w-[280px] leading-snug">
-                                        {{ $item->asset_block_name ?? $item->asset?->asset_block_name ?? '-' }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->asset?->jenis_asset ?? 'Tanah' }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->start_datetime ? $item->start_datetime->format('d/m/y') : '01/01/16' }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->end_datetime_baru ? $item->end_datetime_baru->format('d/m/y') : ($item->end_datetime ? $item->end_datetime->format('d/m/y') : '-') }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-normal whitespace-nowrap">
-                                        {{ is_numeric($item->price) ? number_format((float)$item->price, 0, ',', '.') : ($item->price_formatted ?? '2.264.394') }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->tenant?->status_customer ?? 'Swasta' }}
-                                    </td>
+                                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $item->clean_contract_number ?? $item->contract_number ?? '-' }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->contract_date ?? '-' }}</td>
+                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">{{ $item->tenant?->fullname ?? $item->tenant?->name ?? 'Drs. Bambang Sudarsono' }}</td>
+                                    <td class="py-3.5 px-4 text-gray-600 dark:text-[#9AA0A6] whitespace-nowrap font-normal">{{ $item->tenant?->brand ?: '(kosong)' }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 font-normal max-w-[280px] leading-snug">{{ $item->asset_block_name ?? $item->asset?->asset_block_name ?? '-' }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->asset?->jenis_asset ?? 'Tanah' }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->start_datetime ? $item->start_datetime->format('d/m/y') : '01/01/16' }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->end_datetime_baru ? $item->end_datetime_baru->format('d/m/y') : ($item->end_datetime ? $item->end_datetime->format('d/m/y') : '-') }}</td>
+                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-normal whitespace-nowrap">{{ is_numeric($item->price) ? number_format((float)$item->price, 0, ',', '.') : ($item->price_formatted ?? '2.264.394') }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->tenant?->status_customer ?? 'Swasta' }}</td>
                                     <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
                                              data-contract="{{ $item->contract_number }}">

@@ -248,30 +248,14 @@
                                     data-jenis="{{ strtolower($jenisAset) }}"
                                     data-price="{{ (float)($item->price ?? 0) }}"
                                  >
-                                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ $item->asset_number ?? '-' }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">
-                                        {{ $penyewa }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-600 dark:text-[#9AA0A6] whitespace-nowrap font-normal">
-                                        {{ $brand }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $selesaiLama }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $selesaiBaru }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->due_days ?? '-' }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->spv ?? '-' }}
-                                    </td>
-                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">
-                                        {{ $item->keterangan ?? '-' }}
-                                    </td>
+                                    <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap">{{ $item->asset_number ?? '-' }}</td>
+                                    <td class="py-3.5 px-4 text-gray-900 dark:text-white font-medium whitespace-nowrap">{{ $penyewa }}</td>
+                                    <td class="py-3.5 px-4 text-gray-600 dark:text-[#9AA0A6] whitespace-nowrap font-normal">{{ $brand }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $selesaiLama }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $selesaiBaru }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->due_days ?? '-' }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->spv ?? '-' }}</td>
+                                    <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal">{{ $item->keterangan ?? '-' }}</td>
                                     <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                         <div class="relative inline-block text-left action-menu-wrapper"
                                              data-contract="{{ $item->contract_number }}">
