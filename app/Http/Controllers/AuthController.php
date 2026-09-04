@@ -106,21 +106,44 @@ class AuthController extends Controller
     /**
      * Show the OTP verification page.
      */
-    public function showVerifyCode()
+    public function showVerifyCode(\Illuminate\Http\Request $request)
     {
         $requestId      = session('reset_request_id');
         $sessionExpires = session('otp_session_expires_at');
         $resetRequest   = $requestId ? \App\Models\PasswordResetRequest::find($requestId) : null;
 
+        // Fallback: jika session reset_request_id belum ada, cari dari session user atau query email
+        if (!$resetRequest) {
+            $userId = auth()->id() ?? session('pending_reset_user_id');
+            if (!$userId && $request->filled('email')) {
+                $user = User::where('email', $request->input('email'))->where('is_active', true)->first();
+                $userId = $user?->id;
+            }
+            if ($userId) {
+                $resetRequest = \App\Models\PasswordResetRequest::where('user_id', $userId)
+                    ->whereIn('status', ['pending', 'approved'])
+                    ->latest()
+                    ->first();
+                if ($resetRequest) {
+                    session([
+                        'reset_request_id'       => $resetRequest->id,
+                        'otp_session_expires_at' => $resetRequest->otp_expires_at?->timestamp ?? now()->addMinutes(15)->timestamp,
+                        'pending_reset_user_id'  => $userId,
+                    ]);
+                    $sessionExpires = $resetRequest->otp_expires_at?->timestamp ?? now()->addMinutes(15)->timestamp;
+                }
+            }
+        }
+
         $sessionExpired = $sessionExpires && now()->timestamp > $sessionExpires;
 
-        // Session tidak ada sama sekali → redirect diam-diam ke form request
-        if (!$requestId) {
+        // Session / request tidak ada sama sekali → redirect ke form request
+        if (!$resetRequest) {
             return redirect()->route('password.request');
         }
 
-        // Session ada tapi expired atau OTP tidak valid → tampilkan error
-        if (!$resetRequest || $sessionExpired || !$resetRequest->isApproved() || !$resetRequest->isOtpValid()) {
+        // Session ada tapi expired
+        if ($sessionExpired) {
             session()->forget(['reset_request_id', 'otp_verified', 'pending_reset_user_id', 'otp_session_expires_at']);
             return redirect()->route('password.request')
                 ->with('error', 'Kode OTP sudah kedaluwarsa. Silakan ajukan ulang.');

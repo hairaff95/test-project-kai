@@ -10,14 +10,8 @@
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Anti-FOUC Theme Script -->
-    <script>
-        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+    <!-- Anti-FOUC Auto Theme Script (WIB 17:00 - 07:00 Auto Dark Mode) -->
+    <x-theme-script />
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -217,6 +211,33 @@
                 {{-- ------------------- TAB 3: IMPORT DATA EXCEL ------------------- --}}
                 <div id="panel-import-excel" class="hidden space-y-6">
 
+                    {{-- Alert Messages --}}
+                    @if(session('success'))
+                        <div class="flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                            <x-icon name="toast-sukses" class="w-5 h-5 shrink-0" />
+                            <span class="font-medium">{{ session('success') }}</span>
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="flex items-center gap-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                            <x-icon name="toast-gagal" class="w-5 h-5 shrink-0" />
+                            <span class="font-medium">{{ session('error') }}</span>
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                            <p class="font-semibold mb-1">Terjadi kesalahan:</p>
+                            <ul class="list-disc list-inside space-y-0.5">
+                                @foreach($errors->all() as $err)
+                                    <li>{{ $err }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+>>>>>>> Stashed changes
                     {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
                     <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
                         

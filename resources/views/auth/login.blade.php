@@ -10,14 +10,8 @@
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Anti-FOUC Theme Script -->
-    <script>
-        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+    <!-- Anti-FOUC Auto Theme Script (WIB 17:00 - 07:00 Auto Dark Mode) -->
+    <x-theme-script />
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -107,15 +101,15 @@
                             Alamat Email
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none">
-                                <x-icon name="icon-email-login" class="w-4.5 h-4.5 lg:w-5 lg:h-5" />
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 dark:text-gray-400">
+                                <x-icon name="icon-email-login" class="w-5 h-5 block shrink-0" />
                             </span>
                             <input
                                 type="text"
                                 name="login"
                                 id="email-input"
                                 placeholder="masukan alamat email"
-                                class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-2.5 sm:py-3 pl-10 lg:pl-11 pr-4 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#3285FF] focus:outline-none transition"
+                                class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-2.5 sm:py-3 pl-11 pr-4 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#3285FF] focus:outline-none transition"
                             >
                         </div>
                     </div>
@@ -126,27 +120,27 @@
                             Kata Sandi
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none">
-                                <x-icon name="icon-kunci-login" class="w-4.5 h-4.5 lg:w-5 lg:h-5" />
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 dark:text-gray-400">
+                                <x-icon name="icon-kunci-login" class="w-5 h-5 block shrink-0" />
                             </span>
                             <input
                                 type="password"
                                 name="password"
                                 id="password-input"
                                 placeholder="* * * * * * * *"
-                                class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-2.5 sm:py-3 pl-10 lg:pl-11 pr-10 lg:pr-11 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#3285FF] focus:outline-none transition"
+                                class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-2.5 sm:py-3 pl-11 pr-10 lg:pr-11 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#3285FF] focus:outline-none transition"
                             >
                             <button
                                 type="button"
                                 onclick="togglePasswordVisibility()"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer p-1"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer"
                                 title="Lihat kata sandi"
                             >
-                                <span id="icon-eye-off">
-                                    <x-icon name="icon-show-kunci-login" class="w-4.5 h-4.5 lg:w-5 lg:h-5" />
+                                <span id="icon-eye-off" class="flex items-center justify-center">
+                                    <x-icon name="icon-show-kunci-login" class="w-5 h-5" />
                                 </span>
-                                <span id="icon-eye-on" class="hidden">
-                                    <x-icon name="off-show-kunci-login" class="w-4.5 h-4.5 lg:w-5 lg:h-5" />
+                                <span id="icon-eye-on" class="hidden flex items-center justify-center">
+                                    <x-icon name="off-show-kunci-login" class="w-5 h-5" />
                                 </span>
                             </button>
                         </div>
@@ -208,8 +202,7 @@
                 }
             }
         }
-    </script>
-
+    {{-- Global Toast Notification --}}
     <x-toast />
 </body>
 </html>

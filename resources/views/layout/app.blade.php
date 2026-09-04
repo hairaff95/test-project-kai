@@ -250,6 +250,9 @@
     @endif
     @endauth
 
+    {{-- Global Toast Notification Component --}}
+    <x-toast />
+
     @stack('scripts')
 </body>
 </html>

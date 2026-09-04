@@ -236,11 +236,12 @@ class PasswordResetRequestController extends Controller
             }
         }
 
-        // Jika sudah approved, set session
-        if ($resetRequest && $resetRequest->status === 'approved') {
+        // Jika ada request aktif, set session agar ketika klik "Verifikasi Sekarang" langsung valid
+        if ($resetRequest) {
             session([
                 'reset_request_id'       => $resetRequest->id,
-                'otp_session_expires_at' => $resetRequest->otp_expires_at?->timestamp,
+                'otp_session_expires_at' => $resetRequest->otp_expires_at?->timestamp ?? now()->addMinutes(15)->timestamp,
+                'pending_reset_user_id'  => $resetRequest->user_id,
             ]);
         }
 

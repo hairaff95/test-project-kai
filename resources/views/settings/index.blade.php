@@ -11,14 +11,8 @@
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Anti-FOUC Theme Script -->
-    <script>
-        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+    <!-- Anti-FOUC Auto Theme Script (WIB 17:00 - 07:00 Auto Dark Mode) -->
+    <x-theme-script />
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -395,7 +389,10 @@
                                     <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                                         <h4 class="text-sm font-semibold text-gray-900 dark:text-white leading-tight truncate">{{ $req->user->name ?? '-' }}</h4>
                                         @if($req->isPending() && $req->isBlocked())
-                                            <span class="text-[10px] font-semibold bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 px-2 py-0.5 rounded-full">🚫 Terblokir ({{ $req->request_count }}/{{ \App\Models\PasswordResetRequest::MAX_REQUESTS_PER_CYCLE }}x)</span>
+                                            <span class="inline-flex items-center gap-1 text-[10px] font-semibold bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 px-2 py-0.5 rounded-full">
+                                                <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                                                <span>Terblokir ({{ $req->request_count }}/{{ \App\Models\PasswordResetRequest::MAX_REQUESTS_PER_CYCLE }}x)</span>
+                                            </span>
                                         @elseif($req->isPending())
                                             <span class="text-[10px] font-medium bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-800 px-2 py-0.5 rounded-full">Request ke-{{ $req->request_count }}/{{ \App\Models\PasswordResetRequest::MAX_REQUESTS_PER_CYCLE }}</span>
                                         @endif
@@ -464,12 +461,58 @@
             {{-- ------------------- TAB 4: IMPORT DATA EXCEL ------------------- --}}
             <div id="panel-import-excel" class="hidden space-y-6">
 
+                {{-- Alert Messages --}}
+                @if(session('success'))
+                    <div class="flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                        <x-icon name="toast-sukses" class="w-5 h-5 shrink-0" />
+                        <span class="font-medium">{{ session('success') }}</span>
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="flex items-center gap-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                        <x-icon name="toast-gagal" class="w-5 h-5 shrink-0" />
+                        <span class="font-medium">{{ session('error') }}</span>
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                        <p class="font-semibold mb-1">Terjadi kesalahan:</p>
+                        <ul class="list-disc list-inside space-y-0.5">
+                            @foreach($errors->all() as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
                 <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
                     
                     <h2 class="text-xl sm:text-2xl font-bold text-gray-950 dark:text-white tracking-tight">
                         Upload File Data
                     </h2>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                            <p class="font-semibold mb-1">Terjadi kesalahan:</p>
+                            <ul class="list-disc list-inside space-y-0.5">
+                                @foreach($errors->all() as $err)
+                                    <li>{{ $err }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
+                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
+                        
+                        <h2 class="text-xl sm:text-2xl font-bold text-gray-950 dark:text-white tracking-tight">
+                            Upload File Data
+                        </h2>
+>>>>>>> Stashed changes
 
                         <form id="super-excel-import-form" method="POST" action="{{ route('settings.import-excel') }}" enctype="multipart/form-data" class="space-y-6">
                             @csrf

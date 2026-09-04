@@ -33,7 +33,9 @@ Route::get('/ubah-kata-sandi/status/poll', [PasswordResetRequestController::clas
 Route::get('/ubah-kata-sandi/akses/{resetRequest}', [PasswordResetRequestController::class, 'accessViaToken'])->name('password.access-token');
 Route::get('/verifikasi-kode', [AuthController::class, 'showVerifyCode'])->name('password.verify');
 Route::post('/verifikasi-kode', [PasswordResetRequestController::class, 'verifyOtp'])->name('password.verify.post');
+Route::post('/verifikasi-kode/kirim-ulang', [PasswordResetRequestController::class, 'resendOtp'])->name('password.resend-otp');
 Route::get('/ubah-kata-sandi', [AuthController::class, 'showResetPassword'])->name('password.reset');
+Route::post('/ubah-kata-sandi', [PasswordResetRequestController::class, 'resetPassword'])->name('password.reset.post');
 
 // ================= PENGATURAN =================
 Route::get('/pengaturan', [SuperAdminController::class, 'settingsIndex'])->middleware(['auth', 'temp_pwd_expiry'])->name('settings.index');
