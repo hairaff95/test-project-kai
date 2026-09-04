@@ -21,18 +21,6 @@
 
         <main class="p-6 lg:p-8">
 
-            {{-- Flash messages --}}
-            @if(session('success'))
-                <div class="mb-6 flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl text-sm">
-                    <i data-lucide="check-circle" class="w-5 h-5 shrink-0"></i> {{ session('success') }}
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="mb-6 flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm">
-                    <i data-lucide="alert-circle" class="w-5 h-5 shrink-0"></i> {{ session('error') }}
-                </div>
-            @endif
-
             <div class="mb-6">
                 <h1 class="text-xl font-bold text-gray-900">Request Reset Password</h1>
                 <p class="text-sm text-gray-500 mt-0.5">Approve atau tolak request reset password dari admin.</p>
@@ -89,11 +77,10 @@
                                                     </button>
                                                 </form>
                                                 {{-- Reject --}}
-                                                <form action="{{ route('superadmin.reset-requests.reject', $req) }}" method="POST">
+                                                <form action="{{ route('superadmin.reset-requests.reject', $req) }}" method="POST" onsubmit="event.preventDefault(); return window.confirmDelete(this, 'Apakah Anda yakin ingin menolak permintaan reset kata sandi ini?');">
                                                     @csrf
                                                     <button type="submit"
-                                                        class="flex items-center gap-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition"
-                                                        onclick="return confirm('Tolak request ini?')">
+                                                        class="flex items-center gap-1.5 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition cursor-pointer">
                                                         <i data-lucide="x" class="w-3.5 h-3.5"></i>
                                                         Tolak
                                                     </button>
@@ -127,5 +114,6 @@
     </div>
 
     <script>document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });</script>
+    <x-toast />
 </body>
 </html>

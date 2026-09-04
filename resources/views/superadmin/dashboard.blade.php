@@ -25,20 +25,6 @@
 
         <main class="p-6 lg:p-8">
 
-            {{-- Flash messages --}}
-            @if(session('success'))
-                <div class="mb-6 flex items-center gap-3 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl text-sm font-medium">
-                    <i data-lucide="check-circle" class="w-5 h-5 text-green-600 shrink-0"></i>
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="mb-6 flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm font-medium">
-                    <i data-lucide="alert-circle" class="w-5 h-5 text-red-600 shrink-0"></i>
-                    {{ session('error') }}
-                </div>
-            @endif
-
             {{-- Page Heading --}}
             <div class="mb-8">
                 <h1 class="text-2xl font-bold text-gray-900">Selamat datang, {{ Auth::user()->name }}</h1>
@@ -120,5 +106,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
     </script>
+    <x-toast />
 </body>
 </html>

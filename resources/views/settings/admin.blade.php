@@ -10,14 +10,8 @@
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Anti-FOUC Theme Script -->
-    <script>
-        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+    <!-- Anti-FOUC Auto Theme Script (WIB 17:00 - 07:00 Auto Dark Mode) -->
+    <x-theme-script />
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -196,7 +190,7 @@
                                 onclick="switchAdminTab('profil')"
                                 class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-[8px] bg-[#E00000] hover:bg-red-700 text-xs sm:text-sm font-medium text-white transition shadow-xs cursor-pointer"
                             >
-                                <span>✕</span>
+                                <x-icon name="close" class="w-3.5 h-3.5" />
                                 <span>Batal</span>
                             </button>
 
@@ -206,7 +200,7 @@
                                 onclick="submitResetRequest()"
                                 class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-medium text-white transition shadow-xs cursor-pointer"
                             >
-                                <span>✓</span>
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                                 <span>Ajukan Perubahan Kata Sandi</span>
                             </button>
                         </div>
@@ -220,14 +214,14 @@
                     {{-- Alert Messages --}}
                     @if(session('success'))
                         <div class="flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
-                            <span class="text-base">✅</span>
+                            <x-icon name="toast-sukses" class="w-5 h-5 shrink-0" />
                             <span class="font-medium">{{ session('success') }}</span>
                         </div>
                     @endif
 
                     @if(session('error'))
                         <div class="flex items-center gap-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
-                            <span class="text-base">❌</span>
+                            <x-icon name="toast-gagal" class="w-5 h-5 shrink-0" />
                             <span class="font-medium">{{ session('error') }}</span>
                         </div>
                     @endif
@@ -241,8 +235,6 @@
                                 @endforeach
                             </ul>
                         </div>
-                    @endif
-
                     {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
                     <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
                         
@@ -353,7 +345,9 @@
             
             <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/10 pb-3">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white">Edit Informasi Profil</h3>
-                <button type="button" onclick="closeEditProfileModal()" class="text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white text-lg cursor-pointer">✕</button>
+                <button type="button" onclick="closeEditProfileModal()" class="p-1 rounded-lg text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer">
+                    <x-icon name="close" class="w-4 h-4" />
+                </button>
             </div>
 
             <form id="form-edit-profile" onsubmit="saveProfileChanges(event)" class="space-y-4">
@@ -453,6 +447,13 @@
 
             if (input.files && input.files[0]) {
                 const file = input.files[0];
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (!['xlsx', 'xls', 'csv'].includes(ext)) {
+                    if (window.showToast) window.showToast('Gagal: Format file harus .xlsx, .xls, atau .csv!', 'error');
+                    clearAdminSelectedFile();
+                    return;
+                }
+
                 nameEl.textContent = file.name;
                 const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
                 sizeEl.textContent = (sizeMb >= 1) ? `${sizeMb} MB` : `${(file.size / 1024).toFixed(1)} KB`;
@@ -463,6 +464,7 @@
                 // Progress simulation to 100%
                 percentEl.textContent = '100%';
                 barEl.style.width = '100%';
+                if (window.showToast) window.showToast('File siap diimpor: ' + file.name, 'info');
             } else {
                 container.classList.add('hidden');
             }
@@ -507,6 +509,26 @@
             });
         }
 
+        // Form Submit Handler for Excel Import
+        const adminImportForm = document.getElementById('admin-excel-import-form');
+        if (adminImportForm) {
+            adminImportForm.addEventListener('submit', (e) => {
+                const input = document.getElementById('admin-excel-file-input');
+                if (!input || !input.files || input.files.length === 0) {
+                    e.preventDefault();
+                    if (window.showToast) window.showToast('Silakan pilih file Excel terlebih dahulu!', 'warning');
+                    return;
+                }
+                const btn = document.getElementById('btn-admin-submit-import');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-70', 'cursor-not-allowed');
+                    btn.textContent = 'Mengimpor...';
+                }
+                if (window.showToast) window.showToast('Sedang memproses upload dan impor data Excel...', 'info', 6000);
+            });
+        }
+
         // Auto switch ke tab import jika ada session success atau error
         @if(session('success') || session('error') || $errors->any())
             document.addEventListener('DOMContentLoaded', () => {
@@ -530,18 +552,25 @@
             const lastName = document.getElementById('input-last-name').value.trim();
             const email = document.getElementById('input-email').value.trim();
 
+            if (!firstName || !email) {
+                if (window.showToast) window.showToast('Gagal update: Nama dan email wajib diisi!', 'error');
+                return;
+            }
+
             document.getElementById('display-first-name').textContent = firstName;
             document.getElementById('display-last-name').textContent = lastName;
             document.getElementById('display-fullname').textContent = `${firstName} ${lastName}`;
             document.getElementById('display-email').textContent = email;
 
             closeEditProfileModal();
+            if (window.showToast) window.showToast('Sukses update data terbaru!', 'success');
         }
 
         function submitResetRequest() {
-            // Frontend prototype without toast per design request
+            if (window.showToast) window.showToast('Sukses mengajukan perubahan kata sandi ke Super Admin!', 'success');
         }
     </script>
 
+<x-temp-password-guard />
 </body>
 </html>

@@ -48,8 +48,9 @@ class ExcelImportController extends Controller
                 return $this->normalizeHeaderName($h);
             }, $headerRow);
 
-            $importedCount = 0;
-            $updatedCount  = 0;
+            $importedCount  = 0;
+            $updatedCount   = 0;
+            $identicalCount = 0;
 
             DB::beginTransaction();
 
@@ -104,8 +105,8 @@ class ExcelImportController extends Controller
                 $rawBrand = $this->extractField($data, ['brand', 'merek', 'merk', 'nama_brand', 'usaha', 'nama_usaha']);
                 $brand = ($rawBrand && strtolower(trim($rawBrand)) !== 'kosong') ? $rawBrand : null;
 
-                $rawStatus = $this->extractField($data, ['status_customer', 'status_mitra', 'status_penyewa', 'status', 'kategori_customer', 'ket']);
-                $statusCustomer = ($rawStatus && strtolower(trim($rawStatus)) !== 'kosong') ? $rawStatus : 'Aktif';
+                $rawStatus = $this->extractField($data, ['status_customer', 'status_mitra', 'status_penyewa', 'status', 'kategori_customer']);
+                $statusCustomer = ($rawStatus && strtolower(trim($rawStatus)) !== 'kosong') ? $rawStatus : 'Swasta';
 
                 $rawJenisPerusahaan = $this->extractField($data, ['jenis_perusahaan', 'badan_usaha', 'bentuk_usaha', 'tipe_perusahaan']);
                 $jenisPerusahaan = ($rawJenisPerusahaan && strtolower(trim($rawJenisPerusahaan)) !== 'kosong') ? $rawJenisPerusahaan : 'Perorangan';
@@ -120,19 +121,21 @@ class ExcelImportController extends Controller
                     ]
                 );
 
-                // Selalu perbarui tenant jika ada perubahan data status/brand/jenis
-                $tenantUpdatePayload = [];
+                $tenantChanged = false;
                 if ($brand !== null && $tenant->brand !== $brand) {
-                    $tenantUpdatePayload['brand'] = $brand;
+                    $tenant->brand = $brand;
+                    $tenantChanged = true;
                 }
                 if ($statusCustomer && $tenant->status_customer !== $statusCustomer) {
-                    $tenantUpdatePayload['status_customer'] = $statusCustomer;
+                    $tenant->status_customer = $statusCustomer;
+                    $tenantChanged = true;
                 }
                 if ($jenisPerusahaan && $tenant->jenis_perusahaan !== $jenisPerusahaan) {
-                    $tenantUpdatePayload['jenis_perusahaan'] = $jenisPerusahaan;
+                    $tenant->jenis_perusahaan = $jenisPerusahaan;
+                    $tenantChanged = true;
                 }
-                if (!empty($tenantUpdatePayload)) {
-                    $tenant->update($tenantUpdatePayload);
+                if ($tenantChanged) {
+                    $tenant->save();
                 }
 
                 $tenantId = $tenant->id;
@@ -146,16 +149,16 @@ class ExcelImportController extends Controller
                     $assetBlockName = 'Lahan ' . $fullname;
                 }
 
-                $sizeArea       = $this->parseNumber($this->extractField($data, ['size_area', 'luas_area', 'luas_tanah', 'luas_bangunan', 'luas_sewa', 'area_kontrak', 'luas', 'volume'])) ?: 100.0;
+                $sizeArea = $this->parseNumber($this->extractField($data, ['size_area', 'luas_area', 'luas_tanah', 'luas_bangunan', 'luas_sewa', 'area_kontrak', 'luas', 'volume'])) ?: 100.0;
                 
                 $rawPeruntukan  = $this->extractField($data, ['peruntukan', 'penggunaan', 'kegunaan', 'tujuan_sewa', 'jenis_usaha', 'keperluan']);
-                $peruntukan     = ($rawPeruntukan && strtolower(trim($rawPeruntukan)) !== 'kosong') ? $rawPeruntukan : 'Komersial';
+                $peruntukan     = ($rawPeruntukan && strtolower(trim($rawPeruntukan)) !== 'kosong') ? $rawPeruntukan : 'Tanah';
 
                 $rawJenisAset   = $this->extractField($data, ['jenis_aset', 'jenis_asset', 'kategori_aset', 'tipe_aset', 'klasifikasi_aset']);
                 $jenisAsset     = ($rawJenisAset && strtolower(trim($rawJenisAset)) !== 'kosong') ? $rawJenisAset : 'Tanah';
 
                 $rawStasiun     = $this->extractField($data, ['stasiun', 'nama_stasiun', 'wilayah_stasiun', 'lintas']);
-                $stasiun        = ($rawStasiun && strtolower(trim($rawStasiun)) !== 'kosong') ? $rawStasiun : 'Semarang Tawang';
+                $stasiun        = ($rawStasiun && strtolower(trim($rawStasiun)) !== 'kosong') ? $rawStasiun : 'Pekalongan';
 
                 $rawWilayah     = $this->extractField($data, ['wilayah_aset', 'wilayah_asset', 'wilayah', 'daop', 'divre', 'unit']);
                 $wilayahAsset   = ($rawWilayah && strtolower(trim($rawWilayah)) !== 'kosong') ? $rawWilayah : 'Daop 4 Semarang';
@@ -191,29 +194,102 @@ class ExcelImportController extends Controller
                 }
 
                 // ── 4. KONTRAK (contracts) ────────────────────────────────
-                $contractDate = $this->parseDate($this->extractField($data, ['contract_date', 'tanggal_kontrak', 'tgl_kontrak', 'tgl_perjanjian', 'tanggal_perjanjian'])) ?: now()->format('Y-m-d');
+                $rawContractDate = $this->extractField($data, ['contract_date', 'tanggal_kontrak', 'tgl_kontrak', 'tgl_perjanjian', 'tanggal_perjanjian', 'waktu_kontrak']);
+                $contractDate    = ($rawContractDate !== null && trim((string)$rawContractDate) !== '') ? trim((string)$rawContractDate) : '42710';
                 
                 $rawJenisKontrak = $this->extractField($data, ['jenis_kontrak', 'tipe_kontrak', 'kategori_kontrak', 'status_kontrak']);
-                $jenisKontrak    = ($rawJenisKontrak && strtolower(trim($rawJenisKontrak)) !== 'kosong') ? $rawJenisKontrak : 'Baru';
+                $jenisKontrak    = ($rawJenisKontrak && strtolower(trim($rawJenisKontrak)) !== 'kosong') ? $rawJenisKontrak : 'Kontrak Sewa';
 
                 $rawAreaKontrak  = $this->extractField($data, ['area_kontrak', 'luas_kontrak', 'luas_sewa', 'wilayah_sewa']);
-                $areaKontrak     = ($rawAreaKontrak && strtolower(trim($rawAreaKontrak)) !== 'kosong') ? $rawAreaKontrak : 'Row';
+                $areaKontrak     = ($rawAreaKontrak && strtolower(trim($rawAreaKontrak)) !== 'kosong') ? $rawAreaKontrak : 'Non Row';
 
-                $startDate = $this->parseDate($this->extractField($data, ['start_datetime', 'jangka_waktu_mulai', 'awal', 'tgl_mulai', 'tanggal_mulai', 'awal_sewa', 'mulai', 'awal_kontrak'])) ?: now()->format('Y-m-d');
-                $endDate   = $this->parseDate($this->extractField($data, ['end_datetime', 'jangka_waktu_akhir', 'akhir', 'tgl_akhir', 'tanggal_akhir', 'selesai_kontrak', 'akhir_sewa', 'jatuh_tempo', 'tgl_selesai', 'akhir_kontrak', 'selesai'])) ?: now()->addYear()->format('Y-m-d');
+                $startDate = $this->parseDate($this->extractField($data, ['start_datetime', 'jangka_waktu_mulai', 'awal_sewa', 'tgl_mulai', 'tanggal_mulai', 'mulai', 'awal_kontrak'])) ?: now()->format('Y-m-d');
+                $endDate   = $this->parseDate($this->extractField($data, ['end_datetime', 'jangka_waktu_akhir', 'akhir_sewa', 'tgl_akhir', 'tanggal_akhir', 'selesai_kontrak', 'jatuh_tempo', 'tgl_selesai', 'akhir_kontrak', 'selesai'])) ?: now()->addYear()->format('Y-m-d');
 
                 $startDateBaru = $this->parseDate($this->extractField($data, ['start_datetime_baru', 'awal_baru'])) ?: $startDate;
                 $endDateBaru   = $this->parseDate($this->extractField($data, ['end_datetime_baru', 'akhir_baru', 'selesai_kontrak_baru'])) ?: $endDate;
 
-                $price      = $this->parseNumber($this->extractField($data, ['price', 'nilai_perjanjian', 'total_biaya', 'nilai_kontrak', 'harga', 'nilai_sewa', 'tarif', 'jumlah_biaya', 'total_nilai', 'nilai'])) ?: 50000000.0;
+                $price      = $this->parseNumber($this->extractField($data, ['price', 'nilai_perjanjian', 'total_biaya', 'nilai_kontrak', 'harga', 'nilai_sewa', 'tarif', 'jumlah_biaya', 'total_nilai', 'nilai'])) ?: 0.0;
                 
                 $rawSpv     = $this->extractField($data, ['spv', 'supervisor', 'pic', 'penanggung_jawab', 'sales_executive', 'pengawas']);
-                $spv        = ($rawSpv && strtolower(trim($rawSpv)) !== 'kosong') ? $rawSpv : 'Sales Executive Area';
+                $spv        = ($rawSpv && strtolower(trim($rawSpv)) !== 'kosong') ? $rawSpv : 'Sales Executive Area 1 Pekalongan';
 
-                $rawKet     = $this->extractField($data, ['keterangan', 'keterangan_pendapatan', 'ket', 'catatan', 'notes', 'deskripsi']);
-                $keterangan = ($rawKet && strtolower(trim($rawKet)) !== 'kosong') ? $rawKet : 'Kawasan aset komersial KAI';
+                $rawKet     = $this->extractField($data, ['keterangan', 'ket_kontrak', 'catatan', 'notes']);
+                $keterangan = ($rawKet && strtolower(trim($rawKet)) !== 'kosong') ? $rawKet : 'Pendapatan Sewa Tanah Non Row';
 
-                $existingContract = KaiContract::where('contract_number', $contractNumber)->first();
+                // ── 5. FINANSIAL KONTRAK (contract_financials) ────────────
+                $jumlahHari    = $this->parseNumber($this->extractField($data, ['jumlah_hari', 'hari', 'durasi_hari'])) ?: 365;
+                $nilaiPerHari  = $this->parseNumber($this->extractField($data, ['nilai_per_hari', 'nilai_perhari', 'tarif_harian'])) ?: ($price > 0 ? $price / max(1, $jumlahHari) : 0.0);
+                
+                $rawAwalFin    = $this->parseDate($this->extractField($data, ['awal', 'awal_finansial'])) ?: $startDateBaru;
+                $rawAkhirFin   = $this->parseDate($this->extractField($data, ['akhir', 'akhir_finansial'])) ?: $endDateBaru;
+                
+                $hari2026      = $this->parseNumber($this->extractField($data, ['hari_2026', 'hari2026', 'hari_tahun_berjalan'])) ?: 365;
+                $nilai2026     = $this->parseNumber($this->extractField($data, ['2_026', '2026', 'nilai_2026', 'nilai2026'])) ?: $price;
+                $nilaiBacklog  = $this->parseNumber($this->extractField($data, ['nilai_backlog', 'backlog', 'backlog_1', 'nilai_backlog_1'])) ?: 0.0;
+                $nilaiBacklog2 = $this->parseNumber($this->extractField($data, ['nilai_backlog2', 'backlog2', 'backlog_2', 'nilai_backlog_2'])) ?: 0.0;
+                
+                $rawGl         = $this->extractField($data, ['gl_acount', 'gl_account', 'akun_gl', 'no_gl', 'gl', 'rekening_gl']);
+                $glAccount     = ($rawGl && strtolower(trim($rawGl)) !== 'kosong') ? $rawGl : '3421190010';
+
+                $rawRka        = $this->extractField($data, ['form_rka', 'rka', 'kode_rka', 'no_rka']);
+                $formRka       = ($rawRka && strtolower(trim($rawRka)) !== 'kosong') ? $rawRka : 'RKA';
+
+                $tahunRka      = $this->extractField($data, ['tahun_rka', 'tahun']) ?: 2026;
+                
+                $rawPendapatan = $this->extractField($data, ['jenis_pendapatan', 'pendapatan', 'kategori_pendapatan']);
+                $jenisPendapatan = ($rawPendapatan && strtolower(trim($rawPendapatan)) !== 'kosong') ? $rawPendapatan : 'Pendapatan Non Angkutan';
+
+                $persentase    = $this->parseNumber($this->extractField($data, ['persentase_pncapaian', 'persentase', 'persentase_pencapaian', 'pencapaian'])) ?: 0.9;
+                $ketFin        = $this->extractField($data, ['ket', 'keterangan_pendapatan', 'keterangan_finansial', 'status_finansial']) ?: 'AKTIF';
+
+                // ── 6. LAPORAN BULANAN (monthly_schedules) ────────────────
+                $rawInvoice = $this->extractField($data, ['invoice', 'no_invoice', 'nomor_invoice', 'status_invoice']);
+                $invoice    = ($rawInvoice && strtolower(trim($rawInvoice)) !== 'kosong') ? $rawInvoice : 'SUDAH TERBIT';
+
+                $jan     = $this->parseNumber($this->extractField($data, ['januari', 'jan'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $feb     = $this->parseNumber($this->extractField($data, ['februari', 'febuari', 'feb'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $mar     = $this->parseNumber($this->extractField($data, ['maret', 'mar'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $apr     = $this->parseNumber($this->extractField($data, ['april', 'apr'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $mei     = $this->parseNumber($this->extractField($data, ['mei', 'may'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $jun     = $this->parseNumber($this->extractField($data, ['juni', 'jun'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $jul     = $this->parseNumber($this->extractField($data, ['juli', 'jul'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $agu     = $this->parseNumber($this->extractField($data, ['agustus', 'agu', 'aug'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $sep     = $this->parseNumber($this->extractField($data, ['september', 'sep'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $okt     = $this->parseNumber($this->extractField($data, ['oktober', 'okt', 'oct'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $nov     = $this->parseNumber($this->extractField($data, ['november', 'nov'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $des     = $this->parseNumber($this->extractField($data, ['desember', 'des', 'dec'])) ?: ($price > 0 ? $price / 12 : 0.0);
+                $janDes  = $this->parseNumber($this->extractField($data, ['jan_des', 'jan-des', 'total_jan_des', 'jan_sd_des', 'total'])) ?: ($jan + $feb + $mar + $apr + $mei + $jun + $jul + $agu + $sep + $okt + $nov + $des);
+
+                // ── 7. PERIKSA DUPLIKASI KONTRAK & PENANGANAN BLOK ASET ───
+                $existingContract = KaiContract::with(['financial', 'monthlySchedules'])
+                    ->where('contract_number', $contractNumber)
+                    ->first();
+
+                $targetContractNumber = $contractNumber;
+                $isNewContract = false;
+
+                if (!$existingContract) {
+                    $isNewContract = true;
+                } else {
+                    // Cek apakah asset_block_name berbeda
+                    $existingBlockName = trim((string)$existingContract->asset_block_name);
+                    $incomingBlockName = trim((string)$assetBlockName);
+
+                    if ($incomingBlockName !== '' && $existingBlockName !== '' && strcasecmp($existingBlockName, $incomingBlockName) !== 0) {
+                        // Kontrak sama tapi blok aset berbeda -> DITAMBAHKAN sebagai data baru (generate key unik)
+                        $counter = 2;
+                        $candidateNumber = $contractNumber . ' (' . $counter . ')';
+                        while (KaiContract::where('contract_number', $candidateNumber)->exists()) {
+                            $counter++;
+                            $candidateNumber = $contractNumber . ' (' . $counter . ')';
+                        }
+                        $targetContractNumber = $candidateNumber;
+                        $isNewContract = true;
+                        $existingContract = null;
+                    }
+                }
+
                 $contractPayload = [
                     'tenant_id'            => $tenantId,
                     'asset_number'         => $assetNumber,
@@ -226,103 +302,120 @@ class ExcelImportController extends Controller
                     'end_datetime_baru'    => $endDateBaru,
                     'price'                => $price,
                     'spv'                  => $spv,
+                    'asset_block_name'     => $assetBlockName,
+                    'size_area'            => $sizeArea,
+                    'peruntukan'           => $peruntukan,
                     'keterangan'           => $keterangan,
                 ];
 
-                if ($existingContract) {
-                    $existingContract->update($contractPayload);
-                    $updatedCount++;
-                } else {
+                $finPayload = [
+                    'jumlah_hari'      => $jumlahHari,
+                    'nilai_per_hari'   => $nilaiPerHari,
+                    'awal'             => $rawAwalFin,
+                    'akhir'            => $rawAkhirFin,
+                    'hari_2026'        => $hari2026,
+                    'nilai_2026'       => $nilai2026,
+                    'nilai_backlog'    => $nilaiBacklog,
+                    'nilai_backlog2'   => $nilaiBacklog2,
+                    'gl_account'       => $glAccount,
+                    'form_rka'         => $formRka,
+                    'tahun_rka'        => $tahunRka,
+                    'jenis_pendapatan' => $jenisPendapatan,
+                    'persentase'       => $persentase,
+                    'pencapaian'       => $persentase,
+                    'ket'              => $ketFin,
+                ];
+
+                $schedPayload = [
+                    'invoice'   => $invoice,
+                    'januari'   => $jan,
+                    'febuari'   => $feb,
+                    'maret'     => $mar,
+                    'april'     => $apr,
+                    'mei'       => $mei,
+                    'juni'      => $jun,
+                    'juli'      => $jul,
+                    'agustus'   => $agu,
+                    'september' => $sep,
+                    'oktober'   => $okt,
+                    'november'  => $nov,
+                    'desember'  => $des,
+                    'jan_des'   => $janDes,
+                ];
+
+                if ($isNewContract) {
                     KaiContract::create(array_merge([
-                        'contract_number' => $contractNumber,
+                        'contract_number' => $targetContractNumber,
                         'created_at'      => now(),
                     ], $contractPayload));
-                    $importedCount++;
-                }
 
-                // ── 5. FINANSIAL KONTRAK (contract_financials) ────────────
-                $jumlahHari    = $this->parseNumber($this->extractField($data, ['jumlah_hari', 'hari', 'durasi_hari'])) ?: 365;
-                $nilaiPerHari  = $this->parseNumber($this->extractField($data, ['nilai_per_hari', 'nilai_perhari', 'tarif_harian'])) ?: ($price / max(1, $jumlahHari));
-                $hari2026      = $this->parseNumber($this->extractField($data, ['hari_2026', 'hari2026'])) ?: 365;
-                $nilai2026     = $this->parseNumber($this->extractField($data, ['2_026', '2026', 'nilai_2026', 'nilai2026'])) ?: $price;
-                $nilaiBacklog  = $this->parseNumber($this->extractField($data, ['nilai_backlog', 'backlog', 'backlog_1', 'nilai_backlog_1'])) ?: 0.0;
-                $nilaiBacklog2 = $this->parseNumber($this->extractField($data, ['nilai_backlog2', 'backlog2', 'backlog_2', 'nilai_backlog_2'])) ?: 0.0;
-                
-                $rawGl         = $this->extractField($data, ['gl_acount', 'gl_account', 'akun_gl', 'no_gl', 'gl', 'rekening_gl']);
-                $glAccount     = ($rawGl && strtolower(trim($rawGl)) !== 'kosong') ? $rawGl : '940.281.9';
+                    ContractFinancial::create(array_merge([
+                        'contract_number' => $targetContractNumber,
+                    ], $finPayload));
 
-                $rawRka        = $this->extractField($data, ['form_rka', 'rka', 'kode_rka', 'no_rka']);
-                $formRka       = ($rawRka && strtolower(trim($rawRka)) !== 'kosong') ? $rawRka : 'RKA-2026';
-
-                $tahunRka      = $this->extractField($data, ['tahun_rka', 'tahun']) ?: 2026;
-                
-                $rawPendapatan = $this->extractField($data, ['jenis_pendapatan', 'pendapatan', 'kategori_pendapatan', 'keterangan_pendapatan']);
-                $jenisPendapatan = ($rawPendapatan && strtolower(trim($rawPendapatan)) !== 'kosong') ? $rawPendapatan : 'Pendapatan Non Angkutan';
-
-                $persentase    = $this->parseNumber($this->extractField($data, ['persentase_pncapaian', 'persentase', 'persentase_pencapaian'])) ?: 100.0;
-                $ketFin        = $this->extractField($data, ['ket', 'keterangan_pendapatan', 'keterangan']);
-
-                ContractFinancial::updateOrCreate(
-                    ['contract_number' => $contractNumber],
-                    [
-                        'jumlah_hari'      => $jumlahHari,
-                        'nilai_per_hari'   => $nilaiPerHari,
-                        'awal'             => $startDateBaru ?: $startDate,
-                        'akhir'            => $endDateBaru ?: $endDate,
-                        'hari_2026'        => $hari2026,
-                        'nilai_2026'       => $nilai2026,
-                        'nilai_backlog'    => $nilaiBacklog,
-                        'nilai_backlog2'   => $nilaiBacklog2,
-                        'gl_account'       => $glAccount,
-                        'form_rka'         => $formRka,
-                        'tahun_rka'        => $tahunRka,
-                        'jenis_pendapatan' => $jenisPendapatan,
-                        'persentase'       => $persentase,
-                        'pencapaian'       => $persentase,
-                        'ket'              => $ketFin,
-                    ]
-                );
-
-                // ── 6. LAPORAN BULANAN (monthly_schedules) ────────────────
-                $rawInvoice = $this->extractField($data, ['invoice', 'no_invoice', 'nomor_invoice', 'status_invoice']);
-                $invoice    = ($rawInvoice && strtolower(trim($rawInvoice)) !== 'kosong') ? $rawInvoice : 'SUDAH TERBIT';
-
-                $jan     = $this->parseNumber($this->extractField($data, ['januari', 'jan'])) ?: ($price / 12);
-                $feb     = $this->parseNumber($this->extractField($data, ['februari', 'febuari', 'feb'])) ?: ($price / 12);
-                $mar     = $this->parseNumber($this->extractField($data, ['maret', 'mar'])) ?: ($price / 12);
-                $apr     = $this->parseNumber($this->extractField($data, ['april', 'apr'])) ?: ($price / 12);
-                $mei     = $this->parseNumber($this->extractField($data, ['mei', 'may'])) ?: ($price / 12);
-                $jun     = $this->parseNumber($this->extractField($data, ['juni', 'jun'])) ?: ($price / 12);
-                $jul     = $this->parseNumber($this->extractField($data, ['juli', 'jul'])) ?: ($price / 12);
-                $agu     = $this->parseNumber($this->extractField($data, ['agustus', 'agu', 'aug'])) ?: ($price / 12);
-                $sep     = $this->parseNumber($this->extractField($data, ['september', 'sep'])) ?: ($price / 12);
-                $okt     = $this->parseNumber($this->extractField($data, ['oktober', 'okt', 'oct'])) ?: ($price / 12);
-                $nov     = $this->parseNumber($this->extractField($data, ['november', 'nov'])) ?: ($price / 12);
-                $des     = $this->parseNumber($this->extractField($data, ['desember', 'des', 'dec'])) ?: ($price / 12);
-                $janDes  = $this->parseNumber($this->extractField($data, ['jan_des', 'jan-des', 'total_jan_des', 'jan_sd_des', 'total'])) ?: $price;
-
-                MonthlySchedule::updateOrCreate(
-                    [
-                        'contract_number' => $contractNumber,
+                    MonthlySchedule::create(array_merge([
+                        'contract_number' => $targetContractNumber,
                         'tahun'           => $tahunRka ?: 2026,
-                    ],
-                    [
-                        'invoice'   => $invoice,
-                        'januari'   => $jan,
-                        'febuari'   => $feb,
-                        'maret'     => $mar,
-                        'april'     => $apr,
-                        'mei'       => $mei,
-                        'juni'      => $jun,
-                        'juli'      => $jul,
-                        'agustus'   => $agu,
-                        'september' => $sep,
-                        'oktober'   => $okt,
-                        'november'  => $nov,
-                        'desember'  => $des,
-                        'jan_des'   => $janDes,
-                    ]
-                );
+                    ], $schedPayload));
+
+                    $importedCount++;
+                } else {
+                    // Cek apakah ada perubahan data dari data yang sudah ada
+                    $hasContractChanges = false;
+                    foreach ($contractPayload as $k => $v) {
+                        if (!$this->isFieldEqual($existingContract->$k, $v)) {
+                            $hasContractChanges = true;
+                            break;
+                        }
+                    }
+
+                    $existingFin = $existingContract->financial;
+                    $hasFinChanges = false;
+                    if (!$existingFin) {
+                        $hasFinChanges = true;
+                    } else {
+                        foreach ($finPayload as $k => $v) {
+                            if (!$this->isFieldEqual($existingFin->$k, $v)) {
+                                $hasFinChanges = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    $existingSched = $existingContract->monthlySchedules->first();
+                    $hasSchedChanges = false;
+                    if (!$existingSched) {
+                        $hasSchedChanges = true;
+                    } else {
+                        foreach ($schedPayload as $k => $v) {
+                            if (!$this->isFieldEqual($existingSched->$k, $v)) {
+                                $hasSchedChanges = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if ($hasContractChanges || $hasFinChanges || $hasSchedChanges || $tenantChanged) {
+                        $existingContract->update($contractPayload);
+
+                        ContractFinancial::updateOrCreate(
+                            ['contract_number' => $targetContractNumber],
+                            $finPayload
+                        );
+
+                        MonthlySchedule::updateOrCreate(
+                            [
+                                'contract_number' => $targetContractNumber,
+                                'tahun'           => $tahunRka ?: 2026,
+                            ],
+                            $schedPayload
+                        );
+
+                        $updatedCount++;
+                    } else {
+                        $identicalCount++;
+                    }
+                }
             }
 
             DB::commit();
@@ -335,7 +428,25 @@ class ExcelImportController extends Controller
             Cache::forget('dropdown_jenis_pendapatan');
             DashboardController::forgetDashboardCache();
 
-            return back()->with('success', "Berhasil mengimpor data! ({$importedCount} data baru ditambahkan, {$updatedCount} data diperbarui)");
+            // Format Pesan Toast Sesuai Hasil Import
+            if ($importedCount === 0 && $updatedCount === 0 && $identicalCount > 0) {
+                return back()->with('warning', "Tidak ada data yang diperbarui. {$identicalCount} data memiliki kesamaan dan tidak terupdate karena isinya sama persis.");
+            }
+
+            $toastParts = [];
+            if ($importedCount > 0) {
+                $toastParts[] = "berhasil menambahkan {$importedCount} data";
+            }
+            if ($updatedCount > 0) {
+                $toastParts[] = "data diperbarui sebanyak {$updatedCount}";
+            }
+
+            $successMsg = implode(', ', $toastParts);
+            if ($identicalCount > 0) {
+                $successMsg .= ". ({$identicalCount} data dilewati karena isinya sama persis)";
+            }
+
+            return back()->with('success', $successMsg);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -627,6 +738,26 @@ class ExcelImportController extends Controller
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    private function isFieldEqual($val1, $val2): bool
+    {
+        if ($val1 instanceof \DateTimeInterface) {
+            $val1 = $val1->format('Y-m-d');
+        }
+        if ($val2 instanceof \DateTimeInterface) {
+            $val2 = $val2->format('Y-m-d');
+        }
+
+        if ($val1 === null && $val2 === null) return true;
+        if ($val1 === '' && $val2 === '') return true;
+        if (($val1 === null && $val2 === '') || ($val1 === '' && $val2 === null)) return true;
+
+        if (is_numeric($val1) && is_numeric($val2)) {
+            return abs((float)$val1 - (float)$val2) < 0.0001;
+        }
+
+        return trim((string)$val1) === trim((string)$val2);
     }
 
     private function resolveCoordinates(?float $lat, ?float $lng, ?string $stasiun, ?string $wilayah, int $rowIndex): array

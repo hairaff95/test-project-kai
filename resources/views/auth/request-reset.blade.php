@@ -1,21 +1,17 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Request Reset Password — KAI Tracker App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Reset Kata Sandi — KAI Tracker App</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Anti-FOUC Theme Script -->
-    <script>
-        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+    <!-- Anti-FOUC Auto Theme Script (WIB 17:00 - 07:00 Auto Dark Mode) -->
+    <x-theme-script />
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -25,89 +21,64 @@
     <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] } } } }</script>
 </head>
 
-<body class="min-h-screen bg-white dark:bg-[#1F2123] font-sans antialiased text-gray-900 dark:text-white flex flex-col justify-center items-center px-4 py-12 transition-colors duration-200">
+<body class="min-h-screen bg-white dark:bg-[#1F2123] font-sans antialiased text-gray-900 dark:text-white selection:bg-blue-100 selection:text-[#0066FF] flex flex-col justify-center items-center px-4 py-8 sm:py-12 transition-colors duration-200">
 
-    <div class="w-full max-w-[420px]">
+    <div class="w-full max-w-[360px] sm:max-w-[380px]">
 
-        {{-- Logo --}}
-        <div class="text-center mb-8 flex items-center justify-center gap-1.5">
-            <x-icon name="kai-logo" class="h-[19px] sm:h-5 lg:h-[24px] w-auto shrink-0" />
-            <p class="text-gray-900 dark:text-white font-bold italic text-lg">Tracker<span class="text-[#0066FF] dark:text-[#3B82F6]">App</span></p>
-        </div>
-
-        {{-- Flash messages --}}
-        @if(session('success'))
-            <div class="mb-5 flex items-center gap-3 bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 px-4 py-3 rounded-xl text-sm">
-                ✅ {{ session('success') }}
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="mb-5 flex items-center gap-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-4 py-3 rounded-xl text-sm">
-                ❌ {{ session('error') }}
-            </div>
-        @endif
-        @if($errors->any())
-            <div class="mb-5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-4 py-3 rounded-xl text-sm">
-                {{ $errors->first() }}
-            </div>
-        @endif
-
-        {{-- Heading --}}
-        <h1 class="text-3xl font-bold text-gray-950 dark:text-white tracking-tight mb-2">
-            Reset Password
+        {{-- Heading 'Reset Kata Sandi' --}}
+        <h1 class="text-2xl sm:text-[28px] font-bold text-gray-950 dark:text-white tracking-tight mb-2 sm:mb-2.5">
+            Reset Kata Sandi
         </h1>
-        <p class="text-sm text-gray-500 dark:text-[#9AA0A6] leading-relaxed mb-8">
-            Masukkan email yang terdaftar. Request akan dikirim ke Super Admin untuk disetujui.
+
+        {{-- Subtitle --}}
+        <p class="text-xs sm:text-sm text-gray-500 dark:text-[#9AA0A6] font-normal leading-relaxed mb-4 sm:mb-6">
+            Masukkan email yang terhubung dengan akun Anda, dan kami akan mengirimkan email berisi petunjuk untuk mengatur ulang kata sandi.
         </p>
 
-        {{-- Form input email --}}
-        <form method="POST" action="{{ route('password.submit-request') }}" class="space-y-5">
+        {{-- Form Kirim Permintaan --}}
+        <form method="POST" action="{{ route('password.submit-request') }}" class="space-y-3 sm:space-y-4 lg:space-y-5">
             @csrf
 
+            {{-- Alamat Email --}}
             <div>
-                <label for="email" class="block text-xs font-semibold text-gray-700 dark:text-white mb-2">
+                <label for="email-input" class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5 lg:mb-2">
                     Alamat Email
                 </label>
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    value="{{ old('email') }}"
-                    placeholder="masukkan email yang terdaftar"
-                    autofocus
-                    class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-3 px-4 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] dark:focus:border-[#3B82F6] focus:outline-none transition @error('email') border-red-400 @enderror"
-                >
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 dark:text-gray-400">
+                        <x-icon name="icon-email-login" class="w-5 h-5 block shrink-0" />
+                    </span>
+                    <input
+                        type="email"
+                        name="email"
+                        id="email-input"
+                        value="{{ old('email') }}"
+                        placeholder="Masukan email yang terdaftar"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#282A2C] py-2.5 sm:py-3 pl-11 pr-4 text-xs sm:text-sm text-gray-800 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#3285FF] focus:outline-none transition @error('email') border-red-400 @enderror"
+                        required
+                        autofocus
+                    >
+                </div>
                 @error('email')
-                    <p class="mt-1.5 text-xs text-red-500">{{ $message }}</p>
+                    <p class="mt-1.5 text-xs text-red-500 font-medium">{{ $message }}</p>
                 @enderror
             </div>
 
-            {{-- Info alur --}}
-            <div class="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/60 rounded-xl p-4 text-xs text-blue-800 dark:text-blue-200">
-                <p class="font-semibold mb-1.5 text-blue-900 dark:text-blue-300">Informasi Proses:</p>
-                <ol class="list-decimal pl-4 space-y-1 text-blue-700 dark:text-blue-300/90">
-                    <li>Masukkan email → request dikirim ke Super Admin</li>
-                    <li>Super Admin menyetujui → kode OTP dikirim ke email Anda</li>
-                    <li>Masukkan OTP → atur password baru</li>
-                    <li>Jika tidak direspon 24 jam → password sementara otomatis dikirim</li>
-                </ol>
-            </div>
-
-            <div class="pt-1">
-                <button type="submit"
-                    class="w-full rounded-xl bg-[#0066FF] hover:bg-blue-700 py-3.5 text-xs sm:text-sm font-semibold text-white transition shadow-sm cursor-pointer">
-                    Kirim Request Reset Password
+            {{-- Submit Button --}}
+            <div class="pt-1.5 sm:pt-2">
+                <button
+                    type="submit"
+                    class="w-full rounded-lg bg-[#0066FF] hover:bg-blue-700 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-white transition active:scale-98 cursor-pointer flex items-center justify-center tracking-wide"
+                >
+                    Kirim Permintaan
                 </button>
             </div>
         </form>
 
-        <div class="mt-5 text-center">
-            <a href="{{ route('login') }}" class="text-xs text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white transition">
-                &larr; Kembali ke halaman Masuk
-            </a>
-        </div>
-
     </div>
+
+    {{-- Global Toast Notification --}}
+    <x-toast />
 
 </body>
 </html>
