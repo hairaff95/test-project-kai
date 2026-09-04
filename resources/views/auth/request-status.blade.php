@@ -35,57 +35,22 @@
             Status Permintaan
         </h1>
 
-        {{-- Flash messages --}}
-        @if(session('success'))
-            <div class="mb-4 flex items-start gap-2.5 bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 px-4 py-3 rounded-xl text-xs sm:text-sm">
-                <span class="mt-0.5">✅</span>
-                <span>{{ session('success') }}</span>
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="mb-4 flex items-start gap-2.5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-4 py-3 rounded-xl text-xs sm:text-sm">
-                <span class="mt-0.5">❌</span>
-                <span>{{ session('error') }}</span>
-            </div>
-        @endif
+
 
         @if($resetRequest)
 
             {{-- ── STATUS: PENDING ─────────────────────────────────────────── --}}
             @if($resetRequest->status === 'pending')
                 @php
-                    $isBlocked      = $resetRequest->isBlocked();
-                    $remaining      = $resetRequest->remainingRequests();
-                    $maxReq         = \App\Models\PasswordResetRequest::MAX_REQUESTS_PER_CYCLE;
-                    $currentReq     = $resetRequest->request_count;
-                    $tempSent       = $resetRequest->temp_password_sent_at !== null;
-                    $waitingForTemp = !$tempSent && $resetRequest->created_at->diffInSeconds(now()) < \App\Models\PasswordResetRequest::TEMP_PASSWORD_DELAY_SECONDS;
+                    $isBlocked = $resetRequest->isBlocked();
                 @endphp
 
-                {{-- Subtitle dinamis --}}
+                {{-- Subtitle --}}
                 <p class="text-xs sm:text-sm text-gray-500 dark:text-[#9AA0A6] font-normal leading-relaxed mb-5 sm:mb-6">
-                    @if($isBlocked)
-                        Anda telah mencapai batas maksimal request. Tunggu Super Admin memproses request terakhir Anda.
-                    @elseif($tempSent && $resetRequest->isTempPasswordValid())
-                        ✅ Password sementara telah dikirim ke email Anda — berlaku <strong>2 menit</strong> sejak pengiriman.
-                    @elseif($canRequestNew)
-                        Password sementara sudah kedaluwarsa. Ajukan request baru untuk mendapatkan password baru.
-                    @else
-                        Permintaan Anda sedang dalam antrian. Super Admin akan mereview dan menyetujui permintaan ini.
-                    @endif
+                    Permintaan Anda sedang dalam antrian. Super Admin akan mereview dan menyetujui permintaan ini.
                 </p>
 
-                {{-- Countdown timer (hanya tampil jika masih menunggu temp password) --}}
-                @if($waitingForTemp && !$isBlocked)
-                    <div id="countdown-box" class="flex items-center justify-between bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/50 rounded-xl px-4 py-3 mb-4">
-                        <p class="text-xs text-blue-600 dark:text-blue-300">Password sementara dikirim dalam:</p>
-                        <p id="countdown-timer" class="text-lg font-bold text-[#0066FF] dark:text-[#3B82F6] font-mono">--:--</p>
-                    </div>
-                @elseif(!$tempSent && !$isBlocked && !$waitingForTemp)
-                    <div class="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/50 rounded-xl px-4 py-3 mb-4 text-center">
-                        <p class="text-xs text-blue-600 dark:text-blue-300">🔄 Mengirim password sementara ke email Anda...</p>
-                    </div>
-                @endif
+
 
                 {{-- Tombol aksi --}}
                 @if($isBlocked)
@@ -170,35 +135,9 @@
     {{-- Global Toast Notification --}}
     <x-toast />
 
-    {{-- Scripts: countdown + auto-polling --}}
+    {{-- Scripts: auto-polling --}}
     @if(isset($resetRequest) && $resetRequest && $resetRequest->status === 'pending')
     <script>
-        // ── Countdown timer ke pengiriman temp password ──────────────────
-        @php
-            $targetTs = $resetRequest->created_at->timestamp + \App\Models\PasswordResetRequest::TEMP_PASSWORD_DELAY_SECONDS;
-        @endphp
-
-        const countdownTarget = {{ $targetTs }};
-        const countdownEl     = document.getElementById('countdown-timer');
-
-        function updateCountdown() {
-            if (!countdownEl) return;
-            const now       = Math.floor(Date.now() / 1000);
-            const remaining = countdownTarget - now;
-            if (remaining <= 0) {
-                window.location.reload();
-                return;
-            }
-            const m = Math.floor(remaining / 60).toString().padStart(2, '0');
-            const s = (remaining % 60).toString().padStart(2, '0');
-            countdownEl.textContent = m + ':' + s;
-        }
-
-        if (countdownEl) {
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-        }
-
         // ── Auto-polling setiap 10 detik ────────────────────────────────
         const pollInterval = setInterval(async () => {
             try {
