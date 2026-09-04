@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
     {
         // Super Admin
         User::updateOrCreate(
-            ['email' => 'superadmin@kai-daop4.id'],
+            ['email' => 'lekleksyahrul@gmail.com'],
             [
                 'username' => 'superadmin',
                 'name' => 'Super Admin KAI Daop 4',

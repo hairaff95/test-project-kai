@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="130" height="130" fill="none">
+  <!-- Back Top Flap (Open) -->
+  <path d="M22 62 L80 16 L138 62" fill="#2878F5" stroke="#000000" stroke-width="2.8" stroke-linejoin="round"/>
+
+  <!-- Paper / Card inside -->
+  <rect x="36" y="24" width="88" height="76" rx="8" fill="#FFFFFF" stroke="#000000" stroke-width="2.8"/>
+
+  <!-- Green Circle with Checkmark -->
+  <circle cx="80" cy="62" r="23" fill="#00D26A"/>
+  <path d="M70 62 L77 69 L90 56" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Main Envelope Body -->
+  <rect x="20" y="60" width="120" height="82" fill="#2878F5" stroke="#000000" stroke-width="2.8"/>
+
+  <!-- Envelope Front Triangular Flap (V Shape) -->
+  <path d="M20 60 L80 108 L140 60" fill="#2878F5" stroke="#000000" stroke-width="2.8" stroke-linejoin="round"/>
+
+  <!-- Bottom Diagonals -->
+  <line x1="20" y1="142" x2="68" y2="98" stroke="#000000" stroke-width="2.8" stroke-linecap="round"/>
+  <line x1="140" y1="142" x2="92" y2="98" stroke="#000000" stroke-width="2.8" stroke-linecap="round"/>
+</svg>

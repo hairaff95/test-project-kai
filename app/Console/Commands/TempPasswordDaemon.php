@@ -67,7 +67,7 @@ class TempPasswordDaemon extends Command
 
             // Generate password sementara baru
             $plainPassword = Str::random(12);
-            $expiresAt     = now()->addMinute(); // berlaku 1 menit
+            $expiresAt     = now()->addMinutes(PasswordResetRequest::TEMP_PASSWORD_LIFETIME_MINS); // berlaku 2 menit
 
             $resetRequest->update([
                 'temp_password'            => $plainPassword,
