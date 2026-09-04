@@ -1,10 +1,10 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Daftar Kontrak Î“Ã‡Ã¶ KAI Tracker App</title>
+    <title>Daftar Kontrak GÇö KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
 
     <!-- Anti-FOUC Theme Script -->
     <script>
-        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (localStorage.getItem('kai_theme') === 'dark') {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
@@ -459,7 +459,7 @@
                 document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
             };
 
-            // Tombol Filter Î“Ã‡Ã¶ baru submit form
+            // Tombol Filter GÇö baru submit form
             const btnFilterContracts = document.getElementById('btn-filter-contracts');
             if (btnFilterContracts) {
                 btnFilterContracts.addEventListener('click', function () {

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -10,7 +10,7 @@
 
     <!-- Anti-FOUC Theme Script -->
     <script>
-        if (localStorage.getItem('kai_theme') === 'dark' || (!('kai_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (localStorage.getItem('kai_theme') === 'dark') {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
@@ -317,7 +317,7 @@
                         </div>
 
                         <div>
-                            <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Total JanΓÇôDes</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Total JanG��Des</p>
                             <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $monthly && $monthly->jan_des !== null ? 'Rp ' . number_format($monthly->jan_des, 0, ',', '.') : '-' }}</p>
                         </div>
 
@@ -917,7 +917,7 @@
 
                     <div>
                         <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
-                            Total JanΓÇôDes<span class="text-red-500">*</span>
+                            Total JanG��Des<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
@@ -1066,7 +1066,7 @@
 
     {{-- POPUP CALENDAR PICKER (Dropdown Style) --}}
     <div id="popup-calendar-picker" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
-        {{-- Header: < [Jun Γî╡] [2025 Γî╡] > --}}
+        {{-- Header: < [Jun G�] [2025 G�] > --}}
         <div class="flex items-center justify-between mb-3.5">
             <button type="button" onclick="calPrevMonth()" class="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>

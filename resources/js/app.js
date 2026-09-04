@@ -2,34 +2,12 @@ import Sortable from 'sortablejs';
 window.Sortable = Sortable;
 
 // ===========================
-// CENTRALIZED AUTO DARK MODE CONTROLLER (WIB 17:00 - 07:00)
+// THEME CONTROLLER (localStorage only)
 // ===========================
-function isWibNightTime() {
-    try {
-        const now = new Date();
-        const wibTimeStr = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Jakarta', hour12: false, hour: '2-digit', minute: '2-digit' });
-        const [h, m] = wibTimeStr.split(':').map(Number);
-        const mins = h * 60 + m;
-        // Jam 17:00 WIB (1020 mins) s/d Jam 07:00 WIB (420 mins)
-        return mins >= 17 * 60 || mins < 7 * 60;
-    } catch (e) {
-        const now = new Date();
-        const wibHours = (now.getUTCHours() + 7) % 24;
-        return wibHours >= 17 || wibHours < 7;
-    }
-}
 
 function initTheme() {
-    let isDark;
-
-    if (localStorage.getItem('kai_theme') === 'dark') {
-        isDark = true;
-    } else if (localStorage.getItem('kai_theme') === 'light') {
-        isDark = false;
-    } else {
-        // Belum pernah di-set manual → pakai jam WIB
-        isDark = isWibNightTime();
-    }
+    // Default: light jika belum pernah di-set
+    const isDark = localStorage.getItem('kai_theme') === 'dark';
 
     if (isDark) {
         document.documentElement.classList.add('dark');
@@ -41,7 +19,6 @@ function initTheme() {
 
 function toggleTheme() {
     const isDark = document.documentElement.classList.toggle('dark');
-    // Simpan pilihan user ke localStorage
     localStorage.setItem('kai_theme', isDark ? 'dark' : 'light');
     updateThemeIcons(isDark);
 }
@@ -65,7 +42,6 @@ function updateThemeIcons(isDark) {
 window.toggleTheme = toggleTheme;
 window.initTheme = initTheme;
 window.updateThemeIcons = updateThemeIcons;
-window.isWibNightTime = isWibNightTime;
 
 // Initialize when script loads and on DOM ready
 if (document.readyState === 'loading') {
