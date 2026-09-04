@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Jatuh Tempo GÇö KAI Tracker App</title>
+    <title>Jatuh Tempo Gï¿½ï¿½ KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -54,54 +54,41 @@
         {{-- Unified Card Container: Filter Bar + Bordered Table --}}
         <div class="rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-gray-100/90 dark:border-white/10 flex flex-col gap-2.5 sm:gap-4 transition-colors">
 
-            {{-- Filter Bar --}}
-            <div class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2.5 w-full">
+            {{-- Filter Bar Form --}}
+            <form id="filter-form" method="GET" action="{{ route('due-dates.index') }}" class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2.5 w-full">
 
                 <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
                     {{-- Search --}}
                     <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
                         <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                         <input
-                            id="search-jt"
                             type="text"
+                            name="search"
+                            id="input-search"
+                            value="{{ request('search') }}"
                             placeholder="Search"
                             class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
                         >
                     </div>
 
-                    {{-- Filter Nama Penyewa --}}
-                    @php
-                        $tenantList = $contracts->map(fn($c) => $c->tenant?->fullname)->filter()->unique()->values();
-                    @endphp
-                    <div class="relative custom-filter-container">
-                        <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span id="label-penyewa" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Nama Penyewa</span>
-                            <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
-                        </button>
-                        <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="filterJtClient('penyewa', '', 'Nama Penyewa')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
-                                <span>Semua Penyewa</span>
-                            </button>
-                            @foreach($tenantList as $t)
-                                <button type="button" onclick="filterJtClient('penyewa', '{{ $t }}', '{{ $t }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
-                                    <span>{{ $t }}</span>
-                                </button>
-                            @endforeach
-                        </div>
-                    </div>
+                    {{-- Hidden Inputs for form submit --}}
+                    <input type="hidden" name="status_customer" id="input-status-customer" value="{{ request('status_customer') }}">
+                    <input type="hidden" name="jenis_asset" id="input-jenis-asset" value="{{ request('jenis_asset') }}">
 
                     {{-- Filter Status Customer (Dinamis dari database) --}}
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span id="label-status" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Status Customer</span>
+                            <span id="label-status-customer" class="{{ request('status_customer') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
+                                {{ request('status_customer') ?: 'Status Customer' }}
+                            </span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="filterJtClient('status', '', 'Status Customer')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="selectFilterOption('status_customer', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('status_customer') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Status</span>
                             </button>
                             @foreach($statusCustomerOptions as $opt)
-                                <button type="button" onclick="filterJtClient('status', '{{ $opt }}', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                <button type="button" onclick="selectFilterOption('status_customer', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('status_customer') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                     <span>{{ $opt }}</span>
                                 </button>
                             @endforeach
@@ -111,15 +98,17 @@
                     {{-- Filter Semua Jenis Aset --}}
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span id="label-jenis" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Semua Jenis Aset</span>
+                            <span id="label-jenis-asset" class="{{ request('jenis_asset') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
+                                {{ request('jenis_asset') ?: 'Semua Jenis Aset' }}
+                            </span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="filterJtClient('jenis', '', 'Semua Jenis Aset')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="selectFilterOption('jenis_asset', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('jenis_asset') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Jenis Aset</span>
                             </button>
                             @foreach($jenisAssetOptions as $opt)
-                                <button type="button" onclick="filterJtClient('jenis', '{{ $opt }}', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                <button type="button" onclick="selectFilterOption('jenis_asset', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('jenis_asset') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                     <span>{{ $opt }}</span>
                                 </button>
                             @endforeach
@@ -138,7 +127,7 @@
                 </a>
                 @endauth
 
-            </div>
+            </form>
 
             {{-- MOBILE CARD LIST VIEW (sm:hidden - Mobile-First Card View) --}}
             <div id="mobile-cards-jt" class="sm:hidden flex flex-col gap-3">
@@ -394,57 +383,24 @@
                 }
             });
 
-            // Filter state GÇö hanya disimpan, belum diapply sampai klik tombol Filter
-            const filters = { search: '', penyewa: '', status: '', jenis: '' };
-            const pending = { search: '', penyewa: '', status: '', jenis: '' };
-
-            const labelMap = {
-                penyewa: { el: 'label-penyewa', default: 'Nama Penyewa' },
-                status:  { el: 'label-status',  default: 'Status Customer' },
-                jenis:   { el: 'label-jenis',   default: 'Semua Jenis Aset' },
+            const filterLabelMap = {
+                status_customer: { id: 'label-status-customer', default: 'Status Customer' },
+                jenis_asset:     { id: 'label-jenis-asset',     default: 'Semua Jenis Aset' },
             };
 
-            function applyFilters() {
-                // Commit pending ke filters
-                Object.assign(filters, pending);
+            window.selectFilterOption = function (name, value) {
+                const inputMap = {
+                    status_customer: 'input-status-customer',
+                    jenis_asset:     'input-jenis-asset',
+                };
+                const el = document.getElementById(inputMap[name]);
+                if (el) el.value = value;
 
-                const rows = document.querySelectorAll('tbody tr[data-penyewa]');
-                rows.forEach(row => {
-                    const text = row.innerText.toLowerCase();
-                    row.style.display = checkMatch(text, row.dataset) ? '' : 'none';
-                });
-
-                const cards = document.querySelectorAll('.jt-card-item');
-                cards.forEach(card => {
-                    const text = card.innerText.toLowerCase();
-                    card.style.display = checkMatch(text, card.dataset) ? '' : 'none';
-                });
-
-                // Update tombol Filter: tampilkan jumlah hasil
-                const visibleRows  = document.querySelectorAll('tbody tr[data-penyewa]:not([style*="none"])').length;
-                const hasFilter    = Object.values(filters).some(v => v !== '');
-                const btnFilter    = document.getElementById('btn-filter-jt');
-                const btnSpan      = btnFilter?.querySelector('span');
-                if (btnSpan) btnSpan.textContent = hasFilter ? 'Filter (' + visibleRows + ')' : 'Filter';
-            }
-
-            function checkMatch(text, dataset) {
-                if (filters.search && !text.includes(filters.search.toLowerCase())) return false;
-                if (filters.penyewa && !(dataset.penyewa || '').toLowerCase().includes(filters.penyewa.toLowerCase())) return false;
-                if (filters.status && (dataset.status || '').toLowerCase() !== filters.status.toLowerCase()) return false;
-                if (filters.jenis  && (dataset.jenis  || '').toLowerCase() !== filters.jenis.toLowerCase())  return false;
-                return true;
-            }
-
-            // Simpan pilihan ke pending + update label, tapi BELUM apply
-            window.filterJtClient = function (type, value, label) {
-                pending[type] = value;
-
-                const cfg = labelMap[type];
+                const cfg = filterLabelMap[name];
                 if (cfg) {
-                    const lbl = document.getElementById(cfg.el);
+                    const lbl = document.getElementById(cfg.id);
                     if (lbl) {
-                        lbl.textContent = value ? label : cfg.default;
+                        lbl.textContent = value || cfg.default;
                         lbl.className = value
                             ? 'text-black dark:text-white font-semibold text-[11px] sm:text-xs select-none'
                             : 'text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none';
@@ -456,24 +412,12 @@
                 document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
             };
 
-            // Tombol Filter GÇö apply semua filter sekaligus
+            // Tombol Filter -> submit form
             const btnFilter = document.getElementById('btn-filter-jt');
             if (btnFilter) {
                 btnFilter.addEventListener('click', function () {
-                    pending.search = (document.getElementById('search-jt')?.value || '');
-                    applyFilters();
-                });
-            }
-
-            // Search: simpan ke pending saja, tidak langsung filter
-            const searchInput = document.getElementById('search-jt');
-            if (searchInput) {
-                searchInput.addEventListener('input', function () {
-                    pending.search = this.value;
-                });
-                // Enter di search langsung apply
-                searchInput.addEventListener('keydown', function (e) {
-                    if (e.key === 'Enter') { pending.search = this.value; applyFilters(); }
+                    const filterForm = document.getElementById('filter-form');
+                    if (filterForm) filterForm.submit();
                 });
             }
 

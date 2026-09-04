@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Daftar Kontrak GÇö KAI Tracker App</title>
+    <title>Daftar Kontrak Gï¿½ï¿½ KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -459,7 +459,7 @@
                 document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
             };
 
-            // Tombol Filter GÇö baru submit form
+            // Tombol Filter Gï¿½ï¿½ baru submit form
             const btnFilterContracts = document.getElementById('btn-filter-contracts');
             if (btnFilterContracts) {
                 btnFilterContracts.addEventListener('click', function () {

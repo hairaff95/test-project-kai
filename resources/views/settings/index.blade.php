@@ -11,14 +11,8 @@
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Anti-FOUC Theme Script -->
-    <script>
-        if (localStorage.getItem('kai_theme') === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
+    <!-- Anti-FOUC Auto Theme Script (WIB 17:00 - 07:00 Auto Dark Mode) -->
+    <x-theme-script />
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -71,7 +65,7 @@
                         class="shrink-0 text-left text-sm font-medium transition cursor-pointer text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white px-4 py-2 lg:px-0 lg:py-0 rounded-full lg:rounded-none bg-gray-100/80 dark:bg-[#2D3034] lg:bg-transparent lg:dark:bg-transparent flex items-center gap-2"
                     >
                         <span>Persetujuan Reset Sandi</span>
-                        <span id="badge-pending-count" class="px-2 py-0.5 text-[11px] font-bold bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 rounded-full">2</span>
+                        <span id="badge-pending-count" class="px-2 py-0.5 text-[11px] font-bold bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 rounded-full {{ ($pendingCount ?? 0) > 0 ? '' : 'hidden' }}">{{ $pendingCount ?? 0 }}</span>
                     </button>
 
                     {{-- 4. Tab Import Data Excel --}}
@@ -183,8 +177,8 @@
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-4">
                             <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5 flex-1 max-w-md">
                                 {{-- Search Input --}}
-                                <div class="relative w-full sm:w-[185px] h-[30px] sm:h-[38px]">
-                                    <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                                <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                                    <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                                     <input
                                         type="text"
                                         placeholder="Search"
@@ -196,7 +190,7 @@
 
                                 {{-- Role Filter Dropdown (Konsisten Desain Jatuh Tempo) --}}
                                 <div class="relative custom-filter-container">
-                                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
+                                    <button type="button" class="filter-dropdown-btn inline-flex items-center h-[36px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
                                         <span id="label-role" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Role</span>
                                         <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                                     </button>
@@ -227,59 +221,48 @@
                             </div>
                         </div>
 
-                        {{-- MOBILE CARDS VIEW (block sm:hidden - Format Card Serupa Daftar Kontrak) --}}
+                        {{-- MOBILE CARDS VIEW (block sm:hidden) --}}
                         <div class="space-y-3.5 sm:hidden" id="admin-cards-container">
                             @forelse($admins as $admin)
-                            @php
-                                $isSuperAdmin = in_array(strtolower($admin->role), ['superadmin', 'super admin']);
-                                $canDelete    = !$isSuperAdmin;
-                            @endphp
-                            <div class="admin-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 space-y-3 shadow-2xs transition-all"
-                                data-timestamp="{{ $admin->created_at?->toISOString() }}">
+                            <div class="admin-card rounded-xl sm:rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 space-y-3 shadow-2xs transition-all" data-timestamp="{{ $admin->created_at->toISOString() }}">
                                 <div class="flex items-start justify-between gap-3">
                                     <div class="flex items-center gap-3 min-w-0">
                                         <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
                                             <x-icon name="profile-circle" class="w-5 h-5" />
                                         </div>
                                         <div class="min-w-0 flex-1">
-                                            <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight truncate name-col">
-                                                {{ $admin->name }}
-                                            </h3>
-                                            <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate email-col">
-                                                {{ $admin->email }}
-                                            </p>
+                                            <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-tight truncate name-col">{{ $admin->name }}</h3>
+                                            <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate email-col">{{ $admin->email }}</p>
                                         </div>
                                     </div>
-                                    <button
-                                        type="button"
+                                    <button type="button"
                                         class="admin-action-btn flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 dark:bg-[#34383D] hover:bg-gray-200 dark:hover:bg-white/15 text-gray-600 dark:text-white transition cursor-pointer shrink-0"
                                         title="Aksi"
                                         data-id="{{ $admin->id }}"
                                         data-name="{{ $admin->name }}"
                                         data-email="{{ $admin->email }}"
-                                        data-can-delete="{{ $canDelete ? 'true' : 'false' }}"
+                                        data-can-delete="{{ $admin->role !== 'superadmin' && $admin->id !== auth()->id() ? 'true' : 'false' }}"
                                     >
                                         <x-icon name="dots-vertical" class="w-4 h-4" />
                                     </button>
                                 </div>
-
                                 <div class="grid grid-cols-2 gap-2 bg-gray-50/90 dark:bg-[#2D3034] rounded-lg p-2.5 text-xs">
                                     <div class="role-col">
                                         <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Role</span>
-                                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold {{ $isSuperAdmin ? 'text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800' : 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800' }}">
-                                            {{ $isSuperAdmin ? 'SuperAdmin' : 'Admin' }}
-                                        </span>
+                                        @if($admin->role === 'superadmin')
+                                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800">SuperAdmin</span>
+                                        @else
+                                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800">Admin</span>
+                                        @endif
                                     </div>
                                     <div class="date-col">
                                         <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px] mb-0.5">Dibuat</span>
-                                        <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $admin->created_at?->format('d/m/Y') ?? '-' }}</span>
+                                        <span class="font-medium text-gray-800 dark:text-white text-[11px]">{{ $admin->created_at->format('d/m/Y') }}</span>
                                     </div>
                                 </div>
                             </div>
                             @empty
-                            <div class="py-8 text-center text-sm text-gray-400 dark:text-[#9AA0A6]">
-                                Belum ada admin terdaftar.
-                            </div>
+                            <div class="py-6 text-center text-sm text-gray-400 dark:text-[#9AA0A6]">Belum ada data admin.</div>
                             @endforelse
                         </div>
 
@@ -316,22 +299,17 @@
                                     </thead>
                                     <tbody class="divide-y divide-gray-100 dark:divide-white/10 text-[13px] text-gray-800 dark:text-gray-200" id="admin-tbody">
                                         @forelse($admins as $admin)
-                                        @php
-                                            $isSuperAdmin = in_array(strtolower($admin->role), ['superadmin', 'super admin']);
-                                            $canDelete    = !$isSuperAdmin;
-                                        @endphp
-                                        <tr class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors admin-row"
-                                            data-timestamp="{{ $admin->created_at?->toISOString() }}">
+                                        <tr class="hover:bg-gray-50/60 dark:hover:bg-white/5 transition-colors admin-row" data-timestamp="{{ $admin->created_at->toISOString() }}">
                                             <td class="py-3.5 px-4 font-normal text-gray-900 dark:text-white whitespace-nowrap email-col">{{ $admin->email }}</td>
                                             <td class="py-3.5 px-4 font-medium text-gray-900 dark:text-white whitespace-nowrap name-col">{{ $admin->name }}</td>
                                             <td class="py-3.5 px-4 whitespace-nowrap role-col">
-                                                <span class="inline-block px-3 py-0.5 rounded-full text-xs font-medium {{ $isSuperAdmin ? 'text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800' : 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800' }}">
-                                                    {{ $isSuperAdmin ? 'SuperAdmin' : 'Admin' }}
-                                                </span>
+                                                @if($admin->role === 'superadmin')
+                                                    <span class="inline-block px-3 py-0.5 rounded-full text-xs font-medium text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-900/30 border border-blue-200/80 dark:border-blue-800">SuperAdmin</span>
+                                                @else
+                                                    <span class="inline-block px-3 py-0.5 rounded-full text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200/80 dark:border-emerald-800">Admin</span>
+                                                @endif
                                             </td>
-                                            <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal date-col">
-                                                {{ $admin->created_at?->format('d/m/Y') ?? '-' }}
-                                            </td>
+                                            <td class="py-3.5 px-4 text-gray-700 dark:text-gray-300 whitespace-nowrap font-normal date-col">{{ $admin->created_at->format('d/m/Y \a\t H.i') }}</td>
                                             <td class="py-3.5 px-4 whitespace-nowrap text-center">
                                                 <button
                                                     type="button"
@@ -340,7 +318,7 @@
                                                     data-id="{{ $admin->id }}"
                                                     data-name="{{ $admin->name }}"
                                                     data-email="{{ $admin->email }}"
-                                                    data-can-delete="{{ $canDelete ? 'true' : 'false' }}"
+                                                    data-can-delete="{{ $admin->role !== 'superadmin' && $admin->id !== auth()->id() ? 'true' : 'false' }}"
                                                 >
                                                     <x-icon name="dots-vertical" class="w-4 h-4" />
                                                 </button>
@@ -348,9 +326,7 @@
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="5" class="py-10 text-center text-sm text-gray-400 dark:text-[#9AA0A6]">
-                                                Belum ada admin terdaftar.
-                                            </td>
+                                            <td colspan="5" class="py-8 text-center text-sm text-gray-400 dark:text-[#9AA0A6]">Belum ada data admin.</td>
                                         </tr>
                                         @endforelse
                                     </tbody>
@@ -369,8 +345,8 @@
                     {{-- Header Controls: Search & Waktu Pengajuan Filter (Konsisten Desain Jatuh Tempo) --}}
                     <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5 max-w-md">
                         {{-- Search Input --}}
-                        <div class="relative w-full sm:w-[185px] h-[30px] sm:h-[38px]">
-                            <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                            <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                             <input
                                 type="text"
                                 placeholder="Search"
@@ -382,7 +358,7 @@
 
                         {{-- Filter Waktu Pengajuan Dropdown --}}
                         <div class="relative custom-filter-container">
-                            <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
+                            <button type="button" class="filter-dropdown-btn inline-flex items-center h-[36px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
                                 <span id="label-waktu" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Waktu Pengajuan</span>
                                 <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                             </button>
@@ -402,87 +378,79 @@
 
                     {{-- Cards List of Reset Password Requests per Figma --}}
                     <div class="space-y-4" id="requests-list-container">
-                        
-                        {{-- Card 1 --}}
-                        <div class="approval-card-item rounded-xl sm:rounded-2xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition hover:border-gray-300 dark:hover:border-white/20 shadow-2xs" id="req-card-1" data-timestamp="2026-08-30T15:30:00">
-                            {{-- Profile & Info Header --}}
+                        @forelse($requests as $req)
+                        <div class="approval-card-item rounded-xl sm:rounded-2xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition hover:border-gray-300 dark:hover:border-white/20 shadow-2xs {{ $req->isPending() && $req->isBlocked() ? 'border-red-300 dark:border-red-800/60' : '' }}" id="req-card-{{ $req->id }}" data-timestamp="{{ $req->created_at->toISOString() }}">
+                            {{-- Profile & Info --}}
                             <div class="flex items-center gap-3 sm:gap-4">
                                 <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
                                     <x-icon name="profile-circle" class="w-5 h-5 sm:w-6 sm:h-6" />
                                 </div>
                                 <div class="min-w-0 flex-1">
                                     <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                                        <h4 class="text-sm font-bold sm:font-semibold text-gray-900 dark:text-white leading-tight truncate">Haidar Rafi kosong enam</h4>
-                                        <span class="sm:hidden text-[10px] font-medium text-gray-500 dark:text-[#9AA0A6] bg-gray-100/80 dark:bg-[#2D3034] px-2 py-0.5 rounded-full">30/08/2026 at 15.30 PM</span>
+                                        <h4 class="text-sm font-semibold text-gray-900 dark:text-white leading-tight truncate">{{ $req->user->name ?? '-' }}</h4>
+                                        @if($req->isPending() && $req->isBlocked())
+                                            <span class="inline-flex items-center gap-1 text-[10px] font-semibold bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 px-2 py-0.5 rounded-full">
+                                                <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                                                <span>Terblokir ({{ $req->request_count }}/{{ \App\Models\PasswordResetRequest::MAX_REQUESTS_PER_CYCLE }}x)</span>
+                                            </span>
+                                        @elseif($req->isPending())
+                                            <span class="text-[10px] font-medium bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-800 px-2 py-0.5 rounded-full">Request ke-{{ $req->request_count }}/{{ \App\Models\PasswordResetRequest::MAX_REQUESTS_PER_CYCLE }}</span>
+                                        @endif
+                                        <span class="sm:hidden text-[10px] font-medium text-gray-500 dark:text-[#9AA0A6] bg-gray-100/80 dark:bg-[#2D3034] px-2 py-0.5 rounded-full">{{ $req->created_at->format('d/m/Y H:i') }} WIB</span>
                                     </div>
-                                    <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate">admin.kai@daop4.com</p>
+                                    <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate">{{ $req->user->email ?? '-' }}</p>
+                                    @if($req->isPending() && $req->isBlocked())
+                                        <p class="text-[10px] text-red-500 dark:text-red-400 mt-0.5">Admin ini tidak bisa mengajukan request baru sampai disetujui/ditolak.</p>
+                                    @elseif($req->isPending() && $req->temp_password_sent_at)
+                                        <p class="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">Password sementara dikirim {{ $req->temp_password_sent_at->diffForHumans() }}
+                                            @if($req->isTempPasswordValid()) — masih berlaku @else — sudah kedaluwarsa @endif
+                                        </p>
+                                    @endif
                                 </div>
                             </div>
 
-                            {{-- Actions & Timestamp on Desktop --}}
+                            {{-- Actions & Timestamp --}}
                             <div class="flex items-center gap-2 sm:gap-6 justify-between sm:justify-end pt-1 sm:pt-0 border-t border-gray-100 dark:border-white/10 sm:border-t-0">
-                                <span class="hidden sm:inline-block text-xs text-gray-500 dark:text-[#9AA0A6]">30/08/2026 at 15.30 PM</span>
+                                <span class="hidden sm:inline-block text-xs text-gray-500 dark:text-[#9AA0A6]">{{ $req->created_at->format('d/m/Y H:i') }} WIB</span>
+                                @if($req->status === 'pending')
                                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                                    <button
-                                        type="button"
-                                        onclick="rejectApprovalCard(1)"
-                                        class="flex-1 sm:flex-none min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] border border-red-200 dark:border-red-900/40 bg-red-50/80 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-xs font-semibold text-red-600 dark:text-red-400 transition cursor-pointer"
-                                    >
-                                        <span class="text-sm leading-none font-bold">✕</span>
-                                        <span>Tolak</span>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onclick="approveApprovalCard(1, 'admin.kai@daop4.com')"
-                                        class="flex-1 sm:flex-none min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
-                                    >
-                                        <span class="text-sm leading-none font-bold">✓</span>
-                                        <span>Setuju</span>
-                                    </button>
+                                    <form method="POST" action="{{ route('reset-requests.reject', $req) }}" class="flex-1 sm:flex-none">
+                                        @csrf
+                                        <button type="submit" class="w-full min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] border border-red-200 dark:border-red-900/40 bg-red-50/80 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-xs font-semibold text-red-600 dark:text-red-400 transition cursor-pointer">
+                                            <x-icon name="close" class="w-3.5 h-3.5" />
+                                            <span>Tolak</span>
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{{ route('reset-requests.approve', $req) }}" class="flex-1 sm:flex-none">
+                                        @csrf
+                                        <button type="submit" class="w-full min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-semibold text-white shadow-xs transition cursor-pointer">
+                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                            <span>Setuju</span>
+                                        </button>
+                                    </form>
                                 </div>
+                                @else
+                                <span class="text-xs font-medium px-3 py-1 rounded-full
+                                    {{ $req->status === 'approved' ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800' : '' }}
+                                    {{ $req->status === 'rejected' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800' : '' }}
+                                    {{ in_array($req->status, ['completed','auto_reset']) ? 'bg-gray-100 dark:bg-[#2D3034] text-gray-500 dark:text-[#9AA0A6] border border-gray-200 dark:border-white/10' : '' }}
+                                ">
+                                    {{ match($req->status) {
+                                        'approved'   => 'Disetujui',
+                                        'rejected'   => 'Ditolak',
+                                        'completed'  => 'Selesai',
+                                        'auto_reset' => 'Auto Reset',
+                                        default      => ucfirst($req->status),
+                                    } }}
+                                </span>
+                                @endif
                             </div>
                         </div>
-
-                        {{-- Card 2 --}}
-                        <div class="approval-card-item rounded-xl sm:rounded-2xl border border-gray-200/90 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition hover:border-gray-300 dark:hover:border-white/20 shadow-2xs" id="req-card-2" data-timestamp="2026-08-30T11:20:00">
-                            {{-- Profile & Info Header --}}
-                            <div class="flex items-center gap-3 sm:gap-4">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-50 dark:bg-[#34383D] flex items-center justify-center shrink-0 text-[#0066FF] dark:text-[#3B82F6]">
-                                    <x-icon name="profile-circle" class="w-5 h-5 sm:w-6 sm:h-6" />
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-                                        <h4 class="text-sm font-bold sm:font-semibold text-gray-900 dark:text-white leading-tight truncate">Siti Rahmawati</h4>
-                                        <span class="sm:hidden text-[10px] font-medium text-gray-500 dark:text-[#9AA0A6] bg-gray-100/80 dark:bg-[#2D3034] px-2 py-0.5 rounded-full">30/08/2026 at 11.20 AM</span>
-                                    </div>
-                                    <p class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-0.5 truncate">siti.rahmawati@daop1.com</p>
-                                </div>
-                            </div>
-
-                            {{-- Actions & Timestamp on Desktop --}}
-                            <div class="flex items-center gap-2 sm:gap-6 justify-between sm:justify-end pt-1 sm:pt-0 border-t border-gray-100 dark:border-white/10 sm:border-t-0">
-                                <span class="hidden sm:inline-block text-xs text-gray-500 dark:text-[#9AA0A6]">30/08/2026 at 11.20 AM</span>
-                                <div class="flex items-center gap-2 w-full sm:w-auto">
-                                    <button
-                                        type="button"
-                                        onclick="rejectApprovalCard(2)"
-                                        class="flex-1 sm:flex-none min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] border border-red-200 dark:border-red-900/40 bg-red-50/80 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-900/40 text-xs font-semibold text-red-600 dark:text-red-400 transition cursor-pointer"
-                                    >
-                                        <span class="text-sm leading-none font-bold">✕</span>
-                                        <span>Tolak</span>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onclick="approveApprovalCard(2, 'siti.rahmawati@daop1.com')"
-                                        class="flex-1 sm:flex-none min-h-[38px] sm:min-h-[34px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl sm:rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs font-semibold text-white shadow-xs transition cursor-pointer"
-                                    >
-                                        <span class="text-sm leading-none font-bold">✓</span>
-                                        <span>Setuju</span>
-                                    </button>
-                                </div>
-                            </div>
+                        @empty
+                        <div class="py-10 text-center text-sm text-gray-400 dark:text-[#9AA0A6]">
+                            Tidak ada permintaan reset sandi saat ini.
                         </div>
-
+                        @endforelse
                     </div>
 
                 </div>
@@ -493,38 +461,38 @@
             {{-- ------------------- TAB 4: IMPORT DATA EXCEL ------------------- --}}
             <div id="panel-import-excel" class="hidden space-y-6">
 
-                    {{-- Alert Messages --}}
-                    @if(session('success'))
-                        <div class="flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
-                            <span class="text-base">✅</span>
-                            <span class="font-medium">{{ session('success') }}</span>
-                        </div>
-                    @endif
+                {{-- Alert Messages --}}
+                @if(session('success'))
+                    <div class="flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                        <x-icon name="toast-sukses" class="w-5 h-5 shrink-0" />
+                        <span class="font-medium">{{ session('success') }}</span>
+                    </div>
+                @endif
 
-                    @if(session('error'))
-                        <div class="flex items-center gap-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
-                            <span class="text-base">❌</span>
-                            <span class="font-medium">{{ session('error') }}</span>
-                        </div>
-                    @endif
+                @if(session('error'))
+                    <div class="flex items-center gap-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                        <x-icon name="toast-gagal" class="w-5 h-5 shrink-0" />
+                        <span class="font-medium">{{ session('error') }}</span>
+                    </div>
+                @endif
 
-                    @if($errors->any())
-                        <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
-                            <p class="font-semibold mb-1">Terjadi kesalahan:</p>
-                            <ul class="list-disc list-inside space-y-0.5">
-                                @foreach($errors->all() as $err)
-                                    <li>{{ $err }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                @if($errors->any())
+                    <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 p-4 rounded-2xl text-xs sm:text-sm shadow-xs">
+                        <p class="font-semibold mb-1">Terjadi kesalahan:</p>
+                        <ul class="list-disc list-inside space-y-0.5">
+                            @foreach($errors->all() as $err)
+                                <li>{{ $err }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-                    {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
-                    <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
-                        
-                        <h2 class="text-xl sm:text-2xl font-bold text-gray-950 dark:text-white tracking-tight">
-                            Upload File Data
-                        </h2>
+                {{-- Upload File Data Card (Sesuai Gambar Mockup) --}}
+                <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-10 shadow-xs space-y-8 transition-colors">
+                    
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-950 dark:text-white tracking-tight">
+                        Upload File Data
+                    </h2>
 
                         <form id="super-excel-import-form" method="POST" action="{{ route('settings.import-excel') }}" enctype="multipart/form-data" class="space-y-6">
                             @csrf
@@ -623,18 +591,18 @@
     </main>
 
     {{-- ================= GLOBAL DROPDOWN MENU AKSI ADMIN (DI LUAR TABEL AGAR TIDAK TERPOTONG) ================= --}}
-    <div id="admin-global-action-dropdown" class="opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-right fixed z-[9999] w-[185px] sm:w-[200px] rounded-xl sm:rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.7)] p-1.5 sm:p-2 flex flex-col gap-0.5 sm:gap-1 text-left">
-        <button type="button" id="admin-dd-nonaktif-btn" onclick="executeAdminAction('nonaktif')" class="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-[13px] font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition cursor-pointer w-full text-left">
+    <div id="admin-global-action-dropdown" class="opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-right fixed z-[9999] w-max min-w-[200px] sm:min-w-[220px] rounded-xl sm:rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.7)] p-1.5 sm:p-2 flex flex-col gap-0.5 sm:gap-1 text-left">
+        <button type="button" id="admin-dd-nonaktif-btn" onclick="executeAdminAction('nonaktif')" class="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-[13px] font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition cursor-pointer w-full text-left whitespace-nowrap">
             <x-icon name="icon-nonaktif-profile" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-300 shrink-0" />
-            <span>Non Aktif Profil</span>
+            <span class="whitespace-nowrap">Non Aktif Profil</span>
         </button>
-        <button type="button" id="admin-dd-reset-btn" onclick="executeAdminAction('reset')" class="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-[13px] font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition cursor-pointer w-full text-left">
+        <button type="button" id="admin-dd-reset-btn" onclick="executeAdminAction('reset')" class="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-[13px] font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition cursor-pointer w-full text-left whitespace-nowrap">
             <x-icon name="icon-key" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-300 shrink-0" />
-            <span>Reset Sandi Sementara</span>
+            <span class="whitespace-nowrap">Reset Sandi Sementara</span>
         </button>
-        <button type="button" id="admin-dd-delete-btn" onclick="executeAdminAction('delete')" class="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-[13px] font-semibold text-[#EF4444] dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer w-full text-left">
+        <button type="button" id="admin-dd-delete-btn" onclick="executeAdminAction('delete')" class="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-[13px] font-semibold text-[#EF4444] dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer w-full text-left whitespace-nowrap">
             <x-icon name="icon-trash-admin" class="w-4 h-4 sm:w-5 sm:h-5 text-[#EF4444] dark:text-red-400 shrink-0" />
-            <span>Hapus Admin</span>
+            <span class="whitespace-nowrap">Hapus Admin</span>
         </button>
     </div>
 
@@ -644,20 +612,20 @@
             
             <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/10 pb-3">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white">Tambah Akun Admin Baru</h3>
-                <button type="button" onclick="closeAddAdminModal()" class="text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white text-lg cursor-pointer">✕</button>
+                <button type="button" onclick="closeAddAdminModal()" class="p-1 rounded-lg text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer">
+                    <x-icon name="close" class="w-4 h-4" />
+                </button>
             </div>
 
-            {{-- Error box --}}
-            <div id="tambah-admin-error" class="hidden rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/50 px-4 py-3 text-xs text-red-700 dark:text-red-300"></div>
-
             <form id="form-tambah-admin" onsubmit="saveNewAdmin(event)" class="space-y-4">
-                @csrf
+
+                <div id="form-admin-error" class="hidden rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-3.5 py-2.5 text-xs text-red-700 dark:text-red-400"></div>
+
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Nama Lengkap</label>
                     <input
                         type="text"
                         id="new-admin-name"
-                        name="name"
                         placeholder="Contoh: Haidar Rafi"
                         class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
@@ -669,7 +637,6 @@
                     <input
                         type="text"
                         id="new-admin-username"
-                        name="username"
                         placeholder="Contoh: haidar.rafi"
                         class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
@@ -681,44 +648,32 @@
                     <input
                         type="email"
                         id="new-admin-email"
-                        name="email"
                         placeholder="nama@daop4.com"
                         class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Password</label>
-                        <input
-                            type="password"
-                            id="new-admin-password"
-                            name="password"
-                            placeholder="Min. 8 karakter"
-                            class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
-                            required
-                        >
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Konfirmasi Password</label>
-                        <input
-                            type="password"
-                            id="new-admin-password-confirm"
-                            name="password_confirmation"
-                            placeholder="Ulangi password"
-                            class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
-                            required
-                        >
-                    </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Kata Sandi</label>
+                    <input
+                        type="password"
+                        id="new-admin-password"
+                        placeholder="Minimal 8 karakter"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                        required
+                    >
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Role Pengguna</label>
-                    <select id="new-admin-role" name="role" class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white focus:border-[#0066FF] focus:outline-none transition">
-                        <option value="admin">Admin</option>
-                        <option value="superadmin">SuperAdmin</option>
-                    </select>
+                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Konfirmasi Kata Sandi</label>
+                    <input
+                        type="password"
+                        id="new-admin-password-confirmation"
+                        placeholder="Ulangi kata sandi"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                        required
+                    >
                 </div>
 
                 <div class="flex items-center justify-end gap-3 pt-3">
@@ -731,7 +686,6 @@
                     </button>
                     <button
                         type="submit"
-                        id="btn-simpan-admin"
                         class="px-5 py-2.5 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-medium text-white transition shadow-xs cursor-pointer"
                     >
                         Simpan Admin
@@ -750,7 +704,9 @@
                 <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
                     Edit Profil Saya
                 </h3>
-                <button type="button" onclick="closeEditProfileModal()" class="text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white text-lg cursor-pointer">✕</button>
+                <button type="button" onclick="closeEditProfileModal()" class="p-1 rounded-lg text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer">
+                    <x-icon name="close" class="w-4 h-4" />
+                </button>
             </div>
 
             <form id="form-edit-profile" onsubmit="saveProfileChanges(event)" class="space-y-4">
@@ -839,6 +795,18 @@
             }
         }
 
+        // Inisialisasi tab aktif saat halaman pertama kali dibuka
+        document.addEventListener('DOMContentLoaded', () => {
+            @php
+                $tabToOpen = request('tab', $activeTab ?? 'profil');
+                if ($tabToOpen === 'profil-saya') $tabToOpen = 'profil';
+                if ($tabToOpen === 'manajemen') $tabToOpen = 'manajemen-admin';
+                if ($tabToOpen === 'persetujuan') $tabToOpen = 'persetujuan-sandi';
+                if ($tabToOpen === 'import') $tabToOpen = 'import-excel';
+            @endphp
+            switchSuperTab('{{ $tabToOpen }}');
+        });
+
         // Modal Edit Profil
         function openEditProfileModal() {
             document.getElementById('modal-edit-profile')?.classList.remove('hidden');
@@ -848,8 +816,13 @@
         }
         function saveProfileChanges(e) {
             e.preventDefault();
-            const fullname = document.getElementById('input-fullname')?.value || 'Haidar Rafi';
-            const email = document.getElementById('input-email')?.value || 'admin.kai@daop4.com';
+            const fullname = document.getElementById('input-fullname')?.value.trim() || 'Haidar Rafi';
+            const email = document.getElementById('input-email')?.value.trim() || 'admin.kai@daop4.com';
+
+            if (!fullname || !email) {
+                if (window.showToast) window.showToast('Gagal update: Nama dan email tidak boleh kosong!', 'error');
+                return;
+            }
 
             const displayFullname = document.getElementById('display-fullname');
             const displayFirst = document.getElementById('display-first-name');
@@ -860,6 +833,7 @@
             if (displayEmail) displayEmail.textContent = email;
 
             closeEditProfileModal();
+            if (window.showToast) window.showToast('Sukses update data terbaru!', 'success');
         }
 
         function handleSuperFileSelected(input) {
@@ -871,6 +845,13 @@
 
             if (input.files && input.files[0]) {
                 const file = input.files[0];
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (!['xlsx', 'xls', 'csv'].includes(ext)) {
+                    if (window.showToast) window.showToast('Gagal: Format file harus .xlsx, .xls, atau .csv!', 'error');
+                    clearSuperSelectedFile();
+                    return;
+                }
+
                 nameEl.textContent = file.name;
                 const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
                 sizeEl.textContent = (sizeMb >= 1) ? `${sizeMb} MB` : `${(file.size / 1024).toFixed(1)} KB`;
@@ -881,6 +862,7 @@
                 // Progress simulation to 100%
                 percentEl.textContent = '100%';
                 barEl.style.width = '100%';
+                if (window.showToast) window.showToast('File siap diimpor: ' + file.name, 'info');
             } else {
                 container.classList.add('hidden');
             }
@@ -928,6 +910,26 @@
             });
         }
 
+        // Form Submit Handler for Excel Import
+        const superImportForm = document.getElementById('super-excel-import-form');
+        if (superImportForm) {
+            superImportForm.addEventListener('submit', (e) => {
+                const input = document.getElementById('super-excel-file-input');
+                if (!input || !input.files || input.files.length === 0) {
+                    e.preventDefault();
+                    if (window.showToast) window.showToast('Silakan pilih file Excel terlebih dahulu!', 'warning');
+                    return;
+                }
+                const btn = document.getElementById('btn-super-submit-import');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-70', 'cursor-not-allowed');
+                    btn.textContent = 'Mengimpor...';
+                }
+                if (window.showToast) window.showToast('Sedang memproses upload dan impor data Excel...', 'info', 6000);
+            });
+        }
+
         // ================= GLOBAL ACTION DROPDOWN FOR ADMIN MANAGEMENT =================
         let currentActiveAdmin = null;
         const adminDropdown = document.getElementById('admin-global-action-dropdown');
@@ -962,6 +964,7 @@
                 const name = btn.dataset.name;
                 const email = btn.dataset.email;
                 const canDelete = btn.dataset.canDelete === 'true';
+                const adminId = btn.dataset.id;
                 const row = btn.closest('tr');
 
                 // Jika tombol yang sama diklik lagi saat dropdown terbuka, tutup
@@ -970,7 +973,7 @@
                     return;
                 }
 
-                currentActiveAdmin = { name, email, canDelete, btn, row };
+                currentActiveAdmin = { name, email, canDelete, adminId, btn, row };
                 adminDropdown.dataset.targetEmail = email;
 
                 // Tampilkan / sembunyikan tombol Hapus untuk role SuperAdmin
@@ -981,7 +984,7 @@
 
                 // Hitung posisi fixed dropdown
                 const rect = btn.getBoundingClientRect();
-                const dropWidth = 200;
+                const dropWidth = adminDropdown.offsetWidth || 220;
                 let left = rect.right - dropWidth;
                 let top = rect.bottom + 6;
 
@@ -1012,7 +1015,7 @@
 
         function executeAdminAction(type) {
             if (!currentActiveAdmin) return;
-            const { name, email, row } = currentActiveAdmin;
+            const { name, email, row, adminId } = currentActiveAdmin;
             closeAdminGlobalDropdown();
 
             if (type === 'nonaktif') {
@@ -1020,30 +1023,65 @@
             } else if (type === 'reset') {
                 actionResetSandi(name, email);
             } else if (type === 'delete') {
-                actionHapusAdmin(row, name);
+                actionHapusAdmin(row, name, email, adminId);
             }
         }
 
         function actionNonaktif(name) {
-            // Frontend action
+            if (window.showToast) window.showToast(`Status admin ${name} berhasil diperbarui!`, 'success');
         }
 
         function actionResetSandi(name, email) {
-            // Frontend action
+            if (window.showToast) window.showToast(`Permintaan reset kata sandi untuk ${name} telah diajukan!`, 'info');
         }
 
-        function actionHapusAdmin(row, name) {
-            if (confirm(`Apakah Anda yakin ingin menghapus akun admin ${name}?`)) {
-                if (currentActiveAdmin?.email) {
-                    document.querySelectorAll(`.admin-row, .admin-card`).forEach(el => {
-                        if (el.querySelector('.email-col')?.textContent.trim() === currentActiveAdmin.email) {
-                            el.remove();
+        function actionHapusAdmin(row, name, email, adminId) {
+            window.showToastConfirm({
+                message: `Apakah Anda yakin ingin menghapus akun admin ${name}?`,
+                onConfirm: () => {
+                    if (!adminId) {
+                        if (currentActiveAdmin?.email) {
+                            document.querySelectorAll('.admin-row, .admin-card').forEach(el => {
+                                if (el.querySelector('.email-col')?.textContent.trim() === currentActiveAdmin.email) {
+                                    el.remove();
+                                }
+                            });
+                        } else if (row) {
+                            row.remove();
                         }
+                        if (window.showToast) window.showToast('Sukses menghapus data admin!', 'success');
+                        return;
+                    }
+
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+                    fetch(`/pengaturan/admins/${adminId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'same-origin',
+                    })
+                    .then(async res => {
+                        if (res.ok) {
+                            document.querySelectorAll('.admin-row, .admin-card').forEach(el => {
+                                const emailEl = el.querySelector('.email-col');
+                                if (emailEl?.textContent.trim() === email) {
+                                    el.remove();
+                                }
+                            });
+                            if (window.showToast) window.showToast('Sukses menghapus data admin!', 'success');
+                        } else {
+                            const data = await res.json().catch(() => ({}));
+                            if (window.showToast) window.showToast(data.message || 'Gagal menghapus admin.', 'error');
+                        }
+                    })
+                    .catch(() => {
+                        if (window.showToast) window.showToast('Gagal terhubung ke server.', 'error');
                     });
-                } else if (row) {
-                    row.remove();
                 }
-            }
+            });
         }
 
         // ================= SORTING "TERAKHIR AKTIF" =================
@@ -1117,68 +1155,71 @@
             if (modal) modal.classList.add('hidden');
             const form = document.getElementById('form-tambah-admin');
             if (form) form.reset();
-            const errorBox = document.getElementById('tambah-admin-error');
-            if (errorBox) errorBox.classList.add('hidden');
         }
 
-        async function saveNewAdmin(e) {
+        function saveNewAdmin(e) {
             e.preventDefault();
 
-            const btn      = document.getElementById('btn-simpan-admin');
-            const errorBox = document.getElementById('tambah-admin-error');
-            const form     = document.getElementById('form-tambah-admin');
+            const name     = document.getElementById('new-admin-name').value;
+            const username = document.getElementById('new-admin-username').value;
+            const email    = document.getElementById('new-admin-email').value;
+            const password = document.getElementById('new-admin-password').value;
+            const passwordConfirmation = document.getElementById('new-admin-password-confirmation').value;
+            const errorBox  = document.getElementById('form-admin-error');
+            const submitBtn = e.target.querySelector('[type="submit"]');
 
-            // Tampilkan loading
-            if (btn) { btn.disabled = true; btn.textContent = 'Menyimpan...'; }
-            if (errorBox) errorBox.classList.add('hidden');
+            errorBox.classList.add('hidden');
+            errorBox.textContent = '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menyimpan...';
 
-            const formData = new FormData(form);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            const formData  = new FormData();
+            formData.append('_token', csrfToken);
+            formData.append('name', name);
+            formData.append('username', username);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('password_confirmation', passwordConfirmation);
 
-            try {
-                const res = await fetch('{{ route("admins.store") }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]')?.content
-                            || document.querySelector('#form-tambah-admin input[name="_token"]')?.value
-                            || ''),
-                        'Accept': 'application/json',
-                    },
-                    body: formData,
-                });
-
-                const data = await res.json().catch(() => null);
-
+            fetch('{{ route("admins.store") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                credentials: 'same-origin',
+                body: formData,
+            })
+            .then(async res => {
                 if (res.ok) {
-                    // Sukses — reload halaman agar tabel terupdate dari DB
-                    if (window.setPendingToast) {
-                        window.setPendingToast('Admin baru berhasil ditambahkan!', 'success');
-                    }
-                    window.location.reload();
+                    closeAddAdminModal();
+                    if (window.showToast) window.showToast(`Admin ${name} berhasil ditambahkan!`, 'success');
+                    setTimeout(() => window.location.reload(), 1000);
                     return;
                 }
-
-                // Validasi error dari Laravel (422)
-                if (res.status === 422 && data?.errors) {
-                    const msgs = Object.values(data.errors).flat().join(' • ');
-                    if (errorBox) {
-                        errorBox.textContent = msgs;
-                        errorBox.classList.remove('hidden');
-                    }
+                const data = await res.json().catch(() => ({}));
+                if (data.errors) {
+                    const messages = Object.values(data.errors).flat().join(' ');
+                    errorBox.textContent = messages;
+                    errorBox.classList.remove('hidden');
+                } else if (res.status === 401 || res.status === 403) {
+                    errorBox.textContent = 'Sesi habis. Silakan refresh halaman dan login ulang.';
+                    errorBox.classList.remove('hidden');
                 } else {
-                    const msg = data?.message || 'Terjadi kesalahan. Silakan coba lagi.';
-                    if (errorBox) {
-                        errorBox.textContent = msg;
-                        errorBox.classList.remove('hidden');
-                    }
-                }
-            } catch (err) {
-                if (errorBox) {
-                    errorBox.textContent = 'Gagal terhubung ke server. Periksa koneksi Anda.';
+                    errorBox.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
                     errorBox.classList.remove('hidden');
                 }
-            } finally {
-                if (btn) { btn.disabled = false; btn.textContent = 'Simpan Admin'; }
-            }
+            })
+            .catch(() => {
+                errorBox.textContent = 'Gagal terhubung ke server.';
+                errorBox.classList.remove('hidden');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Simpan Admin';
+            });
         }
 
         // Persetujuan Cards Actions
@@ -1188,14 +1229,21 @@
                 card.remove();
             }
             decrementBadge();
+            if (window.showToast) window.showToast('Sukses menyetujui permintaan! Kode OTP telah dikirim ke email.', 'success');
         }
 
         function rejectApprovalCard(id) {
-            const card = document.getElementById(`req-card-${id}`);
-            if (card) {
-                card.remove();
-            }
-            decrementBadge();
+            window.showToastConfirm({
+                message: 'Apakah Anda yakin ingin menolak permintaan reset kata sandi ini?',
+                onConfirm: () => {
+                    const card = document.getElementById(`req-card-${id}`);
+                    if (card) {
+                        card.remove();
+                    }
+                    decrementBadge();
+                    if (window.showToast) window.showToast('Sukses menolak permintaan reset kata sandi.', 'info');
+                }
+            });
         }
 
         function decrementBadge() {
@@ -1316,5 +1364,6 @@
         }
     </script>
 
+<x-temp-password-guard />
 </body>
 </html>

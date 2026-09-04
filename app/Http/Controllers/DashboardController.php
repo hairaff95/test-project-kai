@@ -170,12 +170,13 @@ class DashboardController extends Controller
                 ['name' => 'Iklan / Lainnya',     'color' => '#00C49F', 'sub' => 'iklan'],
             ];
 
-            $totalRevenue = (float) (ContractFinancial::sum('nilai_2026') ?: 1);
-            $breakdown    = [];
+            $rawTotalRevenue = (float) ContractFinancial::sum('nilai_2026');
+            $totalRevenue    = $rawTotalRevenue > 0 ? $rawTotalRevenue : 1.0;
+            $breakdown       = [];
 
             foreach ($revenueCategories as $cat) {
                 $catSum = (float) ContractFinancial::where('jenis_pendapatan', 'like', "%{$cat['sub']}%")->sum('nilai_2026');
-                $pct    = round(($catSum / $totalRevenue) * 100);
+                $pct    = $rawTotalRevenue > 0 ? round(($catSum / $totalRevenue) * 100) : 0;
 
                 $rawPct = (float) ContractFinancial::where('jenis_pendapatan', 'like', "%{$cat['sub']}%")->avg('persentase');
                 if ($rawPct <= 0) $rawPct = 0.9;
@@ -195,24 +196,24 @@ class DashboardController extends Controller
 
         // ── 5. Pencapaian RKA & Backlog ──────────────────────────────────
         $rkaData = Cache::remember('dashboard_rka', self::CACHE_STATS_TTL, function () {
-            $totalBacklog        = (float) ContractFinancial::sum('nilai_backlog');
-            $totalPendapatan2026 = (float) ContractFinancial::sum('nilai_2026');
+            $totalBacklog  = (float) ContractFinancial::sum('nilai_backlog');
+            $totalBacklog2 = (float) ContractFinancial::sum('nilai_backlog2');
 
             $totalBacklogFormatted = $totalBacklog >= 1_000_000_000
                 ? 'Rp ' . number_format($totalBacklog / 1_000_000_000, 1, ',', '.') . 'M'
                 : 'Rp ' . number_format($totalBacklog / 1_000_000, 1, ',', '.') . 'Jt';
 
-            $totalPendapatanFormatted = $totalPendapatan2026 >= 1_000_000_000
-                ? 'Rp ' . number_format($totalPendapatan2026 / 1_000_000_000, 1, ',', '.') . 'M'
-                : 'Rp ' . number_format($totalPendapatan2026 / 1_000_000, 1, ',', '.') . 'Jt';
+            $totalBacklog2Formatted = $totalBacklog2 >= 1_000_000_000
+                ? 'Rp ' . number_format($totalBacklog2 / 1_000_000_000, 1, ',', '.') . 'M'
+                : 'Rp ' . number_format($totalBacklog2 / 1_000_000, 1, ',', '.') . 'Jt';
 
             $rkaPercentage = 45;
-            if ($totalPendapatan2026 + $totalBacklog > 0) {
-                $computedPct   = round(($totalPendapatan2026 / ($totalPendapatan2026 + $totalBacklog)) * 100);
+            if ($totalBacklog + $totalBacklog2 > 0) {
+                $computedPct   = round(($totalBacklog / ($totalBacklog + $totalBacklog2)) * 100);
                 $rkaPercentage = max(10, min(100, $computedPct));
             }
 
-            return compact('totalBacklogFormatted', 'totalPendapatanFormatted', 'rkaPercentage');
+            return compact('totalBacklogFormatted', 'totalBacklog2Formatted', 'rkaPercentage');
         });
 
         // Unpack semua cache ke variabel untuk view (agar view tidak perlu diubah)
@@ -234,7 +235,7 @@ class DashboardController extends Controller
             'upcomingContracts',
             'revenueBreakdown',
             'totalBacklogFormatted',
-            'totalPendapatanFormatted',
+            'totalBacklog2Formatted',
             'rkaPercentage'
         ));
     }

@@ -77,8 +77,11 @@ class BacklogController extends Controller
         $statusCustomerOptions = Cache::remember('dropdown_status_customer', 3600, fn () =>
             Penyewa::select('status_customer')->distinct()->whereNotNull('status_customer')->where('status_customer', '!=', '')->pluck('status_customer')->toArray()
         );
+        $stasiunOptions = Cache::remember('dropdown_stasiun', 3600, fn () =>
+            \App\Models\KaiAsset::select('stasiun')->distinct()->whereNotNull('stasiun')->where('stasiun', '!=', '')->pluck('stasiun')->toArray()
+        );
 
-        return view('backlog.index', compact('items', 'contracts', 'statusCustomerOptions'));
+        return view('backlog.index', compact('items', 'contracts', 'statusCustomerOptions', 'stasiunOptions'));
     }
 
     public function edit($identifier)

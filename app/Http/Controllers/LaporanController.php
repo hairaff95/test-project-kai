@@ -20,7 +20,9 @@ class LaporanController extends Controller
                 $q->where('contract_number', 'like', "%{$s}%")
                   ->orWhere('asset_number', 'like', "%{$s}%")
                   ->orWhereHas('tenant', fn($q2) => $q2->where('fullname', 'like', "%{$s}%"))
-                  ->orWhereHas('financial', fn($q2) => $q2->where('gl_account', 'like', "%{$s}%"));
+                  ->orWhereHas('financial', fn($q2) => $q2->where('gl_account', 'like', "%{$s}%")
+                                                          ->orWhere('form_rka', 'like', "%{$s}%")
+                                                          ->orWhere('tahun_rka', 'like', "%{$s}%"));
             });
         }
 

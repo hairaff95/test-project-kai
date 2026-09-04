@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Laporan GÇö KAI Tracker App</title>
+    <title>Laporan Gï¿½ï¿½ KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -54,16 +54,18 @@
         {{-- Unified Card Container: Filter Bar + Bordered Table --}}
         <div class="rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-gray-100/90 dark:border-white/10 flex flex-col gap-2.5 sm:gap-4 transition-colors">
 
-            {{-- Filter Bar --}}
-            <div class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2.5 w-full">
+            {{-- Filter Bar Form --}}
+            <form id="filter-form" method="GET" action="{{ route('laporan.index') }}" class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2.5 w-full">
 
                 <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
                     {{-- Search --}}
                     <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
                         <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                         <input
-                            id="search-lap"
                             type="text"
+                            name="search"
+                            id="input-search"
+                            value="{{ request('search') }}"
                             placeholder="Search"
                             class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
                         >
@@ -81,7 +83,7 @@
                 </a>
                 @endauth
 
-            </div>
+            </form>
 
             {{-- MOBILE CARD LIST VIEW (sm:hidden - Mobile-First UX Konsisten dengan Halaman Lain) --}}
             <div id="mobile-cards-lap" class="sm:hidden flex flex-col gap-3">
@@ -335,25 +337,12 @@
 
     <script>
         (function () {
-            // Live Search Filter for Desktop Table Rows & Mobile Cards
-            const searchInput = document.getElementById('search-lap');
-            if (searchInput) {
-                searchInput.addEventListener('input', function () {
-                    const query = this.value.toLowerCase().trim();
-
-                    // Filter Desktop Table Rows
-                    const rows = document.querySelectorAll('.lap-row-item');
-                    rows.forEach(row => {
-                        const text = row.innerText.toLowerCase();
-                        row.style.display = (!query || text.includes(query)) ? '' : 'none';
-                    });
-
-                    // Filter Mobile Cards
-                    const cards = document.querySelectorAll('.lap-card-item');
-                    cards.forEach(card => {
-                        const text = (card.dataset.search || card.innerText).toLowerCase();
-                        card.style.display = (!query || text.includes(query)) ? '' : 'none';
-                    });
+            // Tombol Filter -> submit form
+            const btnFilter = document.getElementById('btn-filter-lap');
+            if (btnFilter) {
+                btnFilter.addEventListener('click', function () {
+                    const filterForm = document.getElementById('filter-form');
+                    if (filterForm) filterForm.submit();
                 });
             }
 

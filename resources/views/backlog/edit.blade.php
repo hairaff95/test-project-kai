@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
@@ -28,7 +28,7 @@
     <x-navbar active="backlog" />
 
     {{-- Main Content --}}
-    <main class="w-full flex-1 max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-10 pt-3 sm:pt-6 pb-28 lg:pb-10 flex flex-col gap-4 sm:gap-6">
+    <main class="w-full flex-1 max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-10 pt-3 sm:pt-6 pb-36 sm:pb-36 lg:pb-12 flex flex-col gap-4 sm:gap-6">
 
         {{-- Page Header & Breadcrumbs & Action Buttons --}}
         <div class="flex items-center justify-between gap-3 shrink-0">

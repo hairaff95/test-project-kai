@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
@@ -28,7 +28,8 @@
     <x-navbar active="due-dates" />
 
     {{-- Main Content --}}
-    <main class="w-full flex-1 max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-10 pt-3 sm:pt-6 pb-28 lg:pb-10 flex flex-col gap-4 sm:gap-6">        {{-- Page Header & Breadcrumbs & Action Buttons --}}
+    <main class="w-full flex-1 max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-10 pt-3 sm:pt-6 pb-36 sm:pb-36 lg:pb-12 flex flex-col gap-4 sm:gap-6">
+
         <div class="flex items-center justify-between gap-3 shrink-0">
             <div>
                 <h1 class="text-lg sm:text-[26px] font-bold tracking-tight text-gray-950 dark:text-white">
@@ -219,11 +220,11 @@
                                     {{-- Selesai Kontrak --}}
                                     <div class="flex flex-col w-full">
                                         <label class="block text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6] mb-0.5">Selesai Kontrak</label>
-                                        <div class="relative">
+                                        <div class="relative flex items-center w-full">
                                             <button
                                                 type="button"
                                                 onclick="openCalendarPicker(event, 'input-selesai-kontrak')"
-                                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
+                                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
                                             >
                                                 <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
                                             </button>
@@ -241,11 +242,11 @@
                                     {{-- Selesai Kontrak Baru --}}
                                     <div class="flex flex-col w-full">
                                         <label class="block text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6] mb-0.5">Selesai Kontrak Baru</label>
-                                        <div class="relative">
+                                        <div class="relative flex items-center w-full">
                                             <button
                                                 type="button"
                                                 onclick="openCalendarPicker(event, 'input-selesai-kontrak-baru')"
-                                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
+                                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
                                             >
                                                 <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
                                             </button>

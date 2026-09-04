@@ -421,11 +421,11 @@
                                 <p
                                     class="text-[11px] sm:text-[12px] lg:text-[11px] xl:text-[13px] font-medium text-white flex items-center gap-1.5 leading-snug whitespace-nowrap">
                                     <span class="h-1.5 w-1.5 rounded-full bg-white shrink-0"></span>
-                                    Pendapatan 2026
+                                    Total Backlog 2
                                 </p>
                                 <p
                                     class="text-xs sm:text-[13px] lg:text-[12px] xl:text-[14px] font-normal text-white/90 mt-0.5 pl-2.5 xl:pl-3">
-                                    {{ $totalPendapatanFormatted }}
+                                    {{ $totalBacklog2Formatted }}
                                 </p>
                             </button>
 

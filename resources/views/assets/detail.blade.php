@@ -317,7 +317,7 @@
                         </div>
 
                         <div>
-                            <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Total JanG«ÙDes</p>
+                            <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">Total JanG - Des</p>
                             <p class="mt-0.5 sm:mt-1 text-[11px] sm:text-[12px] font-normal text-gray-800 dark:text-white">{{ $monthly && $monthly->jan_des !== null ? 'Rp ' . number_format($monthly->jan_des, 0, ',', '.') : '-' }}</p>
                         </div>
 
@@ -366,9 +366,9 @@
 
     {{-- SLIDE DRAWER EDIT ASET --}}
     @auth
-    <div id="drawer-edit-backdrop" class="opacity-0 pointer-events-none fixed inset-0 top-16 sm:top-20 z-30 bg-black/20 dark:bg-black/60 backdrop-blur-[1px] transition-opacity duration-300" onclick="closeEditDrawer()"></div>
+    <div id="drawer-edit-backdrop" class="opacity-0 pointer-events-none fixed inset-0 z-[130] bg-black/40 backdrop-blur-xs transition-opacity duration-300" onclick="closeEditDrawer()"></div>
 
-    <div id="drawer-edit" class="fixed right-0 sm:right-8 lg:right-10 top-14 sm:top-[100px] bottom-0 sm:bottom-8 z-40 w-full sm:w-[420px] max-w-full sm:max-w-[calc(100vw-40px)] rounded-t-2xl sm:rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.7)] p-4 sm:p-6 flex flex-col justify-between overflow-hidden transform translate-x-[120%] transition-transform duration-300 ease-in-out">
+    <div id="drawer-edit" class="fixed right-0 sm:right-8 lg:right-10 top-0 sm:top-[90px] bottom-0 sm:bottom-8 z-[135] w-full sm:w-[420px] max-w-full sm:max-w-[calc(100vw-40px)] rounded-none sm:rounded-2xl bg-white dark:bg-[#1F2123] border-l sm:border border-gray-100 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.7)] p-4 sm:p-6 flex flex-col justify-between overflow-hidden transform translate-x-[120%] transition-transform duration-300 ease-in-out pb-6 sm:pb-6">
         
         {{-- TABS ATAS --}}
         <div class="flex items-center border-b border-gray-100 dark:border-white/10 pb-2.5 sm:pb-3 gap-3.5 sm:gap-6 text-xs sm:text-[13px] shrink-0">
@@ -405,7 +405,7 @@
                     </div>
                 </div>
 
-                <div class="flex-1 overflow-y-auto pr-1 space-y-4 text-left">
+                <div class="flex-1 overflow-y-auto pr-1 space-y-3.5 text-left pb-4">
                     {{-- Judul Aset --}}
                     <div>
                         <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
@@ -415,7 +415,7 @@
                             type="text"
                             name="asset_block_name"
                             value="{{ $asset->asset_block_name }}"
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
@@ -429,7 +429,7 @@
                             type="text"
                             name="subjudul_aset"
                             value="{{ $contract?->asset_block_name ?? $asset->asset_block_name ?? '-' }} ({{ $asset->asset_number }})"
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
@@ -444,7 +444,7 @@
                             name="nama_penyewa"
                             value="{{ $tenant?->fullname ?? '' }}"
                             placeholder="Masukkan nama penyewa"
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -536,14 +536,14 @@
                     </div>
                 </div>
 
-                <div class="flex-1 overflow-y-auto pr-1 space-y-4 text-left">
+                <div class="flex-1 overflow-y-auto pr-1 space-y-3.5 text-left pb-4">
                     {{-- Input Luas Aset --}}
                     <div>
                         <input
                             type="text"
                             name="size_area"
                             value="{{ $contract?->size_area_formatted ?? ($asset->size_area ? $asset->size_area_formatted : '') }}"
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -554,8 +554,8 @@
                         </label>
                         <textarea
                             name="full_address"
-                            rows="3"
-                            class="w-full min-h-[85px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none leading-relaxed font-normal"
+                            rows="2"
+                            class="w-full min-h-[75px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] p-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none leading-relaxed font-normal"
                         >{{ $contract?->asset_block_name ?? $asset->asset_block_name ?? ($asset->description ?: '') }}</textarea>
                     </div>
 
@@ -568,7 +568,7 @@
                             type="text"
                             name="peruntukan"
                             value="{{ $contract?->peruntukan ?? ($asset->peruntukan ?? '') }}"
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -702,11 +702,11 @@
                                         value="{{ $asset->latitude ?? '-6.88856' }}"
                                         oninput="handleCoordinateInputChange()"
                                         placeholder="-6.88856"
-                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                        class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-medium text-black dark:text-white mb-1">Longtitude</label>
+                                    <label class="block text-xs font-medium text-black dark:text-white mb-1">Longitude</label>
                                     <input
                                         type="text"
                                         id="input-edit-longitude"
@@ -714,7 +714,7 @@
                                         value="{{ $asset->longitude ?? '109.67530' }}"
                                         oninput="handleCoordinateInputChange()"
                                         placeholder="109.67530"
-                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                        class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
                             </div>
@@ -726,7 +726,7 @@
                         <button
                             type="button"
                             onclick="saveEditDrawer()"
-                            class="inline-flex items-center gap-2 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 px-6 py-2.5 text-sm font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
+                            class="inline-flex items-center gap-1.5 rounded-lg bg-[#0066FF] hover:bg-blue-700 px-5 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition active:scale-95 cursor-pointer"
                         >
                             <svg class="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"/>
@@ -757,93 +757,93 @@
                 </button>
             </div>
 
-            <div class="flex-1 overflow-y-auto pr-1 space-y-3.5 text-left">
+            <div class="flex-1 overflow-y-auto pr-1 space-y-3 text-left pb-4">
                 {{-- GL Akun --}}
                 <div>
-                    <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
+                    <label class="block text-xs font-medium text-black dark:text-white mb-1">
                         GL Akun<span class="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
                         name="gl_account"
                         value="{{ $financial->gl_account ?? '' }}"
-                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
 
                 {{-- Form RKA --}}
                 <div>
-                    <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
+                    <label class="block text-xs font-medium text-black dark:text-white mb-1">
                         Form RKA<span class="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
                         name="form_rka"
                         value="{{ $financial->form_rka ?? '' }}"
-                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
 
                 {{-- Row 2 Cols: Tahun RKA & Sales Eksekutif/SPV --}}
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
+                        <label class="block text-xs font-medium text-black dark:text-white mb-1">
                             Tahun RKA<span class="text-red-500">*</span>
                         </label>
-                        <div class="relative">
+                        <div class="relative flex items-center w-full">
+                            <button
+                                type="button"
+                                onclick="openCalendarPicker(event, 'input-tahun-rka')"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                            >
+                                <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
+                            </button>
                             <input
                                 type="text"
                                 id="input-tahun-rka"
                                 name="tahun_rka"
                                 value="{{ $financial->tahun_rka !== null ? $financial->tahun_rka : '' }}"
-                                class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
-                            <button
-                                type="button"
-                                onclick="openCalendarPicker(event, 'input-tahun-rka')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer"
-                            >
-                                <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF]" />
-                            </button>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
+                        <label class="block text-xs font-medium text-black dark:text-white mb-1">
                             Sales Eksekutif/SPV<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="spv"
                             value="{{ $contract->spv ?? '' }}"
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
                 </div>
 
                 {{-- Jenis Pendapatan --}}
                 <div>
-                    <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
+                    <label class="block text-xs font-medium text-black dark:text-white mb-1">
                         Jenis Pendapatan<span class="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
                         name="jenis_pendapatan"
                         value="{{ $financial->jenis_pendapatan ?? '' }}"
-                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
 
                 {{-- Keterangan Pendapatan --}}
                 <div>
-                    <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
+                    <label class="block text-xs font-medium text-black dark:text-white mb-1">
                         Keterangan Pendapatan<span class="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
                         name="ket_pendapatan"
                         value="{{ $financial->keterangan_pendapatan ?? '' }}"
-                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                     >
                 </div>
 
@@ -900,30 +900,30 @@
                 </button>
             </div>
 
-            <div class="flex-1 overflow-y-auto pr-1 space-y-3.5 text-left">
+            <div class="flex-1 overflow-y-auto pr-1 space-y-3 text-left pb-4">
                 {{-- Row 1: Nilai Kontrak & Total Jan-Des --}}
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
+                        <label class="block text-xs font-medium text-black dark:text-white mb-1">
                             Nilai Kontrak<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="price"
                             value="{{ $contract && $contract->price ? 'Rp ' . number_format($contract->price, 0, ',', '.') : '' }}"
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
-                            Total JanG«ÙDes<span class="text-red-500">*</span>
+                        <label class="block text-xs font-medium text-black dark:text-white mb-1">
+                            Total Jan - Des<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="total_jandes"
                             value="{{ $monthly && $monthly->jan_des !== null ? 'Rp ' . number_format($monthly->jan_des, 0, ',', '.') : '' }}"
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
                 </div>
@@ -931,26 +931,26 @@
                 {{-- Row 2: Jumlah Hari & Nilai Per Hari --}}
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
+                        <label class="block text-xs font-medium text-black dark:text-white mb-1">
                             Jumlah Hari<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="jumlah_hari"
                             value="{{ $financial && $financial->jumlah_hari ? number_format($financial->jumlah_hari, 0, ',', '.') . ' hari' : '' }}"
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
+                        <label class="block text-xs font-medium text-black dark:text-white mb-1">
                             Nilai Per Hari<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="nilai_per_hari"
                             value="{{ $financial && $financial->nilai_per_hari ? 'Rp ' . number_format($financial->nilai_per_hari, 0, ',', '.') : '' }}"
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
                 </div>
@@ -958,46 +958,46 @@
                 {{-- Row 3: Hari Berjalan & Nilai Tahun Berjalan --}}
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
+                        <label class="block text-xs font-medium text-black dark:text-white mb-1">
                             Hari Berjalan<span class="text-red-500">*</span>
                         </label>
-                        <div class="relative">
+                        <div class="relative flex items-center w-full">
+                            <button
+                                type="button"
+                                onclick="openCalendarPicker(event, 'input-hari-berjalan')"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                            >
+                                <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
+                            </button>
                             <input
                                 type="text"
                                 id="input-hari-berjalan"
                                 name="hari_berjalan"
                                 value="{{ $financial && $financial->hari_2026 ? number_format($financial->hari_2026, 0, ',', '.') . ' hari' : '' }}"
-                                class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
-                            <button
-                                type="button"
-                                onclick="openCalendarPicker(event, 'input-hari-berjalan')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer"
-                            >
-                                <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF]" />
-                            </button>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-black dark:text-white mb-1.5">
+                        <label class="block text-xs font-medium text-black dark:text-white mb-1">
                             Nilai Tahun Berjalan<span class="text-red-500">*</span>
                         </label>
-                        <div class="relative">
+                        <div class="relative flex items-center w-full">
+                            <button
+                                type="button"
+                                onclick="openCalendarPicker(event, 'input-nilai-tahun-berjalan')"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                            >
+                                <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
+                            </button>
                             <input
                                 type="text"
                                 id="input-nilai-tahun-berjalan"
                                 name="nilai_tahun_berjalan"
                                 value="{{ $financial && $financial->nilai_2026 ? 'Rp ' . number_format($financial->nilai_2026, 0, ',', '.') : '' }}"
-                                class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-3 py-1.5 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
-                            <button
-                                type="button"
-                                onclick="openCalendarPicker(event, 'input-nilai-tahun-berjalan')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer"
-                            >
-                                <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF]" />
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -1027,7 +1027,7 @@
 
                     <div class="grid grid-cols-2 gap-3">
                         {{-- Kolom Kiri: Jan - Jun --}}
-                        <div class="space-y-2.5">
+                        <div class="space-y-2">
                             @foreach($months1 as [$label, $col, $default])
                                 <div>
                                     <label class="block text-[11px] text-gray-500 dark:text-[#9AA0A6] mb-1 font-medium">{{ $label }}</label>
@@ -1035,14 +1035,14 @@
                                         type="text"
                                         name="{{ $col }}"
                                         value="{{ $monthly && $monthly->$col !== null ? number_format((float)$monthly->$col, 0, ',', '.') : $default }}"
-                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                        class="w-full h-[34px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
                             @endforeach
                         </div>
 
                         {{-- Kolom Kanan: Jul - Des --}}
-                        <div class="space-y-2.5">
+                        <div class="space-y-2">
                             @foreach($months2 as [$label, $col, $default])
                                 <div>
                                     <label class="block text-[11px] text-gray-500 dark:text-[#9AA0A6] mb-1 font-medium">{{ $label }}</label>
@@ -1050,7 +1050,7 @@
                                         type="text"
                                         name="{{ $col }}"
                                         value="{{ $monthly && $monthly->$col !== null ? number_format((float)$monthly->$col, 0, ',', '.') : $default }}"
-                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 py-1.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                        class="w-full h-[34px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
                             @endforeach
@@ -1066,7 +1066,7 @@
 
     {{-- POPUP CALENDAR PICKER (Dropdown Style) --}}
     <div id="popup-calendar-picker" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
-        {{-- Header: < [Jun GÓ¶] [2025 GÓ¶] > --}}
+        {{-- Header: < [Jun v] [2025 v] > --}}
         <div class="flex items-center justify-between mb-3.5">
             <button type="button" onclick="calPrevMonth()" class="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>

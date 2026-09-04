@@ -1,4 +1,4 @@
-﻿@props(['active' => 'dashboard'])
+@props(['active' => 'dashboard'])
 
 <!-- ===== TOP NAVIGATION BAR (Sticky, for all screens) ===== -->
 <header id="mainNavbar" class="sticky top-0 z-[100] w-full bg-[#F6F7F9]/95 dark:bg-[#282A2C]/95 backdrop-blur-md transition-all duration-200 border-b border-transparent">
@@ -168,26 +168,26 @@
                 <!-- Dropdown Desktop (Ukuran dan style persis sama dengan dropdown aksi) -->
                 <div
                     id="profileDropdown"
-                    class="absolute right-0 top-full mt-2 w-[190px] sm:w-[210px] origin-top-right rounded-2xl p-2 sm:p-2.5 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.7)] opacity-0 invisible scale-95 transition-all duration-200 bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 z-[110] flex flex-col gap-1"
+                    class="absolute right-0 top-full mt-2 w-max min-w-[200px] sm:min-w-[215px] origin-top-right rounded-2xl p-2 sm:p-2.5 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.7)] opacity-0 invisible scale-95 transition-all duration-200 bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 z-[110] flex flex-col gap-1"
                 >
                     @auth
                         @if(auth()->user()->isSuperAdmin())
                             <!-- Panel Super Admin -->
                             <a
                                 href="{{ route('settings.superadmin') }}"
-                                class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+                                class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition whitespace-nowrap"
                             >
                                 <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
-                                <span>Panel Super Admin</span>
+                                <span class="whitespace-nowrap">Panel Super Admin</span>
                             </a>
                         @else
                             <!-- Pengaturan Akun (Admin) -->
                             <a
                                 href="{{ route('settings.index') }}"
-                                class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+                                class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition whitespace-nowrap"
                             >
                                 <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
-                                <span>Pengaturan Akun</span>
+                                <span class="whitespace-nowrap">Pengaturan Akun</span>
                             </a>
                         @endif
 
@@ -196,29 +196,29 @@
                             @csrf
                             <button
                                 type="submit"
-                                class="flex w-full items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer"
+                                class="flex w-full items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer whitespace-nowrap"
                             >
                                 <x-icon name="logout" class="w-5 h-5 text-[#EF4444] shrink-0" />
-                                <span>Keluar</span>
+                                <span class="whitespace-nowrap">Keluar</span>
                             </button>
                         </form>
                     @else
                         <!-- Pengaturan Akun (Tamu) -->
                         <a
                             href="{{ route('settings.index') }}"
-                            class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+                            class="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition whitespace-nowrap"
                         >
                             <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
-                            <span>Pengaturan Akun</span>
+                            <span class="whitespace-nowrap">Pengaturan Akun</span>
                         </a>
 
                         <!-- Login (Tamu) -->
                         <a
                             href="{{ route('login') }}"
-                            class="flex w-full items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-xl transition cursor-pointer"
+                            class="flex w-full items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-xl transition cursor-pointer whitespace-nowrap"
                         >
                             <x-icon name="icon-masuk" class="w-5 h-5 text-[#0066FF] dark:text-[#3B82F6] shrink-0" />
-                            <span>Masuk</span>
+                            <span class="whitespace-nowrap">Masuk</span>
                         </a>
                     @endauth
                 </div>
@@ -247,19 +247,19 @@
         </a>
 
         <!-- 3. Tengah: FAB Menu (Daftar Kontrak, Jatuh Tempo, Backlog, Laporan) -->
-        <div class="relative">
+        <div class="relative flex items-center justify-center">
             <!-- FAB Action Button -->
             <button
                 id="mobileMenuFab"
                 type="button"
                 onclick="toggleMobileSubMenu()"
-                class="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white shadow-[0_4px_16px_rgba(0,102,255,0.45)] transition-all duration-200 cursor-pointer {{ in_array($active, ['contracts', 'due-dates', 'backlog', 'blacklog', 'reports', 'laporan']) ? 'ring-3 ring-blue-300 dark:ring-blue-800 shadow-[0_0_20px_rgba(0,102,255,0.6)]' : '' }}"
+                class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white p-0 shadow-[0_4px_16px_rgba(0,102,255,0.45)] transition-all duration-200 cursor-pointer {{ in_array($active, ['contracts', 'due-dates', 'backlog', 'blacklog', 'reports', 'laporan']) ? 'ring-3 ring-blue-300 dark:ring-blue-800 shadow-[0_0_20px_rgba(0,102,255,0.6)]' : '' }}"
                 title="Kelola Data"
             >
-                <span id="fabIconOpen">
+                <span id="fabIconOpen" class="flex items-center justify-center w-full h-full pointer-events-none">
                     <x-icon name="nav-add" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
                 </span>
-                <span id="fabIconClose" class="hidden">
+                <span id="fabIconClose" class="hidden items-center justify-center w-full h-full pointer-events-none">
                     <x-icon name="x-mark" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
                 </span>
             </button>
@@ -355,18 +355,18 @@
             @if(auth()->user()->isSuperAdmin())
                 <a
                     href="{{ route('settings.superadmin') }}"
-                    class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+                    class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition whitespace-nowrap"
                 >
                     <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
-                    <span>Panel Super Admin</span>
+                    <span class="whitespace-nowrap">Panel Super Admin</span>
                 </a>
             @else
                 <a
                     href="{{ route('settings.index') }}"
-                    class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+                    class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition whitespace-nowrap"
                 >
                     <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
-                    <span>Pengaturan Akun</span>
+                    <span class="whitespace-nowrap">Pengaturan Akun</span>
                 </a>
             @endif
 
@@ -374,26 +374,26 @@
                 @csrf
                 <button
                     type="submit"
-                    class="flex w-full items-center gap-3 px-3 py-2.5 text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer"
+                    class="flex w-full items-center gap-3 px-3 py-2.5 text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer whitespace-nowrap"
                 >
                     <x-icon name="logout" class="w-5 h-5 text-[#EF4444] shrink-0" />
-                    <span>Keluar</span>
+                    <span class="whitespace-nowrap">Keluar</span>
                 </button>
             </form>
         @else
             <a
                 href="{{ route('settings.index') }}"
-                class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition"
+                class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition whitespace-nowrap"
             >
                 <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
-                <span>Pengaturan Akun</span>
+                <span class="whitespace-nowrap">Pengaturan Akun</span>
             </a>
             <a
                 href="{{ route('login') }}"
-                class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-xl transition"
+                class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-xl transition whitespace-nowrap"
             >
                 <x-icon name="icon-masuk" class="w-5 h-5 text-[#0066FF] dark:text-[#3B82F6] shrink-0" />
-                <span>Masuk</span>
+                <span class="whitespace-nowrap">Masuk</span>
             </a>
         @endauth
     </div>
@@ -424,13 +424,17 @@
             menu.classList.add('flex');
             backdrop?.classList.remove('hidden');
             iconOpen?.classList.add('hidden');
+            iconOpen?.classList.remove('flex');
             iconClose?.classList.remove('hidden');
+            iconClose?.classList.add('flex');
         } else {
             menu.classList.add('hidden');
             menu.classList.remove('flex');
             backdrop?.classList.add('hidden');
             iconOpen?.classList.remove('hidden');
+            iconOpen?.classList.add('flex');
             iconClose?.classList.add('hidden');
+            iconClose?.classList.remove('flex');
         }
     }
 
@@ -445,7 +449,9 @@
         menu.classList.remove('flex');
         backdrop?.classList.add('hidden');
         iconOpen?.classList.remove('hidden');
+        iconOpen?.classList.add('flex');
         iconClose?.classList.add('hidden');
+        iconClose?.classList.remove('flex');
     }
 
     // Mobile Profile Sheet
@@ -518,7 +524,7 @@
             dropdown.classList.add('opacity-0', 'invisible', 'scale-95');
             dropdown.classList.remove('opacity-100', 'visible', 'scale-100');
         } else {
-            // Buka dropdown ΓÇö catat waktu baca sekarang
+            // Buka dropdown — catat waktu baca sekarang
             saveReadAt();
             dropdown.classList.remove('opacity-0', 'invisible', 'scale-95');
             dropdown.classList.add('opacity-100', 'visible', 'scale-100');
@@ -560,7 +566,7 @@
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-gray-800 dark:text-white truncate">${item.asset_block_name}</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">${item.stasiun} ┬╖ ${item.jenis_asset}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">${item.stasiun} · ${item.jenis_asset}</p>
                                     <p class="text-xs text-blue-500 dark:text-blue-400 mt-0.5">${item.created_at}</p>
                                 </div>
                             </a>
@@ -576,7 +582,7 @@
             });
     }
 
-    // Polling otomatis setiap 60 detik ΓÇö hanya update badge
+    // Polling otomatis setiap 60 detik — hanya update badge
     function pollNotifications() {
         fetch('{{ route("notifications.new-assets") }}')
             .then(res => res.json())

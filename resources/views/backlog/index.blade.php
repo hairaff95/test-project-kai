@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
@@ -48,61 +48,64 @@
         {{-- Unified Card Container: Filter Bar + Bordered Table --}}
         <div class="rounded-3xl bg-white dark:bg-[#1F2123] p-3 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-gray-100/90 dark:border-white/10 flex flex-col gap-2.5 sm:gap-4 transition-colors">
 
-            {{-- Filter Bar --}}
-            <div class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2.5 w-full">
+            {{-- Filter Bar Form --}}
+            <form id="filter-form" method="GET" action="{{ route('backlog.index') }}" class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2.5 w-full">
 
                 <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
                     {{-- Search --}}
                     <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
                         <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                         <input
-                            id="search-bl"
                             type="text"
+                            name="search"
+                            id="input-search"
+                            value="{{ request('search') }}"
                             placeholder="Search"
                             class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
                         >
                     </div>
 
+                    {{-- Hidden Inputs for form submit --}}
+                    <input type="hidden" name="status_customer" id="input-status-customer" value="{{ request('status_customer') }}">
+                    <input type="hidden" name="stasiun" id="input-stasiun" value="{{ request('stasiun') }}">
+
                     {{-- Filter Status Customer (Dinamis dari database) --}}
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span id="label-status" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Status Customer</span>
+                            <span id="label-status-customer" class="{{ request('status_customer') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
+                                {{ request('status_customer') ?: 'Status Customer' }}
+                            </span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="filterBlClient('status', '', 'Status Customer')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="selectFilterOption('status_customer', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('status_customer') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Status</span>
                             </button>
                             @foreach($statusCustomerOptions as $opt)
-                                <button type="button" onclick="filterBlClient('status', '{{ $opt }}', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                <button type="button" onclick="selectFilterOption('status_customer', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('status_customer') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                     <span>{{ $opt }}</span>
                                 </button>
                             @endforeach
                         </div>
                     </div>
 
-                    {{-- Filter Semua Stasiun --}}
+                    {{-- Filter Semua Stasiun (Dinamis dari database) --}}
                     <div class="relative custom-filter-container">
                         <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span id="label-stasiun" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Semua Stasiun</span>
+                            <span id="label-stasiun" class="{{ request('stasiun') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
+                                {{ request('stasiun') ?: 'Semua Stasiun' }}
+                            </span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="filterBlClient('stasiun', '', 'Semua Stasiun')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="selectFilterOption('stasiun', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('stasiun') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Stasiun</span>
                             </button>
-                            <button type="button" onclick="filterBlClient('stasiun', 'Semarang Poncol', 'Semarang Poncol')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
-                                <span>Semarang Poncol</span>
-                            </button>
-                            <button type="button" onclick="filterBlClient('stasiun', 'Semarang Tawang', 'Semarang Tawang')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
-                                <span>Semarang Tawang</span>
-                            </button>
-                            <button type="button" onclick="filterBlClient('stasiun', 'Pekalongan', 'Pekalongan')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
-                                <span>Pekalongan</span>
-                            </button>
-                            <button type="button" onclick="filterBlClient('stasiun', 'Tegal', 'Tegal')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
-                                <span>Tegal</span>
-                            </button>
+                            @foreach($stasiunOptions as $st)
+                                <button type="button" onclick="selectFilterOption('stasiun', '{{ $st }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('stasiun') === $st ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                    <span>{{ $st }}</span>
+                                </button>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -118,7 +121,7 @@
                 </a>
                 @endauth
 
-            </div>
+            </form>
 
             {{-- MOBILE CARD LIST VIEW (sm:hidden - Mobile-First Card View) --}}
             <div id="mobile-cards-bl" class="sm:hidden flex flex-col gap-3">
@@ -348,57 +351,41 @@
                 }
             });
 
-            // Filter state
-            const filters = { search: '', status: '', stasiun: '' };
-
-            window.filterBlClient = function (type, value, label) {
-                filters[type] = value;
-
-                if (type === 'status') {
-                    const lbl = document.getElementById('label-status');
-                    lbl.textContent = value ? label : 'Status Customer';
-                    lbl.className = value ? 'text-gray-800 font-semibold text-xs sm:text-sm select-none' : 'text-gray-400 font-normal text-xs sm:text-sm select-none';
-                } else if (type === 'stasiun') {
-                    const lbl = document.getElementById('label-stasiun');
-                    lbl.textContent = value ? label : 'Semua Stasiun';
-                    lbl.className = value ? 'text-gray-800 font-semibold text-xs sm:text-sm select-none' : 'text-gray-400 font-normal text-xs sm:text-sm select-none';
-                }
-
-                // Close menus & reset arrows
-                document.querySelectorAll('.filter-dropdown-menu').forEach(closeSmoothDropdown);
-                document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
-
-                // Apply client-side row and mobile card filtering
-                const rows = document.querySelectorAll('tbody tr[data-status]');
-                rows.forEach(row => {
-                    const text = row.innerText.toLowerCase();
-                    const rowStatus = (row.dataset.status || '').toLowerCase();
-
-                    const matchSearch = !filters.search || text.includes(filters.search.toLowerCase());
-                    const matchStatus = !filters.status || rowStatus === filters.status.toLowerCase();
-                    const matchStasiun = !filters.stasiun || text.includes(filters.stasiun.toLowerCase());
-
-                    row.style.display = (matchSearch && matchStatus && matchStasiun) ? '' : 'none';
-                });
-
-                const cards = document.querySelectorAll('.bl-card-item');
-                cards.forEach(card => {
-                    const text = card.innerText.toLowerCase();
-                    const cardStatus = (card.dataset.status || '').toLowerCase();
-
-                    const matchSearch = !filters.search || text.includes(filters.search.toLowerCase());
-                    const matchStatus = !filters.status || cardStatus === filters.status.toLowerCase();
-                    const matchStasiun = !filters.stasiun || text.includes(filters.stasiun.toLowerCase());
-
-                    card.style.display = (matchSearch && matchStatus && matchStasiun) ? '' : 'none';
-                });
+            const filterLabelMap = {
+                status_customer: { id: 'label-status-customer', default: 'Status Customer' },
+                stasiun:         { id: 'label-stasiun',         default: 'Semua Stasiun' },
             };
 
-            const searchInput = document.getElementById('search-bl');
-            if (searchInput) {
-                searchInput.addEventListener('input', function () {
-                    filters.search = this.value;
-                    filterBlClient('search', this.value, '');
+            window.selectFilterOption = function (name, value) {
+                const inputMap = {
+                    status_customer: 'input-status-customer',
+                    stasiun:         'input-stasiun',
+                };
+                const el = document.getElementById(inputMap[name]);
+                if (el) el.value = value;
+
+                const cfg = filterLabelMap[name];
+                if (cfg) {
+                    const lbl = document.getElementById(cfg.id);
+                    if (lbl) {
+                        lbl.textContent = value || cfg.default;
+                        lbl.className = value
+                            ? 'text-black dark:text-white font-semibold text-[11px] sm:text-xs select-none'
+                            : 'text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none';
+                    }
+                }
+
+                // Tutup dropdown setelah pilih
+                document.querySelectorAll('.filter-dropdown-menu').forEach(closeSmoothDropdown);
+                document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
+            };
+
+            // Tombol Filter -> submit form
+            const btnFilter = document.getElementById('btn-filter-bl');
+            if (btnFilter) {
+                btnFilter.addEventListener('click', function () {
+                    const filterForm = document.getElementById('filter-form');
+                    if (filterForm) filterForm.submit();
                 });
             }
 
