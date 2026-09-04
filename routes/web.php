@@ -33,6 +33,7 @@ Route::get('/ubah-kata-sandi/status/poll', [PasswordResetRequestController::clas
 Route::get('/ubah-kata-sandi/akses/{resetRequest}', [PasswordResetRequestController::class, 'accessViaToken'])->name('password.access-token');
 Route::get('/verifikasi-kode', [AuthController::class, 'showVerifyCode'])->name('password.verify');
 Route::post('/verifikasi-kode', [PasswordResetRequestController::class, 'verifyOtp'])->name('password.verify.post');
+Route::post('/verifikasi-kode/kirim-ulang', [PasswordResetRequestController::class, 'resendOtp'])->name('password.resend-otp');
 Route::get('/ubah-kata-sandi', [AuthController::class, 'showResetPassword'])->name('password.reset');
 
 // ================= PENGATURAN =================

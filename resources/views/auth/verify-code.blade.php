@@ -61,7 +61,7 @@
                 <p class="mb-3 text-left text-xs text-red-500 font-medium">{{ $message }}</p>
             @enderror
 
-            {{-- Resend Code Link (Rata Kiri & Semi-Bold) --}}
+            {{-- Resend Code Link --}}
             <div class="text-left text-xs text-gray-500 dark:text-[#9AA0A6] font-normal mb-6 sm:mb-8">
                 Tidak mendapat kode?
                 <button
@@ -73,7 +73,7 @@
                 </button>
             </div>
 
-            {{-- Submit Button 'Verifikasi' --}}
+            {{-- Submit Button --}}
             <div>
                 <button
                     type="submit"
@@ -95,7 +95,7 @@
     {{-- Script for OTP Inputs Auto Focus & Paste --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const inputs = document.querySelectorAll('.otp-input');
+            const inputs   = document.querySelectorAll('.otp-input');
             const combined = document.getElementById('otp-combined');
 
             function updateCombined() {
