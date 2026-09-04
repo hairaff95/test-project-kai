@@ -20,8 +20,17 @@ function isWibNightTime() {
 }
 
 function initTheme() {
-    const isDark = isWibNightTime();
-    
+    let isDark;
+
+    if (localStorage.getItem('kai_theme') === 'dark') {
+        isDark = true;
+    } else if (localStorage.getItem('kai_theme') === 'light') {
+        isDark = false;
+    } else {
+        // Belum pernah di-set manual → pakai jam WIB
+        isDark = isWibNightTime();
+    }
+
     if (isDark) {
         document.documentElement.classList.add('dark');
     } else {
@@ -32,6 +41,8 @@ function initTheme() {
 
 function toggleTheme() {
     const isDark = document.documentElement.classList.toggle('dark');
+    // Simpan pilihan user ke localStorage
+    localStorage.setItem('kai_theme', isDark ? 'dark' : 'light');
     updateThemeIcons(isDark);
 }
 
