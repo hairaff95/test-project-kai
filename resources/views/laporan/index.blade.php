@@ -57,9 +57,9 @@
             {{-- Filter Bar Form --}}
             <form id="filter-form" method="GET" action="{{ route('laporan.index') }}" class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2.5 w-full">
 
-                <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
+                <div class="flex items-center gap-1.5 sm:gap-2.5 flex-1 sm:flex-none min-w-0">
                     {{-- Search --}}
-                    <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                    <div class="relative flex items-center w-full sm:w-[185px] h-[34px] sm:h-[38px]">
                         <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                         <input
                             type="text"
@@ -67,7 +67,7 @@
                             id="input-search"
                             value="{{ request('search') }}"
                             placeholder="Search"
-                            class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
+                            class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 placeholder:text-xs sm:placeholder:text-sm transition"
                         >
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                 @auth
                 <a
                     href="{{ route('contracts.create') }}"
-                    class="inline-flex items-center gap-1.5 sm:gap-2 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white shadow-xs transition active:scale-95 cursor-pointer ml-auto shrink-0"
+                    class="inline-flex items-center gap-1.5 sm:gap-2 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 px-3 sm:px-4 py-2 sm:py-2.5 h-[34px] sm:h-auto text-xs sm:text-sm font-semibold text-white shadow-xs transition active:scale-95 cursor-pointer ml-auto shrink-0"
                 >
                     <x-icon name="plus-icon" class="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white fill-white" />
                     <span>Tambah Aset</span>

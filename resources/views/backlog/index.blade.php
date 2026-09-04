@@ -51,9 +51,9 @@
             {{-- Filter Bar Form --}}
             <form id="filter-form" method="GET" action="{{ route('backlog.index') }}" class="flex flex-wrap items-center justify-between gap-1.5 sm:gap-2.5 w-full">
 
-                <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5">
+                <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5 w-full sm:w-auto">
                     {{-- Search --}}
-                    <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                    <div class="relative flex items-center flex-1 min-w-[130px] sm:flex-none sm:w-[185px] h-[34px] sm:h-[38px]">
                         <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                         <input
                             type="text"
@@ -61,7 +61,7 @@
                             id="input-search"
                             value="{{ request('search') }}"
                             placeholder="Search"
-                            class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
+                            class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 placeholder:text-xs sm:placeholder:text-sm transition"
                         >
                     </div>
 
@@ -71,18 +71,18 @@
 
                     {{-- Filter Status Customer (Dinamis dari database) --}}
                     <div class="relative custom-filter-container">
-                        <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span id="label-status-customer" class="{{ request('status_customer') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
+                        <button type="button" class="filter-dropdown-btn inline-flex items-center h-[34px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
+                            <span id="label-status-customer" class="{{ request('status_customer') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-xs select-none">
                                 {{ request('status_customer') ?: 'Status Customer' }}
                             </span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="selectFilterOption('status_customer', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('status_customer') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="selectFilterOption('status_customer', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-semibold {{ !request('status_customer') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Status</span>
                             </button>
                             @foreach($statusCustomerOptions as $opt)
-                                <button type="button" onclick="selectFilterOption('status_customer', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('status_customer') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                <button type="button" onclick="selectFilterOption('status_customer', '{{ $opt }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-semibold {{ request('status_customer') === $opt ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                     <span>{{ $opt }}</span>
                                 </button>
                             @endforeach
@@ -91,18 +91,18 @@
 
                     {{-- Filter Semua Stasiun (Dinamis dari database) --}}
                     <div class="relative custom-filter-container">
-                        <button type="button" class="filter-dropdown-btn inline-flex items-center h-[30px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                            <span id="label-stasiun" class="{{ request('stasiun') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-[11px] sm:text-xs select-none">
+                        <button type="button" class="filter-dropdown-btn inline-flex items-center h-[34px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
+                            <span id="label-stasiun" class="{{ request('stasiun') ? 'text-black dark:text-white font-semibold' : 'text-gray-400 dark:text-[#9AA0A6] font-normal' }} text-xs select-none">
                                 {{ request('stasiun') ?: 'Semua Stasiun' }}
                             </span>
                             <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                         </button>
                         <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[160px] max-h-[220px] overflow-y-auto rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
-                            <button type="button" onclick="selectFilterOption('stasiun', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ !request('stasiun') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                            <button type="button" onclick="selectFilterOption('stasiun', '')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-semibold {{ !request('stasiun') ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                 <span>Semua Stasiun</span>
                             </button>
                             @foreach($stasiunOptions as $st)
-                                <button type="button" onclick="selectFilterOption('stasiun', '{{ $st }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold {{ request('stasiun') === $st ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
+                                <button type="button" onclick="selectFilterOption('stasiun', '{{ $st }}')" class="flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-semibold {{ request('stasiun') === $st ? 'bg-blue-50 dark:bg-blue-900/30 text-black dark:text-white' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10' }} rounded-lg lg:rounded-[10px] transition text-left cursor-pointer">
                                     <span>{{ $st }}</span>
                                 </button>
                             @endforeach

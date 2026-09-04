@@ -175,23 +175,23 @@
                         
                         {{-- Header Controls: Search, Role Filter, + Tambah Admin Button --}}
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-4">
-                            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5 flex-1 max-w-md">
+                            <div class="flex items-center gap-2 w-full sm:w-auto flex-1 max-w-md">
                                 {{-- Search Input --}}
-                                <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                                <div class="relative flex items-center flex-1 sm:w-[185px] sm:flex-none h-[36px] sm:h-[38px]">
                                     <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                                     <input
                                         type="text"
                                         placeholder="Search"
                                         id="search-admin-input"
                                         onkeyup="filterAdminTable()"
-                                        class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
+                                        class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 placeholder:text-xs sm:placeholder:text-sm transition"
                                     >
                                 </div>
 
                                 {{-- Role Filter Dropdown (Konsisten Desain Jatuh Tempo) --}}
-                                <div class="relative custom-filter-container">
+                                <div class="relative custom-filter-container shrink-0">
                                     <button type="button" class="filter-dropdown-btn inline-flex items-center h-[36px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                                        <span id="label-role" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Role</span>
+                                        <span id="label-role" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-xs select-none">Role</span>
                                         <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                                     </button>
                                     <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[140px] rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
@@ -343,23 +343,23 @@
                 <div class="rounded-3xl border border-gray-200/80 dark:border-white/10 bg-white dark:bg-[#1F2123] p-6 sm:p-8 shadow-xs space-y-6 transition-colors">
                     
                     {{-- Header Controls: Search & Waktu Pengajuan Filter (Konsisten Desain Jatuh Tempo) --}}
-                    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2.5 max-w-md">
+                    <div class="flex items-center gap-2 w-full sm:w-auto max-w-md">
                         {{-- Search Input --}}
-                        <div class="relative flex items-center w-full sm:w-[185px] h-[36px] sm:h-[38px]">
+                        <div class="relative flex items-center flex-1 sm:w-[185px] sm:flex-none h-[36px] sm:h-[38px]">
                             <x-icon name="search" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 dark:text-[#9AA0A6] absolute left-2.5 sm:left-3 pointer-events-none" />
                             <input
                                 type="text"
                                 placeholder="Search"
                                 id="search-approval-input"
                                 onkeyup="filterApprovalCards()"
-                                class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition"
+                                class="w-full h-full pl-8 sm:pl-9 pr-3 py-1 text-xs sm:text-sm bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 rounded-lg lg:rounded-[10px] focus:outline-none focus:border-[#0066FF] text-gray-700 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 placeholder:text-xs sm:placeholder:text-sm transition"
                             >
                         </div>
 
                         {{-- Filter Waktu Pengajuan Dropdown --}}
-                        <div class="relative custom-filter-container">
+                        <div class="relative custom-filter-container shrink-0">
                             <button type="button" class="filter-dropdown-btn inline-flex items-center h-[36px] sm:h-[38px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3 py-1 transition cursor-pointer">
-                                <span id="label-waktu" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-[11px] sm:text-xs select-none">Waktu Pengajuan</span>
+                                <span id="label-waktu" class="text-gray-400 dark:text-[#9AA0A6] font-normal text-xs select-none">Waktu Pengajuan</span>
                                 <x-icon name="chevron-down" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 dark:text-[#9AA0A6] ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
                             </button>
                             <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] min-w-[150px] rounded-lg lg:rounded-[10px] bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1.5 flex flex-col gap-0.5">
