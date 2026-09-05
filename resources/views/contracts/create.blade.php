@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Tambah Aset & Kontrak ΓÇö KAI Tracker App</title>
+    <title>Tambah Aset & Kontrak — KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -28,7 +28,7 @@
     <x-navbar active="contracts" />
 
     {{-- Main Content --}}
-    <main class="w-full flex-1 max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-10 pt-3 sm:pt-6 pb-36 sm:pb-36 lg:pb-12 flex flex-col gap-4 sm:gap-6">
+    <main class="w-full flex-1 max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-10 pt-3 sm:pt-6 pb-28 lg:pb-10 flex flex-col gap-4 sm:gap-6">
 
         {{-- Page Header & Breadcrumbs & Action Buttons --}}
         <div class="flex items-center justify-between gap-3 shrink-0">
@@ -119,99 +119,55 @@
                             name="status_customer"
                             id="input_status_customer"
                             list="list_status_customer"
-                            value="{{ old('status_customer', 'LAMA') }}"
-                            placeholder="Contoh: LAMA / BARU"
+                            value="{{ old('status_customer', 'Swasta') }}"
+                            placeholder="Pilih atau ketik status..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                         <datalist id="list_status_customer">
-                            <option value="LAMA"></option>
-                            <option value="BARU"></option>
+                            <option value="Swasta"></option>
+                            <option value="BUMN"></option>
+                            <option value="Individu"></option>
+                            <option value="Pemerintah"></option>
                         </datalist>
                     </div>
 
-                    {{-- NIK --}}
+                    {{-- Jenis Perusahaan --}}
                     <div class="flex flex-col">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            NIK (16 Digit)
+                            Jenis Perusahaan
                         </label>
                         <input
                             type="text"
-                            name="nik"
-                            value="{{ old('nik') }}"
-                            maxlength="16"
-                            placeholder="3325..."
+                            name="jenis_perusahaan"
+                            list="list_jenis_perusahaan"
+                            value="{{ old('jenis_perusahaan', '-') }}"
+                            placeholder="Contoh: - / PT / CV"
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
+                        <datalist id="list_jenis_perusahaan">
+                            <option value="-"></option>
+                            <option value="PT"></option>
+                            <option value="CV"></option>
+                            <option value="Yayasan"></option>
+                            <option value="Koperasi"></option>
+                            <option value="BUMN"></option>
+                            <option value="BUMD"></option>
+                        </datalist>
                     </div>
 
-                    {{-- Instansi / Perusahaan --}}
-                    <div class="flex flex-col sm:col-span-2">
+                    {{-- Brand / Merek --}}
+                    <div class="flex flex-col sm:col-span-2 lg:col-span-4">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Instansi / Perusahaan
+                            Brand / Usaha
                         </label>
                         <input
                             type="text"
-                            name="instansi"
-                            value="{{ old('instansi') }}"
-                            placeholder="Contoh: PT Kereta Api Indonesia / Perseorangan"
+                            name="brand"
+                            value="{{ old('brand') }}"
+                            placeholder="Jika kosong, sistem akan otomatis mencatat (kosong)"
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
-                    </div>
-
-                    {{-- NIP / NRP --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            NIP / NRP Pegawai
-                        </label>
-                        <input
-                            type="text"
-                            name="nip"
-                            value="{{ old('nip') }}"
-                            placeholder="NIP / NRP..."
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                        >
-                    </div>
-
-                    {{-- No Telepon / WA --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            No. Telepon / WhatsApp
-                        </label>
-                        <input
-                            type="text"
-                            name="phone_number"
-                            value="{{ old('phone_number') }}"
-                            placeholder="08xxxxxxxxxx"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                        >
-                    </div>
-
-                    {{-- Email Penyewa --}}
-                    <div class="flex flex-col sm:col-span-2">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            placeholder="nama@email.com"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                        >
-                    </div>
-
-                    {{-- Alamat Penyewa --}}
-                    <div class="flex flex-col sm:col-span-2">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Alamat Lengkap Penyewa
-                        </label>
-                        <textarea
-                            name="address"
-                            rows="2"
-                            placeholder="Alamat domisili..."
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] p-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none font-normal"
-                        >{{ old('address') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -220,124 +176,47 @@
             <div class="rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-6 shadow-[0_4px_25px_rgba(0,0,0,0.03)] transition-colors">
                 <div class="mb-3.5 sm:mb-4 border-b border-gray-100 dark:border-white/10 pb-2.5">
                     <h2 class="text-xs sm:text-sm font-bold text-gray-950 dark:text-white">
-                        2. Identitas & Lokasi Aset
+                        2. Informasi Aset KAI
                     </h2>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    {{-- Judul / Blok Aset --}}
-                    <div class="flex flex-col sm:col-span-2">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Judul Aset / Nama Lokasi<span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="asset_block_name"
-                            value="{{ old('asset_block_name') }}"
-                            placeholder="Contoh: Tanah & Bangunan Jl. Pemuda No. 1"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                            required
-                        >
-                    </div>
-
                     {{-- Nomor Aset --}}
                     <div class="flex flex-col">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Nomor Aset (Kode Aset)<span class="text-red-500">*</span>
+                            Nomor / Kode Aset<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="asset_number"
                             value="{{ old('asset_number') }}"
-                            placeholder="Contoh: AST-SMG-001"
+                            placeholder="Contoh: 04.01.00764"
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
 
-                    {{-- Klasifikasi Aset --}}
+                    {{-- Jenis Aset --}}
                     <div class="flex flex-col">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Klasifikasi Aset<span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="klasifikasi_asset"
-                            list="list_klasifikasi_asset"
-                            value="{{ old('klasifikasi_asset', 'NON ROW') }}"
-                            placeholder="NON ROW / ROW"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                            required
-                        >
-                        <datalist id="list_klasifikasi_asset">
-                            <option value="NON ROW"></option>
-                            <option value="ROW"></option>
-                        </datalist>
-                    </div>
-
-                    {{-- Jenis Aset (Kategori) --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Jenis Aset (Kategori)<span class="text-red-500">*</span>
+                            Jenis Aset<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="jenis_asset"
+                            id="input_jenis_asset"
                             list="list_jenis_asset"
-                            value="{{ old('jenis_asset', 'Rumah Perusahaan') }}"
-                            placeholder="Pilih atau ketik jenis aset"
+                            value="{{ old('jenis_asset', 'Tanah') }}"
+                            placeholder="Pilih atau ketik jenis aset..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                         <datalist id="list_jenis_asset">
-                            <option value="Rumah Perusahaan"></option>
+                            <option value="Tanah"></option>
                             <option value="Bangunan"></option>
-                            <option value="Lahan/Tanah"></option>
-                            <option value="Jembatan/Komersial"></option>
-                            <option value="Kios"></option>
-                            <option value="Lainnya"></option>
+                            <option value="Fasilitas"></option>
+                            <option value="Rumah Perusahaan"></option>
                         </datalist>
-                    </div>
-
-                    {{-- Stasiun Terdekat --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Stasiun Terdekat<span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="stasiun"
-                            list="list_stasiun"
-                            value="{{ old('stasiun', 'Pekalongan') }}"
-                            placeholder="Contoh: Pekalongan, Tawang"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                            required
-                        >
-                        <datalist id="list_stasiun">
-                            <option value="Pekalongan"></option>
-                            <option value="Batang"></option>
-                            <option value="Ujungnegoro"></option>
-                            <option value="Weleri"></option>
-                            <option value="Kendal"></option>
-                            <option value="Kaliwungu"></option>
-                            <option value="Semarang Poncol"></option>
-                            <option value="Semarang Tawang"></option>
-                        </datalist>
-                    </div>
-
-                    {{-- Wilayah Aset --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Wilayah Aset (Daop)<span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="wilayah_asset"
-                            value="{{ old('wilayah_asset', 'Daop 4 Semarang') }}"
-                            placeholder="Daop 4 Semarang"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                            required
-                        >
                     </div>
 
                     {{-- Luas Aset --}}
@@ -346,138 +225,187 @@
                             Luas Aset (m²)
                         </label>
                         <input
-                            type="number"
-                            step="0.01"
-                            name="asset_area"
-                            value="{{ old('asset_area') }}"
-                            placeholder="Contoh: 150.5"
+                            type="text"
+                            name="size_area"
+                            value="{{ old('size_area', '43.5') }}"
+                            placeholder="Contoh: 42 / 43.5"
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
-                    {{-- Alamat Lengkap Aset --}}
-                    <div class="flex flex-col sm:col-span-2 lg:col-span-4">
+                    {{-- Peruntukan --}}
+                    <div class="flex flex-col">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Alamat Lengkap Aset<span class="text-red-500">*</span>
+                            Peruntukan
                         </label>
-                        <textarea
-                            name="address_asset"
-                            rows="2"
-                            placeholder="Jl. ..., RT/RW ..., Kel. ..., Kec. ..., Kota/Kab. ..."
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] p-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none font-normal"
-                            required
-                        >{{ old('address_asset') }}</textarea>
-                    </div>
-
-                    {{-- Upload Foto Aset (Multiple) --}}
-                    <div class="flex flex-col sm:col-span-2 lg:col-span-4">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Foto / Gambar Aset
-                        </label>
-
-                        {{-- Hidden Real File Input (Multiple) --}}
-                        <input type="file" name="asset_images[]" id="file-upload-input" class="hidden" accept="image/jpeg,image/png,image/webp,image/jpg" onchange="handleFileUpload(event)" multiple>
-
-                        {{-- Dropzone / Upload Trigger Button --}}
-                        <div
-                            id="file-upload-zone"
-                            onclick="document.getElementById('file-upload-input').click()"
-                            ondragover="handleDragOver(event)"
-                            ondragleave="handleDragLeave(event)"
-                            ondrop="handleDrop(event)"
-                            class="relative flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 dark:border-white/20 bg-gray-50/50 dark:bg-[#282A2C]/50 px-4 py-3.5 text-center transition hover:border-[#0066FF] dark:hover:border-[#3B82F6] hover:bg-blue-50/20 cursor-pointer"
+                        <input
+                            type="text"
+                            name="peruntukan"
+                            id="input_peruntukan"
+                            list="list_peruntukan"
+                            value="{{ old('peruntukan', 'RUMAH TINGGAL') }}"
+                            placeholder="Contoh: RUMAH TINGGAL / -"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
-                            <svg class="h-6 w-6 text-gray-400 dark:text-[#9AA0A6] mb-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="17 8 12 3 7 8"/>
-                                <line x1="12" y1="3" x2="12" y2="15"/>
-                            </svg>
-                            <p class="text-xs font-medium text-gray-700 dark:text-gray-200">
-                                <span class="text-[#0066FF] dark:text-[#3B82F6] font-semibold">Klik untuk upload</span> atau drag & drop gambar ke sini
-                            </p>
-                            <p class="text-[10px] text-gray-400 dark:text-[#9AA0A6] mt-0.5">
-                                PNG, JPG, JPEG, WEBP (Bisa pilih beberapa gambar sekaligus, maks. 5MB per file)
-                            </p>
+                        <datalist id="list_peruntukan">
+                            <option value="RUMAH TINGGAL"></option>
+                            <option value="KANTOR"></option>
+                            <option value="USAHA / BISNIS"></option>
+                            <option value="GUDANG"></option>
+                            <option value="TAMAN"></option>
+                            <option value="-"></option>
+                        </datalist>
+                    </div>
+
+                    {{-- Stasiun Terdekat --}}
+                    <div class="flex flex-col">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            Stasiun Terdekat
+                        </label>
+                        <input
+                            type="text"
+                            name="stasiun"
+                            id="input_stasiun"
+                            list="list_stasiun"
+                            value="{{ old('stasiun', 'Pekalongan') }}"
+                            placeholder="Pilih atau ketik stasiun..."
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
+                        <datalist id="list_stasiun">
+                            <option value="Pekalongan"></option>
+                            <option value="Semarang Tawang"></option>
+                            <option value="Semarang Poncol"></option>
+                            <option value="Tegal"></option>
+                            <option value="Pekalongan Barat"></option>
+                        </datalist>
+                    </div>
+
+                    {{-- Wilayah Aset --}}
+                    <div class="flex flex-col">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            Wilayah Aset
+                        </label>
+                        <input
+                            type="text"
+                            name="wilayah_asset"
+                            id="input_wilayah_asset"
+                            list="list_wilayah"
+                            value="{{ old('wilayah_asset', 'Daop 4 Semarang') }}"
+                            placeholder="Pilih atau ketik wilayah..."
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
+                    </div>
+
+                    {{-- Nama Blok Aset (Full Width) --}}
+                    <div class="flex flex-col sm:col-span-2 lg:col-span-2">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            Nama Blok Aset / Lokasi Lengkap<span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="asset_block_name"
+                            value="{{ old('asset_block_name') }}"
+                            placeholder="Contoh: SEKITAR KM. 2+533 S.D KM. 3+533 KEL. PRINGREJO KEC. PEKALONGAN BARAT"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            required
+                        >
+                    </div>
+                </div>
+            </div>
+
+            {{-- CARD: TAMBAH GAMBAR ASET --}}
+            <div class="rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-6 shadow-[0_4px_25px_rgba(0,0,0,0.03)] transition-colors">
+                <div class="flex items-center justify-between mb-3.5 sm:mb-4 border-b border-gray-100 dark:border-white/10 pb-2.5">
+                    <h2 class="text-xs sm:text-sm font-bold text-gray-950 dark:text-white">
+                        Tambah Gambar<span class="text-red-500">*</span>
+                    </h2>
+                </div>
+
+                <div class="space-y-4 text-left">
+                    {{-- Upload Box Dashed --}}
+                    <div onclick="document.getElementById('file-upload-input').click()" class="rounded-2xl border-2 border-dashed border-gray-300 dark:border-white/20 bg-transparent hover:bg-gray-50/70 dark:hover:bg-white/5 py-8 px-5 flex flex-col items-center justify-center text-center transition cursor-pointer">
+                        <input type="file" name="asset_images[]" id="file-upload-input" class="hidden" accept="image/jpeg,image/png,image/webp,image/jpg" onchange="handleFileUpload(event)" multiple>
+                        <x-icon name="icon-upload-gambar" class="w-16 h-16 mb-2.5 text-[#4F4F4F] dark:text-[#9AA0A6]" />
+                        <p class="text-xs sm:text-[13px] font-medium text-black dark:text-white">Klik ikon untuk tambah gambar dibawah 10 MB</p>
+                        <p class="text-[11px] text-gray-400 dark:text-[#9AA0A6] mt-0.5 font-normal">pilih dalam format JPEG, JPG, PNG, WEBP</p>
+                    </div>
+
+                    {{-- Container List Gambar DnD --}}
+                    <div id="image-dnd-wrapper" class="space-y-3">
+                        {{-- Slot Utama --}}
+                        <div>
+                            <label class="block text-xs font-medium text-black dark:text-white mb-1.5">Utama</label>
+                            <div id="image-slot-utama" class="image-drop-target">
+                                {{-- Rendered dynamically by renderImageList() --}}
+                            </div>
                         </div>
 
-                        {{-- Container Preview List Gambar yang Terpilih --}}
-                        <div id="file-preview-list" class="mt-2.5 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2.5">
-                            {{-- Preview Cards dynamically injected by JS --}}
+                        {{-- Grid Gambar Lainnya (2 Kolom) --}}
+                        <div id="image-grid-secondary" class="grid grid-cols-1 sm:grid-cols-2 gap-3 image-drop-target">
+                            {{-- Rendered dynamically by renderImageList() --}}
                         </div>
                     </div>
 
-                    {{-- Koordinat Latitude & Longitude & Leaflet Interactive Map Preview --}}
-                    <div class="flex flex-col sm:col-span-2 lg:col-span-4 mt-2">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                            <div>
-                                <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white">
-                                    Titik Koordinat & Peta Lokasi Aset<span class="text-red-500">*</span>
-                                </label>
-                                <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">
-                                    Geser pin pada peta atau ketik koordinat latitude & longitude di bawah.
-                                </p>
+                    {{-- Titik Koordinat G Maps (Google Maps Asli & Sinkronisasi Realtime) --}}
+                    <div class="pt-3 border-t border-gray-100 dark:border-white/10 mt-4">
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-950 dark:text-white mb-2">
+                            Titik Koordinat G Maps<span class="text-red-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-3.5 items-center">
+                            <div class="h-[145px] sm:h-[160px] w-full rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-[#282A2C] relative shadow-2xs">
+                                <div id="edit-map-preview" class="w-full h-full z-0"></div>
                             </div>
 
-                            <div class="flex items-center gap-2">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-[10px] sm:text-[11px] text-gray-500 dark:text-gray-400 font-medium">Lat:</span>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 dark:text-white mb-1">Latitude</label>
                                     <input
                                         type="text"
-                                        id="input-create-latitude"
+                                        id="input-edit-latitude"
                                         name="latitude"
-                                        value="{{ old('latitude', '-6.888632') }}"
+                                        value="{{ old('latitude', '-6.8887') }}"
                                         oninput="handleCoordinateInputChange()"
-                                        placeholder="-6.888632"
-                                        class="w-24 sm:w-28 h-[30px] rounded-md border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2 text-[11px] text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                                        required
+                                        placeholder="-6.8887"
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-[10px] sm:text-[11px] text-gray-500 dark:text-gray-400 font-medium">Lng:</span>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 dark:text-white mb-1">Longtitude</label>
                                     <input
                                         type="text"
-                                        id="input-create-longitude"
+                                        id="input-edit-longitude"
                                         name="longitude"
-                                        value="{{ old('longitude', '109.675300') }}"
+                                        value="{{ old('longitude', '109.6738') }}"
                                         oninput="handleCoordinateInputChange()"
-                                        placeholder="109.675300"
-                                        class="w-24 sm:w-28 h-[30px] rounded-md border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2 text-[11px] text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                                        required
+                                        placeholder="109.6738"
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
-                            </div>
-                        </div>
-
-                        {{-- Leaflet Interactive Map Container --}}
-                        <div class="relative w-full h-[220px] sm:h-[300px] rounded-xl overflow-hidden border border-gray-200 dark:border-white/10 shadow-xs">
-                            <div id="map-preview-create" class="w-full h-full z-0"></div>
-                            <div class="absolute bottom-2 left-2 z-[400] bg-white/90 dark:bg-[#1F2123]/90 backdrop-blur-xs px-2 py-1 rounded-md text-[10px] text-gray-600 dark:text-gray-300 shadow-xs border border-gray-200 dark:border-white/10">
-                                📍 Klik peta untuk pindahkan pin lokasi
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- CARD 3: INFORMASI KONTRAK & SEWA --}}
+            {{-- CARD 3: INFORMASI KONTRAK & PERIODE SEWA --}}
             <div class="rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-6 shadow-[0_4px_25px_rgba(0,0,0,0.03)] transition-colors">
                 <div class="mb-3.5 sm:mb-4 border-b border-gray-100 dark:border-white/10 pb-2.5">
                     <h2 class="text-xs sm:text-sm font-bold text-gray-950 dark:text-white">
-                        3. Informasi Kontrak, Perjanjian & Masa Sewa
+                        3. Informasi Kontrak & Periode Sewa
                     </h2>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     {{-- Nomor Kontrak --}}
-                    <div class="flex flex-col">
+                    <div class="flex flex-col sm:col-span-2">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Nomor Kontrak (Perjanjian)<span class="text-red-500">*</span>
+                            Nomor Kontrak<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="contract_number"
                             value="{{ old('contract_number') }}"
-                            placeholder="Contoh: KAI/D4/2026/001"
+                            placeholder="Contoh: 0004/51116/D.4/941/PK/TN/XI/2016"
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
@@ -491,53 +419,52 @@
                         <input
                             type="text"
                             name="jenis_kontrak"
+                            id="input_jenis_kontrak"
                             list="list_jenis_kontrak"
                             value="{{ old('jenis_kontrak', 'Kontrak Sewa') }}"
-                            placeholder="Pilih jenis kontrak"
+                            placeholder="Pilih atau ketik jenis kontrak..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                         <datalist id="list_jenis_kontrak">
                             <option value="Kontrak Sewa"></option>
-                            <option value="Kontrak Pengawasan"></option>
-                            <option value="Perjanjian Bangun Guna Serah"></option>
+                            <option value="Perjanjian Kerjasama"></option>
                             <option value="Addendum"></option>
+                            <option value="Sewa Tanah"></option>
+                            <option value="Sewa Bangunan"></option>
                         </datalist>
                     </div>
 
-                    {{-- Status Kontrak / Perjanjian --}}
+                    {{-- Area Kontrak --}}
                     <div class="flex flex-col">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Status Perjanjian / Kontrak<span class="text-red-500">*</span>
+                            Area Kontrak
                         </label>
                         <input
                             type="text"
-                            name="status_perjanjian"
-                            list="list_status_perjanjian"
-                            value="{{ old('status_perjanjian', 'Sewa Baru') }}"
-                            placeholder="Contoh: Sewa Baru, Perpanjangan"
+                            name="area_kontrak"
+                            id="input_area_kontrak"
+                            list="list_wilayah"
+                            value="{{ old('area_kontrak', 'Daop 4 Semarang') }}"
+                            placeholder="Pilih atau ketik area..."
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
+                    </div>
+
+                    {{-- Nilai Kontrak / Harga --}}
+                    <div class="flex flex-col">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            Nilai Kontrak / Harga (Rp)<span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="price"
+                            id="input-price-main"
+                            oninput="syncPriceToRevenue(this.value)"
+                            value="{{ old('price') }}"
+                            placeholder="Contoh: 1.887.604"
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
-                        >
-                        <datalist id="list_status_perjanjian">
-                            <option value="Sewa Baru"></option>
-                            <option value="Perpanjangan"></option>
-                            <option value="Selesai"></option>
-                            <option value="Batal"></option>
-                        </datalist>
-                    </div>
-
-                    {{-- Peruntukan Sewa --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Peruntukan Sewa
-                        </label>
-                        <input
-                            type="text"
-                            name="peruntukan"
-                            value="{{ old('peruntukan', 'Hunian / Tempat Tinggal') }}"
-                            placeholder="Contoh: Hunian, Usaha Kuliner, Toko"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -546,11 +473,11 @@
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
                             Tanggal Kontrak
                         </label>
-                        <div class="relative flex items-center w-full">
+                        <div class="relative">
                             <button
                                 type="button"
                                 onclick="openCalendarPicker(event, 'input-contract-date')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
                             >
                                 <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
                             </button>
@@ -558,11 +485,44 @@
                                 type="text"
                                 id="input-contract-date"
                                 name="contract_date"
-                                value="{{ old('contract_date', date('d/m/Y')) }}"
-                                placeholder="DD/MM/YYYY"
-                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-9 pr-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                value="{{ old('contract_date', date('d/m/y')) }}"
+                                placeholder="DD/MM/YY"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
+                    </div>
+
+                    {{-- PIC / SPV --}}
+                    <div class="flex flex-col">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            SPV / Penanggung Jawab
+                        </label>
+                        <input
+                            type="text"
+                            name="spv"
+                            value="{{ old('spv', 'PIC Daop 4 Semarang') }}"
+                            placeholder="Nama SPV"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
+                    </div>
+
+                    {{-- Keterangan --}}
+                    <div class="flex flex-col">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            Keterangan
+                        </label>
+                        <input
+                            type="text"
+                            name="keterangan"
+                            list="list_keterangan"
+                            value="{{ old('keterangan', 'RKA') }}"
+                            placeholder="Contoh: RKA / Non RKA"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
+                        <datalist id="list_keterangan">
+                            <option value="RKA"></option>
+                            <option value="Non RKA"></option>
+                        </datalist>
                     </div>
 
                     {{-- Tanggal Mulai --}}
@@ -570,11 +530,11 @@
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
                             Tanggal Mulai Awal
                         </label>
-                        <div class="relative flex items-center w-full">
+                        <div class="relative">
                             <button
                                 type="button"
                                 onclick="openCalendarPicker(event, 'input-start-date')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
                             >
                                 <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
                             </button>
@@ -582,9 +542,9 @@
                                 type="text"
                                 id="input-start-date"
                                 name="start_datetime"
-                                value="{{ old('start_datetime', date('d/m/Y')) }}"
-                                placeholder="DD/MM/YYYY"
-                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-9 pr-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                value="{{ old('start_datetime', '01/01/' . date('y')) }}"
+                                placeholder="DD/MM/YY"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
                     </div>
@@ -594,11 +554,11 @@
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
                             Tanggal Selesai (Jatuh Tempo)<span class="text-red-500">*</span>
                         </label>
-                        <div class="relative flex items-center w-full">
+                        <div class="relative">
                             <button
                                 type="button"
                                 onclick="openCalendarPicker(event, 'input-end-date')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
                             >
                                 <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
                             </button>
@@ -606,9 +566,9 @@
                                 type="text"
                                 id="input-end-date"
                                 name="end_datetime"
-                                value="{{ old('end_datetime') }}"
-                                placeholder="DD/MM/YYYY"
-                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-9 pr-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                value="{{ old('end_datetime', '31/12/' . date('y')) }}"
+                                placeholder="DD/MM/YY"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                 required
                             >
                         </div>
@@ -619,11 +579,11 @@
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
                             Tanggal Mulai Baru (Addendum)
                         </label>
-                        <div class="relative flex items-center w-full">
+                        <div class="relative">
                             <button
                                 type="button"
                                 onclick="openCalendarPicker(event, 'input-start-date-baru')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
                             >
                                 <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
                             </button>
@@ -632,8 +592,8 @@
                                 id="input-start-date-baru"
                                 name="start_datetime_baru"
                                 value="{{ old('start_datetime_baru') }}"
-                                placeholder="DD/MM/YYYY"
-                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-9 pr-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                placeholder="DD/MM/YY"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
                     </div>
@@ -643,11 +603,11 @@
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
                             Tanggal Selesai Baru (Addendum)
                         </label>
-                        <div class="relative flex items-center w-full">
+                        <div class="relative">
                             <button
                                 type="button"
                                 onclick="openCalendarPicker(event, 'input-end-date-baru')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
                             >
                                 <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
                             </button>
@@ -656,8 +616,8 @@
                                 id="input-end-date-baru"
                                 name="end_datetime_baru"
                                 value="{{ old('end_datetime_baru') }}"
-                                placeholder="DD/MM/YYYY"
-                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-9 pr-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                placeholder="DD/MM/YY"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
                     </div>
@@ -853,7 +813,7 @@
 
     {{-- POPUP CALENDAR PICKER (Dropdown Style) --}}
     <div id="popup-calendar-picker" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
-        {{-- Header: < [Jun Γî╡] [2025 Γî╡] > --}}
+        {{-- Header: < [Jun ⌵] [2025 ⌵] > --}}
         <div class="flex items-center justify-between mb-3.5">
             <button type="button" onclick="calPrevMonth()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
