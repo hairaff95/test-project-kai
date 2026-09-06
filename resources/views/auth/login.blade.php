@@ -40,8 +40,8 @@
 
     <div class="h-full min-h-[100dvh] w-full flex flex-col lg:grid lg:grid-cols-[1.12fr_0.88fr] xl:grid-cols-[1.18fr_0.82fr] overflow-hidden">
 
-        {{-- BLUE BANNER: HERO HEADER DI MOBILE (Gambar Besar & Jelas), FULL CURVED SPLIT-SCREEN DI DESKTOP --}}
-        <div class="blue-curved-banner relative bg-[#3285FF] text-white px-5 pt-3.5 pb-2.5 sm:px-8 sm:pt-5 sm:pb-3 lg:p-14 lg:pr-24 flex flex-col justify-between overflow-hidden h-[40dvh] sm:h-[42dvh] lg:h-full shrink-0 rounded-b-[28px] sm:rounded-b-[36px] lg:rounded-none shadow-sm lg:shadow-none z-10">
+        {{-- BLUE BANNER: HERO HEADER DI MOBILE (Gambar Besar, Jelas & Proporsional), FULL CURVED SPLIT-SCREEN DI DESKTOP --}}
+        <div class="blue-curved-banner relative bg-[#3285FF] text-white px-5 pt-3.5 pb-3 sm:px-8 sm:pt-5 sm:pb-4 lg:p-14 lg:pr-24 flex flex-col justify-between overflow-hidden h-[36dvh] sm:h-[40dvh] lg:h-full shrink-0 rounded-b-[28px] sm:rounded-b-[36px] lg:rounded-none shadow-sm lg:shadow-none z-10">
             
             {{-- Lingkaran Aksen #5197FF --}}
             <div class="absolute -top-10 -right-10 lg:-top-12 lg:right-12 w-40 h-40 sm:w-56 sm:h-56 lg:w-[480px] lg:h-[480px] rounded-full bg-[#5197FF] pointer-events-none"></div>
@@ -52,11 +52,11 @@
                 <x-icon name="logo-login-page" class="h-6 sm:h-7 lg:h-11 w-auto" />
             </div>
 
-            {{-- Center: Security Illustration terpusat via <x-icon name="aset-gambar-login-page" /> (Besar, Jelas & Proporsional) --}}
-            <div class="relative z-20 my-auto w-full lg:max-w-[86%] flex items-center justify-center py-1 lg:py-6 overflow-hidden">
+            {{-- Center: Security Illustration terpusat via <x-icon name="aset-gambar-login-page" /> (Besar, Jelas & Tidak Terpotong) --}}
+            <div class="relative z-20 flex-1 min-h-0 w-full lg:max-w-[86%] flex items-center justify-center py-1 sm:py-2 lg:py-6 my-auto">
                 <x-icon
                     name="aset-gambar-login-page"
-                    class="h-[140px] sm:h-[175px] lg:h-auto w-auto max-w-[85%] sm:max-w-[340px] lg:max-w-[500px] object-contain select-none pointer-events-none drop-shadow-md lg:drop-shadow-2xl mx-auto transition-transform"
+                    class="h-full max-h-[155px] sm:max-h-[190px] lg:max-h-none lg:h-auto w-auto max-w-[85%] sm:max-w-[340px] lg:max-w-[500px] object-contain select-none pointer-events-none drop-shadow-md lg:drop-shadow-2xl mx-auto transition-transform"
                 />
             </div>
 
@@ -69,7 +69,7 @@
 
 
         {{-- RIGHT / BOTTOM SIDE: FORM LOGIN (Mobile & Desktop) --}}
-        <div class="flex-1 flex flex-col justify-between items-center px-6 sm:px-12 lg:px-16 py-4 sm:py-6 lg:py-8 bg-white dark:bg-[#1F2123] z-20 transition-colors h-full overflow-hidden">
+        <div class="flex-1 flex flex-col justify-between items-center px-6 sm:px-12 lg:px-16 py-3.5 sm:py-6 lg:py-8 bg-white dark:bg-[#1F2123] z-20 transition-colors h-full overflow-y-auto lg:overflow-hidden">
             
             <div class="w-full max-w-[360px] lg:max-w-[380px] my-auto">
 
@@ -146,10 +146,10 @@
                         </div>
                     </div>
 
-                    {{-- Ubah kata sandi link --}}
+                    {{-- Lupa kata sandi link --}}
                     <div class="pt-0.5">
                         <a href="{{ route('password.verify') }}" class="text-xs text-gray-500 dark:text-[#9AA0A6] hover:text-[#0066FF] dark:hover:text-[#3B82F6] underline transition inline-block cursor-pointer">
-                            Ubah kata sandi
+                            Lupa kata sandi?
                         </a>
                     </div>
 

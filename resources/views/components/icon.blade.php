@@ -1,4 +1,4 @@
-@props(['name'])
+@props(['name' => ''])
 
 @switch($name)
     @case('kai-logo')
@@ -1654,7 +1654,7 @@
     @case('aset-gambar-login-page')
     @case('login-illustration')
     @case('gambar-login-page')
-        <svg {{ $attributes->merge(['class' => 'h-[280px] sm:h-[350px] lg:h-[400px] w-auto mx-auto', 'viewBox' => '0 0 587 436', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+        <svg {{ $attributes->merge(['class' => 'w-full h-auto', 'viewBox' => '0 0 587 436', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
             <path d="M452.074 358.395H131.503V409.168H452.074V358.395Z" fill="#6498F6"/>
 <path d="M142.159 358.726L173.615 378.607L209.482 359.194" fill="#0063F3"/>
 <path d="M142.159 358.726L173.615 378.607L209.482 359.194" stroke="#000E39" stroke-width="0.87773" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1909,6 +1909,171 @@
             <path d="M255.525 35.727L248.23 22.2652C248.23 22.2652 238.692 29.3796 228.445 26.589C228.445 26.589 222.733 24.0695 224.663 18.4769C226.597 12.8676 234.365 14.352 238.199 12.3767C245.19 8.77589 261.597 8.3174 262.192 21.1521C262.711 32.3489 258.597 37.047 258.597 37.047L255.525 35.727Z" fill="#000E39"/>
             <path d="M264.219 33.6627C264.796 36.144 263.318 38.6174 260.917 39.1869C258.516 39.7571 256.102 38.2079 255.524 35.7266C254.947 33.2453 256.426 30.772 258.826 30.2025C261.227 29.6323 263.642 31.1814 264.219 33.6627Z" fill="#FFCEBD"/>
             <path d="M255.73 22.1928C255.507 25.0418 253.015 27.1699 250.166 26.9464C247.317 26.7229 243.207 24.2315 243.432 21.3826C243.655 18.5336 248.128 16.4055 250.976 16.629C253.825 16.8532 255.953 19.3439 255.73 22.1928Z" fill="#000E39"/>
+        </svg>
+        @break
+
+    @case('icon-corp')
+    @case('corp')
+    @case('building-corp')
+        <svg {{ $attributes->merge(['class' => 'w-full h-full text-[#0066FF]', 'viewBox' => '0 0 21 19', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 18.7775V0H10.4319V4.17278H20.8639V18.7775H0ZM2.08639 16.6911H8.34555V14.6047H2.08639V16.6911ZM2.08639 12.5183H8.34555V10.4319H2.08639V12.5183ZM2.08639 8.34555H8.34555V6.25916H2.08639V8.34555ZM2.08639 4.17278H8.34555V2.08639H2.08639V4.17278ZM10.4319 16.6911H18.7775V6.25916H10.4319V16.6911ZM12.5183 10.4319V8.34555H16.6911V10.4319H12.5183ZM12.5183 14.6047V12.5183H16.6911V14.6047H12.5183Z" fill="currentColor"/>
+        </svg>
+        @break
+
+    @case('icon-alamat')
+    @case('alamat-icon')
+    @case('popup-alamat')
+        <svg {{ $attributes->merge(['class' => 'w-full h-full', 'viewBox' => '-1 -1 24 21', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <g filter="url(#f_d_alm)">
+                <g filter="url(#f1_d_alm)">
+                    <path d="M4.51 3.01C4.51 2.18 5.18 1.5 6.01 1.5H18.04C18.87 1.5 19.54 2.18 19.54 3.01V11.28C19.54 12.11 18.87 12.78 18.04 12.78H6.01C5.18 12.78 4.51 12.11 4.51 11.28V3.01Z" fill="url(#p0_lin_alm)"/>
+                </g>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M10.52 4.51L13.53 5.26V16.54L10.52 15.79V10.31C10.78 10.77 11.27 11.09 11.84 11.09C12.67 11.09 13.34 10.41 13.34 9.58C13.34 8.75 12.67 8.08 11.84 8.08C11.27 8.08 10.78 8.39 10.52 8.86V4.51Z" fill="white" fill-opacity="0.4"/>
+                <path d="M7.52 5.26L4.51 4.51V15.79L7.52 16.54V5.26Z" fill="white" fill-opacity="0.4"/>
+                <path d="M13.53 5.26L16.54 4.51V15.79L13.53 16.54V5.26Z" fill="white" fill-opacity="0.4"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M10.52 4.51L7.52 5.26V16.54L10.52 15.79V10.31C10.4 10.1 10.34 9.85 10.34 9.58C10.34 9.32 10.4 9.07 10.52 8.86V4.51Z" fill="white" fill-opacity="0.4"/>
+                <path d="M1.5 5.26L4.51 4.51V15.79L1.5 16.54V5.26Z" fill="white" fill-opacity="0.4"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12.06 14.28C12.7 13.72 14.47 11.93 14.47 9.69C14.47 8.32 13.65 6.95 11.84 6.95C10.03 6.95 9.21 8.32 9.21 9.69C9.21 11.93 10.98 13.72 11.62 14.28C11.75 14.4 11.93 14.4 12.06 14.28ZM11.84 11.09C12.67 11.09 13.34 10.41 13.34 9.58C13.34 8.75 12.67 8.08 11.84 8.08C11.01 8.08 10.34 8.75 10.34 9.58C10.34 10.41 11.01 11.09 11.84 11.09Z" fill="white" fill-opacity="0.6"/>
+            </g>
+            <defs>
+                <filter id="f_d_alm" x="-20%" y="-20%" width="150%" height="150%">
+                    <feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#93DF32" flood-opacity="0.4"/>
+                </filter>
+                <filter id="f1_d_alm" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="0.75"/>
+                    <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/>
+                    <feBlend mode="normal" in="SourceGraphic" result="shape"/>
+                </filter>
+                <linearGradient id="p0_lin_alm" x1="12" y1="1.5" x2="12" y2="12.8" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#93DF32"/>
+                    <stop offset="1" stop-color="#70BD0D"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        @break
+
+    @case('icon-luas')
+    @case('luas-icon')
+    @case('popup-luas')
+        <svg {{ $attributes->merge(['class' => 'w-full h-full', 'viewBox' => '-1 -1 23 25', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <g filter="url(#f_d_ls)">
+                <g filter="url(#f1_d_ls)">
+                    <path d="M9.99 6.92C9.99 6.49 10.34 6.15 10.76 6.15H17.68C18.1 6.15 18.45 6.49 18.45 6.92V16.14C18.45 16.57 18.1 16.91 17.68 16.91H10.76C10.34 16.91 9.99 16.57 9.99 16.14V6.92Z" fill="url(#p0_lin_ls)"/>
+                </g>
+                <g filter="url(#f2_d_ls)">
+                    <path d="M5.38 2.31C5.38 1.88 5.72 1.54 6.15 1.54H11.53C11.95 1.54 12.3 1.88 12.3 2.31V16.14C12.3 16.57 11.95 16.91 11.53 16.91H6.15C5.72 16.91 5.38 16.57 5.38 16.14V2.31Z" fill="url(#p1_lin_ls)"/>
+                </g>
+                <path d="M1.54 5.38C1.54 4.96 1.88 4.61 2.31 4.61H7.69C8.11 4.61 8.46 4.96 8.46 5.38V19.22C8.46 19.64 8.11 19.99 7.69 19.99H2.31C1.88 19.99 1.54 19.64 1.54 19.22V5.38Z" fill="white" fill-opacity="0.4"/>
+            </g>
+            <defs>
+                <filter id="f_d_ls" x="-20%" y="-20%" width="150%" height="150%">
+                    <feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#31C8D2" flood-opacity="0.4"/>
+                </filter>
+                <filter id="f1_d_ls" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="0.75"/>
+                    <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/>
+                    <feBlend mode="normal" in="SourceGraphic" result="shape"/>
+                </filter>
+                <filter id="f2_d_ls" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="0.75"/>
+                    <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/>
+                    <feBlend mode="normal" in="SourceGraphic" result="shape"/>
+                </filter>
+                <linearGradient id="p0_lin_ls" x1="14.2" y1="6.1" x2="14.2" y2="16.9" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#31C8D2"/>
+                    <stop offset="1" stop-color="#1AA6E1"/>
+                </linearGradient>
+                <linearGradient id="p1_lin_ls" x1="8.8" y1="1.5" x2="8.8" y2="16.9" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#31C8D2"/>
+                    <stop offset="1" stop-color="#1AA6E1"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        @break
+
+    @case('icon-jenis')
+    @case('jenis-icon')
+    @case('popup-jenis')
+        <svg {{ $attributes->merge(['class' => 'w-full h-full', 'viewBox' => '-1 -1 24 23', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <g filter="url(#f_d_jns)">
+                <g filter="url(#f1_d_jns)">
+                    <path d="M4.51 3.01C4.51 2.18 5.18 1.5 6.01 1.5H18.04C18.87 1.5 19.54 2.18 19.54 3.01V11.28C19.54 12.11 18.87 12.78 18.04 12.78H6.01C5.18 12.78 4.51 12.11 4.51 11.28V3.01Z" fill="url(#p0_lin_jns)"/>
+                </g>
+                <path d="M1.5 5.26C1.5 4.85 1.84 4.51 2.25 4.51H15.79C16.2 4.51 16.54 4.85 16.54 5.26V6.77C16.54 7.18 16.2 7.52 15.79 7.52H2.25C1.84 7.52 1.5 7.18 1.5 6.77V5.26Z" fill="white" fill-opacity="0.4"/>
+                <path d="M1.5 8.64C1.5 8.44 1.67 8.27 1.88 8.27H14.66C14.87 8.27 15.03 8.44 15.03 8.64V10.15C15.03 10.36 14.87 10.52 14.66 10.52H1.88C1.67 10.52 1.5 10.36 1.5 10.15V8.64Z" fill="white" fill-opacity="0.4"/>
+                <path d="M1.5 11.65C1.5 11.44 1.67 11.28 1.88 11.28H8.64C8.85 11.28 9.02 11.44 9.02 11.65V12.4C9.02 12.61 8.85 12.78 8.64 12.78H1.88C1.67 12.78 1.5 12.61 1.5 12.4V11.65Z" fill="white" fill-opacity="0.4"/>
+                <path d="M11.22 16.68C12.1 18.11 13.71 18.11 14.63 18C16.48 17.78 17.78 16.73 17.41 13.23C17.31 12.26 16.57 11.86 15.69 12.45C15.36 11.51 13.75 11.78 13.84 12.67L13.64 10.73C13.56 10 13.16 9.31 12.33 9.41C11.5 9.5 11.5 10.49 11.6 11.41L11.96 14.87L11.17 13.98C10.91 13.76 10.24 13.15 9.7 13.41C9.17 13.67 9.08 14.23 9.37 14.68C9.65 15.14 10.65 15.76 11.22 16.68Z" fill="white" fill-opacity="0.6"/>
+            </g>
+            <defs>
+                <filter id="f_d_jns" x="-20%" y="-20%" width="150%" height="150%">
+                    <feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#9D68F3" flood-opacity="0.4"/>
+                </filter>
+                <filter id="f1_d_jns" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="0.75"/>
+                    <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/>
+                    <feBlend mode="normal" in="SourceGraphic" result="shape"/>
+                </filter>
+                <linearGradient id="p0_lin_jns" x1="12" y1="1.5" x2="12" y2="12.8" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#6966FF"/>
+                    <stop offset="1" stop-color="#9D68F3"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        @break
+
+    @case('icon-nilai')
+    @case('nilai-icon')
+    @case('popup-nilai')
+        <svg {{ $attributes->merge(['class' => 'w-full h-full', 'viewBox' => '-1 -1 23 20', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <g filter="url(#f_d_nl)">
+                <g filter="url(#f1_d_nl)">
+                    <path d="M4.2 2.8C4.2 2.03 4.83 1.4 5.6 1.4H16.8C17.57 1.4 18.2 2.03 18.2 2.8V9.1C18.2 9.87 17.57 10.5 16.8 10.5H5.6C4.83 10.5 4.2 9.87 4.2 9.1V2.8Z" fill="url(#p0_lin_nl)"/>
+                </g>
+                <path d="M3.85 4.25C4.05 3.5 4.82 3.06 5.57 3.26L16.39 6.15C17.13 6.35 17.58 7.12 17.38 7.87L15.75 13.96C15.55 14.7 14.78 15.15 14.03 14.95L3.21 12.05C2.47 11.85 2.02 11.08 2.22 10.33L3.85 4.25Z" fill="white" fill-opacity="0.4"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.4 7.35C1.4 6.58 2.03 5.95 2.8 5.95H14C14.77 5.95 15.4 6.58 15.4 7.35V13.65C15.4 14.42 14.77 15.05 14 15.05H2.8C2.03 15.05 1.4 14.42 1.4 13.65V7.35ZM10.5 10.5C10.5 12.24 9.56 13.65 8.4 13.65C7.24 13.65 6.3 12.24 6.3 10.5C6.3 8.76 7.24 7.35 8.4 7.35C9.56 7.35 10.5 8.76 10.5 10.5ZM3.85 7.7C3.85 8.09 3.54 8.4 3.15 8.4C2.76 8.4 2.45 8.09 2.45 7.7C2.45 7.31 2.76 7 3.15 7C3.54 7 3.85 7.31 3.85 7.7ZM14.35 7.7C14.35 8.09 14.04 8.4 13.65 8.4C13.26 8.4 12.95 8.09 12.95 7.7C12.95 7.31 13.26 7 13.65 7C14.04 7 14.35 7.31 14.35 7.7ZM3.15 14C3.54 14 3.85 13.69 3.85 13.3C3.85 12.91 3.54 12.6 3.15 12.6C2.76 12.6 2.45 12.91 2.45 13.3C2.45 13.69 2.76 14 3.15 14ZM14.35 13.3C14.35 13.69 14.04 14 13.65 14C13.26 14 12.95 13.69 12.95 13.3C12.95 12.91 13.26 12.6 13.65 12.6C14.04 12.6 14.35 12.91 14.35 13.3Z" fill="white" fill-opacity="0.4"/>
+            </g>
+            <defs>
+                <filter id="f_d_nl" x="-20%" y="-20%" width="150%" height="150%">
+                    <feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#21EB66" flood-opacity="0.4"/>
+                </filter>
+                <filter id="f1_d_nl" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="0.75"/>
+                    <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/>
+                    <feBlend mode="normal" in="SourceGraphic" result="shape"/>
+                </filter>
+                <linearGradient id="p0_lin_nl" x1="11.2" y1="1.4" x2="11.2" y2="10.5" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#21EB66"/>
+                    <stop offset="1" stop-color="#12D583"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        @break
+
+    @case('icon-periode')
+    @case('periode-icon')
+    @case('popup-periode')
+        <svg {{ $attributes->merge(['class' => 'w-full h-full', 'viewBox' => '-1 -1 25 22', 'fill' => 'none']) }} xmlns="http://www.w3.org/2000/svg">
+            <g filter="url(#f_d_prd)">
+                <g filter="url(#f1_d_prd)">
+                    <path d="M4.57 3.05C4.57 2.21 5.25 1.52 6.09 1.52H18.28C19.12 1.52 19.81 2.21 19.81 3.05V11.43C19.81 12.27 19.12 12.95 18.28 12.95H6.09C5.25 12.95 4.57 12.27 4.57 11.43V3.05Z" fill="url(#p0_lin_prd)"/>
+                </g>
+                <path d="M1.52 6.09V6.86H16.76V6.09C16.76 5.25 16.08 4.57 15.24 4.57H3.05C2.21 4.57 1.52 5.25 1.52 6.09Z" fill="white" fill-opacity="0.4"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16.76 7.62V15.24C16.76 16.08 16.08 16.76 15.24 16.76H3.05C2.21 16.76 1.52 16.08 1.52 15.24V7.62H16.76ZM13.71 10.67C14.13 10.67 14.47 10.32 14.47 9.9C14.47 9.48 14.13 9.14 13.71 9.14C13.29 9.14 12.95 9.48 12.95 9.9C12.95 10.32 13.29 10.67 13.71 10.67Z" fill="white" fill-opacity="0.4"/>
+            </g>
+            <defs>
+                <filter id="f_d_prd" x="-20%" y="-20%" width="150%" height="150%">
+                    <feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#FFA800" flood-opacity="0.4"/>
+                </filter>
+                <filter id="f1_d_prd" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="0.75"/>
+                    <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/>
+                    <feBlend mode="normal" in="SourceGraphic" result="shape"/>
+                </filter>
+                <linearGradient id="p0_lin_prd" x1="12.2" y1="1.5" x2="12.2" y2="12.9" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#FFA800"/>
+                    <stop offset="1" stop-color="#FF7A00"/>
+                </linearGradient>
+            </defs>
         </svg>
         @break
 

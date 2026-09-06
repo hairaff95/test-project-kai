@@ -20,18 +20,54 @@
     {{-- Leaflet JS & CSS for Google Maps Interactive Preview --}}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+    @media (max-width: 1023.98px) {
+        .mobile-dropup-sheet {
+            animation: slideUpEditSheet 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    }
+    @keyframes slideUpEditSheet {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
 </head>
 
 <body class="min-h-screen bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between transition-colors duration-200">
 
-    {{-- Top Navbar --}}
-    <x-navbar active="contracts" />
+    {{-- Top Navbar (Desktop Only on Edit Page) --}}
+    <div class="hidden lg:block">
+        <x-navbar active="contracts" />
+    </div>
 
-    {{-- Main Content --}}
-    <main class="w-full flex-1 max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-10 pt-3 sm:pt-6 pb-36 sm:pb-36 lg:pb-12 flex flex-col gap-4 sm:gap-6">
+    {{-- Mobile Sheet Backdrop Overlay --}}
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 lg:hidden" onclick="window.location.href='{{ route('contracts.index') }}'"></div>
 
-        {{-- Page Header & Breadcrumbs & Action Buttons --}}
-        <div class="flex items-center justify-between gap-3 shrink-0">
+    {{-- Main Content / Mobile Dropup Bottom Sheet Panel --}}
+    <main class="mobile-dropup-sheet fixed inset-x-0 bottom-0 z-50 h-[90dvh] max-h-[90dvh] flex flex-col bg-white dark:bg-[#1F2123] rounded-t-[36px] sm:rounded-t-[40px] shadow-[0_-16px_50px_rgba(0,0,0,0.25)] dark:shadow-[0_-16px_50px_rgba(0,0,0,0.85)] border-t border-x border-gray-100 dark:border-white/10 overflow-hidden lg:static lg:h-auto lg:max-h-none lg:rounded-none lg:bg-transparent lg:shadow-none lg:border-none lg:overflow-visible w-full flex-1 max-w-[1600px] mx-auto lg:px-10 lg:pt-6 lg:pb-10 transition-all duration-300" style="padding-bottom: 0 !important;">
+
+        {{-- Mobile Dropup Sheet Header (Persis Desain Filter Peta) --}}
+        <div class="px-5 pt-5 pb-3.5 flex items-center justify-between border-b border-gray-100 dark:border-white/10 shrink-0 lg:hidden">
+            <div class="flex items-center gap-2">
+                <h2 class="text-base font-bold text-gray-950 dark:text-white tracking-tight">
+                    Edit Daftar Kontrak
+                </h2>
+            </div>
+            <a href="{{ route('contracts.index') }}" class="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer" aria-label="Tutup">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </a>
+        </div>
+
+        {{-- Desktop Page Header & Breadcrumbs & Action Buttons --}}
+        <div class="hidden lg:flex items-center justify-between gap-3 shrink-0 mb-6">
             <div>
                 <h1 class="text-lg sm:text-[26px] font-bold tracking-tight text-gray-950 dark:text-white">
                     Edit Daftar Kontrak
@@ -49,7 +85,7 @@
                     type="submit"
                     form="form-edit-contract"
                     onclick="if(window.setPendingToast) window.setPendingToast('Sukses update data kontrak terbaru!', 'success');"
-                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#0066FF] hover:bg-blue-700 px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
+                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#0066FF] hover:bg-blue-700 px-3.5 sm:px-5 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition active:scale-95 cursor-pointer"
                 >
                     <svg class="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"/>
@@ -59,7 +95,7 @@
 
                 <a
                     href="{{ route('contracts.index') }}"
-                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#E60000] hover:bg-red-700 px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
+                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#E60000] hover:bg-red-700 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition active:scale-95 cursor-pointer"
                 >
                     <svg class="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -70,10 +106,12 @@
             </div>
         </div>
 
-        {{-- Form & Grid Container --}}
-        <form id="form-edit-contract" action="{{ route('contracts.update', $contract->contract_number) }}" method="POST" onsubmit="if(window.setPendingToast) window.setPendingToast('Sukses update data kontrak terbaru!', 'success');" class="w-full">
-            @csrf
-            @method('PUT')
+        {{-- Scrollable Form Wrapper for Mobile & Full Layout for Desktop --}}
+        <div class="overflow-y-auto min-h-0 flex-1 px-4 py-4 sm:px-6 lg:px-0 lg:py-0 lg:overflow-visible lg:flex-none flex flex-col gap-4 sm:gap-6 pb-8 lg:pb-0">
+            {{-- Form & Grid Container --}}
+            <form id="form-edit-contract" action="{{ route('contracts.update', $contract->contract_number) }}" method="POST" onsubmit="if(window.setPendingToast) window.setPendingToast('Sukses update data kontrak terbaru!', 'success');" class="w-full">
+                @csrf
+                @method('PUT')
 
             <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px] gap-3.5 sm:gap-6 items-start">
 
@@ -306,7 +344,18 @@
                 </div>
 
             </div>
-        </form>
+            </form>
+        </div>
+
+        {{-- Mobile Dropup Sheet Footer (Sticky Bottom Action Bar) --}}
+        <div class="px-6 pt-3.5 pb-3 flex items-center justify-between shrink-0 border-t border-gray-100 dark:border-white/10 bg-white dark:bg-[#1F2123] lg:hidden z-20" style="padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));">
+            <a href="{{ route('contracts.index') }}" class="text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:underline cursor-pointer select-none transition py-2 px-1">
+                Batal
+            </a>
+            <button type="submit" form="form-edit-contract" onclick="if(window.setPendingToast) window.setPendingToast('Sukses update data kontrak terbaru!', 'success');" class="h-[46px] min-h-[46px] px-6 rounded-[14px] bg-[#0066FF] hover:bg-blue-700 text-sm font-semibold text-white transition shadow-sm cursor-pointer select-none flex items-center justify-center shrink-0">
+                Simpan
+            </button>
+        </div>
 
     </main>
 

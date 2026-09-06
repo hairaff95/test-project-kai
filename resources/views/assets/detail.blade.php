@@ -368,13 +368,20 @@
     @auth
     <div id="drawer-edit-backdrop" class="opacity-0 pointer-events-none fixed inset-0 z-[130] bg-black/40 backdrop-blur-xs transition-opacity duration-300" onclick="closeEditDrawer()"></div>
 
-    <div id="drawer-edit" class="fixed right-0 sm:right-8 lg:right-10 top-0 sm:top-[90px] bottom-0 sm:bottom-8 z-[135] w-full sm:w-[420px] max-w-full sm:max-w-[calc(100vw-40px)] rounded-none sm:rounded-2xl bg-white dark:bg-[#1F2123] border-l sm:border border-gray-100 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.7)] p-4 sm:p-6 flex flex-col justify-between overflow-hidden transform translate-x-[120%] transition-transform duration-300 ease-in-out pb-6 sm:pb-6">
+    <div id="drawer-edit" class="fixed inset-x-0 bottom-0 sm:inset-x-auto sm:right-8 lg:right-10 sm:top-[90px] sm:bottom-8 z-[135] w-full sm:w-[420px] max-w-full sm:max-w-[calc(100vw-40px)] max-h-[92vh] sm:max-h-none rounded-t-[36px] sm:rounded-2xl bg-white dark:bg-[#1F2123] border-t sm:border border-gray-100 dark:border-white/10 shadow-[0_-16px_50px_rgba(0,0,0,0.25)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.18)] dark:shadow-[0_-16px_50px_rgba(0,0,0,0.85)] dark:sm:shadow-[0_20px_60px_rgba(0,0,0,0.7)] p-4 sm:p-6 flex flex-col justify-between overflow-hidden transform translate-y-full sm:translate-y-0 sm:translate-x-[120%] transition-transform duration-300 ease-in-out pb-6 sm:pb-6">
         
-        {{-- TABS ATAS --}}
-        <div class="flex items-center border-b border-gray-100 dark:border-white/10 pb-2.5 sm:pb-3 gap-3.5 sm:gap-6 text-xs sm:text-[13px] shrink-0">
-            <button type="button" id="tab-btn-info" onclick="switchEditTab('info')" class="font-medium text-[#0066FF] dark:text-[#3B82F6] border-b-2 border-[#0066FF] dark:border-[#3B82F6] pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer">Informasi Aset</button>
-            <button type="button" id="tab-btn-admin" onclick="switchEditTab('admin')" class="font-medium text-gray-500 dark:text-white hover:text-gray-800 dark:hover:text-white pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer">Data Administratif</button>
-            <button type="button" id="tab-btn-finansial" onclick="switchEditTab('finansial')" class="font-medium text-gray-500 dark:text-white hover:text-gray-800 dark:hover:text-white pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer">Data Finansial</button>
+        {{-- TABS ATAS & TOMBOL TUTUP --}}
+        <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/10 pb-2.5 sm:pb-3 shrink-0 mb-1">
+            <div class="flex items-center gap-3 sm:gap-6 text-xs sm:text-[13px] overflow-x-auto">
+                <button type="button" id="tab-btn-info" onclick="switchEditTab('info')" class="font-medium text-[#0066FF] dark:text-[#3B82F6] border-b-2 border-[#0066FF] dark:border-[#3B82F6] pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer whitespace-nowrap">Informasi Aset</button>
+                <button type="button" id="tab-btn-admin" onclick="switchEditTab('admin')" class="font-medium text-gray-500 dark:text-white hover:text-gray-800 dark:hover:text-white pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer whitespace-nowrap">Data Administratif</button>
+                <button type="button" id="tab-btn-finansial" onclick="switchEditTab('finansial')" class="font-medium text-gray-500 dark:text-white hover:text-gray-800 dark:hover:text-white pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer whitespace-nowrap">Data Finansial</button>
+            </div>
+            <button type="button" onclick="closeEditDrawer()" class="sm:hidden w-7 h-7 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-white transition -mr-1" aria-label="Tutup">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
 
         {{-- FORM EDIT DRAWER --}}
@@ -1176,8 +1183,13 @@
             goToInfoStep(1);
             backdrop.classList.remove('opacity-0', 'pointer-events-none');
             backdrop.classList.add('opacity-100');
-            drawer.classList.remove('translate-x-[120%]');
-            drawer.classList.add('translate-x-0');
+            if (window.innerWidth < 640) {
+                drawer.classList.remove('translate-y-full');
+                drawer.classList.add('translate-y-0');
+            } else {
+                drawer.classList.remove('translate-x-[120%]');
+                drawer.classList.add('translate-x-0');
+            }
             initDragAndDrop();
             renderImageList();
         }
@@ -1187,8 +1199,13 @@
             const backdrop = document.getElementById('drawer-edit-backdrop');
             
             closeCalendarPicker();
-            drawer.classList.remove('translate-x-0');
-            drawer.classList.add('translate-x-[120%]');
+            if (window.innerWidth < 640) {
+                drawer.classList.remove('translate-y-0');
+                drawer.classList.add('translate-y-full');
+            } else {
+                drawer.classList.remove('translate-x-0');
+                drawer.classList.add('translate-x-[120%]');
+            }
             backdrop.classList.remove('opacity-100');
             backdrop.classList.add('opacity-0', 'pointer-events-none');
         }

@@ -20,18 +20,54 @@
     {{-- Leaflet JS & CSS for Google Maps Interactive Preview --}}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+    @media (max-width: 1023.98px) {
+        .mobile-dropup-sheet {
+            animation: slideUpCreateSheet 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    }
+    @keyframes slideUpCreateSheet {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
 </head>
 
 <body class="min-h-screen bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between transition-colors duration-200">
 
-    {{-- Top Navbar --}}
-    <x-navbar active="contracts" />
+    {{-- Top Navbar (Desktop Only on Create Page) --}}
+    <div class="hidden lg:block">
+        <x-navbar active="contracts" />
+    </div>
 
-    {{-- Main Content --}}
-    <main class="w-full flex-1 max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-10 pt-3 sm:pt-6 pb-28 lg:pb-10 flex flex-col gap-4 sm:gap-6">
+    {{-- Mobile Sheet Backdrop Overlay --}}
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 lg:hidden" onclick="window.location.href='{{ route('contracts.index') }}'"></div>
 
-        {{-- Page Header & Breadcrumbs & Action Buttons --}}
-        <div class="flex items-center justify-between gap-3 shrink-0">
+    {{-- Main Content / Mobile Dropup Bottom Sheet Panel --}}
+    <main class="mobile-dropup-sheet fixed inset-x-0 bottom-0 z-50 h-[90dvh] max-h-[90dvh] flex flex-col bg-white dark:bg-[#1F2123] rounded-t-[36px] sm:rounded-t-[40px] shadow-[0_-16px_50px_rgba(0,0,0,0.25)] dark:shadow-[0_-16px_50px_rgba(0,0,0,0.85)] border-t border-x border-gray-100 dark:border-white/10 overflow-hidden lg:static lg:h-auto lg:max-h-none lg:rounded-none lg:bg-transparent lg:shadow-none lg:border-none lg:overflow-visible w-full flex-1 max-w-[1600px] mx-auto lg:px-10 lg:pt-6 lg:pb-10 transition-all duration-300" style="padding-bottom: 0 !important;">
+
+        {{-- Mobile Dropup Sheet Header (Persis Desain Filter Peta) --}}
+        <div class="px-5 pt-5 pb-3.5 flex items-center justify-between border-b border-gray-100 dark:border-white/10 shrink-0 lg:hidden">
+            <div class="flex items-center gap-2">
+                <h2 class="text-base font-bold text-gray-950 dark:text-white tracking-tight">
+                    Tambah Aset & Kontrak
+                </h2>
+            </div>
+            <a href="{{ route('contracts.index') }}" class="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer" aria-label="Tutup">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </a>
+        </div>
+
+        {{-- Desktop Page Header & Breadcrumbs & Action Buttons --}}
+        <div class="hidden lg:flex items-center justify-between gap-3 shrink-0 mb-6">
             <div>
                 <h1 class="text-lg sm:text-[26px] font-bold tracking-tight text-gray-950 dark:text-white">
                     Tambah Aset & Kontrak Baru
@@ -69,9 +105,11 @@
             </div>
         </div>
 
-        {{-- Form Container: Full Width Unified Layout --}}
-        <form id="form-create-contract" action="{{ route('contracts.store') }}" method="POST" enctype="multipart/form-data" class="w-full flex flex-col gap-4 sm:gap-6">
-            @csrf
+        {{-- Scrollable Form Wrapper for Mobile & Full Layout for Desktop --}}
+        <div class="overflow-y-auto min-h-0 flex-1 px-4 py-4 sm:px-6 lg:px-0 lg:py-0 lg:overflow-visible lg:flex-none flex flex-col gap-4 sm:gap-6 pb-8 lg:pb-0">
+            {{-- Form Container: Full Width Unified Layout --}}
+            <form id="form-create-contract" action="{{ route('contracts.store') }}" method="POST" enctype="multipart/form-data" class="w-full flex flex-col gap-4 sm:gap-6">
+                @csrf
 
             {{-- Validation Errors Alert --}}
             @if ($errors->any())
@@ -806,8 +844,18 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
+
+        {{-- Mobile Dropup Sheet Footer (Sticky Bottom Action Bar) --}}
+        <div class="px-6 pt-3.5 pb-3 flex items-center justify-between shrink-0 border-t border-gray-100 dark:border-white/10 bg-white dark:bg-[#1F2123] lg:hidden z-20" style="padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));">
+            <a href="{{ route('contracts.index') }}" class="text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:underline cursor-pointer select-none transition py-2 px-1">
+                Batal
+            </a>
+            <button type="submit" form="form-create-contract" class="h-[46px] min-h-[46px] px-6 rounded-[14px] bg-[#0066FF] hover:bg-blue-700 text-sm font-semibold text-white transition shadow-sm cursor-pointer select-none flex items-center justify-center shrink-0">
+                Simpan Aset
+            </button>
+        </div>
 
     </main>
 
@@ -845,7 +893,7 @@
     </div>
 
     {{-- Footer Copyright --}}
-    <footer class="w-full text-center py-4 text-xs text-gray-400 dark:text-[#787E87] border-t border-gray-100 dark:border-white/5">
+    <footer class="hidden lg:block w-full text-center py-4 text-xs text-gray-400 dark:text-[#787E87] border-t border-gray-100 dark:border-white/5">
         &copy; {{ date('Y') }} PT Kereta Api Indonesia (Persero) Daop 4 Semarang. All rights reserved.
     </footer>
 
