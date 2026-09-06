@@ -52,7 +52,7 @@ return [
             // menghindari replication lag yang membingungkan.
             // ponytail: single-host fallback ke DB_HOST lokal jika DB_READ_HOST/DB_WRITE_HOST tidak diset.
             'read' => [
-                'host' => [env('DB_READ_HOST', env('DB_HOST', '127.0.0.1'))],
+                'host' => array_values(array_filter(array_map('trim', explode(',', (string) env('DB_READ_HOST', env('DB_HOST', '127.0.0.1')))))),
             ],
             'write' => [
                 'host' => [env('DB_WRITE_HOST', env('DB_HOST', '127.0.0.1'))],

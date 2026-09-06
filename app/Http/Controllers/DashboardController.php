@@ -40,21 +40,36 @@ class DashboardController extends Controller
         });
 
         // ── 2. Data Bulanan untuk Chart ──────────────────────────────────
-        // Di-cache terpisah karena query ini 12x SUM ke monthly_schedules (cukup berat)
+        // Di-cache terpisah — dihitung dalam 1 query agregat cepat
         $chartData = Cache::remember('dashboard_chart_monthly', self::CACHE_STATS_TTL, function () {
+            $sums = MonthlySchedule::selectRaw('
+                COALESCE(SUM(januari), 0) as jan,
+                COALESCE(SUM(febuari), 0) as feb,
+                COALESCE(SUM(maret), 0) as mar,
+                COALESCE(SUM(april), 0) as apr,
+                COALESCE(SUM(mei), 0) as mei,
+                COALESCE(SUM(juni), 0) as jun,
+                COALESCE(SUM(juli), 0) as jul,
+                COALESCE(SUM(agustus), 0) as agu,
+                COALESCE(SUM(september), 0) as sep,
+                COALESCE(SUM(oktober), 0) as okt,
+                COALESCE(SUM(november), 0) as nov,
+                COALESCE(SUM(desember), 0) as des
+            ')->first();
+
             $monthlyRaw = [
-                ['key' => 'Jan', 'val' => (float) MonthlySchedule::sum('januari')],
-                ['key' => 'Feb', 'val' => (float) MonthlySchedule::sum('febuari')],
-                ['key' => 'Mar', 'val' => (float) MonthlySchedule::sum('maret')],
-                ['key' => 'Apr', 'val' => (float) MonthlySchedule::sum('april')],
-                ['key' => 'Mei', 'val' => (float) MonthlySchedule::sum('mei')],
-                ['key' => 'Jun', 'val' => (float) MonthlySchedule::sum('juni')],
-                ['key' => 'Jul', 'val' => (float) MonthlySchedule::sum('juli')],
-                ['key' => 'Agu', 'val' => (float) MonthlySchedule::sum('agustus')],
-                ['key' => 'Sep', 'val' => (float) MonthlySchedule::sum('september')],
-                ['key' => 'Okt', 'val' => (float) MonthlySchedule::sum('oktober')],
-                ['key' => 'Nov', 'val' => (float) MonthlySchedule::sum('november')],
-                ['key' => 'Des', 'val' => (float) MonthlySchedule::sum('desember')],
+                ['key' => 'Jan', 'val' => (float) ($sums->jan ?? 0)],
+                ['key' => 'Feb', 'val' => (float) ($sums->feb ?? 0)],
+                ['key' => 'Mar', 'val' => (float) ($sums->mar ?? 0)],
+                ['key' => 'Apr', 'val' => (float) ($sums->apr ?? 0)],
+                ['key' => 'Mei', 'val' => (float) ($sums->mei ?? 0)],
+                ['key' => 'Jun', 'val' => (float) ($sums->jun ?? 0)],
+                ['key' => 'Jul', 'val' => (float) ($sums->jul ?? 0)],
+                ['key' => 'Agu', 'val' => (float) ($sums->agu ?? 0)],
+                ['key' => 'Sep', 'val' => (float) ($sums->sep ?? 0)],
+                ['key' => 'Okt', 'val' => (float) ($sums->okt ?? 0)],
+                ['key' => 'Nov', 'val' => (float) ($sums->nov ?? 0)],
+                ['key' => 'Des', 'val' => (float) ($sums->des ?? 0)],
             ];
 
             $vals   = array_column($monthlyRaw, 'val');
