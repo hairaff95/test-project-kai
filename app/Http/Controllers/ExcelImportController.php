@@ -47,11 +47,103 @@ class ExcelImportController extends Controller
                 return back()->with('error', 'File tidak memiliki baris data atau kosong.');
             }
 
-            // Normalisasi header (baris pertama)
+            // Temukan baris header yang sesungguhnya (bukan baris judul atau baris kosong)
+            $headerRowIndex = null;
+            foreach ($rows as $rIdx => $r) {
+                if (empty(array_filter($r, fn($v) => $v !== null && trim((string)$v) !== ''))) {
+                    continue;
+                }
+                
+                $matchedKeywords = 0;
+                foreach ($r as $cell) {
+                    $norm = $this->normalizeHeaderName($cell);
+                    if ($norm !== '' && (
+                        str_contains($norm, 'kontrak') || 
+                        str_contains($norm, 'penyewa') || 
+                        str_contains($norm, 'aset') || 
+                        str_contains($norm, 'asset') || 
+                        str_contains($norm, 'stasiun') || 
+                        str_contains($norm, 'backlog') || 
+                        str_contains($norm, 'invoice') || 
+                        str_contains($norm, '2026') || 
+                        str_contains($norm, '2_026') ||
+                        str_contains($norm, 'januari') ||
+                        str_contains($norm, 'gl')
+                    )) {
+                        $matchedKeywords++;
+                    }
+                }
+                
+                if ($matchedKeywords >= 2) {
+                    $headerRowIndex = $rIdx;
+                    break;
+                }
+            }
+
+            if ($headerRowIndex === null) {
+                $headerRowIndex = 0;
+            }
+
+            // Buang baris-baris sebelum header dan ambil header row
+            for ($i = 0; $i < $headerRowIndex; $i++) {
+                array_shift($rows);
+            }
             $headerRow = array_shift($rows);
             $normalizedHeaders = array_map(function ($h) {
                 return $this->normalizeHeaderName($h);
             }, $headerRow);
+
+            // Deteksi index kolom penting secara presisi
+            $colIdxHari2026 = null;
+            $colIdxJanuari  = null;
+            $colIdx2026     = null;
+            $colIdxJanDes   = null;
+            $colIdxBacklog  = null;
+            $colIdxBacklog2 = null;
+
+            foreach ($headerRow as $cIdx => $rawHeader) {
+                $norm = $this->normalizeHeaderName($rawHeader);
+                $rawTrim = strtolower(trim((string)$rawHeader));
+                
+                // Cek kolom nilai 2026
+                if (
+                    $norm === '2_026' || $norm === '2026' || 
+                    $rawTrim === '2,026' || $rawTrim === '2026' || $rawTrim === '2.026' || $rawTrim === '2 026' ||
+                    $norm === 'nilai_2026' || $norm === 'nilai_2_026' || $norm === 'nilai2026' ||
+                    (str_contains($norm, '2026') && !str_contains($norm, 'hari') && !str_contains($norm, 'rka') && !str_contains($norm, 'thn'))
+                ) {
+                    $colIdx2026 = $cIdx;
+                }
+
+                if (str_contains($norm, 'hari') && (str_contains($norm, '2026') || str_contains($norm, '2_026'))) {
+                    $colIdxHari2026 = $cIdx;
+                }
+
+                if ($norm === 'januari' || $norm === 'jan') {
+                    $colIdxJanuari = $cIdx;
+                }
+
+                if ($norm === 'jan_des' || $norm === 'jandes' || str_contains($norm, 'jan_des') || str_contains($norm, 'jan-des')) {
+                    $colIdxJanDes = $cIdx;
+                }
+
+                if ($norm === 'nilai_backlog' || $norm === 'backlog' || $norm === 'backlog_1' || $norm === 'nilai_backlog_1') {
+                    $colIdxBacklog = $cIdx;
+                }
+
+                if ($norm === 'nilai_backlog2' || $norm === 'backlog2' || $norm === 'backlog_2' || $norm === 'nilai_backlog_2') {
+                    $colIdxBacklog2 = $cIdx;
+                }
+            }
+
+            // Fallback letak posisi kolom 2026 (berada di antara HARI 2026 dan JANUARI)
+            if ($colIdx2026 === null) {
+                if ($colIdxHari2026 !== null && ($colIdxJanuari === null || $colIdxHari2026 < $colIdxJanuari)) {
+                    $colIdx2026 = $colIdxHari2026 + 1;
+                } elseif ($colIdxJanuari !== null && $colIdxJanuari > 0) {
+                    $colIdx2026 = $colIdxJanuari - 1;
+                }
+            }
 
             $importedCount  = 0;
             $updatedCount   = 0;
@@ -231,10 +323,64 @@ class ExcelImportController extends Controller
                 $rawAwalFin    = $this->parseDate($this->extractField($data, ['awal', 'awal_finansial']));
                 $rawAkhirFin   = $this->parseDate($this->extractField($data, ['akhir', 'akhir_finansial']));
                 
-                $hari2026      = (int) ($this->parseNumber($this->extractField($data, ['hari_2026', 'hari2026', 'hari_tahun_berjalan'])) ?: 0);
-                $nilai2026     = $this->parseNumber($this->extractField($data, ['2_026', '2026', 'nilai_2026', 'nilai2026'])) ?: 0.0;
-                $nilaiBacklog  = $this->parseNumber($this->extractField($data, ['nilai_backlog', 'backlog', 'backlog_1', 'nilai_backlog_1'])) ?: 0.0;
-                $nilaiBacklog2 = $this->parseNumber($this->extractField($data, ['nilai_backlog2', 'backlog2', 'backlog_2', 'nilai_backlog_2'])) ?: 0.0;
+                $rawHari2026 = null;
+                if ($colIdxHari2026 !== null && isset($row[$colIdxHari2026]) && trim((string)$row[$colIdxHari2026]) !== '') {
+                    $rawHari2026 = trim((string)$row[$colIdxHari2026]);
+                } else {
+                    $rawHari2026 = $this->extractField($data, ['hari_2026', 'hari2026', 'hari_2_026', 'hari_2.026', 'hari_tahun_berjalan']);
+                }
+                $hari2026 = (int) ($this->parseNumber($rawHari2026) ?: 0);
+                
+                // Ekstraksi nilai 2026 secara presisi
+                $rawNilai2026 = null;
+                if ($colIdx2026 !== null && isset($row[$colIdx2026]) && trim((string)$row[$colIdx2026]) !== '') {
+                    $rawNilai2026 = trim((string)$row[$colIdx2026]);
+                }
+                if ($rawNilai2026 === null) {
+                    $rawNilai2026 = $this->extractField($data, [
+                        '2_026', '2026', '2,026', '2.026', '2 026',
+                        'nilai_2026', 'nilai2026', 'nilai_2_026', 'nilai_2,026', 'nilai_2.026',
+                        'nilai_tahun_2026', 'pendapatan_2026', 'target_2026'
+                    ]);
+                }
+
+                // Fallback: cari key yang memiliki pola 2026 tanpa kata hari atau rka
+                if ($rawNilai2026 === null) {
+                    foreach ($data as $dKey => $dVal) {
+                        if ($dVal !== null && trim((string)$dVal) !== '') {
+                            if (preg_match('/^2[._,\s]?026$/', $dKey) || (str_contains($dKey, '2026') && !str_contains($dKey, 'hari') && !str_contains($dKey, 'rka') && !str_contains($dKey, 'thn'))) {
+                                $rawNilai2026 = $dVal;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Fallback posisi relatif jika kolom 2026 berada tepat setelah hari 2026 atau sebelum januari
+                if ($rawNilai2026 === null && $colIdxHari2026 !== null && isset($row[$colIdxHari2026 + 1]) && trim((string)$row[$colIdxHari2026 + 1]) !== '') {
+                    $rawNilai2026 = trim((string)$row[$colIdxHari2026 + 1]);
+                }
+                if ($rawNilai2026 === null && $colIdxJanuari !== null && $colIdxJanuari > 0 && isset($row[$colIdxJanuari - 1]) && trim((string)$row[$colIdxJanuari - 1]) !== '') {
+                    $rawNilai2026 = trim((string)$row[$colIdxJanuari - 1]);
+                }
+
+                $nilai2026 = $this->parseNumber($rawNilai2026) ?: 0.0;
+
+                $rawBacklog = null;
+                if ($colIdxBacklog !== null && isset($row[$colIdxBacklog]) && trim((string)$row[$colIdxBacklog]) !== '') {
+                    $rawBacklog = trim((string)$row[$colIdxBacklog]);
+                } else {
+                    $rawBacklog = $this->extractField($data, ['nilai_backlog', 'backlog', 'backlog_1', 'nilai_backlog_1']);
+                }
+                $nilaiBacklog = $this->parseNumber($rawBacklog) ?: 0.0;
+
+                $rawBacklog2 = null;
+                if ($colIdxBacklog2 !== null && isset($row[$colIdxBacklog2]) && trim((string)$row[$colIdxBacklog2]) !== '') {
+                    $rawBacklog2 = trim((string)$row[$colIdxBacklog2]);
+                } else {
+                    $rawBacklog2 = $this->extractField($data, ['nilai_backlog2', 'backlog2', 'backlog_2', 'nilai_backlog_2']);
+                }
+                $nilaiBacklog2 = $this->parseNumber($rawBacklog2) ?: 0.0;
                 
                 $rawGl         = $this->extractField($data, ['gl_acount', 'gl_account', 'akun_gl', 'no_gl', 'gl', 'rekening_gl']);
                 $glAccount     = ($rawGl !== null && trim($rawGl) !== '') ? trim($rawGl) : null;
@@ -347,12 +493,56 @@ class ExcelImportController extends Controller
                     $importedCount++;
                 } else {
                     $hasChanges = false;
+
+                    // 1. Cek perubahan di data kontrak
                     foreach (['contract_date', 'jenis_kontrak', 'area_kontrak', 'start_datetime', 'end_datetime', 'start_datetime_baru', 'end_datetime_baru', 'price', 'spv', 'asset_block_name', 'size_area', 'peruntukan', 'keterangan'] as $k) {
                         if (!$this->isFieldEqual($existingContract->$k, $contractPayload[$k])) {
                             $hasChanges = true;
                             break;
                         }
                     }
+
+                    // 2. Cek perubahan di data finansial (termasuk nilai_2026, hari_2026, backlog, dll)
+                    if (!$hasChanges) {
+                        $exFin = $existingContract->financial;
+                        if (!$exFin) {
+                            $hasChanges = true;
+                        } else {
+                            foreach (['jumlah_hari', 'nilai_per_hari', 'awal', 'akhir', 'hari_2026', 'nilai_2026', 'nilai_backlog', 'nilai_backlog2', 'gl_account', 'form_rka', 'tahun_rka', 'jenis_pendapatan', 'persentase', 'pencapaian', 'ket'] as $fk) {
+                                if (!$this->isFieldEqual($exFin->$fk, $finPayload[$fk])) {
+                                    $hasChanges = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    // 3. Cek perubahan di data jadwal bulanan & invoice
+                    if (!$hasChanges) {
+                        $exSched = $existingContract->monthlySchedules->first();
+                        if (!$exSched) {
+                            $hasChanges = true;
+                        } else {
+                            foreach (['invoice', 'januari', 'febuari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'jan_des'] as $sk) {
+                                if (!$this->isFieldEqual($exSched->$sk, $schedPayload[$sk])) {
+                                    $hasChanges = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    // 4. Cek perubahan di data aset
+                    if (!$hasChanges && $assetNumber && $assetsMap->has($assetNumber)) {
+                        $exAsset = $assetsMap->get($assetNumber);
+                        foreach (['asset_block_name', 'peruntukan', 'jenis_asset', 'stasiun', 'wilayah_asset', 'size_area', 'latitude', 'longitude'] as $ak) {
+                            if (isset($assetsToUpsert[$assetNumber][$ak]) && !$this->isFieldEqual($exAsset->$ak, $assetsToUpsert[$assetNumber][$ak])) {
+                                $hasChanges = true;
+                                break;
+                            }
+                        }
+                    }
+
                     if ($hasChanges) {
                         $updatedCount++;
                     } else {
@@ -431,6 +621,7 @@ class ExcelImportController extends Controller
             Cache::forget('dropdown_stasiun');
             Cache::forget('dropdown_jenis_pendapatan');
             DashboardController::forgetDashboardCache();
+            ContractController::forgetContractCache();
 
             // Susun rincian diagnostik jika ada data duplikat/dilewati
             $diagnostics = [];
@@ -755,16 +946,45 @@ class ExcelImportController extends Controller
         if (strtolower($val) === 'kosong' || strtolower($val) === '-') return 0.0;
 
         $val = str_replace(['Rp', 'rp', 'RP', ' ', '%'], '', $val);
+        if ($val === '') return null;
 
-        // Kasus format Indonesia: ribuan titik "2.264.394" atau "105.775" atau "3.102"
-        // Jika ada koma, misal "0,9" atau "1.234,56"
-        if (strpos($val, ',') !== false) {
-            $val = str_replace('.', '', $val);
-            $val = str_replace(',', '.', $val);
-        } else {
-            // Jika ada titik tapi format ribuan Indonesia (misal: 2.264.394 atau 105.775)
-            if (preg_match('/\.\d{3}(\.\d{3})*$/', $val)) {
+        $hasComma = strpos($val, ',') !== false;
+        $hasDot = strpos($val, '.') !== false;
+
+        if ($hasComma && $hasDot) {
+            $lastComma = strrpos($val, ',');
+            $lastDot = strrpos($val, '.');
+            if ($lastComma > $lastDot) {
+                // Format Indonesia: 1.234.567,89
                 $val = str_replace('.', '', $val);
+                $val = str_replace(',', '.', $val);
+            } else {
+                // Format US: 1,234,567.89
+                $val = str_replace(',', '', $val);
+            }
+        } elseif ($hasComma) {
+            $commaCount = substr_count($val, ',');
+            if ($commaCount > 1) {
+                // US thousand separator e.g. "1,132,197"
+                $val = str_replace(',', '', $val);
+            } else {
+                $parts = explode(',', $val);
+                if (strlen($parts[1]) === 3 && (int)$parts[0] > 0 && !preg_match('/^0/', $parts[0])) {
+                    $val = str_replace(',', '', $val);
+                } else {
+                    $val = str_replace(',', '.', $val);
+                }
+            }
+        } elseif ($hasDot) {
+            $dotCount = substr_count($val, '.');
+            if ($dotCount > 1) {
+                // Indonesian thousand separator e.g. "1.132.197"
+                $val = str_replace('.', '', $val);
+            } else {
+                $parts = explode('.', $val);
+                if (strlen($parts[1]) === 3 && (int)$parts[0] > 0 && !preg_match('/^0/', $parts[0])) {
+                    $val = str_replace('.', '', $val);
+                }
             }
         }
 
