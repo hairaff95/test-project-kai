@@ -11,8 +11,6 @@ Aplikasi web berbasis Laravel untuk manajemen dan monitoring aset PT. Kereta Api
 - **Peta Aset** — Visualisasi persebaran aset di peta Indonesia
 - **Manajemen Kontrak** — Daftar kontrak dan monitoring jatuh tempo
 - **Backlog** — Monitoring aset yang belum terkontrak
-- **Favorit** — Tandai aset favorit
-- **FAQ** — Halaman pertanyaan umum
 - **Admin Panel** — Manajemen aset dan pengguna (khusus admin)
 
 ---
