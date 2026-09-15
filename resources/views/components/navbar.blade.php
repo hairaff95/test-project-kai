@@ -230,113 +230,143 @@
 </header>
 
 <!-- ===== MOBILE MENU BACKDROP OVERLAY ===== -->
-<div id="mobileMenuBackdrop" class="hidden lg:hidden fixed inset-0 z-[110] bg-black/25 backdrop-blur-[2px] transition-opacity duration-200" onclick="closeMobileSubMenu()"></div>
+<div id="mobileMenuBackdrop" class="hidden lg:hidden fixed inset-0 z-[110] bg-black/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-300 pointer-events-none" onclick="closeMobileSubMenu()"></div>
 
-<!-- ===== BOTTOM MOBILE NAVIGATION (Sleek Floating Bar, hidden on lg+) ===== -->
-<div class="lg:hidden fixed bottom-0 inset-x-0 z-[120] pointer-events-none select-none px-4 pb-4" style="padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem));">
-    <nav id="mobileBottomNav" class="pointer-events-auto relative mx-auto bg-white/95 dark:bg-[#1F2123]/95 backdrop-blur-xl rounded-[32px] px-3.5 sm:px-5 py-2 flex items-center justify-between shadow-[0_8px_40px_rgba(0,0,0,0.12),0_2px_10px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.6)] w-full max-w-[340px] sm:max-w-[360px] border border-gray-200/80 dark:border-white/10 transition-all duration-300">
-
-        <!-- 1. Home / Dashboard (Kiri) -->
-        <a href="{{ route('welcome') }}" class="mobile-nav-item flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full transition {{ in_array($active, ['dashboard', 'home', 'welcome']) ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-400 dark:text-[#9AA0A6] hover:text-[#171717] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95' }}" title="Dashboard">
-            <x-icon name="nav-home" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
-        </a>
-
-        <!-- 2. Peta / Map -->
-        <a href="{{ route('map') }}" class="mobile-nav-item flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full transition {{ in_array($active, ['map', 'peta', 'asset']) ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-400 dark:text-[#9AA0A6] hover:text-[#171717] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95' }}" title="Peta">
-            <x-icon name="nav-map" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
-        </a>
-
-        <!-- 3. Tengah: FAB Menu (Daftar Kontrak, Jatuh Tempo, Backlog, Laporan) -->
-        <div class="relative flex items-center justify-center">
-            <!-- FAB Action Button -->
-            <button
-                id="mobileMenuFab"
-                type="button"
-                onclick="toggleMobileSubMenu()"
-                class="flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full bg-[#0066FF] hover:bg-blue-700 active:scale-95 text-white p-0 shadow-[0_4px_16px_rgba(0,102,255,0.45)] transition-all duration-200 cursor-pointer {{ in_array($active, ['contracts', 'due-dates', 'backlog', 'blacklog', 'reports', 'laporan']) ? 'ring-3 ring-blue-300 dark:ring-blue-800 shadow-[0_0_20px_rgba(0,102,255,0.6)]' : '' }}"
-                title="Kelola Data"
+<!-- ===== EXPANDABLE NAVBAR MODAL PANEL (Persis Desain Gambar 1 & 2) ===== -->
+<div
+    id="mobileSubMenu"
+    class="hidden lg:hidden fixed z-[120] max-w-[340px] sm:max-w-[360px] w-[calc(100%-2rem)] mx-auto opacity-0 scale-90 translate-y-4 pointer-events-none transition-all duration-300 ease-out origin-bottom-right"
+    style="bottom: max(5.25rem, calc(4.75rem + env(safe-area-inset-bottom, 0px))); left: 0; right: 0;"
+>
+    <div class="rounded-[28px] sm:rounded-[32px] bg-white/95 dark:bg-[#1F2123]/95 backdrop-blur-xl border border-gray-200/80 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] p-3.5 sm:p-4">
+        
+        <!-- Grid 4 Menu Utama (Persis Gambar 2: Icon dalam kotak squircle + Label di bawah) -->
+        <div class="grid grid-cols-4 gap-2 sm:gap-2.5">
+            
+            <!-- 1. Daftar Kontrak -->
+            <a
+                href="{{ route('contracts.index') }}"
+                class="flex flex-col items-center text-center transition active:scale-95 group select-none"
             >
-                <span id="fabIconOpen" class="flex items-center justify-center w-full h-full pointer-events-none">
-                    <x-icon name="nav-add" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
-                </span>
-                <span id="fabIconClose" class="hidden items-center justify-center w-full h-full pointer-events-none">
-                    <x-icon name="x-mark" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
-                </span>
-            </button>
+                <div class="w-full aspect-square max-w-[62px] rounded-[20px] {{ $active === 'contracts' ? 'bg-[#0066FF] text-white shadow-[0_4px_16px_rgba(0,102,255,0.45)]' : 'bg-gray-100/90 dark:bg-[#2D3034] text-gray-700 dark:text-gray-200 hover:bg-gray-200/90 dark:hover:bg-[#383C40] active:bg-gray-300 dark:active:bg-[#43484E] border border-gray-200/50 dark:border-white/5' }} flex items-center justify-center transition-all duration-200">
+                    <x-icon name="nav-contract" class="w-6 h-6" />
+                </div>
+                <span class="text-[11px] {{ $active === 'contracts' ? 'text-[#0066FF] dark:text-white font-bold' : 'text-gray-600 dark:text-gray-300 font-medium' }} mt-1.5 leading-tight truncate">Kontrak</span>
+            </a>
 
-            <!-- Popup Menu Modal Melayang (Persis Gambar 2) -->
-            <div
-                id="mobileSubMenu"
-                class="hidden absolute bottom-full mb-3.5 left-1/2 -translate-x-1/2 min-w-[215px] sm:min-w-[230px] rounded-[24px] bg-[#0066FF] text-white p-2 sm:p-2.5 shadow-[0_16px_40px_rgba(0,102,255,0.55)] flex-col gap-1 z-[120]"
+            <!-- 2. Jatuh Tempo -->
+            <a
+                href="{{ route('due-dates.index') }}"
+                class="flex flex-col items-center text-center transition active:scale-95 group select-none"
             >
-                <!-- 1. Daftar Kontrak -->
-                <a
-                    href="{{ route('contracts.index') }}"
-                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] text-xs sm:text-sm font-semibold transition {{ $active === 'contracts' ? 'bg-white/25 text-white shadow-xs' : 'text-white/90 hover:bg-white/15 active:bg-white/20' }}"
-                >
-                    <x-icon name="nav-contract" class="w-5 h-5 text-white shrink-0" />
-                    <span>Daftar Kontrak</span>
-                </a>
+                <div class="w-full aspect-square max-w-[62px] rounded-[20px] {{ $active === 'due-dates' ? 'bg-[#0066FF] text-white shadow-[0_4px_16px_rgba(0,102,255,0.45)]' : 'bg-gray-100/90 dark:bg-[#2D3034] text-gray-700 dark:text-gray-200 hover:bg-gray-200/90 dark:hover:bg-[#383C40] active:bg-gray-300 dark:active:bg-[#43484E] border border-gray-200/50 dark:border-white/5' }} flex items-center justify-center transition-all duration-200">
+                    <x-icon name="nav-card" class="w-6 h-6" />
+                </div>
+                <span class="text-[11px] {{ $active === 'due-dates' ? 'text-[#0066FF] dark:text-white font-bold' : 'text-gray-600 dark:text-gray-300 font-medium' }} mt-1.5 leading-tight truncate">Tempo</span>
+            </a>
 
-                <!-- 2. Jatuh Tempo -->
-                <a
-                    href="{{ route('due-dates.index') }}"
-                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] text-xs sm:text-sm font-semibold transition {{ $active === 'due-dates' ? 'bg-white/25 text-white shadow-xs' : 'text-white/90 hover:bg-white/15 active:bg-white/20' }}"
-                >
-                    <x-icon name="nav-card" class="w-5 h-5 text-white shrink-0" />
-                    <span>Jatuh Tempo</span>
-                </a>
+            <!-- 3. Backlog -->
+            <a
+                href="{{ route('backlog.index') }}"
+                class="flex flex-col items-center text-center transition active:scale-95 group select-none"
+            >
+                <div class="w-full aspect-square max-w-[62px] rounded-[20px] {{ in_array($active, ['backlog', 'blacklog']) ? 'bg-[#0066FF] text-white shadow-[0_4px_16px_rgba(0,102,255,0.45)]' : 'bg-gray-100/90 dark:bg-[#2D3034] text-gray-700 dark:text-gray-200 hover:bg-gray-200/90 dark:hover:bg-[#383C40] active:bg-gray-300 dark:active:bg-[#43484E] border border-gray-200/50 dark:border-white/5' }} flex items-center justify-center transition-all duration-200">
+                    <x-icon name="nav-scan" class="w-6 h-6" />
+                </div>
+                <span class="text-[11px] {{ in_array($active, ['backlog', 'blacklog']) ? 'text-[#0066FF] dark:text-white font-bold' : 'text-gray-600 dark:text-gray-300 font-medium' }} mt-1.5 leading-tight truncate">Backlog</span>
+            </a>
 
-                <!-- 3. Backlog -->
-                <a
-                    href="{{ route('backlog.index') }}"
-                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] text-xs sm:text-sm font-semibold transition {{ in_array($active, ['backlog', 'blacklog']) ? 'bg-white/25 text-white shadow-xs' : 'text-white/90 hover:bg-white/15 active:bg-white/20' }}"
-                >
-                    <x-icon name="nav-scan" class="w-5 h-5 text-white shrink-0" />
-                    <span>Backlog</span>
-                </a>
+            <!-- 4. Laporan -->
+            <a
+                href="{{ route('laporan.index') }}"
+                class="flex flex-col items-center text-center transition active:scale-95 group select-none"
+            >
+                <div class="w-full aspect-square max-w-[62px] rounded-[20px] {{ in_array($active, ['reports', 'laporan']) ? 'bg-[#0066FF] text-white shadow-[0_4px_16px_rgba(0,102,255,0.45)]' : 'bg-gray-100/90 dark:bg-[#2D3034] text-gray-700 dark:text-gray-200 hover:bg-gray-200/90 dark:hover:bg-[#383C40] active:bg-gray-300 dark:active:bg-[#43484E] border border-gray-200/50 dark:border-white/5' }} flex items-center justify-center transition-all duration-200">
+                    <x-icon name="nav-report" class="w-6 h-6" />
+                </div>
+                <span class="text-[11px] {{ in_array($active, ['reports', 'laporan']) ? 'text-[#0066FF] dark:text-white font-bold' : 'text-gray-600 dark:text-gray-300 font-medium' }} mt-1.5 leading-tight truncate">Laporan</span>
+            </a>
 
-                <!-- 4. Laporan -->
-                <a
-                    href="{{ route('laporan.index') }}"
-                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-[16px] text-xs sm:text-sm font-semibold transition {{ in_array($active, ['reports', 'laporan']) ? 'bg-white/25 text-white shadow-xs' : 'text-white/90 hover:bg-white/15 active:bg-white/20' }}"
-                >
-                    <x-icon name="nav-report" class="w-5 h-5 text-white shrink-0" />
-                    <span>Laporan</span>
-                </a>
-            </div>
         </div>
+    </div>
+</div>
 
-        <!-- 4. Profil / Pengaturan (Kanan) -->
+<!-- ===== BOTTOM MOBILE NAVIGATION (Expandable Navbar, hidden on lg+) ===== -->
+<div class="lg:hidden fixed bottom-0 inset-x-0 z-[120] pointer-events-none select-none px-4 pb-4" style="padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem));">
+    <div class="flex items-center justify-center gap-2.5 max-w-[340px] sm:max-w-[360px] mx-auto pointer-events-auto">
+        
+        <!-- 1. Grup Pill Kapsul Navbar: [Dashboard] [Peta] [Profil] (Persis Gambar 3 dengan Oval Active Highlight) -->
+        <nav id="mobileBottomNav" class="flex-1 bg-white/95 dark:bg-[#1F2123]/95 backdrop-blur-xl rounded-full p-1.5 flex items-center justify-between shadow-[0_8px_35px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_35px_rgba(0,0,0,0.6)] border border-gray-200/80 dark:border-white/10 transition-all duration-300">
+            
+            <!-- Dashboard (Home) -->
+            <a
+                id="mobileNavHome"
+                href="{{ route('welcome') }}"
+                class="mobile-nav-item flex-1 h-11 flex items-center justify-center rounded-[22px] transition-all duration-200 {{ in_array($active, ['dashboard', 'home', 'welcome']) ? 'bg-gray-100 dark:bg-[#2D3034] text-[#0066FF] dark:text-white shadow-xs font-semibold' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 active:scale-95' }}"
+                title="Dashboard"
+            >
+                <x-icon name="nav-home" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
+            </a>
+
+            <!-- Peta (Map) -->
+            <a
+                id="mobileNavMap"
+                href="{{ route('map') }}"
+                class="mobile-nav-item flex-1 h-11 flex items-center justify-center rounded-[22px] transition-all duration-200 {{ in_array($active, ['map', 'peta', 'asset']) ? 'bg-gray-100 dark:bg-[#2D3034] text-[#0066FF] dark:text-white shadow-xs font-semibold' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 active:scale-95' }}"
+                title="Peta"
+            >
+                <x-icon name="nav-map" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
+            </a>
+
+            <!-- Profil / Pengaturan Akun -->
+            <button
+                id="mobileNavProfile"
+                type="button"
+                onclick="toggleMobileProfileSheet()"
+                class="mobile-nav-item flex-1 h-11 flex items-center justify-center rounded-[22px] transition-all duration-200 cursor-pointer {{ in_array($active, ['settings', 'pengaturan', 'admin', 'profile', 'akun']) ? 'bg-gray-100 dark:bg-[#2D3034] text-[#0066FF] dark:text-white shadow-xs font-semibold' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 active:scale-95' }}"
+                title="Profil & Pengaturan"
+            >
+                <x-icon name="nav-user" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
+            </button>
+        </nav>
+
+        <!-- 2. Tombol FAB Lingkaran Terpisah (+) di Samping Grup Navbar (Background Putih di Mode Terang, Gelap di Mode Gelap) -->
         <button
+            id="mobileMenuFab"
             type="button"
-            onclick="toggleMobileProfileSheet()"
-            class="mobile-nav-item flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full transition {{ in_array($active, ['settings', 'pengaturan', 'admin', 'profile', 'akun']) ? 'bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6]' : 'text-gray-400 dark:text-[#9AA0A6] hover:text-[#171717] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 active:scale-95' }}"
-            title="Profil & Pengaturan"
+            onclick="toggleMobileSubMenu()"
+            class="h-14 w-14 sm:h-14 sm:w-14 shrink-0 flex items-center justify-center rounded-full bg-white/95 dark:bg-[#1F2123]/95 text-[#171717] dark:text-white border border-gray-200/80 dark:border-white/10 shadow-[0_8px_35px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_35px_rgba(0,0,0,0.6)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer {{ in_array($active, ['contracts', 'due-dates', 'backlog', 'blacklog', 'reports', 'laporan']) ? 'ring-2 ring-[#0066FF]' : '' }}"
+            title="Menu Tambahan"
+            aria-label="Menu Tambahan"
         >
-            <x-icon name="nav-user" class="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
+            <div id="fabIconPlus" class="transition-transform duration-300 transform">
+                <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </div>
         </button>
 
-    </nav>
+    </div>
 </div>
 
 
-<!-- ===== MOBILE PROFILE SHEET (hidden on lg+) ===== -->
-<div id="mobileProfileBackdrop" class="hidden lg:hidden fixed inset-0 z-[130] bg-black/30 backdrop-blur-[2px]" onclick="closeMobileProfileSheet()"></div>
+<!-- ===== MOBILE PROFILE POPUP PANEL (Expandable di atas Navbar) ===== -->
+<div id="mobileProfileBackdrop" class="hidden lg:hidden fixed inset-0 z-[110] bg-black/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-300 pointer-events-none" onclick="closeMobileProfileSheet()"></div>
 <div
     id="mobileProfileSheet"
-    class="hidden lg:hidden fixed bottom-0 inset-x-0 z-[140] px-4 pb-6 transition-all duration-200"
-    style="padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));"
+    class="hidden lg:hidden fixed z-[120] max-w-[340px] sm:max-w-[360px] w-[calc(100%-2rem)] mx-auto opacity-0 scale-90 translate-y-4 pointer-events-none transition-all duration-300 ease-out origin-bottom"
+    style="bottom: max(5.25rem, calc(4.75rem + env(safe-area-inset-bottom, 0px))); left: 0; right: 0;"
 >
-    <div class="mx-auto max-w-[400px] rounded-[24px] bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_-8px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_-8px_40px_rgba(0,0,0,0.6)] p-3 flex flex-col gap-1">
+    <div class="rounded-[28px] sm:rounded-[32px] bg-white/95 dark:bg-[#1F2123]/95 backdrop-blur-xl border border-gray-200/80 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] p-3.5 sm:p-4 flex flex-col gap-1.5">
 
         <!-- Info Profil -->
-        <div class="flex items-center gap-3 px-3 py-2.5 mb-1 border-b border-gray-100 dark:border-white/10">
-            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 dark:bg-[#43484E] text-gray-600 dark:text-white shrink-0">
+        <div class="flex items-center gap-3 px-2 py-2 mb-1 border-b border-gray-100 dark:border-white/10">
+            <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-900/30 text-[#0066FF] dark:text-[#3B82F6] shrink-0 font-bold">
                 <x-icon name="profile-circle" class="w-6 h-6" />
             </div>
             <div class="leading-tight">
-                <p class="text-sm font-bold text-[#171717] dark:text-white">
+                <p class="text-sm font-bold text-gray-900 dark:text-white">
                     @auth {{ auth()->user()->name }} @else Tamu @endauth
                 </p>
                 <p class="text-xs text-gray-400 dark:text-[#9AA0A6] mt-0.5">
@@ -355,7 +385,7 @@
             @if(auth()->user()->isSuperAdmin())
                 <a
                     href="{{ route('settings.superadmin') }}"
-                    class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition whitespace-nowrap"
+                    class="flex items-center gap-3 px-3 py-2.5 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 rounded-2xl transition whitespace-nowrap"
                 >
                     <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
                     <span class="whitespace-nowrap">Panel Super Admin</span>
@@ -363,7 +393,7 @@
             @else
                 <a
                     href="{{ route('settings.index') }}"
-                    class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition whitespace-nowrap"
+                    class="flex items-center gap-3 px-3 py-2.5 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 rounded-2xl transition whitespace-nowrap"
                 >
                     <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
                     <span class="whitespace-nowrap">Pengaturan Akun</span>
@@ -374,7 +404,7 @@
                 @csrf
                 <button
                     type="submit"
-                    class="flex w-full items-center gap-3 px-3 py-2.5 text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition cursor-pointer whitespace-nowrap"
+                    class="flex w-full items-center gap-3 px-3 py-2.5 text-xs sm:text-sm font-semibold text-[#EF4444] hover:bg-red-50 dark:hover:bg-red-950/30 rounded-2xl transition cursor-pointer whitespace-nowrap"
                 >
                     <x-icon name="logout" class="w-5 h-5 text-[#EF4444] shrink-0" />
                     <span class="whitespace-nowrap">Keluar</span>
@@ -383,14 +413,14 @@
         @else
             <a
                 href="{{ route('settings.index') }}"
-                class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-xl transition whitespace-nowrap"
+                class="flex items-center gap-3 px-3 py-2.5 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 rounded-2xl transition whitespace-nowrap"
             >
                 <x-icon name="setting" class="w-5 h-5 text-gray-500 dark:text-gray-300 shrink-0" />
                 <span class="whitespace-nowrap">Pengaturan Akun</span>
             </a>
             <a
                 href="{{ route('login') }}"
-                class="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-xl transition whitespace-nowrap"
+                class="flex items-center gap-3 px-3 py-2.5 text-xs sm:text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-2xl transition whitespace-nowrap"
             >
                 <x-icon name="icon-masuk" class="w-5 h-5 text-[#0066FF] dark:text-[#3B82F6] shrink-0" />
                 <span class="whitespace-nowrap">Masuk</span>
@@ -410,69 +440,142 @@
         }
     });
 
-    // Mobile FAB Submenu Toggle Functions
+    // Mobile Expandable Submenu Toggle Functions (Smooth Spring Transition)
     function toggleMobileSubMenu() {
         const menu = document.getElementById('mobileSubMenu');
         const backdrop = document.getElementById('mobileMenuBackdrop');
-        const iconOpen = document.getElementById('fabIconOpen');
-        const iconClose = document.getElementById('fabIconClose');
+        const fabPlus = document.getElementById('fabIconPlus');
+        const fabBtn = document.getElementById('mobileMenuFab');
         if (!menu) return;
 
         const isHidden = menu.classList.contains('hidden');
         if (isHidden) {
+            closeMobileProfileSheet();
+
             menu.classList.remove('hidden');
-            menu.classList.add('flex');
             backdrop?.classList.remove('hidden');
-            iconOpen?.classList.add('hidden');
-            iconOpen?.classList.remove('flex');
-            iconClose?.classList.remove('hidden');
-            iconClose?.classList.add('flex');
+            backdrop?.classList.remove('pointer-events-none');
+            menu.classList.remove('pointer-events-none');
+
+            requestAnimationFrame(() => {
+                menu.classList.remove('opacity-0', 'scale-90', 'translate-y-4');
+                menu.classList.add('opacity-100', 'scale-100', 'translate-y-0');
+                backdrop?.classList.remove('opacity-0');
+                backdrop?.classList.add('opacity-100');
+                if (fabPlus) {
+                    fabPlus.style.transform = 'rotate(45deg)';
+                }
+                if (fabBtn) {
+                    fabBtn.classList.remove('bg-white/95', 'dark:bg-[#1F2123]/95', 'text-[#171717]', 'dark:text-white');
+                    fabBtn.classList.add('bg-[#0066FF]', 'text-white', 'dark:bg-[#0066FF]');
+                }
+            });
         } else {
-            menu.classList.add('hidden');
-            menu.classList.remove('flex');
-            backdrop?.classList.add('hidden');
-            iconOpen?.classList.remove('hidden');
-            iconOpen?.classList.add('flex');
-            iconClose?.classList.add('hidden');
-            iconClose?.classList.remove('flex');
+            closeMobileSubMenu();
         }
     }
 
     function closeMobileSubMenu() {
         const menu = document.getElementById('mobileSubMenu');
         const backdrop = document.getElementById('mobileMenuBackdrop');
-        const iconOpen = document.getElementById('fabIconOpen');
-        const iconClose = document.getElementById('fabIconClose');
-        if (!menu) return;
+        const fabPlus = document.getElementById('fabIconPlus');
+        const fabBtn = document.getElementById('mobileMenuFab');
+        if (!menu || menu.classList.contains('hidden')) return;
 
-        menu.classList.add('hidden');
-        menu.classList.remove('flex');
-        backdrop?.classList.add('hidden');
-        iconOpen?.classList.remove('hidden');
-        iconOpen?.classList.add('flex');
-        iconClose?.classList.add('hidden');
-        iconClose?.classList.remove('flex');
+        menu.classList.remove('opacity-100', 'scale-100', 'translate-y-0');
+        menu.classList.add('opacity-0', 'scale-90', 'translate-y-4');
+        backdrop?.classList.remove('opacity-100');
+        backdrop?.classList.add('opacity-0');
+        backdrop?.classList.add('pointer-events-none');
+        menu.classList.add('pointer-events-none');
+
+        if (fabPlus) {
+            fabPlus.style.transform = 'rotate(0deg)';
+        }
+        if (fabBtn) {
+            fabBtn.classList.remove('bg-[#0066FF]', 'dark:bg-[#0066FF]', 'text-white');
+            fabBtn.classList.add('bg-white/95', 'dark:bg-[#1F2123]/95', 'text-[#171717]', 'dark:text-white');
+        }
+
+        setTimeout(() => {
+            menu.classList.add('hidden');
+            backdrop?.classList.add('hidden');
+        }, 250);
     }
 
-    // Mobile Profile Sheet
+    const navActiveClasses = ['bg-gray-100', 'dark:bg-[#2D3034]', 'text-[#0066FF]', 'dark:text-white', 'shadow-xs', 'font-semibold'];
+    const navInactiveClasses = ['text-gray-500', 'dark:text-gray-400', 'hover:text-gray-900', 'dark:hover:text-white', 'hover:bg-gray-50', 'dark:hover:bg-white/5'];
+
+    // Mobile Expandable Profile Sheet Toggle
     function toggleMobileProfileSheet() {
         const sheet = document.getElementById('mobileProfileSheet');
         const backdrop = document.getElementById('mobileProfileBackdrop');
+        const profileBtn = document.getElementById('mobileNavProfile');
         if (!sheet) return;
         const isHidden = sheet.classList.contains('hidden');
         if (isHidden) {
+            closeMobileSubMenu();
+
             sheet.classList.remove('hidden');
             backdrop?.classList.remove('hidden');
-            // Tutup FAB submenu jika terbuka
-            closeMobileSubMenu();
+            backdrop?.classList.remove('pointer-events-none');
+            sheet.classList.remove('pointer-events-none');
+
+            // Aktifkan highlight oval pada tombol profil navbar
+            if (profileBtn) {
+                profileBtn.classList.remove(...navInactiveClasses);
+                profileBtn.classList.add(...navActiveClasses);
+            }
+
+            // Nonaktifkan sementara highlight pada menu aktif lain (misal Dashboard / Peta)
+            const currentActive = document.querySelector('#mobileBottomNav .mobile-nav-item:not(#mobileNavProfile).font-semibold');
+            if (currentActive) {
+                currentActive.setAttribute('data-was-active', 'true');
+                currentActive.classList.remove(...navActiveClasses);
+                currentActive.classList.add(...navInactiveClasses);
+            }
+
+            requestAnimationFrame(() => {
+                sheet.classList.remove('opacity-0', 'scale-90', 'translate-y-4');
+                sheet.classList.add('opacity-100', 'scale-100', 'translate-y-0');
+                backdrop?.classList.remove('opacity-0');
+                backdrop?.classList.add('opacity-100');
+            });
         } else {
             closeMobileProfileSheet();
         }
     }
 
     function closeMobileProfileSheet() {
-        document.getElementById('mobileProfileSheet')?.classList.add('hidden');
-        document.getElementById('mobileProfileBackdrop')?.classList.add('hidden');
+        const sheet = document.getElementById('mobileProfileSheet');
+        const backdrop = document.getElementById('mobileProfileBackdrop');
+        const profileBtn = document.getElementById('mobileNavProfile');
+        if (!sheet || sheet.classList.contains('hidden')) return;
+
+        sheet.classList.remove('opacity-100', 'scale-100', 'translate-y-0');
+        sheet.classList.add('opacity-0', 'scale-90', 'translate-y-4');
+        backdrop?.classList.remove('opacity-100');
+        backdrop?.classList.add('opacity-0');
+        backdrop?.classList.add('pointer-events-none');
+        sheet.classList.add('pointer-events-none');
+
+        // Kembalikan highlight aktif ke menu halaman semula jika sebelumnya aktif
+        const prevActive = document.querySelector('#mobileBottomNav [data-was-active="true"]');
+        if (prevActive) {
+            prevActive.removeAttribute('data-was-active');
+            prevActive.classList.remove(...navInactiveClasses);
+            prevActive.classList.add(...navActiveClasses);
+
+            if (profileBtn) {
+                profileBtn.classList.remove(...navActiveClasses);
+                profileBtn.classList.add(...navInactiveClasses);
+            }
+        }
+
+        setTimeout(() => {
+            sheet.classList.add('hidden');
+            backdrop?.classList.add('hidden');
+        }, 250);
     }
 
     // ===== NOTIFIKASI =====

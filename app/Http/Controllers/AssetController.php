@@ -33,8 +33,9 @@ class AssetController extends Controller
                 ?: \App\Models\KaiAsset::where('asset_number', $contract->asset_number)->first()
                 ?: new \App\Models\KaiAsset(['asset_number' => $contract->asset_number]);
             $asset->setRelation('contract', $contract);
+            $asset->load('images');
         } else {
-            $asset = KaiAsset::with(['contract.tenant', 'contract.financial', 'contract.monthlySchedules'])
+            $asset = KaiAsset::with(['contract.tenant', 'contract.financial', 'contract.monthlySchedules', 'images'])
                 ->where('asset_number', $identifier)
                 ->firstOrFail();
         }
@@ -194,17 +195,21 @@ class AssetController extends Controller
                 $asset->longitude = (float) $request->longitude;
             }
 
-            // Image uploads
+            // Image uploads — simpan ke tabel asset_images, bukan kolom
             if ($request->hasFile('images')) {
-                $imgPaths = is_array($asset->images) ? $asset->images : [];
-                foreach ($request->file('images') as $file) {
+                $isFirst = $asset->images()->where('is_primary', true)->doesntExist();
+                foreach ($request->file('images') as $index => $file) {
                     if ($file->isValid()) {
                         $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                         $file->move(public_path('uploads/assets'), $filename);
-                        $imgPaths[] = 'uploads/assets/' . $filename;
+                        \App\Models\AssetImage::create([
+                            'asset_id'   => $asset->asset_number,
+                            'image_path' => 'uploads/assets/' . $filename,
+                            'is_primary' => $isFirst && $index === 0,
+                        ]);
+                        $isFirst = false;
                     }
                 }
-                $asset->images = $imgPaths;
             }
 
             $asset->save();

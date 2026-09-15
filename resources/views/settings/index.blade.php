@@ -622,86 +622,86 @@
     </div>
 
     {{-- ================= MODAL TAMBAH ADMIN ================= --}}
-    <div id="modal-tambah-admin" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-        <div class="w-full max-w-md rounded-3xl bg-white dark:bg-[#1F2123] p-6 sm:p-8 shadow-2xl border border-gray-100 dark:border-white/10 space-y-5 animate-in fade-in zoom-in-95 duration-200 transition-colors">
+    <div id="modal-tambah-admin" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-3 sm:p-4">
+        <div class="w-full max-w-[340px] sm:max-w-md rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] p-4 sm:p-8 shadow-2xl border border-gray-100 dark:border-white/10 space-y-3.5 sm:space-y-5 animate-in fade-in zoom-in-95 duration-200 transition-colors max-h-[90vh] overflow-y-auto">
             
-            <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/10 pb-3">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Tambah Akun Admin Baru</h3>
+            <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/10 pb-2.5 sm:pb-3">
+                <h3 class="text-sm sm:text-lg font-bold text-gray-900 dark:text-white">Tambah Akun Admin Baru</h3>
                 <button type="button" onclick="closeAddAdminModal()" class="p-1 rounded-lg text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer">
-                    <x-icon name="close" class="w-4 h-4" />
+                    <x-icon name="close" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
             </div>
 
-            <form id="form-tambah-admin" onsubmit="saveNewAdmin(event)" class="space-y-4">
+            <form id="form-tambah-admin" onsubmit="saveNewAdmin(event)" class="space-y-2.5 sm:space-y-4">
 
-                <div id="form-admin-error" class="hidden rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-3.5 py-2.5 text-xs text-red-700 dark:text-red-400"></div>
+                <div id="form-admin-error" class="hidden rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-3 py-2 sm:px-3.5 sm:py-2.5 text-[11px] sm:text-xs text-red-700 dark:text-red-400"></div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Nama Lengkap</label>
+                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1 sm:mb-1.5">Nama Lengkap</label>
                     <input
                         type="text"
                         id="new-admin-name"
                         placeholder="Contoh: Haidar Rafi"
-                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Username</label>
+                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1 sm:mb-1.5">Username</label>
                     <input
                         type="text"
                         id="new-admin-username"
                         placeholder="Contoh: haidar.rafi"
-                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Alamat Email Dinas</label>
+                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1 sm:mb-1.5">Alamat Email Dinas</label>
                     <input
                         type="email"
                         id="new-admin-email"
                         placeholder="nama@daop4.com"
-                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Kata Sandi</label>
+                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1 sm:mb-1.5">Kata Sandi</label>
                     <input
                         type="password"
                         id="new-admin-password"
                         placeholder="Minimal 8 karakter"
-                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Konfirmasi Kata Sandi</label>
+                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1 sm:mb-1.5">Konfirmasi Kata Sandi</label>
                     <input
                         type="password"
                         id="new-admin-password-confirmation"
                         placeholder="Ulangi kata sandi"
-                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
 
-                <div class="flex items-center justify-end gap-3 pt-3">
+                <div class="flex items-center justify-end gap-2 sm:gap-3 pt-2 sm:pt-3">
                     <button
                         type="button"
                         onclick="closeAddAdminModal()"
-                        class="px-5 py-2.5 rounded-[8px] border border-gray-200 dark:border-white/10 text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer"
+                        class="px-4 py-2 sm:px-5 sm:py-2.5 rounded-[8px] border border-gray-200 dark:border-white/10 text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer"
                     >
                         Batal
                     </button>
                     <button
                         type="submit"
-                        class="px-5 py-2.5 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-medium text-white transition shadow-xs cursor-pointer"
+                        class="px-4 py-2 sm:px-5 sm:py-2.5 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-medium text-white transition shadow-xs cursor-pointer"
                     >
                         Simpan Admin
                     </button>
@@ -712,52 +712,52 @@
     </div>
 
     {{-- Modal Edit Profil Super Admin --}}
-    <div id="modal-edit-profile" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-        <div class="w-full max-w-md rounded-3xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 p-6 sm:p-8 shadow-2xl space-y-6 transition-colors">
+    <div id="modal-edit-profile" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-3 sm:p-4">
+        <div class="w-full max-w-[340px] sm:max-w-md rounded-2xl sm:rounded-3xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 p-4 sm:p-8 shadow-2xl space-y-4 sm:space-y-6 transition-colors max-h-[90vh] overflow-y-auto">
             
-            <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/10 pb-4">
-                <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
+            <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/10 pb-2.5 sm:pb-4">
+                <h3 class="text-sm sm:text-lg font-bold text-gray-900 dark:text-white">
                     Edit Profil Saya
                 </h3>
                 <button type="button" onclick="closeEditProfileModal()" class="p-1 rounded-lg text-gray-400 dark:text-[#9AA0A6] hover:text-gray-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer">
-                    <x-icon name="close" class="w-4 h-4" />
+                    <x-icon name="close" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
             </div>
 
-            <form id="form-edit-profile" onsubmit="saveProfileChanges(event)" class="space-y-4">
+            <form id="form-edit-profile" onsubmit="saveProfileChanges(event)" class="space-y-3 sm:space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Nama Lengkap</label>
+                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1 sm:mb-1.5">Nama Lengkap</label>
                     <input
                         type="text"
                         id="input-fullname"
                         value="@auth {{ auth()->user()->name }} @else Haidar Rafi @endauth"
-                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 dark:text-white mb-1.5">Alamat Email</label>
+                    <label class="block text-[11px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1 sm:mb-1.5">Alamat Email</label>
                     <input
                         type="email"
                         id="input-email"
                         value="@auth {{ auth()->user()->email }} @else admin.kai@daop4.com @endauth"
-                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3.5 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
+                        class="w-full rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#2D3034] px-3 py-2 sm:px-3.5 sm:py-2.5 text-xs sm:text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-[#0066FF] focus:outline-none transition"
                         required
                     >
                 </div>
 
-                <div class="flex items-center justify-end gap-3 pt-3">
+                <div class="flex items-center justify-end gap-2 sm:gap-3 pt-2 sm:pt-3">
                     <button
                         type="button"
                         onclick="closeEditProfileModal()"
-                        class="px-5 py-2.5 rounded-[8px] border border-gray-200 dark:border-white/10 text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer"
+                        class="px-4 py-2 sm:px-5 sm:py-2.5 rounded-[8px] border border-gray-200 dark:border-white/10 text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer"
                     >
                         Batal
                     </button>
                     <button
                         type="submit"
-                        class="px-5 py-2.5 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-medium text-white transition shadow-xs cursor-pointer"
+                        class="px-4 py-2 sm:px-5 sm:py-2.5 rounded-[8px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-medium text-white transition shadow-xs cursor-pointer"
                     >
                         Simpan Perubahan
                     </button>

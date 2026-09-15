@@ -64,10 +64,13 @@ body {
     touch-action: pan-x pan-y;
 }
 
-/* Prevent auto-zoom on input focus in mobile iOS / Android */
-@media screen and (max-width: 768px) {
+/* Mobile input text & placeholder font scaling (proporsional dan rapi selaras judul field di mobile) */
+@media screen and (max-width: 1023.98px) {
     input, select, textarea {
-        font-size: 16px !important;
+        font-size: 11px !important;
+    }
+    input::placeholder, textarea::placeholder {
+        font-size: 11px !important;
     }
 }
 
@@ -99,8 +102,11 @@ body {
 
 /* Main content padding bottom on mobile to not be hidden by floating nav */
 @media (max-width: 1023px) {
-    main {
+    main:not(.mobile-dropup-sheet) {
         padding-bottom: max(calc(var(--mobile-nav-height) + 1.5rem), calc(var(--mobile-nav-height) + env(safe-area-inset-bottom, 0px) + 1.5rem));
+    }
+    .mobile-dropup-sheet {
+        padding-bottom: 0 !important;
     }
 }
 

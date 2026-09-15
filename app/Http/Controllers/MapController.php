@@ -18,20 +18,25 @@ class MapController extends Controller
                     $contract = $asset->contract;
                     $tenant   = $contract?->tenant;
 
+                    $startFmt = $contract && $contract->start_datetime ? $contract->start_datetime->format('d/m/Y') : null;
+                    $endFmt   = $contract && $contract->end_datetime   ? $contract->end_datetime->format('d/m/Y')   : null;
+                    $period   = ($startFmt && $endFmt) ? "{$startFmt} – {$endFmt}" : ($startFmt ?? $endFmt ?? '');
+
+                    $lat = (float) $asset->latitude;
+                    $lng = (float) $asset->longitude;
+
                     return [
                         'name'      => $asset->asset_block_name,
                         'code'      => $asset->asset_number,
                         'location'  => $asset->stasiun,
                         'address'   => $asset->wilayah_asset,
                         'area'      => $asset->size_area_formatted,
-                        'type'      => $asset->jenis_asset . ' — ' . $asset->peruntukan,
+                        'type'      => ($asset->jenis_asset ?? '') . ' — ' . ($asset->peruntukan ?? ''),
                         'value'     => $contract ? 'Rp ' . number_format((float) $contract->price, 0, ',', '.') : '-',
-                        'period'    => $contract
-                            ? $contract->start_datetime->format('d/m/Y') . ' – ' . $contract->end_datetime->format('d/m/Y')
-                            : '',
+                        'period'    => $period,
                         'tenant'    => $tenant?->fullname ?? '-',
-                        'latitude'  => (string) $asset->latitude,
-                        'longitude' => (string) $asset->longitude,
+                        'latitude'  => ($lat !== 0.0) ? (string) $lat : '',
+                        'longitude' => ($lng !== 0.0) ? (string) $lng : '',
                     ];
                 })
                 ->toArray(); // simpan sebagai plain array agar aman di-serialize ke cache

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Tambah Aset & Kontrak ΓÇö KAI Tracker App</title>
+    <title>Tambah Aset & Kontrak — KAI Tracker App</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -20,18 +20,54 @@
     {{-- Leaflet JS & CSS for Google Maps Interactive Preview --}}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+    @media (max-width: 1023.98px) {
+        .mobile-dropup-sheet {
+            animation: slideUpCreateSheet 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    }
+    @keyframes slideUpCreateSheet {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
 </head>
 
 <body class="min-h-screen bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between transition-colors duration-200">
 
-    {{-- Top Navbar --}}
-    <x-navbar active="contracts" />
+    {{-- Top Navbar (Desktop Only on Create Page) --}}
+    <div class="hidden lg:block">
+        <x-navbar active="contracts" />
+    </div>
 
-    {{-- Main Content --}}
-    <main class="w-full flex-1 max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-10 pt-3 sm:pt-6 pb-36 sm:pb-36 lg:pb-12 flex flex-col gap-4 sm:gap-6">
+    {{-- Mobile Sheet Backdrop Overlay --}}
+    <div class="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 lg:hidden" onclick="window.location.href='{{ route('contracts.index') }}'"></div>
 
-        {{-- Page Header & Breadcrumbs & Action Buttons --}}
-        <div class="flex items-center justify-between gap-3 shrink-0">
+    {{-- Main Content / Mobile Dropup Bottom Sheet Panel --}}
+    <main class="mobile-dropup-sheet fixed inset-x-0 bottom-0 z-50 h-[90dvh] max-h-[90dvh] flex flex-col bg-white dark:bg-[#1F2123] rounded-t-[36px] sm:rounded-t-[40px] shadow-[0_-16px_50px_rgba(0,0,0,0.25)] dark:shadow-[0_-16px_50px_rgba(0,0,0,0.85)] border-t border-x border-gray-100 dark:border-white/10 overflow-hidden lg:static lg:h-auto lg:max-h-none lg:rounded-none lg:bg-transparent lg:shadow-none lg:border-none lg:overflow-visible w-full flex-1 max-w-[1600px] mx-auto lg:px-10 lg:pt-6 lg:pb-10 transition-all duration-300" style="padding-bottom: 0 !important;">
+
+        {{-- Mobile Dropup Sheet Header (Persis Desain Filter Peta) --}}
+        <div class="px-5 pt-5 pb-3.5 flex items-center justify-between border-b border-gray-100 dark:border-white/10 shrink-0 lg:hidden">
+            <div class="flex items-center gap-2">
+                <h2 class="text-base font-bold text-gray-950 dark:text-white tracking-tight">
+                    Tambah Aset & Kontrak
+                </h2>
+            </div>
+            <a href="{{ route('contracts.index') }}" class="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer" aria-label="Tutup">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </a>
+        </div>
+
+        {{-- Desktop Page Header & Breadcrumbs & Action Buttons --}}
+        <div class="hidden lg:flex items-center justify-between gap-3 shrink-0 mb-6">
             <div>
                 <h1 class="text-lg sm:text-[26px] font-bold tracking-tight text-gray-950 dark:text-white">
                     Tambah Aset & Kontrak Baru
@@ -69,9 +105,11 @@
             </div>
         </div>
 
-        {{-- Form Container: Full Width Unified Layout --}}
-        <form id="form-create-contract" action="{{ route('contracts.store') }}" method="POST" enctype="multipart/form-data" class="w-full flex flex-col gap-4 sm:gap-6">
-            @csrf
+        {{-- Scrollable Form Wrapper for Mobile & Full Layout for Desktop --}}
+        <div class="overflow-y-auto min-h-0 flex-1 px-4 py-4 sm:px-6 lg:px-0 lg:py-0 lg:overflow-visible lg:flex-none flex flex-col gap-4 sm:gap-6 pb-8 lg:pb-0">
+            {{-- Form Container: Full Width Unified Layout --}}
+            <form id="form-create-contract" action="{{ route('contracts.store') }}" method="POST" enctype="multipart/form-data" class="w-full flex flex-col gap-4 sm:gap-6">
+                @csrf
 
             {{-- Validation Errors Alert --}}
             @if ($errors->any())
@@ -101,9 +139,9 @@
                         </label>
                         <input
                             type="text"
-                            name="nama_penyewa"
-                            value="{{ old('nama_penyewa') }}"
-                            placeholder="Contoh: ARIF KHUZAINI / MARDIYAH"
+                            name="fullname"
+                            value="{{ old('fullname') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
@@ -119,99 +157,55 @@
                             name="status_customer"
                             id="input_status_customer"
                             list="list_status_customer"
-                            value="{{ old('status_customer', 'LAMA') }}"
-                            placeholder="Contoh: LAMA / BARU"
+                            value="{{ old('status_customer') }}"
+                            placeholder="Pilih atau ketik status..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                         <datalist id="list_status_customer">
-                            <option value="LAMA"></option>
-                            <option value="BARU"></option>
+                            <option value="Swasta"></option>
+                            <option value="BUMN"></option>
+                            <option value="Individu"></option>
+                            <option value="Pemerintah"></option>
                         </datalist>
                     </div>
 
-                    {{-- NIK --}}
+                    {{-- Jenis Perusahaan --}}
                     <div class="flex flex-col">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            NIK (16 Digit)
+                            Jenis Perusahaan
                         </label>
                         <input
                             type="text"
-                            name="nik"
-                            value="{{ old('nik') }}"
-                            maxlength="16"
-                            placeholder="3325..."
+                            name="jenis_perusahaan"
+                            list="list_jenis_perusahaan"
+                            value="{{ old('jenis_perusahaan', '-') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
+                        <datalist id="list_jenis_perusahaan">
+                            <option value="-"></option>
+                            <option value="PT"></option>
+                            <option value="CV"></option>
+                            <option value="Yayasan"></option>
+                            <option value="Koperasi"></option>
+                            <option value="BUMN"></option>
+                            <option value="BUMD"></option>
+                        </datalist>
                     </div>
 
-                    {{-- Instansi / Perusahaan --}}
-                    <div class="flex flex-col sm:col-span-2">
+                    {{-- Brand / Merek --}}
+                    <div class="flex flex-col sm:col-span-2 lg:col-span-4">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Instansi / Perusahaan
+                            Brand / Usaha
                         </label>
                         <input
                             type="text"
-                            name="instansi"
-                            value="{{ old('instansi') }}"
-                            placeholder="Contoh: PT Kereta Api Indonesia / Perseorangan"
+                            name="brand"
+                            value="{{ old('brand') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
-                    </div>
-
-                    {{-- NIP / NRP --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            NIP / NRP Pegawai
-                        </label>
-                        <input
-                            type="text"
-                            name="nip"
-                            value="{{ old('nip') }}"
-                            placeholder="NIP / NRP..."
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                        >
-                    </div>
-
-                    {{-- No Telepon / WA --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            No. Telepon / WhatsApp
-                        </label>
-                        <input
-                            type="text"
-                            name="phone_number"
-                            value="{{ old('phone_number') }}"
-                            placeholder="08xxxxxxxxxx"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                        >
-                    </div>
-
-                    {{-- Email Penyewa --}}
-                    <div class="flex flex-col sm:col-span-2">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            placeholder="nama@email.com"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                        >
-                    </div>
-
-                    {{-- Alamat Penyewa --}}
-                    <div class="flex flex-col sm:col-span-2">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Alamat Lengkap Penyewa
-                        </label>
-                        <textarea
-                            name="address"
-                            rows="2"
-                            placeholder="Alamat domisili..."
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] p-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none font-normal"
-                        >{{ old('address') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -220,124 +214,47 @@
             <div class="rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-6 shadow-[0_4px_25px_rgba(0,0,0,0.03)] transition-colors">
                 <div class="mb-3.5 sm:mb-4 border-b border-gray-100 dark:border-white/10 pb-2.5">
                     <h2 class="text-xs sm:text-sm font-bold text-gray-950 dark:text-white">
-                        2. Identitas & Lokasi Aset
+                        2. Informasi Aset KAI
                     </h2>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    {{-- Judul / Blok Aset --}}
-                    <div class="flex flex-col sm:col-span-2">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Judul Aset / Nama Lokasi<span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="asset_block_name"
-                            value="{{ old('asset_block_name') }}"
-                            placeholder="Contoh: Tanah & Bangunan Jl. Pemuda No. 1"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                            required
-                        >
-                    </div>
-
                     {{-- Nomor Aset --}}
                     <div class="flex flex-col">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Nomor Aset (Kode Aset)<span class="text-red-500">*</span>
+                            Nomor / Kode Aset<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="asset_number"
                             value="{{ old('asset_number') }}"
-                            placeholder="Contoh: AST-SMG-001"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                     </div>
 
-                    {{-- Klasifikasi Aset --}}
+                    {{-- Jenis Aset --}}
                     <div class="flex flex-col">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Klasifikasi Aset<span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="klasifikasi_asset"
-                            list="list_klasifikasi_asset"
-                            value="{{ old('klasifikasi_asset', 'NON ROW') }}"
-                            placeholder="NON ROW / ROW"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                            required
-                        >
-                        <datalist id="list_klasifikasi_asset">
-                            <option value="NON ROW"></option>
-                            <option value="ROW"></option>
-                        </datalist>
-                    </div>
-
-                    {{-- Jenis Aset (Kategori) --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Jenis Aset (Kategori)<span class="text-red-500">*</span>
+                            Jenis Aset<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="jenis_asset"
+                            id="input_jenis_asset"
                             list="list_jenis_asset"
-                            value="{{ old('jenis_asset', 'Rumah Perusahaan') }}"
-                            placeholder="Pilih atau ketik jenis aset"
+                            value="{{ old('jenis_asset') }}"
+                            placeholder="Pilih atau ketik jenis aset..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                         <datalist id="list_jenis_asset">
-                            <option value="Rumah Perusahaan"></option>
+                            <option value="Tanah"></option>
                             <option value="Bangunan"></option>
-                            <option value="Lahan/Tanah"></option>
-                            <option value="Jembatan/Komersial"></option>
-                            <option value="Kios"></option>
-                            <option value="Lainnya"></option>
+                            <option value="Fasilitas"></option>
+                            <option value="Rumah Perusahaan"></option>
                         </datalist>
-                    </div>
-
-                    {{-- Stasiun Terdekat --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Stasiun Terdekat<span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="stasiun"
-                            list="list_stasiun"
-                            value="{{ old('stasiun', 'Pekalongan') }}"
-                            placeholder="Contoh: Pekalongan, Tawang"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                            required
-                        >
-                        <datalist id="list_stasiun">
-                            <option value="Pekalongan"></option>
-                            <option value="Batang"></option>
-                            <option value="Ujungnegoro"></option>
-                            <option value="Weleri"></option>
-                            <option value="Kendal"></option>
-                            <option value="Kaliwungu"></option>
-                            <option value="Semarang Poncol"></option>
-                            <option value="Semarang Tawang"></option>
-                        </datalist>
-                    </div>
-
-                    {{-- Wilayah Aset --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Wilayah Aset (Daop)<span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="wilayah_asset"
-                            value="{{ old('wilayah_asset', 'Daop 4 Semarang') }}"
-                            placeholder="Daop 4 Semarang"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                            required
-                        >
                     </div>
 
                     {{-- Luas Aset --}}
@@ -346,138 +263,187 @@
                             Luas Aset (m²)
                         </label>
                         <input
-                            type="number"
-                            step="0.01"
-                            name="asset_area"
-                            value="{{ old('asset_area') }}"
-                            placeholder="Contoh: 150.5"
+                            type="text"
+                            name="size_area"
+                            value="{{ old('size_area') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
-                    {{-- Alamat Lengkap Aset --}}
-                    <div class="flex flex-col sm:col-span-2 lg:col-span-4">
+                    {{-- Peruntukan --}}
+                    <div class="flex flex-col">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Alamat Lengkap Aset<span class="text-red-500">*</span>
+                            Peruntukan
                         </label>
-                        <textarea
-                            name="address_asset"
-                            rows="2"
-                            placeholder="Jl. ..., RT/RW ..., Kel. ..., Kec. ..., Kota/Kab. ..."
-                            class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] p-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition resize-none font-normal"
-                            required
-                        >{{ old('address_asset') }}</textarea>
-                    </div>
-
-                    {{-- Upload Foto Aset (Multiple) --}}
-                    <div class="flex flex-col sm:col-span-2 lg:col-span-4">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Foto / Gambar Aset
-                        </label>
-
-                        {{-- Hidden Real File Input (Multiple) --}}
-                        <input type="file" name="asset_images[]" id="file-upload-input" class="hidden" accept="image/jpeg,image/png,image/webp,image/jpg" onchange="handleFileUpload(event)" multiple>
-
-                        {{-- Dropzone / Upload Trigger Button --}}
-                        <div
-                            id="file-upload-zone"
-                            onclick="document.getElementById('file-upload-input').click()"
-                            ondragover="handleDragOver(event)"
-                            ondragleave="handleDragLeave(event)"
-                            ondrop="handleDrop(event)"
-                            class="relative flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 dark:border-white/20 bg-gray-50/50 dark:bg-[#282A2C]/50 px-4 py-3.5 text-center transition hover:border-[#0066FF] dark:hover:border-[#3B82F6] hover:bg-blue-50/20 cursor-pointer"
+                        <input
+                            type="text"
+                            name="peruntukan"
+                            id="input_peruntukan"
+                            list="list_peruntukan"
+                            value="{{ old('peruntukan', 'RUMAH TINGGAL') }}"
+                            placeholder="...."
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
-                            <svg class="h-6 w-6 text-gray-400 dark:text-[#9AA0A6] mb-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="17 8 12 3 7 8"/>
-                                <line x1="12" y1="3" x2="12" y2="15"/>
-                            </svg>
-                            <p class="text-xs font-medium text-gray-700 dark:text-gray-200">
-                                <span class="text-[#0066FF] dark:text-[#3B82F6] font-semibold">Klik untuk upload</span> atau drag & drop gambar ke sini
-                            </p>
-                            <p class="text-[10px] text-gray-400 dark:text-[#9AA0A6] mt-0.5">
-                                PNG, JPG, JPEG, WEBP (Bisa pilih beberapa gambar sekaligus, maks. 5MB per file)
-                            </p>
+                        <datalist id="list_peruntukan">
+                            <option value="RUMAH TINGGAL"></option>
+                            <option value="KANTOR"></option>
+                            <option value="USAHA / BISNIS"></option>
+                            <option value="GUDANG"></option>
+                            <option value="TAMAN"></option>
+                            <option value="-"></option>
+                        </datalist>
+                    </div>
+
+                    {{-- Stasiun Terdekat --}}
+                    <div class="flex flex-col">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            Stasiun Terdekat
+                        </label>
+                        <input
+                            type="text"
+                            name="stasiun"
+                            id="input_stasiun"
+                            list="list_stasiun"
+                            value="{{ old('stasiun') }}"
+                            placeholder="Pilih atau ketik stasiun..."
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
+                        <datalist id="list_stasiun">
+                            <option value="Pekalongan"></option>
+                            <option value="Semarang Tawang"></option>
+                            <option value="Semarang Poncol"></option>
+                            <option value="Tegal"></option>
+                            <option value="Pekalongan Barat"></option>
+                        </datalist>
+                    </div>
+
+                    {{-- Wilayah Aset --}}
+                    <div class="flex flex-col">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            Wilayah Aset
+                        </label>
+                        <input
+                            type="text"
+                            name="wilayah_asset"
+                            id="input_wilayah_asset"
+                            list="list_wilayah"
+                            value="{{ old('wilayah_asset') }}"
+                            placeholder="Pilih atau ketik wilayah..."
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
+                    </div>
+
+                    {{-- Nama Blok Aset (Full Width) --}}
+                    <div class="flex flex-col sm:col-span-2 lg:col-span-2">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            Nama Blok Aset / Lokasi Lengkap<span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="asset_block_name"
+                            value="{{ old('asset_block_name') }}"
+                            placeholder="...."
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                            required
+                        >
+                    </div>
+                </div>
+            </div>
+
+            {{-- CARD: TAMBAH GAMBAR ASET --}}
+            <div class="rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-6 shadow-[0_4px_25px_rgba(0,0,0,0.03)] transition-colors">
+                <div class="flex items-center justify-between mb-3.5 sm:mb-4 border-b border-gray-100 dark:border-white/10 pb-2.5">
+                    <h2 class="text-xs sm:text-sm font-bold text-gray-950 dark:text-white">
+                        Tambah Gambar<span class="text-red-500">*</span>
+                    </h2>
+                </div>
+
+                <div class="space-y-4 text-left">
+                    {{-- Upload Box Dashed --}}
+                    <div onclick="document.getElementById('file-upload-input').click()" class="rounded-2xl border-2 border-dashed border-gray-300 dark:border-white/20 bg-transparent hover:bg-gray-50/70 dark:hover:bg-white/5 py-8 px-5 flex flex-col items-center justify-center text-center transition cursor-pointer">
+                        <input type="file" name="asset_images[]" id="file-upload-input" class="hidden" accept="image/jpeg,image/png,image/webp,image/jpg" onchange="handleFileUpload(event)" multiple>
+                        <x-icon name="icon-upload-gambar" class="w-16 h-16 mb-2.5 text-[#4F4F4F] dark:text-[#9AA0A6]" />
+                        <p class="text-xs sm:text-[13px] font-medium text-black dark:text-white">Klik ikon untuk tambah gambar dibawah 10 MB</p>
+                        <p class="text-[11px] text-gray-400 dark:text-[#9AA0A6] mt-0.5 font-normal">pilih dalam format JPEG, JPG, PNG, WEBP</p>
+                    </div>
+
+                    {{-- Container List Gambar DnD --}}
+                    <div id="image-dnd-wrapper" class="space-y-3">
+                        {{-- Slot Utama --}}
+                        <div>
+                            <label class="block text-xs font-medium text-black dark:text-white mb-1.5">Utama</label>
+                            <div id="image-slot-utama" class="image-drop-target">
+                                {{-- Rendered dynamically by renderImageList() --}}
+                            </div>
                         </div>
 
-                        {{-- Container Preview List Gambar yang Terpilih --}}
-                        <div id="file-preview-list" class="mt-2.5 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2.5">
-                            {{-- Preview Cards dynamically injected by JS --}}
+                        {{-- Grid Gambar Lainnya (2 Kolom) --}}
+                        <div id="image-grid-secondary" class="grid grid-cols-1 sm:grid-cols-2 gap-3 image-drop-target">
+                            {{-- Rendered dynamically by renderImageList() --}}
                         </div>
                     </div>
 
-                    {{-- Koordinat Latitude & Longitude & Leaflet Interactive Map Preview --}}
-                    <div class="flex flex-col sm:col-span-2 lg:col-span-4 mt-2">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                            <div>
-                                <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white">
-                                    Titik Koordinat & Peta Lokasi Aset<span class="text-red-500">*</span>
-                                </label>
-                                <p class="text-[10px] sm:text-[11px] text-gray-400 dark:text-[#9AA0A6]">
-                                    Geser pin pada peta atau ketik koordinat latitude & longitude di bawah.
-                                </p>
+                    {{-- Titik Koordinat G Maps (Google Maps Asli & Sinkronisasi Realtime) --}}
+                    <div class="pt-3 border-t border-gray-100 dark:border-white/10 mt-4">
+                        <label class="block text-xs sm:text-sm font-semibold text-gray-950 dark:text-white mb-2">
+                            Titik Koordinat G Maps<span class="text-red-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-3.5 items-center">
+                            <div class="h-[145px] sm:h-[160px] w-full rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-[#282A2C] relative shadow-2xs">
+                                <div id="edit-map-preview" class="w-full h-full z-0"></div>
                             </div>
 
-                            <div class="flex items-center gap-2">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-[10px] sm:text-[11px] text-gray-500 dark:text-gray-400 font-medium">Lat:</span>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 dark:text-white mb-1">Latitude</label>
                                     <input
                                         type="text"
-                                        id="input-create-latitude"
+                                        id="input-edit-latitude"
                                         name="latitude"
-                                        value="{{ old('latitude', '-6.888632') }}"
+                                        value="{{ old('latitude') }}"
                                         oninput="handleCoordinateInputChange()"
-                                        placeholder="-6.888632"
-                                        class="w-24 sm:w-28 h-[30px] rounded-md border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2 text-[11px] text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                                        required
+                                        placeholder="...."
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-[10px] sm:text-[11px] text-gray-500 dark:text-gray-400 font-medium">Lng:</span>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 dark:text-white mb-1">Longtitude</label>
                                     <input
                                         type="text"
-                                        id="input-create-longitude"
+                                        id="input-edit-longitude"
                                         name="longitude"
-                                        value="{{ old('longitude', '109.675300') }}"
+                                        value="{{ old('longitude') }}"
                                         oninput="handleCoordinateInputChange()"
-                                        placeholder="109.675300"
-                                        class="w-24 sm:w-28 h-[30px] rounded-md border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2 text-[11px] text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                                        required
+                                        placeholder="...."
+                                        class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
-                            </div>
-                        </div>
-
-                        {{-- Leaflet Interactive Map Container --}}
-                        <div class="relative w-full h-[220px] sm:h-[300px] rounded-xl overflow-hidden border border-gray-200 dark:border-white/10 shadow-xs">
-                            <div id="map-preview-create" class="w-full h-full z-0"></div>
-                            <div class="absolute bottom-2 left-2 z-[400] bg-white/90 dark:bg-[#1F2123]/90 backdrop-blur-xs px-2 py-1 rounded-md text-[10px] text-gray-600 dark:text-gray-300 shadow-xs border border-gray-200 dark:border-white/10">
-                                📍 Klik peta untuk pindahkan pin lokasi
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- CARD 3: INFORMASI KONTRAK & SEWA --}}
+            {{-- CARD 3: INFORMASI KONTRAK & PERIODE SEWA --}}
             <div class="rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-6 shadow-[0_4px_25px_rgba(0,0,0,0.03)] transition-colors">
                 <div class="mb-3.5 sm:mb-4 border-b border-gray-100 dark:border-white/10 pb-2.5">
                     <h2 class="text-xs sm:text-sm font-bold text-gray-950 dark:text-white">
-                        3. Informasi Kontrak, Perjanjian & Masa Sewa
+                        3. Informasi Kontrak & Periode Sewa
                     </h2>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     {{-- Nomor Kontrak --}}
-                    <div class="flex flex-col">
+                    <div class="flex flex-col sm:col-span-2">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Nomor Kontrak (Perjanjian)<span class="text-red-500">*</span>
+                            Nomor Kontrak<span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
                             name="contract_number"
                             value="{{ old('contract_number') }}"
-                            placeholder="Contoh: KAI/D4/2026/001"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
@@ -491,53 +457,52 @@
                         <input
                             type="text"
                             name="jenis_kontrak"
+                            id="input_jenis_kontrak"
                             list="list_jenis_kontrak"
-                            value="{{ old('jenis_kontrak', 'Kontrak Sewa') }}"
-                            placeholder="Pilih jenis kontrak"
+                            value="{{ old('jenis_kontrak') }}"
+                            placeholder="Pilih atau ketik jenis kontrak..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
                         <datalist id="list_jenis_kontrak">
                             <option value="Kontrak Sewa"></option>
-                            <option value="Kontrak Pengawasan"></option>
-                            <option value="Perjanjian Bangun Guna Serah"></option>
+                            <option value="Perjanjian Kerjasama"></option>
                             <option value="Addendum"></option>
+                            <option value="Sewa Tanah"></option>
+                            <option value="Sewa Bangunan"></option>
                         </datalist>
                     </div>
 
-                    {{-- Status Kontrak / Perjanjian --}}
+                    {{-- Area Kontrak --}}
                     <div class="flex flex-col">
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Status Perjanjian / Kontrak<span class="text-red-500">*</span>
+                            Area Kontrak
                         </label>
                         <input
                             type="text"
-                            name="status_perjanjian"
-                            list="list_status_perjanjian"
-                            value="{{ old('status_perjanjian', 'Sewa Baru') }}"
-                            placeholder="Contoh: Sewa Baru, Perpanjangan"
+                            name="area_kontrak"
+                            id="input_area_kontrak"
+                            list="list_wilayah"
+                            value="{{ old('area_kontrak') }}"
+                            placeholder="Pilih atau ketik area..."
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
+                    </div>
+
+                    {{-- Nilai Kontrak / Harga --}}
+                    <div class="flex flex-col">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            Nilai Kontrak / Harga (Rp)<span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="price"
+                            id="input-price-main"
+                            oninput="syncPriceToRevenue(this.value)"
+                            value="{{ old('price') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
-                        >
-                        <datalist id="list_status_perjanjian">
-                            <option value="Sewa Baru"></option>
-                            <option value="Perpanjangan"></option>
-                            <option value="Selesai"></option>
-                            <option value="Batal"></option>
-                        </datalist>
-                    </div>
-
-                    {{-- Peruntukan Sewa --}}
-                    <div class="flex flex-col">
-                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
-                            Peruntukan Sewa
-                        </label>
-                        <input
-                            type="text"
-                            name="peruntukan"
-                            value="{{ old('peruntukan', 'Hunian / Tempat Tinggal') }}"
-                            placeholder="Contoh: Hunian, Usaha Kuliner, Toko"
-                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
 
@@ -546,23 +511,47 @@
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
                             Tanggal Kontrak
                         </label>
-                        <div class="relative flex items-center w-full">
-                            <button
-                                type="button"
-                                onclick="openCalendarPicker(event, 'input-contract-date')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
-                            >
-                                <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
-                            </button>
-                            <input
-                                type="text"
-                                id="input-contract-date"
-                                name="contract_date"
-                                value="{{ old('contract_date', date('d/m/Y')) }}"
-                                placeholder="DD/MM/YYYY"
-                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-9 pr-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                            >
-                        </div>
+                        <input
+                            type="text"
+                            id="input-contract-date"
+                            name="contract_date"
+                            value="{{ old('contract_date')}}"
+                            placeholder="...."
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
+                    </div>
+
+                    {{-- PIC / SPV --}}
+                    <div class="flex flex-col">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            SPV / Penanggung Jawab
+                        </label>
+                        <input
+                            type="text"
+                            name="spv"
+                            value="{{ old('spv') }}"
+                            placeholder="Nama SPV"
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
+                    </div>
+
+                    {{-- Keterangan --}}
+                    <div class="flex flex-col">
+                        <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
+                            Keterangan
+                        </label>
+                        <input
+                            type="text"
+                            name="keterangan"
+                            list="list_keterangan"
+                            value="{{ old('keterangan') }}"
+                            placeholder="...."
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
+                        <datalist id="list_keterangan">
+                            <option value="RKA"></option>
+                            <option value="Non RKA"></option>
+                        </datalist>
                     </div>
 
                     {{-- Tanggal Mulai --}}
@@ -570,11 +559,11 @@
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
                             Tanggal Mulai Awal
                         </label>
-                        <div class="relative flex items-center w-full">
+                        <div class="relative">
                             <button
                                 type="button"
                                 onclick="openCalendarPicker(event, 'input-start-date')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
                             >
                                 <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
                             </button>
@@ -582,9 +571,9 @@
                                 type="text"
                                 id="input-start-date"
                                 name="start_datetime"
-                                value="{{ old('start_datetime', date('d/m/Y')) }}"
-                                placeholder="DD/MM/YYYY"
-                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-9 pr-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                value="{{ old('start_datetime')}}"
+                                placeholder="DD/MM/YY"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
                     </div>
@@ -594,11 +583,11 @@
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
                             Tanggal Selesai (Jatuh Tempo)<span class="text-red-500">*</span>
                         </label>
-                        <div class="relative flex items-center w-full">
+                        <div class="relative">
                             <button
                                 type="button"
                                 onclick="openCalendarPicker(event, 'input-end-date')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
                             >
                                 <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
                             </button>
@@ -606,9 +595,9 @@
                                 type="text"
                                 id="input-end-date"
                                 name="end_datetime"
-                                value="{{ old('end_datetime') }}"
-                                placeholder="DD/MM/YYYY"
-                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-9 pr-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                value="{{ old('end_datetime')}}"
+                                placeholder="DD/MM/YY"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                 required
                             >
                         </div>
@@ -619,11 +608,11 @@
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
                             Tanggal Mulai Baru (Addendum)
                         </label>
-                        <div class="relative flex items-center w-full">
+                        <div class="relative">
                             <button
                                 type="button"
                                 onclick="openCalendarPicker(event, 'input-start-date-baru')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
                             >
                                 <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
                             </button>
@@ -632,8 +621,8 @@
                                 id="input-start-date-baru"
                                 name="start_datetime_baru"
                                 value="{{ old('start_datetime_baru') }}"
-                                placeholder="DD/MM/YYYY"
-                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-9 pr-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                placeholder="DD/MM/YY"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
                     </div>
@@ -643,11 +632,11 @@
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
                             Tanggal Selesai Baru (Addendum)
                         </label>
-                        <div class="relative flex items-center w-full">
+                        <div class="relative">
                             <button
                                 type="button"
                                 onclick="openCalendarPicker(event, 'input-end-date-baru')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center w-4 h-4 p-0 m-0 border-0 bg-transparent text-[#0066FF] dark:text-[#3B82F6] hover:text-blue-600 transition cursor-pointer z-10 leading-none"
+                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
                             >
                                 <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
                             </button>
@@ -656,8 +645,8 @@
                                 id="input-end-date-baru"
                                 name="end_datetime_baru"
                                 value="{{ old('end_datetime_baru') }}"
-                                placeholder="DD/MM/YYYY"
-                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-9 pr-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                placeholder="DD/MM/YY"
+                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
                         </div>
                     </div>
@@ -683,7 +672,7 @@
                             name="jenis_pendapatan"
                             id="input_jenis_pendapatan"
                             list="list_jenis_pendapatan"
-                            value="{{ old('jenis_pendapatan', 'Non Row') }}"
+                            value="{{ old('jenis_pendapatan') }}"
                             placeholder="Pilih atau ketik jenis..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
@@ -704,8 +693,8 @@
                         <input
                             type="text"
                             name="akun_gl"
-                            value="{{ old('akun_gl', '3421190010') }}"
-                            placeholder="Contoh: 3421190010"
+                            value="{{ old('akun_gl') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -718,8 +707,8 @@
                         <input
                             type="text"
                             name="form_rka"
-                            value="{{ old('form_rka', '-') }}"
-                            placeholder="Contoh: - / RKA 2026"
+                            value="{{ old('form_rka') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -732,8 +721,8 @@
                         <input
                             type="text"
                             name="tahun_rka"
-                            value="{{ old('tahun_rka', '0') }}"
-                            placeholder="Contoh: 0 / 1 / 2026"
+                            value="{{ old('tahun_rka') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -748,7 +737,7 @@
                             name="nilai_2026"
                             id="input-nilai-2026"
                             value="{{ old('nilai_2026') }}"
-                            placeholder="Contoh: 781.151"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -761,7 +750,7 @@
                         <input
                             type="text"
                             name="persentase"
-                            value="{{ old('persentase', '0.9') }}"
+                            value="{{ old('persentase') }}"
                             placeholder="Contoh: 0.9 / 90%"
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
@@ -775,8 +764,8 @@
                         <input
                             type="text"
                             name="nilai_backlog"
-                            value="{{ old('nilai_backlog', '0') }}"
-                            placeholder="0"
+                            value="{{ old('nilai_backlog') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -789,8 +778,8 @@
                         <input
                             type="text"
                             name="nilai_backlog2"
-                            value="{{ old('nilai_backlog2', '0') }}"
-                            placeholder="0"
+                            value="{{ old('nilai_backlog2') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -846,46 +835,71 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
+
+        {{-- Mobile Dropup Sheet Footer (Sticky Bottom Action Bar) --}}
+        <div class="px-6 pt-3.5 pb-3 flex items-center justify-between shrink-0 border-t border-gray-100 dark:border-white/10 bg-white dark:bg-[#1F2123] lg:hidden z-20" style="padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));">
+            <a href="{{ route('contracts.index') }}" class="text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:underline cursor-pointer select-none transition py-2 px-1">
+                Batal
+            </a>
+            <button type="submit" form="form-create-contract" class="h-[46px] min-h-[46px] px-6 rounded-[14px] bg-[#0066FF] hover:bg-blue-700 text-sm font-semibold text-white transition shadow-sm cursor-pointer select-none flex items-center justify-center shrink-0">
+                Simpan Aset
+            </button>
+        </div>
 
     </main>
 
     {{-- POPUP CALENDAR PICKER (Dropdown Style) --}}
-    <div id="popup-calendar-picker" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
-        {{-- Header: < [Jun Γî╡] [2025 Γî╡] > --}}
-        <div class="flex items-center justify-between mb-3.5">
-            <button type="button" onclick="calPrevMonth()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
+    <div id="popup-calendar-picker" onclick="event.stopPropagation()" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
+
+        {{-- Header: < [Jun ⌵] [2025 ⌵] > --}}
+        <div id="cal-header" class="flex items-center justify-between mb-3.5">
+            <button type="button" onclick="calPrev()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
             <div class="flex items-center gap-2">
-                <div class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white">
+                <button type="button" onclick="calShowMonthPicker()" class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white hover:border-blue-400 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer">
                     <span id="cal-month-name">Jun</span>
                     <svg class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
-                <div class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white">
+                </button>
+                <button type="button" onclick="calShowYearPicker()" class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white hover:border-blue-400 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer">
                     <span id="cal-year-val">2026</span>
                     <svg class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
+                </button>
             </div>
-            <button type="button" onclick="calNextMonth()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
+            <button type="button" onclick="calNext()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
             </button>
         </div>
 
-        {{-- Weekdays header: Ming Sen Sel Rab Kam Jum Sa --}}
-        <div class="grid grid-cols-7 text-center text-xs font-semibold text-slate-500 dark:text-[#9AA0A6] mb-2">
-            <div>Ming</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sa</div>
+        {{-- Panel: Days (default) --}}
+        <div id="cal-days-panel">
+            <div class="grid grid-cols-7 text-center text-xs font-semibold text-slate-500 dark:text-[#9AA0A6] mb-2">
+                <div>Ming</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sa</div>
+            </div>
+            <div id="cal-days-grid" class="grid grid-cols-7 text-center text-xs font-medium gap-y-1">
+                {{-- Rendered via JS --}}
+            </div>
         </div>
 
-        {{-- Days grid --}}
-        <div id="cal-days-grid" class="grid grid-cols-7 text-center text-xs font-medium gap-y-1">
-            {{-- Rendered via JS --}}
+        {{-- Panel: Month Picker --}}
+        <div id="cal-month-panel" class="hidden">
+            <div id="cal-month-grid" class="grid grid-cols-3 gap-2">
+                {{-- Rendered via JS --}}
+            </div>
+        </div>
+
+        {{-- Panel: Year Picker --}}
+        <div id="cal-year-panel" class="hidden">
+            <div id="cal-year-grid" class="grid grid-cols-3 gap-2">
+                {{-- Rendered via JS --}}
+            </div>
         </div>
     </div>
 
     {{-- Footer Copyright --}}
-    <footer class="w-full text-center py-4 text-xs text-gray-400 dark:text-[#787E87] border-t border-gray-100 dark:border-white/5">
+    <footer class="hidden lg:block w-full text-center py-4 text-xs text-gray-400 dark:text-[#787E87] border-t border-gray-100 dark:border-white/5">
         &copy; {{ date('Y') }} PT Kereta Api Indonesia (Persero) Daop 4 Semarang. All rights reserved.
     </footer>
 
@@ -1150,6 +1164,17 @@
 
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
+        // calView: 'days' | 'months' | 'years'
+        let calView = 'days';
+        let calYearRangeStart = Math.floor(new Date().getFullYear() / 12) * 12;
+
+        function calShowPanel(view) {
+            calView = view;
+            document.getElementById('cal-days-panel').classList.toggle('hidden', view !== 'days');
+            document.getElementById('cal-month-panel').classList.toggle('hidden', view !== 'months');
+            document.getElementById('cal-year-panel').classList.toggle('hidden', view !== 'years');
+        }
+
         function renderCalendar() {
             const monthNameEl = document.getElementById('cal-month-name');
             const yearValEl = document.getElementById('cal-year-val');
@@ -1166,16 +1191,13 @@
             const totalDaysInMonth = new Date(calCurrentYear, calCurrentMonth + 1, 0).getDate();
             const prevMonthTotalDays = new Date(calCurrentYear, calCurrentMonth, 0).getDate();
 
-            // Previous month overflow days
             for (let i = firstDayIndex - 1; i >= 0; i--) {
-                const dayNum = prevMonthTotalDays - i;
                 const cell = document.createElement('div');
                 cell.className = 'py-1 text-gray-400 dark:text-gray-600 text-center pointer-events-none select-none';
-                cell.textContent = dayNum;
+                cell.textContent = prevMonthTotalDays - i;
                 daysGridEl.appendChild(cell);
             }
 
-            // Current month days
             for (let d = 1; d <= totalDaysInMonth; d++) {
                 const cell = document.createElement('button');
                 cell.type = 'button';
@@ -1190,27 +1212,22 @@
                             const selM = parseInt(parts[1], 10) - 1;
                             let selY = parseInt(parts[2], 10);
                             if (selY < 100) selY += 2000;
-                            if (selD === d && selM === calCurrentMonth && selY === calCurrentYear) {
-                                isSelected = true;
-                            }
+                            if (selD === d && selM === calCurrentMonth && selY === calCurrentYear) isSelected = true;
                         }
                     }
                 }
 
-                if (isSelected) {
-                    cell.className = 'h-7 w-7 mx-auto flex items-center justify-center rounded-full bg-[#0066FF] text-white font-semibold shadow-xs cursor-pointer';
-                } else {
-                    cell.className = 'h-7 w-7 mx-auto flex items-center justify-center rounded-full text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] font-medium transition cursor-pointer';
-                }
-
+                cell.className = isSelected
+                    ? 'h-7 w-7 mx-auto flex items-center justify-center rounded-full bg-[#0066FF] text-white font-semibold shadow-xs cursor-pointer'
+                    : 'h-7 w-7 mx-auto flex items-center justify-center rounded-full text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] font-medium transition cursor-pointer';
                 cell.textContent = d;
-                cell.onclick = function () {
+                cell.onclick = function (e) {
+                    e.stopPropagation();
                     selectCalendarDate(d, calCurrentMonth, calCurrentYear);
                 };
                 daysGridEl.appendChild(cell);
             }
 
-            // Next month overflow days
             const totalRendered = firstDayIndex + totalDaysInMonth;
             const remainingCells = (totalRendered % 7 === 0) ? 0 : 7 - (totalRendered % 7);
             for (let n = 1; n <= remainingCells; n++) {
@@ -1221,23 +1238,101 @@
             }
         }
 
-        function calPrevMonth() {
-            calCurrentMonth--;
-            if (calCurrentMonth < 0) {
-                calCurrentMonth = 11;
-                calCurrentYear--;
+        function renderMonthPicker() {
+            const grid = document.getElementById('cal-month-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            monthNames.forEach((name, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = name;
+                btn.className = idx === calCurrentMonth
+                    ? 'py-1.5 rounded-xl text-xs font-bold bg-[#0066FF] text-white cursor-pointer'
+                    : 'py-1.5 rounded-xl text-xs font-semibold text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer';
+                btn.onclick = function (e) {
+                    e.stopPropagation();
+                    calSelectMonth(idx);
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function renderYearPicker() {
+            const grid = document.getElementById('cal-year-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            for (let y = calYearRangeStart; y < calYearRangeStart + 12; y++) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = y;
+                btn.className = y === calCurrentYear
+                    ? 'py-1.5 rounded-xl text-xs font-bold bg-[#0066FF] text-white cursor-pointer'
+                    : 'py-1.5 rounded-xl text-xs font-semibold text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer';
+                btn.onclick = function (e) {
+                    e.stopPropagation();
+                    calSelectYear(y);
+                };
+                grid.appendChild(btn);
             }
+            // update header label to show year range
+            const yearValEl = document.getElementById('cal-year-val');
+            if (yearValEl) yearValEl.textContent = calYearRangeStart + ' – ' + (calYearRangeStart + 11);
+        }
+
+        function calShowMonthPicker() {
+            calShowPanel('months');
+            renderMonthPicker();
+            // header panah navigasi tidak relevan di mode bulan, sembunyikan
+            document.getElementById('cal-header').querySelector('button:first-child').classList.add('invisible');
+            document.getElementById('cal-header').querySelector('button:last-child').classList.add('invisible');
+        }
+
+        function calShowYearPicker() {
+            calYearRangeStart = Math.floor(calCurrentYear / 12) * 12;
+            calShowPanel('years');
+            renderYearPicker();
+        }
+
+        function calSelectMonth(monthIdx) {
+            calCurrentMonth = monthIdx;
+            calShowPanel('days');
+            renderCalendar();
+            document.getElementById('cal-header').querySelector('button:first-child').classList.remove('invisible');
+            document.getElementById('cal-header').querySelector('button:last-child').classList.remove('invisible');
+        }
+
+        function calSelectYear(year) {
+            calCurrentYear = year;
+            calShowPanel('days');
             renderCalendar();
         }
 
-        function calNextMonth() {
-            calCurrentMonth++;
-            if (calCurrentMonth > 11) {
-                calCurrentMonth = 0;
-                calCurrentYear++;
+        // Tombol < > navigasi — perilaku berbeda tiap view
+        function calPrev() {
+            if (calView === 'days') {
+                calCurrentMonth--;
+                if (calCurrentMonth < 0) { calCurrentMonth = 11; calCurrentYear--; }
+                renderCalendar();
+            } else if (calView === 'years') {
+                calYearRangeStart -= 12;
+                renderYearPicker();
             }
-            renderCalendar();
         }
+
+        function calNext() {
+            if (calView === 'days') {
+                calCurrentMonth++;
+                if (calCurrentMonth > 11) { calCurrentMonth = 0; calCurrentYear++; }
+                renderCalendar();
+            } else if (calView === 'years') {
+                calYearRangeStart += 12;
+                renderYearPicker();
+            }
+        }
+
+        // Alias lama agar tidak error jika masih ada referensi
+        function calPrevMonth() { calPrev(); }
+        function calNextMonth() { calNext(); }
 
         function openCalendarPicker(e, targetInputId) {
             e.stopPropagation();
@@ -1262,6 +1357,12 @@
             }
 
             renderCalendar();
+
+            // Reset ke tampilan hari, pastikan panah navigasi visible
+            calShowPanel('days');
+            const headerBtns = document.getElementById('cal-header').querySelectorAll('button');
+            headerBtns[0].classList.remove('invisible');
+            headerBtns[headerBtns.length - 1].classList.remove('invisible');
 
             // Pindahkan picker langsung ke dalam container input (.relative) agar menempel persis seperti dropdown
             container.appendChild(picker);

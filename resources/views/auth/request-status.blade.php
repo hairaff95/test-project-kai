@@ -53,17 +53,15 @@
 
 
                 {{-- Tombol aksi --}}
-                @if($isBlocked)
-                    <button disabled
-                        class="w-full inline-flex items-center justify-center rounded-lg bg-gray-300 dark:bg-gray-700 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 cursor-not-allowed tracking-wide mb-5 sm:mb-6">
-                        🚫 Menunggu Super Admin
-                    </button>
-                @else
-                    <a href="{{ route('password.verify', array_filter(['email' => request('email')])) }}"
-                        class="w-full inline-flex items-center justify-center rounded-lg bg-[#0066FF] hover:bg-blue-700 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-white transition active:scale-98 cursor-pointer tracking-wide shadow-sm mb-5 sm:mb-6">
-                        Verifikasi Sekarang
-                    </a>
-                @endif
+                <a href="{{ route('password.verify', array_filter(['email' => request('email')])) }}"
+                    class="w-full inline-flex items-center justify-center rounded-lg bg-[#0066FF] hover:bg-blue-700 py-3 sm:py-3.5 text-xs sm:text-sm font-semibold text-white transition active:scale-98 cursor-pointer tracking-wide shadow-sm mb-5 sm:mb-6">
+                    Verifikasi Sekarang
+                </a>
+
+                {{-- Teks Bawah: Permintaan Ulang --}}
+                <p class="text-center text-xs text-gray-500 dark:text-[#9AA0A6]">
+                    Tidak mendapatkan kode? <a href="{{ route('password.request') }}" class="text-[#0066FF] dark:text-[#3B82F6] hover:underline font-medium">Ajukan Permintaan ulang</a>
+                </p>
 
             {{-- ── STATUS: APPROVED ────────────────────────────────────────── --}}
             @elseif($resetRequest->status === 'approved')

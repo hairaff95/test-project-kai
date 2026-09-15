@@ -153,6 +153,14 @@
                         {{-- 2-Cols Financial Details Grid --}}
                         <div class="grid grid-cols-2 gap-2 bg-gray-50/90 dark:bg-[#2D3034] rounded-lg p-2.5 text-xs">
                             <div>
+                                <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Nilai 2026</span>
+                                <span class="font-bold text-gray-950 dark:text-white text-[11px]">{{ $row['nilai_2026'] }}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Jumlah Hari</span>
+                                <span class="font-medium text-gray-800 dark:text-gray-200 text-[11px]">{{ $row['jumlah_hari'] }}</span>
+                            </div>
+                            <div>
                                 <span class="text-gray-400 dark:text-[#9AA0A6] block text-[10px]">Nilai Backlog</span>
                                 <span class="font-semibold text-gray-900 dark:text-white text-[11px]">{{ $row['nilai_backlog'] }}</span>
                             </div>

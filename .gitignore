@@ -13,7 +13,7 @@
 /.phpunit.cache
 /auth.json
 /node_modules
-/public/build
+# public/build — TIDAK di-exclude, Vercel butuh compiled assets
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
@@ -75,8 +75,7 @@ $RECYCLE.BIN/
 ###########################
 # Build artifacts
 ###########################
-/public/css/
-/public/js/
+# public/css dan public/js compiled tidak di-exclude agar Vercel bisa serve assets
 !/public/js/*.json
 /public/mix-manifest.json
 
@@ -92,3 +91,13 @@ $RECYCLE.BIN/
 caching.md
 *.md
 !README.md
+
+###########################
+# Vercel / Deployment
+###########################
+.vercel
+
+###########################
+# SSL / Certificates
+###########################
+*.pem

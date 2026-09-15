@@ -172,6 +172,81 @@
             line-height: 1.2;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
         }
+
+        /* Mobile Asset Bottom Sheet Drawer (Rounded Top & Custom Buttons) */
+        #mobileAssetBottomSheet,
+        #mobileFilterBottomSheet {
+            border-top-left-radius: 36px !important;
+            border-top-right-radius: 36px !important;
+            border-bottom-left-radius: 0px !important;
+            border-bottom-right-radius: 0px !important;
+            overflow: hidden !important;
+            box-shadow: 0 -16px 50px rgba(0, 0, 0, 0.22) !important;
+        }
+
+        .dark #mobileAssetBottomSheet,
+        .dark #mobileFilterBottomSheet {
+            box-shadow: 0 -16px 50px rgba(0, 0, 0, 0.85) !important;
+        }
+
+        .mobile-btn-detail {
+            height: 48px !important;
+            min-height: 48px !important;
+            border-radius: 14px !important;
+            background-color: #0066FF !important;
+            color: #ffffff !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            text-decoration: none !important;
+            flex: 1 1 0% !important;
+            border: none !important;
+            outline: none !important;
+            cursor: pointer !important;
+            user-select: none !important;
+            transition: background-color 0.2s ease !important;
+        }
+
+        .mobile-btn-detail:hover {
+            background-color: #0052cc !important;
+        }
+
+        .mobile-btn-maps {
+            height: 48px !important;
+            min-height: 48px !important;
+            border-radius: 14px !important;
+            background-color: #ffffff !important;
+            border: 1.5px solid #D1D5DB !important;
+            color: #71717A !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            text-decoration: none !important;
+            flex: 1 1 0% !important;
+            cursor: pointer !important;
+            user-select: none !important;
+            transition: background-color 0.2s ease, border-color 0.2s ease !important;
+        }
+
+        .mobile-btn-maps:hover {
+            background-color: #F9FAFB !important;
+        }
+
+        .dark .mobile-btn-maps {
+            background-color: #2D3034 !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            color: #D1D5DB !important;
+        }
+
+        .dark .mobile-btn-maps:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
     </style>
 </head>
 
@@ -265,16 +340,262 @@
         class="invisible fixed inset-0 z-40 bg-black/[0.12] opacity-0 transition-all duration-300 pointer-events-auto">
     </div>
 
-    {{-- Modal Filter (Slide in from Right on both Mobile & Desktop, scaled down for Mobile) --}}
+    {{-- Mobile Asset Bottom Sheet Overlay (z-[130] di atas bottom navbar z-[120]) --}}
+    <div id="mobileAssetBottomSheetOverlay"
+        class="invisible fixed inset-0 z-[130] bg-black/40 backdrop-blur-[2px] opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"
+        onclick="closeMobileAssetBottomSheet()">
+    </div>
+
+    {{-- Mobile Asset Bottom Sheet Modal (Drawer dari Bawah z-[140] menutupi navbar sepenuhnya) --}}
+    <div id="mobileAssetBottomSheet"
+        class="invisible fixed inset-x-0 bottom-0 z-[140] max-h-[90vh] bg-white dark:bg-[#1F2123] rounded-t-[36px] sm:rounded-t-[40px] shadow-[0_-16px_50px_rgba(0,0,0,0.22)] dark:shadow-[0_-16px_50px_rgba(0,0,0,0.85)] border-t border-x border-gray-100 dark:border-white/10 transform translate-y-full opacity-0 transition-all duration-300 ease-out pointer-events-none flex flex-col lg:hidden overflow-hidden" style="padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));">
+        
+        {{-- Content Container --}}
+        <div id="mobileAssetBottomSheetContent" class="overflow-y-auto px-6 pt-7 pb-4 sm:px-8 sm:pt-8 sm:pb-6">
+        </div>
+    </div>
+
+    {{-- ================= MOBILE FILTER BOTTOM SHEET (DRAWER DARI BAWAH) ================= --}}
+    {{-- Mobile Filter Bottom Sheet Overlay --}}
+    <div id="mobileFilterOverlay"
+        class="invisible fixed inset-0 z-[130] bg-black/40 backdrop-blur-[2px] opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"
+        onclick="closeFilterModal()">
+    </div>
+
+    {{-- Mobile Filter Bottom Sheet Modal (Persis Gambar Referensi User) --}}
+    <div id="mobileFilterBottomSheet"
+        class="invisible fixed inset-x-0 bottom-0 z-[140] max-h-[90vh] bg-white dark:bg-[#1F2123] rounded-t-[36px] sm:rounded-t-[40px] shadow-[0_-16px_50px_rgba(0,0,0,0.22)] dark:shadow-[0_-16px_50px_rgba(0,0,0,0.85)] border-t border-x border-gray-100 dark:border-white/10 transform translate-y-full opacity-0 transition-all duration-300 ease-out pointer-events-none flex flex-col lg:hidden overflow-hidden"
+        style="border-top-left-radius: 36px !important; border-top-right-radius: 36px !important; padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));">
+
+        {{-- Mobile Filter Header: Title + Badge Active Count + Close 'X' Button --}}
+        <div class="px-6 pt-6 pb-3.5 flex items-center justify-between border-b border-gray-100 dark:border-white/10 shrink-0">
+            <div class="flex items-center gap-2.5">
+                <h2 class="text-lg font-bold text-gray-950 dark:text-white tracking-tight">
+                    Filter Peta
+                </h2>
+                <span id="mobileActiveFilterBadge"
+                    class="hidden w-6 h-6 items-center justify-center text-xs font-bold text-[#0066FF] dark:text-[#3B82F6] bg-blue-50 dark:bg-blue-600/20 rounded-full select-none">
+                    0
+                </span>
+            </div>
+
+            <button type="button" onclick="closeFilterModal()"
+                class="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer select-none"
+                aria-label="Tutup Filter">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        {{-- Mobile Filter Content Body --}}
+        <div class="overflow-y-auto px-6 py-4 flex-1">
+            <div class="grid grid-cols-2 gap-x-3.5 gap-y-3.5">
+                {{-- 1. STASIUN --}}
+                <div class="flex flex-col">
+                    <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1.5">
+                        <x-icon name="subway" class="w-4 h-4 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                        Stasiun
+                    </label>
+                    <div class="relative custom-filter-container" data-filter-id="stasiun">
+                        <button type="button"
+                            class="filter-dropdown-btn flex items-center justify-between w-full h-[44px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-xl px-3 py-2 transition cursor-pointer">
+                            <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-xs truncate select-none">Semua Stasiun</span>
+                            <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
+                        </button>
+                        <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[190px] overflow-y-auto rounded-xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 flex flex-col gap-0.5">
+                            <button type="button" onclick="selectMapFilter('stasiun', '', 'Semua Stasiun')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg transition text-left cursor-pointer">
+                                <span>Semua Stasiun</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('stasiun', 'gambir', 'Gambir')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Gambir</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('stasiun', 'bandung', 'Bandung')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Bandung</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('stasiun', 'surabaya', 'Surabaya')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Surabaya</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('stasiun', 'semarang', 'Semarang Poncol')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Semarang Poncol</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('stasiun', 'pekalongan', 'Pekalongan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Pekalongan</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('stasiun', 'tegal', 'Tegal')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Tegal</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 2. WILAYAH --}}
+                <div class="flex flex-col">
+                    <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1.5">
+                        <x-icon name="explore_nearby" class="w-4 h-4 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                        Wilayah
+                    </label>
+                    <div class="relative custom-filter-container" data-filter-id="wilayah">
+                        <button type="button"
+                            class="filter-dropdown-btn flex items-center justify-between w-full h-[44px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-xl px-3 py-2 transition cursor-pointer">
+                            <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-xs truncate select-none">Row & Non Row</span>
+                            <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
+                        </button>
+                        <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[190px] overflow-y-auto rounded-xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 flex flex-col gap-0.5">
+                            <button type="button" onclick="selectMapFilter('wilayah', '', 'Row & Non Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg transition text-left cursor-pointer">
+                                <span>Row & Non Row</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('wilayah', 'row', 'Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Row</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('wilayah', 'non-row', 'Non Row')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Non Row</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 3. ASET --}}
+                <div class="flex flex-col">
+                    <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1.5">
+                        <x-icon name="aset-icon" class="w-4 h-4 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                        Aset
+                    </label>
+                    <div class="relative custom-filter-container" data-filter-id="aset">
+                        <button type="button"
+                            class="filter-dropdown-btn flex items-center justify-between w-full h-[44px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-xl px-3 py-2 transition cursor-pointer">
+                            <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-xs truncate select-none">Semua Aset</span>
+                            <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
+                        </button>
+                        <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[190px] overflow-y-auto rounded-xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 flex flex-col gap-0.5">
+                            <button type="button" onclick="selectMapFilter('aset', '', 'Semua Aset')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg transition text-left cursor-pointer">
+                                <span>Semua Aset</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('aset', 'tanah', 'Tanah')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Tanah</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('aset', 'bangunan', 'Bangunan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Bangunan</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 4. JENIS KONTRAK --}}
+                <div class="flex flex-col">
+                    <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1.5">
+                        <x-icon name="contract-icon" class="w-4 h-4 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                        Jenis Kontrak
+                    </label>
+                    <div class="relative custom-filter-container" data-filter-id="jenis_kontrak">
+                        <button type="button"
+                            class="filter-dropdown-btn flex items-center justify-between w-full h-[44px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-xl px-3 py-2 transition cursor-pointer">
+                            <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-xs truncate select-none">Semua Kontrak</span>
+                            <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
+                        </button>
+                        <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[190px] overflow-y-auto rounded-xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 flex flex-col gap-0.5">
+                            <button type="button" onclick="selectMapFilter('jenis_kontrak', '', 'Semua Kontrak')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg transition text-left cursor-pointer">
+                                <span>Semua Kontrak</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('jenis_kontrak', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Sewa</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('jenis_kontrak', 'kerjasama', 'Kerja Sama')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Kerja Sama</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 5. JENIS PENDAPATAN --}}
+                <div class="flex flex-col">
+                    <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1.5">
+                        <x-icon name="jenis-pendapatan-icon" class="w-4 h-4 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                        Jenis Pendapatan
+                    </label>
+                    <div class="relative custom-filter-container" data-filter-id="jenis_pendapatan">
+                        <button type="button"
+                            class="filter-dropdown-btn flex items-center justify-between w-full h-[44px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-xl px-3 py-2 transition cursor-pointer">
+                            <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-xs truncate select-none">Semua Pend...</span>
+                            <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
+                        </button>
+                        <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[190px] overflow-y-auto rounded-xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 flex flex-col gap-0.5">
+                            <button type="button" onclick="selectMapFilter('jenis_pendapatan', '', 'Semua Pend...')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg transition text-left cursor-pointer">
+                                <span>Semua Pend...</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'sewa', 'Sewa')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Sewa</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'iklan', 'Iklan')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Iklan</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('jenis_pendapatan', 'lainnya', 'Lainnya')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>Lainnya</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- 6. SPV --}}
+                <div class="flex flex-col">
+                    <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-[#9AA0A6] mb-1.5">
+                        <x-icon name="spv-icon" class="w-4 h-4 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
+                        SPV
+                    </label>
+                    <div class="relative custom-filter-container" data-filter-id="spv">
+                        <button type="button"
+                            class="filter-dropdown-btn flex items-center justify-between w-full h-[44px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-xl px-3 py-2 transition cursor-pointer">
+                            <span class="filter-selected-label text-[#8B8B8B] dark:text-[#9AA0A6] font-medium text-xs truncate select-none">Semua SPV</span>
+                            <x-icon name="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-[#9AA0A6] shrink-0 ml-1 pointer-events-none transition-transform duration-200 filter-dropdown-arrow" />
+                        </button>
+                        <div class="filter-dropdown-menu opacity-0 invisible scale-95 pointer-events-none transition-all duration-200 origin-top-left absolute left-0 top-full mt-1 z-[100] w-full min-w-[140px] max-h-[190px] overflow-y-auto rounded-xl bg-white dark:bg-[#2D3034] border border-gray-100 dark:border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.14)] dark:shadow-[0_10px_35px_rgba(0,0,0,0.6)] p-1 flex flex-col gap-0.5">
+                            <button type="button" onclick="selectMapFilter('spv', '', 'Semua SPV')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg transition text-left cursor-pointer">
+                                <span>Semua SPV</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('spv', 'spv1', 'SPV 1')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>SPV 1</span>
+                            </button>
+                            <button type="button" onclick="selectMapFilter('spv', 'spv2', 'SPV 2')" class="filter-option-btn flex items-center justify-between w-full px-2.5 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg transition text-left cursor-pointer">
+                                <span>SPV 2</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Mobile Filter Footer: Reset filters (Link) & Apply filters (Solid Button) Persis Gambar --}}
+        <div class="px-6 pt-3 flex items-center justify-between shrink-0 border-t border-gray-100 dark:border-white/10">
+            <button id="resetFilterMobile" type="button"
+                class="text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:underline cursor-pointer select-none transition py-2 px-1">
+                Reset filter
+            </button>
+
+            <button id="applyFilterMobile" type="button"
+                class="h-[48px] px-7 rounded-[14px] bg-[#0066FF] hover:bg-blue-700 text-sm font-semibold text-white transition shadow-sm cursor-pointer select-none flex items-center justify-center">
+                Terapkan Filter
+            </button>
+        </div>
+    </div>
+
+    {{-- ================= DESKTOP FILTER MODAL (ASIDE FLOATING DARI KANAN) ================= --}}
     <aside id="filterModal"
-        class="fixed right-3 sm:right-6 lg:right-10 top-16 sm:top-20 bottom-24 lg:bottom-8 z-50 w-[295px] sm:w-[350px] lg:w-[373px] bg-white dark:bg-[#1F2123] rounded-2xl lg:rounded-[10px] p-4 sm:p-6 lg:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.14)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-gray-100/90 dark:border-white/5 transition-all duration-300 ease-in-out transform translate-x-[140%] opacity-0 pointer-events-none flex flex-col justify-start overflow-y-auto">
+        class="hidden lg:flex fixed right-3 sm:right-6 lg:right-10 top-16 sm:top-20 bottom-24 lg:bottom-8 z-50 w-[373px] bg-white dark:bg-[#1F2123] rounded-2xl lg:rounded-[10px] p-4 sm:p-6 lg:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.14)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-gray-100/90 dark:border-white/5 transition-all duration-300 ease-in-out transform translate-x-[140%] opacity-0 pointer-events-none flex-col justify-start overflow-y-auto">
         <div class="mb-3 sm:mb-5 lg:mb-6 flex items-center justify-between">
             <h2 class="text-base sm:text-lg lg:text-[20px] font-bold text-gray-950 dark:text-white tracking-tight">
                 Filter Peta
             </h2>
         </div>
 
-        {{-- FILTER 2-COLUMN GRID --}}
+        {{-- Hidden Inputs for Shared Filter State --}}
+        <input type="hidden" id="stasiun" name="stasiun" value="">
+        <input type="hidden" id="wilayah" name="wilayah" value="">
+        <input type="hidden" id="aset" name="aset" value="">
+        <input type="hidden" id="jenis_kontrak" name="jenis_kontrak" value="">
+        <input type="hidden" id="jenis_pendapatan" name="jenis_pendapatan" value="">
+        <input type="hidden" id="spv" name="spv" value="">
+
+        {{-- FILTER 2-COLUMN GRID (DESKTOP) --}}
         <div class="grid grid-cols-2 gap-x-2.5 sm:gap-x-4 gap-y-3 sm:gap-y-5">
 
             {{-- 1. STASIUN --}}
@@ -285,8 +606,7 @@
                         class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Stasiun
                 </label>
-                <div class="relative custom-filter-container">
-                    <input type="hidden" id="stasiun" name="stasiun" value="">
+                <div class="relative custom-filter-container" data-filter-id="stasiun">
                     <button type="button"
                         class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
                         <span
@@ -337,8 +657,7 @@
                         class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Wilayah
                 </label>
-                <div class="relative custom-filter-container">
-                    <input type="hidden" id="wilayah" name="wilayah" value="">
+                <div class="relative custom-filter-container" data-filter-id="wilayah">
                     <button type="button"
                         class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
                         <span
@@ -373,8 +692,7 @@
                         class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Aset
                 </label>
-                <div class="relative custom-filter-container">
-                    <input type="hidden" id="aset" name="aset" value="">
+                <div class="relative custom-filter-container" data-filter-id="aset">
                     <button type="button"
                         class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
                         <span
@@ -409,8 +727,7 @@
                         class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Jenis Kontrak
                 </label>
-                <div class="relative custom-filter-container">
-                    <input type="hidden" id="jenis_kontrak" name="jenis_kontrak" value="">
+                <div class="relative custom-filter-container" data-filter-id="jenis_kontrak">
                     <button type="button"
                         class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
                         <span
@@ -445,8 +762,7 @@
                         class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     Jenis Pendapatan
                 </label>
-                <div class="relative custom-filter-container">
-                    <input type="hidden" id="jenis_pendapatan" name="jenis_pendapatan" value="">
+                <div class="relative custom-filter-container" data-filter-id="jenis_pendapatan">
                     <button type="button"
                         class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
                         <span
@@ -485,8 +801,7 @@
                         class="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 shrink-0 text-gray-400 dark:text-[#9AA0A6]" />
                     SPV
                 </label>
-                <div class="relative custom-filter-container">
-                    <input type="hidden" id="spv" name="spv" value="">
+                <div class="relative custom-filter-container" data-filter-id="spv">
                     <button type="button"
                         class="filter-dropdown-btn flex items-center justify-between w-full h-[36px] sm:h-[42px] lg:h-[46px] bg-white dark:bg-[#2D3034] border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 rounded-lg lg:rounded-[10px] px-2.5 sm:px-3.5 py-1.5 sm:py-2 transition cursor-pointer">
                         <span
@@ -515,7 +830,7 @@
 
         </div>
 
-        {{-- ACTION BUTTONS --}}
+        {{-- ACTION BUTTONS (DESKTOP) --}}
         <div class="mt-4 sm:mt-6 lg:mt-8 flex gap-2 sm:gap-3.5 shrink-0">
             <button id="applyFilter" type="button"
                 class="h-[38px] sm:h-[44px] lg:h-[48px] flex-1 rounded-lg lg:rounded-[10px] bg-[#0066FF] hover:bg-blue-700 text-xs sm:text-sm font-semibold text-white transition flex items-center justify-center gap-1.5 sm:gap-2 shadow-xs cursor-pointer">
@@ -531,6 +846,16 @@
 
     </aside>
 
+    {{-- Centralized Blade Icons Container untuk JavaScript Popup & Bottom Sheet --}}
+    <div id="blade-map-icons-tpl" class="hidden" style="display:none !important;" aria-hidden="true">
+        <div id="icon-corp-src"><x-icon name="icon-corp" /></div>
+        <div id="icon-alamat-src"><x-icon name="icon-alamat" /></div>
+        <div id="icon-luas-src"><x-icon name="icon-luas" /></div>
+        <div id="icon-jenis-src"><x-icon name="icon-jenis" /></div>
+        <div id="icon-nilai-src"><x-icon name="icon-nilai" /></div>
+        <div id="icon-periode-src"><x-icon name="icon-periode" /></div>
+        <div id="icon-maps-src"><x-icon name="maps" class="w-4 h-4 text-gray-700 dark:text-gray-200 shrink-0" /></div>
+    </div>
 
     {{-- Javascript & Peta Leaflet --}}
     <script>
@@ -542,10 +867,14 @@
         let baseJatengZoom = 8.5;
         let kabupatenLabelsLayer = L.layerGroup();
 
+        const isMobileScreen = window.innerWidth < 768;
+        const initialMobileZoom = 9.75;
+        const initialDesktopZoom = 8.5;
+
         // Inisialisasi peta Leaflet berpusat di Jawa Tengah dengan zoom touchpad cepat & bertenaga
         const map = L.map('map', {
             center: [-7.15, 110.14],
-            zoom: 8.5,
+            zoom: isMobileScreen ? initialMobileZoom : initialDesktopZoom,
             zoomSnap: 0.25,
             zoomDelta: 10,
             wheelPxPerZoomLevel: 100,
@@ -563,13 +892,19 @@
 
         kabupatenLabelsLayer.addTo(map);
 
-        // Pusatkan peta ke wilayah Jawa Tengah
+        // Pusatkan peta ke wilayah Jawa Tengah (Zoom besar proporsional di mobile, full bounds di desktop)
         function fitJatengBounds() {
             if (jatengBounds) {
-                map.fitBounds(jatengBounds, {
-                    padding: [20, 20],
-                    animate: true
-                });
+                if (window.innerWidth < 768) {
+                    map.setView([-7.15, 110.14], initialMobileZoom, {
+                        animate: true
+                    });
+                } else {
+                    map.fitBounds(jatengBounds, {
+                        padding: [20, 20],
+                        animate: true
+                    });
+                }
             }
         }
 
@@ -725,6 +1060,8 @@
         });
 
         let assetMarkerInstances = [];
+        let currentOpenedMarker = null;
+        let isClosingAnimation = false;
 
         function getActiveMarkerIcon() {
             return map.getZoom() >= 9.6 ? redPinIcon : redDotIcon;
@@ -845,16 +1182,22 @@
 
                 jatengBounds = jatengGeojsonLayer.getBounds();
 
-                map.fitBounds(jatengBounds, {
-                    padding: [20, 20],
-                    animate: false
-                });
+                if (window.innerWidth < 768) {
+                    map.setView([-7.15, 110.14], initialMobileZoom, {
+                        animate: false
+                    });
+                } else {
+                    map.fitBounds(jatengBounds, {
+                        padding: [20, 20],
+                        animate: false
+                    });
+                }
 
                 const baseMinZoom = map.getBoundsZoom(jatengBounds, false, [20, 20]);
                 baseJatengZoom = baseMinZoom || 8.0;
-                map.setMinZoom(Math.max(6.5, baseJatengZoom - 1));
-                map.setMaxZoom(17);
-                map.setMaxBounds(jatengBounds.pad(0.6));
+                map.setMinZoom(Math.max(6.0, baseJatengZoom - 2.5));
+                map.setMaxZoom(18);
+                map.setMaxBounds(jatengBounds.pad(1.2));
 
                 createKabupatenLabels();
                 renderMarkers();
@@ -918,15 +1261,168 @@
             }
         });
 
-        // Ikon 3D untuk popup kartu aset dengan Drop Shadow persis Figma (responsif scalable)
-        const ICON_CORP = `<svg class="w-full h-full text-[#0066FF]" viewBox="0 0 21 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 18.7775V0H10.4319V4.17278H20.8639V18.7775H0ZM2.08639 16.6911H8.34555V14.6047H2.08639V16.6911ZM2.08639 12.5183H8.34555V10.4319H2.08639V12.5183ZM2.08639 8.34555H8.34555V6.25916H2.08639V8.34555ZM2.08639 4.17278H8.34555V2.08639H2.08639V4.17278ZM10.4319 16.6911H18.7775V6.25916H10.4319V16.6911ZM12.5183 10.4319V8.34555H16.6911V10.4319H12.5183ZM12.5183 14.6047V12.5183H16.6911V14.6047H12.5183Z" fill="currentColor"/></svg>`;
-        const ICON_ALAMAT = `<svg class="w-full h-full" viewBox="-1 -1 24 21" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_alm)"><g filter="url(#f1_d_alm)"><path d="M4.51 3.01C4.51 2.18 5.18 1.5 6.01 1.5H18.04C18.87 1.5 19.54 2.18 19.54 3.01V11.28C19.54 12.11 18.87 12.78 18.04 12.78H6.01C5.18 12.78 4.51 12.11 4.51 11.28V3.01Z" fill="url(#p0_lin_alm)"/></g><path fill-rule="evenodd" clip-rule="evenodd" d="M10.52 4.51L13.53 5.26V16.54L10.52 15.79V10.31C10.78 10.77 11.27 11.09 11.84 11.09C12.67 11.09 13.34 10.41 13.34 9.58C13.34 8.75 12.67 8.08 11.84 8.08C11.27 8.08 10.78 8.39 10.52 8.86V4.51Z" fill="white" fill-opacity="0.4"/><path d="M7.52 5.26L4.51 4.51V15.79L7.52 16.54V5.26Z" fill="white" fill-opacity="0.4"/><path d="M13.53 5.26L16.54 4.51V15.79L13.53 16.54V5.26Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.52 4.51L7.52 5.26V16.54L10.52 15.79V10.31C10.4 10.1 10.34 9.85 10.34 9.58C10.34 9.32 10.4 9.07 10.52 8.86V4.51Z" fill="white" fill-opacity="0.4"/><path d="M1.5 5.26L4.51 4.51V15.79L1.5 16.54V5.26Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M12.06 14.28C12.7 13.72 14.47 11.93 14.47 9.69C14.47 8.32 13.65 6.95 11.84 6.95C10.03 6.95 9.21 8.32 9.21 9.69C9.21 11.93 10.98 13.72 11.62 14.28C11.75 14.4 11.93 14.4 12.06 14.28ZM11.84 11.09C12.67 11.09 13.34 10.41 13.34 9.58C13.34 8.75 12.67 8.08 11.84 8.08C11.01 8.08 10.34 8.75 10.34 9.58C10.34 10.41 11.01 11.09 11.84 11.09Z" fill="white" fill-opacity="0.6"/></g><defs><filter id="f_d_alm" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#93DF32" flood-opacity="0.4"/></filter><filter id="f1_d_alm" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_alm" x1="12" y1="1.5" x2="12" y2="12.8" gradientUnits="userSpaceOnUse"><stop stop-color="#93DF32"/><stop offset="1" stop-color="#70BD0D"/></linearGradient></defs></svg>`;
-        const ICON_LUAS = `<svg class="w-full h-full" viewBox="-1 -1 23 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_ls)"><g filter="url(#f1_d_ls)"><path d="M9.99 6.92C9.99 6.49 10.34 6.15 10.76 6.15H17.68C18.1 6.15 18.45 6.49 18.45 6.92V16.14C18.45 16.57 18.1 16.91 17.68 16.91H10.76C10.34 16.91 9.99 16.57 9.99 16.14V6.92Z" fill="url(#p0_lin_ls)"/></g><g filter="url(#f2_d_ls)"><path d="M5.38 2.31C5.38 1.88 5.72 1.54 6.15 1.54H11.53C11.95 1.54 12.3 1.88 12.3 2.31V16.14C12.3 16.57 11.95 16.91 11.53 16.91H6.15C5.72 16.91 5.38 16.57 5.38 16.14V2.31Z" fill="url(#p1_lin_ls)"/></g><path d="M1.54 5.38C1.54 4.96 1.88 4.61 2.31 4.61H7.69C8.11 4.61 8.46 4.96 8.46 5.38V19.22C8.46 19.64 8.11 19.99 7.69 19.99H2.31C1.88 19.99 1.54 19.64 1.54 19.22V5.38Z" fill="white" fill-opacity="0.4"/></g><defs><filter id="f_d_ls" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#31C8D2" flood-opacity="0.4"/></filter><filter id="f1_d_ls" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><filter id="f2_d_ls" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_ls" x1="14.2" y1="6.1" x2="14.2" y2="16.9" gradientUnits="userSpaceOnUse"><stop stop-color="#31C8D2"/><stop offset="1" stop-color="#1AA6E1"/></linearGradient><linearGradient id="p1_lin_ls" x1="8.8" y1="1.5" x2="8.8" y2="16.9" gradientUnits="userSpaceOnUse"><stop stop-color="#31C8D2"/><stop offset="1" stop-color="#1AA6E1"/></linearGradient></defs></svg>`;
-        const ICON_JENIS = `<svg class="w-full h-full" viewBox="-1 -1 24 23" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_jns)"><g filter="url(#f1_d_jns)"><path d="M4.51 3.01C4.51 2.18 5.18 1.5 6.01 1.5H18.04C18.87 1.5 19.54 2.18 19.54 3.01V11.28C19.54 12.11 18.87 12.78 18.04 12.78H6.01C5.18 12.78 4.51 12.11 4.51 11.28V3.01Z" fill="url(#p0_lin_jns)"/></g><path d="M1.5 5.26C1.5 4.85 1.84 4.51 2.25 4.51H15.79C16.2 4.51 16.54 4.85 16.54 5.26V6.77C16.54 7.18 16.2 7.52 15.79 7.52H2.25C1.84 7.52 1.5 7.18 1.5 6.77V5.26Z" fill="white" fill-opacity="0.4"/><path d="M1.5 8.64C1.5 8.44 1.67 8.27 1.88 8.27H14.66C14.87 8.27 15.03 8.44 15.03 8.64V10.15C15.03 10.36 14.87 10.52 14.66 10.52H1.88C1.67 10.52 1.5 10.36 1.5 10.15V8.64Z" fill="white" fill-opacity="0.4"/><path d="M1.5 11.65C1.5 11.44 1.67 11.28 1.88 11.28H8.64C8.85 11.28 9.02 11.44 9.02 11.65V12.4C9.02 12.61 8.85 12.78 8.64 12.78H1.88C1.67 12.78 1.5 12.61 1.5 12.4V11.65Z" fill="white" fill-opacity="0.4"/><path d="M11.22 16.68C12.1 18.11 13.71 18.11 14.63 18C16.48 17.78 17.78 16.73 17.41 13.23C17.31 12.26 16.57 11.86 15.69 12.45C15.36 11.51 13.75 11.78 13.84 12.67L13.64 10.73C13.56 10 13.16 9.31 12.33 9.41C11.5 9.5 11.5 10.49 11.6 11.41L11.96 14.87L11.17 13.98C10.91 13.76 10.24 13.15 9.7 13.41C9.17 13.67 9.08 14.23 9.37 14.68C9.65 15.14 10.65 15.76 11.22 16.68Z" fill="white" fill-opacity="0.6"/></g><defs><filter id="f_d_jns" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#9D68F3" flood-opacity="0.4"/></filter><filter id="f1_d_jns" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_jns" x1="12" y1="1.5" x2="12" y2="12.8" gradientUnits="userSpaceOnUse"><stop stop-color="#6966FF"/><stop offset="1" stop-color="#9D68F3"/></linearGradient></defs></svg>`;
-        const ICON_NILAI = `<svg class="w-full h-full" viewBox="-1 -1 23 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_nl)"><g filter="url(#f1_d_nl)"><path d="M4.2 2.8C4.2 2.03 4.83 1.4 5.6 1.4H16.8C17.57 1.4 18.2 2.03 18.2 2.8V9.1C18.2 9.87 17.57 10.5 16.8 10.5H5.6C4.83 10.5 4.2 9.87 4.2 9.1V2.8Z" fill="url(#p0_lin_nl)"/></g><path d="M3.85 4.25C4.05 3.5 4.82 3.06 5.57 3.26L16.39 6.15C17.13 6.35 17.58 7.12 17.38 7.87L15.75 13.96C15.55 14.7 14.78 15.15 14.03 14.95L3.21 12.05C2.47 11.85 2.02 11.08 2.22 10.33L3.85 4.25Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M1.4 7.35C1.4 6.58 2.03 5.95 2.8 5.95H14C14.77 5.95 15.4 6.58 15.4 7.35V13.65C15.4 14.42 14.77 15.05 14 15.05H2.8C2.03 15.05 1.4 14.42 1.4 13.65V7.35ZM10.5 10.5C10.5 12.24 9.56 13.65 8.4 13.65C7.24 13.65 6.3 12.24 6.3 10.5C6.3 8.76 7.24 7.35 8.4 7.35C9.56 7.35 10.5 8.76 10.5 10.5ZM3.85 7.7C3.85 8.09 3.54 8.4 3.15 8.4C2.76 8.4 2.45 8.09 2.45 7.7C2.45 7.31 2.76 7 3.15 7C3.54 7 3.85 7.31 3.85 7.7ZM14.35 7.7C14.35 8.09 14.04 8.4 13.65 8.4C13.26 8.4 12.95 8.09 12.95 7.7C12.95 7.31 13.26 7 13.65 7C14.04 7 14.35 7.31 14.35 7.7ZM3.15 14C3.54 14 3.85 13.69 3.85 13.3C3.85 12.91 3.54 12.6 3.15 12.6C2.76 12.6 2.45 12.91 2.45 13.3C2.45 13.69 2.76 14 3.15 14ZM14.35 13.3C14.35 13.69 14.04 14 13.65 14C13.26 14 12.95 13.69 12.95 13.3C12.95 12.91 13.26 12.6 13.65 12.6C14.04 12.6 14.35 12.91 14.35 13.3Z" fill="white" fill-opacity="0.4"/></g><defs><filter id="f_d_nl" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#21EB66" flood-opacity="0.4"/></filter><filter id="f1_d_nl" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_nl" x1="11.2" y1="1.4" x2="11.2" y2="10.5" gradientUnits="userSpaceOnUse"><stop stop-color="#21EB66"/><stop offset="1" stop-color="#12D583"/></linearGradient></defs></svg>`;
-        const ICON_PERIODE = `<svg class="w-full h-full" viewBox="-1 -1 25 22" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#f_d_prd)"><g filter="url(#f1_d_prd)"><path d="M4.57 3.05C4.57 2.21 5.25 1.52 6.09 1.52H18.28C19.12 1.52 19.81 2.21 19.81 3.05V11.43C19.81 12.27 19.12 12.95 18.28 12.95H6.09C5.25 12.95 4.57 12.27 4.57 11.43V3.05Z" fill="url(#p0_lin_prd)"/></g><path d="M1.52 6.09V6.86H16.76V6.09C16.76 5.25 16.08 4.57 15.24 4.57H3.05C2.21 4.57 1.52 5.25 1.52 6.09Z" fill="white" fill-opacity="0.4"/><path fill-rule="evenodd" clip-rule="evenodd" d="M16.76 7.62V15.24C16.76 16.08 16.08 16.76 15.24 16.76H3.05C2.21 16.76 1.52 16.08 1.52 15.24V7.62H16.76ZM13.71 10.67C14.13 10.67 14.47 10.32 14.47 9.9C14.47 9.48 14.13 9.14 13.71 9.14C13.29 9.14 12.95 9.48 12.95 9.9C12.95 10.32 13.29 10.67 13.71 10.67Z" fill="white" fill-opacity="0.4"/></g><defs><filter id="f_d_prd" x="-20%" y="-20%" width="150%" height="150%"><feDropShadow dx="0.75" dy="0.75" stdDeviation="0.75" flood-color="#FFA800" flood-opacity="0.4"/></filter><filter id="f1_d_prd" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="0.75"/><feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/><feBlend mode="normal" in="SourceGraphic" result="shape"/></filter><linearGradient id="p0_lin_prd" x1="12.2" y1="1.5" x2="12.2" y2="12.9" gradientUnits="userSpaceOnUse"><stop stop-color="#FFA800"/><stop offset="1" stop-color="#FF7A00"/></linearGradient></defs></svg>`;
+        // Ikon Popup & Bottom Sheet terpusat dari komponen Blade <x-icon />
+        const ICON_CORP = document.getElementById('icon-corp-src')?.innerHTML || '';
+        const ICON_ALAMAT = document.getElementById('icon-alamat-src')?.innerHTML || '';
+        const ICON_LUAS = document.getElementById('icon-luas-src')?.innerHTML || '';
+        const ICON_JENIS = document.getElementById('icon-jenis-src')?.innerHTML || '';
+        const ICON_NILAI = document.getElementById('icon-nilai-src')?.innerHTML || '';
+        const ICON_PERIODE = document.getElementById('icon-periode-src')?.innerHTML || '';
+        const ICON_MAPS = document.getElementById('icon-maps-src')?.innerHTML || '';
 
-        // Template HTML untuk kartu popup aset persis desain Figma asli
+        // Template HTML untuk Mobile Bottom Sheet Drawer
+        function createMobileBottomSheetHTML(asset, id) {
+            const googleMapsUrl = (asset.latitude && asset.longitude)
+                ? `https://www.google.com/maps?q=${asset.latitude},${asset.longitude}`
+                : '#';
+
+            return `
+                <div class="font-sans text-left">
+                    {{-- Header: Icon Gedung + Nama Tenant / Perusahaan --}}
+                    <div class="mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 text-[#0066FF] flex items-center justify-center">
+                                ${ICON_CORP}
+                            </div>
+                            <h3 class="m-0 text-xl sm:text-2xl font-bold leading-tight text-gray-950 dark:text-white tracking-tight truncate">${asset.tenant || asset.name || '-'}</h3>
+                        </div>
+                        <p class="mt-2 text-center text-sm sm:text-base font-semibold text-[#8C95A0] dark:text-gray-400 tracking-wide truncate">${(asset.code ? asset.code + ' • ' : '') + (asset.location || '')}</p>
+                    </div>
+
+                    {{-- 2-Column Info Grid Sesuai Desain Gambar: Kiri 3 item, Kanan 2 item --}}
+                    <div class="grid grid-cols-2 gap-x-5 sm:gap-x-8">
+                        {{-- Kolom Kiri: Alamat, Jenis Aset, Periode --}}
+                        <div class="space-y-4 sm:space-y-5">
+                            {{-- Alamat --}}
+                            <div class="flex items-start gap-2.5 sm:gap-3 min-w-0">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 flex items-center justify-center mt-0.5">${ICON_ALAMAT}</div>
+                                <div class="min-w-0 flex-1">
+                                    <span class="block text-sm sm:text-[14px] font-semibold text-gray-800 dark:text-gray-200 leading-tight">Alamat</span>
+                                    <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-gray-400 leading-relaxed mt-0.5 line-clamp-3">${asset.address || '-'}</span>
+                                </div>
+                            </div>
+
+                            {{-- Jenis Aset --}}
+                            <div class="flex items-start gap-2.5 sm:gap-3 min-w-0">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 flex items-center justify-center mt-0.5">${ICON_JENIS}</div>
+                                <div class="min-w-0 flex-1">
+                                    <span class="block text-sm sm:text-[14px] font-semibold text-gray-800 dark:text-gray-200 leading-tight">Jenis Aset</span>
+                                    <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-gray-400 leading-relaxed mt-0.5 line-clamp-2">${asset.type || '-'}</span>
+                                </div>
+                            </div>
+
+                            {{-- Periode --}}
+                            <div class="flex items-start gap-2.5 sm:gap-3 min-w-0">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 flex items-center justify-center mt-0.5">${ICON_PERIODE}</div>
+                                <div class="min-w-0 flex-1">
+                                    <span class="block text-sm sm:text-[14px] font-semibold text-gray-800 dark:text-gray-200 leading-tight">Periode</span>
+                                    <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-gray-400 leading-relaxed mt-0.5 truncate">${asset.period || '-'}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Kolom Kanan: Luas, Nilai Aset --}}
+                        <div class="space-y-4 sm:space-y-5">
+                            {{-- Luas --}}
+                            <div class="flex items-start gap-2.5 sm:gap-3 min-w-0">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 flex items-center justify-center mt-0.5">${ICON_LUAS}</div>
+                                <div class="min-w-0 flex-1">
+                                    <span class="block text-sm sm:text-[14px] font-semibold text-gray-800 dark:text-gray-200 leading-tight">Luas</span>
+                                    <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-gray-400 leading-relaxed mt-0.5 truncate">${asset.area || '-'}</span>
+                                </div>
+                            </div>
+
+                            {{-- Nilai Aset --}}
+                            <div class="flex items-start gap-2.5 sm:gap-3 min-w-0">
+                                <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 flex items-center justify-center mt-0.5">${ICON_NILAI}</div>
+                                <div class="min-w-0 flex-1">
+                                    <span class="block text-sm sm:text-[14px] font-semibold text-gray-800 dark:text-gray-200 leading-tight">Nilai Aset</span>
+                                    <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-gray-400 leading-relaxed mt-0.5 truncate">${asset.value || '-'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Tombol Aksi: Detail Lanjutan & Buka Maps Persis Gambar Referensi --}}
+                    <div class="mt-8 flex items-center gap-3.5 sm:gap-4 shrink-0">
+                        <a href="/asset/${id}" class="mobile-btn-detail flex-1" style="height: 48px !important; min-height: 48px !important; border-radius: 14px !important; background-color: #0066FF !important; color: #ffffff !important; text-decoration: none !important; font-size: 15px !important; font-weight: 600 !important;">Detail Lanjutan</a>
+                        <a href="${googleMapsUrl}" target="_blank" class="mobile-btn-maps flex-1 flex items-center justify-center gap-2" style="height: 48px !important; min-height: 48px !important; border-radius: 14px !important; border: 1.5px solid #D1D5DB !important; text-decoration: none !important; font-size: 15px !important; font-weight: 600 !important;">
+                            ${ICON_MAPS}
+                            <span>Buka Maps</span>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.openMobileAssetBottomSheet = function (asset, id, latlng) {
+            const sheet = document.getElementById('mobileAssetBottomSheet');
+            const overlay = document.getElementById('mobileAssetBottomSheetOverlay');
+            const content = document.getElementById('mobileAssetBottomSheetContent');
+            const mobileBottomNav = document.getElementById('mobileBottomNav');
+            if (!sheet || !content) return;
+
+            content.innerHTML = createMobileBottomSheetHTML(asset, id);
+            
+            // Tampilkan elemen
+            sheet.classList.remove('invisible', 'opacity-0');
+            requestAnimationFrame(() => {
+                sheet.classList.remove('translate-y-full', 'pointer-events-none');
+                sheet.classList.add('translate-y-0', 'pointer-events-auto');
+            });
+
+            if (overlay) {
+                overlay.classList.remove('invisible', 'opacity-0', 'pointer-events-none');
+                overlay.classList.add('opacity-100', 'pointer-events-auto');
+            }
+
+            // Animasi navbar tertutup / tenggelam dengan halus
+            if (mobileBottomNav) {
+                mobileBottomNav.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+            }
+            if (typeof window.closeMobileSubMenu === 'function') {
+                window.closeMobileSubMenu();
+            }
+
+            if (latlng && map) {
+                const currentZoom = Math.max(map.getZoom(), 10.5);
+                const projected = map.project(latlng, currentZoom);
+                const targetCenter = map.unproject(projected.add([0, 130]), currentZoom);
+                map.flyTo(targetCenter, currentZoom, { duration: 0.4, easeLinearity: 0.25 });
+            }
+        };
+
+        window.closeMobileAssetBottomSheet = function () {
+            const sheet = document.getElementById('mobileAssetBottomSheet');
+            const overlay = document.getElementById('mobileAssetBottomSheetOverlay');
+            const mobileBottomNav = document.getElementById('mobileBottomNav');
+
+            if (sheet) {
+                sheet.classList.add('translate-y-full', 'pointer-events-none');
+                sheet.classList.remove('translate-y-0', 'pointer-events-auto');
+                setTimeout(() => {
+                    if (sheet.classList.contains('translate-y-full')) {
+                        sheet.classList.add('invisible', 'opacity-0');
+                    }
+                }, 300);
+            }
+            if (overlay) {
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                overlay.classList.remove('opacity-100', 'pointer-events-auto');
+                setTimeout(() => {
+                    if (overlay.classList.contains('opacity-0')) {
+                        overlay.classList.add('invisible');
+                    }
+                }, 300);
+            }
+
+            // Kembalikan navbar mobile ke posisi semula
+            if (mobileBottomNav) {
+                mobileBottomNav.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+            }
+        };
+
+        // Template HTML untuk kartu popup aset Desktop
         function createPopupCardHTML(asset, id) {
             const googleMapsUrl = (asset.latitude && asset.longitude)
                 ? `https://www.google.com/maps?q=${asset.latitude},${asset.longitude}`
@@ -936,14 +1432,11 @@
                 <div class="w-[320px] sm:w-[420px] rounded-[28px] sm:rounded-[36px] bg-white dark:bg-[#1F2123] p-6 sm:p-7 md:p-8 shadow-[0_24px_60px_rgba(0,0,0,0.14)] dark:shadow-[0_24px_60px_rgba(0,0,0,0.7)] border border-gray-100/90 dark:border-white/10 font-sans text-left relative">
                     <div class="mb-6 sm:mb-7">
                         <div class="flex items-center gap-2.5 sm:gap-3">
-                            <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 text-[#0066FF] flex items-center justify-center">
-                                ${ICON_CORP}
-                            </div>
+                            <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 text-[#0066FF] flex items-center justify-center">${ICON_CORP}</div>
                             <h3 class="m-0 text-base sm:text-[22px] font-bold leading-snug text-gray-950 dark:text-white truncate">${asset.tenant || asset.name || '-'}</h3>
                         </div>
                         <p class="mt-1 sm:mt-1.5 text-xs sm:text-[13px] font-semibold text-gray-400 dark:text-[#9AA0A6] pl-10 sm:pl-11 truncate">${(asset.code ? asset.code + ' • ' : '') + (asset.location || '')}</p>
                     </div>
-
                     <div class="grid grid-cols-2 gap-x-6 sm:gap-x-8 gap-y-5 sm:gap-y-6 pt-1">
                         <div class="flex items-center gap-3 sm:gap-3.5 min-w-0">
                             <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">${ICON_ALAMAT}</div>
@@ -952,7 +1445,6 @@
                                 <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-white leading-relaxed line-clamp-3">${asset.address || '-'}</span>
                             </div>
                         </div>
-
                         <div class="flex items-center gap-3 sm:gap-3.5 min-w-0">
                             <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">${ICON_LUAS}</div>
                             <div class="min-w-0 flex-1">
@@ -960,7 +1452,6 @@
                                 <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-white leading-relaxed truncate">${asset.area || '-'}</span>
                             </div>
                         </div>
-
                         <div class="flex items-center gap-3 sm:gap-3.5 min-w-0">
                             <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">${ICON_JENIS}</div>
                             <div class="min-w-0 flex-1">
@@ -968,7 +1459,6 @@
                                 <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-white leading-relaxed line-clamp-2">${asset.type || '-'}</span>
                             </div>
                         </div>
-
                         <div class="flex items-center gap-3 sm:gap-3.5 min-w-0">
                             <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">${ICON_NILAI}</div>
                             <div class="min-w-0 flex-1">
@@ -976,7 +1466,6 @@
                                 <span class="block text-xs sm:text-[13px] text-gray-500 dark:text-white leading-relaxed truncate">${asset.value || '-'}</span>
                             </div>
                         </div>
-
                         <div class="col-span-2 flex items-center gap-3 sm:gap-3.5 min-w-0">
                             <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">${ICON_PERIODE}</div>
                             <div class="min-w-0 flex-1">
@@ -985,17 +1474,10 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="mt-7 sm:mt-8 flex items-center gap-3 sm:gap-4">
                         <a href="/asset/${id}" class="btn-detail-lanjutan flex-1 h-[44px] sm:h-[48px] flex items-center justify-center text-center cursor-pointer rounded-xl sm:rounded-2xl bg-[#0066FF] px-4 text-xs sm:text-sm font-semibold !text-white transition hover:bg-blue-700 shadow-xs whitespace-nowrap" style="color: #ffffff !important;">Detail Lanjutan</a>
                         <a href="${googleMapsUrl}" target="_blank" class="btn-buka-maps flex-1 h-[44px] sm:h-[48px] flex items-center justify-center gap-2 text-center cursor-pointer rounded-xl sm:rounded-2xl border border-gray-300 dark:border-white/15 bg-white dark:bg-[#2D3034] px-4 text-xs sm:text-sm font-semibold text-gray-700 dark:text-white transition hover:bg-gray-50 dark:hover:bg-white/10 shadow-xs whitespace-nowrap">
-                            <svg class="w-4 h-4 text-gray-600 dark:text-white shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M22 9.00002V15C22 17.5 21.5 19.25 20.38 20.38L14 14L21.73 6.27002C21.91 7.06002 22 7.96002 22 9.00002Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M21.73 6.27L6.26999 21.73C3.25999 21.04 2 18.96 2 15V9C2 4 4 2 9 2H15C18.96 2 21.04 3.26 21.73 6.27Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M20.38 20.38C19.25 21.5 17.5 22 15 22H9.00003C7.96003 22 7.06002 21.91 6.27002 21.73L14 14L20.38 20.38Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path opacity="0.4" d="M6.24002 7.97997C6.92002 5.04997 11.32 5.04997 12 7.97997C12.39 9.69997 11.31 11.16 10.36 12.06C9.67001 12.72 8.58003 12.72 7.88003 12.06C6.93003 11.16 5.84002 9.69997 6.24002 7.97997Z" stroke="currentColor" stroke-width="1.5"/>
-                                <path opacity="0.4" d="M9.0946 8.69995H9.10359" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                            ${ICON_MAPS}
                             <span>Buka Maps</span>
                         </a>
                     </div>
@@ -1005,7 +1487,6 @@
 
         // Render marker aset dan popup info
         function renderMarkers() {
-            // Bersihkan marker lama jika ada
             assetMarkerInstances.forEach(m => map.removeLayer(m));
             assetMarkerInstances = [];
 
@@ -1017,13 +1498,11 @@
                 let lng = parseFloat(asset.longitude);
 
                 if (!isNaN(lat) && !isNaN(lng)) {
-                    // Deteksi overlap koordinat identik
                     const key = `${lat.toFixed(4)},${lng.toFixed(4)}`;
                     if (!coordCounts[key]) {
                         coordCounts[key] = 0;
                     } else {
                         coordCounts[key]++;
-                        // Sebar perlahan melingkar spiral agar tidak menumpuk di 1 pixel
                         const angle = (coordCounts[key] * 137.5) * (Math.PI / 180);
                         const radius = 0.002 * Math.sqrt(coordCounts[key]);
                         lat += radius * Math.cos(angle);
@@ -1037,7 +1516,6 @@
 
                     const popupOffset = (activeIcon === redPinIcon) ? [0, -16] : [0, -8];
                     
-                    // Lazy Loading: Konten HTML kartu popup baru di-generate saat pin diklik
                     marker.bindPopup(function () {
                         return createPopupCardHTML(asset, id);
                     }, {
@@ -1047,46 +1525,83 @@
                         className: 'custom-asset-leaflet-popup'
                     });
 
+                    // Lepas listener click bawaan Leaflet agar kontrol buka/tutup 100% dikendalikan oleh handler kita tanpa konflik
+                    marker.off('click');
+
                     marker.on('click', function (e) {
                         L.DomEvent.stopPropagation(e);
 
-                        const baseZoom = baseJatengZoom || map.getMinZoom() || 8.5;
-                        const pointZoomLevel = Math.max(baseZoom + 1.5, 10.5);
-
-                        const projected = map.project([lat, lng], pointZoomLevel);
-                        // On mobile: subtract 130px, desktop: 170px so popup attached to pin is vertically centered
-                        const yOffset = isMobile() ? 130 : 170;
-                        const targetCenter = map.unproject(projected.subtract([0, yOffset]), pointZoomLevel);
-
-                        // Cek apakah peta sudah berada di posisi target
-                        const currentCenter = map.getCenter();
-                        const isAlreadyNear = Math.abs(currentCenter.lat - targetCenter.lat) < 0.005 &&
-                                              Math.abs(currentCenter.lng - targetCenter.lng) < 0.005 &&
-                                              Math.abs(map.getZoom() - pointZoomLevel) < 0.2;
-
-                        if (isAlreadyNear) {
-                            marker.openPopup();
+                        if (isMobile()) {
+                            const sheet = document.getElementById('mobileAssetBottomSheet');
+                            if (sheet && !sheet.classList.contains('translate-y-full') && !sheet.classList.contains('invisible') && currentOpenedMarker === marker) {
+                                currentOpenedMarker = null;
+                                closeMobileAssetBottomSheet();
+                                return;
+                            }
+                            currentOpenedMarker = marker;
+                            map.closePopup();
+                            closeFilterModal();
+                            openMobileAssetBottomSheet(asset, id, [lat, lng]);
                         } else {
-                            map.once('moveend', function () {
+                            // Jika marker ini yang sedang aktif terbuka, klik ulang akan menutup popup dan mereset view peta ke Jawa Tengah
+                            if (currentOpenedMarker === marker) {
+                                currentOpenedMarker = null;
+                                isClosingAnimation = true;
+                                marker.closePopup();
+                                fitJatengBounds();
+                                setTimeout(() => { isClosingAnimation = false; }, 400);
+                                return;
+                            }
+
+                            currentOpenedMarker = marker;
+                            closeMobileAssetBottomSheet();
+                            const baseZoom = baseJatengZoom || map.getMinZoom() || 8.5;
+                            const pointZoomLevel = Math.max(baseZoom + 1.5, 10.5);
+
+                            const projected = map.project([lat, lng], pointZoomLevel);
+                            // Hitung offset vertikal agar popup kartu (tinggi ~440px) berada di bawah toolbar header tools
+                            const popupHeight = 440;
+                            const headerSpace = 160;
+                            const desiredMarkerScreenY = headerSpace + popupHeight;
+                            const calculatedYOffset = Math.round(desiredMarkerScreenY - (window.innerHeight / 2));
+                            const yOffset = Math.max(255, calculatedYOffset);
+
+                            const targetCenter = map.unproject(projected.subtract([0, yOffset]), pointZoomLevel);
+
+                            const currentCenter = map.getCenter();
+                            const isAlreadyNear = Math.abs(currentCenter.lat - targetCenter.lat) < 0.005 &&
+                                                  Math.abs(currentCenter.lng - targetCenter.lng) < 0.005 &&
+                                                  Math.abs(map.getZoom() - pointZoomLevel) < 0.2;
+
+                            if (isAlreadyNear) {
                                 marker.openPopup();
-                            });
-                            map.flyTo(targetCenter, pointZoomLevel, {
-                                duration: 0.45,
-                                easeLinearity: 0.25
-                            });
+                            } else {
+                                map.once('moveend', function () {
+                                    if (currentOpenedMarker === marker) {
+                                        marker.openPopup();
+                                    }
+                                });
+                                map.flyTo(targetCenter, pointZoomLevel, {
+                                    duration: 0.45,
+                                    easeLinearity: 0.25
+                                });
+                            }
                         }
                     });
                 }
             });
         }
 
-
         map.on('popupclose', function () {
-            fitJatengBounds();
+            currentOpenedMarker = null;
+            if (!isMobile() && !isClosingAnimation) {
+                fitJatengBounds();
+            }
         });
 
         map.on('click', function () {
             closeFilterModal();
+            closeMobileAssetBottomSheet();
         });
 
         // Kontrol filter panel & button animation
@@ -1107,9 +1622,6 @@
             if (!isMobile() && filterButtonDesktop && filterModal) {
                 const rect = filterButtonDesktop.getBoundingClientRect();
                 filterModal.style.top = rect.top + 'px';
-            } else if (isMobile() && filterButton && filterModal) {
-                const rect = filterButton.getBoundingClientRect();
-                filterModal.style.top = rect.top + 'px';
             }
         }
 
@@ -1119,48 +1631,130 @@
             }
         });
 
+        function updateActiveFilterBadge() {
+            const filterKeys = ['stasiun', 'wilayah', 'aset', 'jenis_kontrak', 'jenis_pendapatan', 'spv'];
+            let activeCount = 0;
+            filterKeys.forEach(k => {
+                const el = document.getElementById(k);
+                if (el && el.value && el.value.trim() !== '') {
+                    activeCount++;
+                }
+            });
+
+            const badge = document.getElementById('mobileActiveFilterBadge');
+            if (badge) {
+                if (activeCount > 0) {
+                    badge.textContent = activeCount;
+                    badge.classList.remove('hidden');
+                    badge.classList.add('flex');
+                } else {
+                    badge.classList.add('hidden');
+                    badge.classList.remove('flex');
+                }
+            }
+        }
+
         function openFilter() {
             isFilterOpen = true;
-            alignFilterModal();
 
-            // Slide in from right on both mobile and desktop
-            filterModal.classList.remove('translate-x-[140%]', 'opacity-0', 'pointer-events-none');
-            filterModal.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
+            if (isMobile()) {
+                if (typeof window.closeMobileAssetBottomSheet === 'function') {
+                    window.closeMobileAssetBottomSheet();
+                }
 
-            // Shift filter button to the left
-            if (isMobile() && filterButton) {
-                const shiftWidth = (filterModal.offsetWidth || 295) + 12;
-                filterButton.style.transform = 'translateX(-' + shiftWidth + 'px)';
-            } else if (!isMobile() && filterButtonDesktop) {
-                const shiftWidth = (filterModal.offsetWidth || 373) + 12;
-                filterButtonDesktop.style.transform = 'translateX(-' + shiftWidth + 'px)';
+                const sheet = document.getElementById('mobileFilterBottomSheet');
+                const overlay = document.getElementById('mobileFilterOverlay');
+                const mobileBottomNav = document.getElementById('mobileBottomNav');
+
+                if (sheet) {
+                    sheet.classList.remove('invisible', 'opacity-0');
+                    requestAnimationFrame(() => {
+                        sheet.classList.remove('translate-y-full', 'pointer-events-none');
+                        sheet.classList.add('translate-y-0', 'pointer-events-auto');
+                    });
+                }
+
+                if (overlay) {
+                    overlay.classList.remove('invisible', 'opacity-0', 'pointer-events-none');
+                    overlay.classList.add('opacity-100', 'pointer-events-auto');
+                }
+
+                if (mobileBottomNav) {
+                    mobileBottomNav.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+                }
+                if (typeof window.closeMobileSubMenu === 'function') {
+                    window.closeMobileSubMenu();
+                }
+            } else {
+                alignFilterModal();
+
+                if (filterModal) {
+                    filterModal.classList.remove('translate-x-[140%]', 'opacity-0', 'pointer-events-none');
+                    filterModal.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
+                }
+
+                if (filterButtonDesktop) {
+                    const shiftWidth = (filterModal?.offsetWidth || 373) + 12;
+                    filterButtonDesktop.style.transform = 'translateX(-' + shiftWidth + 'px)';
+                }
+
+                if (filterOverlay) {
+                    filterOverlay.classList.remove('invisible', 'opacity-0');
+                    filterOverlay.classList.add('visible', 'opacity-100');
+                }
             }
-
-            // Show overlay
-            filterOverlay.classList.remove('invisible', 'opacity-0');
-            filterOverlay.classList.add('visible', 'opacity-100');
         }
 
         function closeFilterModal() {
             isFilterOpen = false;
 
-            // Slide back right on both mobile and desktop
-            filterModal.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
-            filterModal.classList.add('translate-x-[140%]', 'opacity-0', 'pointer-events-none');
+            if (isMobile()) {
+                const sheet = document.getElementById('mobileFilterBottomSheet');
+                const overlay = document.getElementById('mobileFilterOverlay');
+                const mobileBottomNav = document.getElementById('mobileBottomNav');
 
-            if (filterButton) {
-                filterButton.style.transform = 'translateX(0)';
-            }
-            if (filterButtonDesktop) {
-                filterButtonDesktop.style.transform = 'translateX(0)';
-            }
+                if (sheet) {
+                    sheet.classList.add('translate-y-full', 'pointer-events-none');
+                    sheet.classList.remove('translate-y-0', 'pointer-events-auto');
+                    setTimeout(() => {
+                        if (sheet.classList.contains('translate-y-full')) {
+                            sheet.classList.add('invisible', 'opacity-0');
+                        }
+                    }, 300);
+                }
 
-            // Hide overlay
-            filterOverlay.classList.remove('visible', 'opacity-100');
-            filterOverlay.classList.add('invisible', 'opacity-0');
+                if (overlay) {
+                    overlay.classList.add('opacity-0', 'pointer-events-none');
+                    overlay.classList.remove('opacity-100', 'pointer-events-auto');
+                    setTimeout(() => {
+                        if (overlay.classList.contains('opacity-0')) {
+                            overlay.classList.add('invisible');
+                        }
+                    }, 300);
+                }
+
+                if (mobileBottomNav) {
+                    mobileBottomNav.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+                }
+            } else {
+                if (filterModal) {
+                    filterModal.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
+                    filterModal.classList.add('translate-x-[140%]', 'opacity-0', 'pointer-events-none');
+                }
+
+                if (filterButtonDesktop) {
+                    filterButtonDesktop.style.transform = 'translateX(0)';
+                }
+
+                if (filterOverlay) {
+                    filterOverlay.classList.remove('visible', 'opacity-100');
+                    filterOverlay.classList.add('invisible', 'opacity-0');
+                }
+            }
 
             // Close all dropdown menus
-            document.querySelectorAll('.filter-dropdown-menu').forEach(m => m.classList.add('hidden'));
+            document.querySelectorAll('.filter-dropdown-menu').forEach(m => closeSmoothDropdown(m));
+            document.querySelectorAll('.filter-dropdown-arrow').forEach(a => a.classList.remove('rotate-180'));
         }
 
         function toggleFilter() {
@@ -1178,27 +1772,29 @@
                 input.value = value;
             }
 
-            const container = input ? input.closest('.custom-filter-container') : null;
-            if (container) {
+            // Update all containers for this filter (both mobile and desktop)
+            const containers = document.querySelectorAll(`.custom-filter-container[data-filter-id="${filterId}"]`);
+            containers.forEach(container => {
                 const labelSpan = container.querySelector('.filter-selected-label');
                 if (labelSpan) {
                     labelSpan.textContent = labelText;
                     if (value && value !== '') {
-                        labelSpan.classList.remove('text-[#8B8B8B]');
-                        labelSpan.classList.add('text-black');
+                        labelSpan.classList.remove('text-[#8B8B8B]', 'dark:text-[#9AA0A6]');
+                        labelSpan.classList.add('text-black', 'dark:text-white', 'font-semibold');
                     } else {
-                        labelSpan.classList.remove('text-black');
-                        labelSpan.classList.add('text-[#8B8B8B]');
+                        labelSpan.classList.remove('text-black', 'dark:text-white', 'font-semibold');
+                        labelSpan.classList.add('text-[#8B8B8B]', 'dark:text-[#9AA0A6]', 'font-medium');
                     }
                 }
 
-                // Update active state in menu
+                // Update active state in menu options
                 const options = container.querySelectorAll('.filter-option-btn');
                 options.forEach(btn => {
-                    if (btn.querySelector('span')?.textContent.trim() === labelText.trim()) {
-                        btn.className = "filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium bg-blue-50 text-[#0066FF] rounded-xl transition text-left cursor-pointer";
+                    const span = btn.querySelector('span');
+                    if (span && span.textContent.trim() === labelText.trim()) {
+                        btn.className = "filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium bg-blue-50 dark:bg-blue-600/20 text-[#0066FF] dark:text-[#3B82F6] rounded-lg lg:rounded-xl transition text-left cursor-pointer";
                     } else {
-                        btn.className = "filter-option-btn flex items-center justify-between w-full px-3 py-2 text-xs sm:text-[13px] font-medium text-gray-700 hover:bg-gray-50 rounded-xl transition text-left cursor-pointer";
+                        btn.className = "filter-option-btn flex items-center justify-between w-full px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/10 rounded-lg lg:rounded-xl transition text-left cursor-pointer";
                     }
                 });
 
@@ -1210,7 +1806,9 @@
                 if (arrow) {
                     arrow.classList.remove('rotate-180');
                 }
-            }
+            });
+
+            updateActiveFilterBadge();
         };
 
         function openSmoothDropdown(el) {
@@ -1267,27 +1865,55 @@
             });
         }
 
-        filterOverlay.addEventListener('click', function () {
-            closeFilterModal();
-        });
+        if (filterOverlay) {
+            filterOverlay.addEventListener('click', function () {
+                closeFilterModal();
+            });
+        }
 
-        applyFilter.addEventListener('click', function () {
-            closeFilterModal();
-        });
+        const applyFilterMobile = document.getElementById('applyFilterMobile');
+        if (applyFilterMobile) {
+            applyFilterMobile.addEventListener('click', function () {
+                closeFilterModal();
+            });
+        }
 
-        resetFilter.addEventListener('click', function () {
-            selectMapFilter('stasiun', '', 'Semua Stasiun');
-            selectMapFilter('wilayah', '', 'Row & Non Row');
-            selectMapFilter('aset', '', 'Semua Aset');
-            selectMapFilter('jenis_kontrak', '', 'Semua Kontrak');
-            selectMapFilter('jenis_pendapatan', '', 'Semua Pend...');
-            selectMapFilter('spv', '', 'Semua SPV');
-            closeFilterModal();
-        });
+        const resetFilterMobile = document.getElementById('resetFilterMobile');
+        if (resetFilterMobile) {
+            resetFilterMobile.addEventListener('click', function () {
+                selectMapFilter('stasiun', '', 'Semua Stasiun');
+                selectMapFilter('wilayah', '', 'Row & Non Row');
+                selectMapFilter('aset', '', 'Semua Aset');
+                selectMapFilter('jenis_kontrak', '', 'Semua Kontrak');
+                selectMapFilter('jenis_pendapatan', '', 'Semua Pend...');
+                selectMapFilter('spv', '', 'Semua SPV');
+            });
+        }
+
+        if (applyFilter) {
+            applyFilter.addEventListener('click', function () {
+                closeFilterModal();
+            });
+        }
+
+        if (resetFilter) {
+            resetFilter.addEventListener('click', function () {
+                selectMapFilter('stasiun', '', 'Semua Stasiun');
+                selectMapFilter('wilayah', '', 'Row & Non Row');
+                selectMapFilter('aset', '', 'Semua Aset');
+                selectMapFilter('jenis_kontrak', '', 'Semua Kontrak');
+                selectMapFilter('jenis_pendapatan', '', 'Semua Pend...');
+                selectMapFilter('spv', '', 'Semua SPV');
+                closeFilterModal();
+            });
+        }
 
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeFilterModal();
+                if (typeof window.closeMobileAssetBottomSheet === 'function') {
+                    window.closeMobileAssetBottomSheet();
+                }
                 map.closePopup();
             }
         });

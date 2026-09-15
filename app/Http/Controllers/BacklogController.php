@@ -54,7 +54,9 @@ class BacklogController extends Controller
             $hari2026 = $fin->hari_2026 ?? '365';
             $nilaiPerhari = $fin && $fin->nilai_per_hari ? number_format((float)$fin->nilai_per_hari, 0, ',', '.') : '0';
 
-            $nilai2026 = $fin && $fin->nilai_2026 ? number_format((float)$fin->nilai_2026, 0, ',', '.') : '0';
+            $nilai2026 = $fin && is_numeric($fin->nilai_2026 ?? null) && (float)$fin->nilai_2026 != 0
+                ? number_format((float)$fin->nilai_2026, 0, ',', '.')
+                : ($fin && $fin->nilai_2026 !== null && (string)$fin->nilai_2026 !== '' ? (string)$fin->nilai_2026 : '0');
             $jumlahHari = $fin && $fin->jumlah_hari ? (string)$fin->jumlah_hari : '-';
 
             return [
@@ -84,17 +86,12 @@ class BacklogController extends Controller
         return view('backlog.index', compact('items', 'contracts', 'statusCustomerOptions', 'stasiunOptions'));
     }
 
-    public function edit($identifier)
+    public function edit($id)
     {
         $contract = KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
-            ->where('contract_number', $identifier)
-            ->first();
-
-        if (!$contract) {
-            $contract = KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
-                ->where('asset_number', $identifier)
-                ->firstOrFail();
-        }
+            ->where('contract_number', $id)
+            ->orWhere('asset_number', $id)
+            ->firstOrFail();
 
         $asset     = $contract->asset;
         $tenant    = $contract->tenant;
@@ -104,24 +101,11 @@ class BacklogController extends Controller
         return view('backlog.edit', compact('contract', 'asset', 'tenant', 'financial', 'schedule'));
     }
 
-    public function update(Request $request, $identifier)
+    public function update(Request $request, $id)
     {
-        if ($request->has('contract_number') && trim((string)$request->contract_number) === '') {
-            return back()->with('warning', 'Field Nomor Kontrak wajib diisi dan tidak boleh kosong!');
-        }
-        if ($request->has('asset_number') && trim((string)$request->asset_number) === '') {
-            return back()->with('warning', 'Field Nomor Aset wajib diisi dan tidak boleh kosong!');
-        }
-
         $contract = KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
-            ->where('contract_number', $identifier)
-            ->first();
-
-        if (!$contract) {
-            $contract = KaiContract::with(['tenant', 'asset', 'financial', 'monthlySchedules'])
-                ->where('asset_number', $identifier)
-                ->firstOrFail();
-        }
+            ->where('contract_number', $id)
+            ->firstOrFail();
 
         // Update Tenant
         if ($contract->tenant) {
@@ -150,6 +134,9 @@ class BacklogController extends Controller
         }
         if ($request->filled('hari_2026')) {
             $fin->hari_2026 = (int) preg_replace('/[^\d]/', '', $request->hari_2026);
+        }
+        if ($request->has('nilai_2026')) {
+            $fin->nilai_2026 = $this->cleanNumeric($request->nilai_2026);
         }
         if ($request->has('nilai_perhari')) {
             $fin->nilai_per_hari = $this->cleanNumeric($request->nilai_perhari);
@@ -185,15 +172,11 @@ class BacklogController extends Controller
             $contract->asset->save();
         }
 
-        // Invalidasi cache karena data keuangan/kontrak/aset berubah
         ContractController::forgetContractCache();
 
         return redirect()->route('backlog.index')->with('success', 'Sukses update data backlog terbaru!');
     }
 
-    /**
-     * Clean and parse numeric input safely
-     */
     private function cleanNumeric($value): float
     {
         if ($value === null || trim((string)$value) === '') {
@@ -201,21 +184,43 @@ class BacklogController extends Controller
         }
         
         $clean = trim((string)$value);
-        $clean = preg_replace('/[^\d.,]/', '', $clean);
-        
-        if (substr_count($clean, '.') > 1) {
-            $parts = explode('.', $clean);
-            $last = array_pop($parts);
-            if (strlen($last) <= 2 && !str_contains($clean, ',')) {
-                $clean = implode('', $parts) . '.' . $last;
+        $clean = str_replace(['Rp', 'rp', 'RP', ' ', '%'], '', $clean);
+        if ($clean === '') return 0.0;
+
+        $hasComma = strpos($clean, ',') !== false;
+        $hasDot = strpos($clean, '.') !== false;
+
+        if ($hasComma && $hasDot) {
+            $lastComma = strrpos($clean, ',');
+            $lastDot = strrpos($clean, '.');
+            if ($lastComma > $lastDot) {
+                $clean = str_replace('.', '', $clean);
+                $clean = str_replace(',', '.', $clean);
             } else {
-                $clean = implode('', $parts) . $last;
+                $clean = str_replace(',', '', $clean);
             }
-        } elseif (str_contains($clean, '.') && str_contains($clean, ',')) {
-            $clean = str_replace('.', '', $clean);
-            $clean = str_replace(',', '.', $clean);
-        } elseif (str_contains($clean, ',')) {
-            $clean = str_replace(',', '.', $clean);
+        } elseif ($hasComma) {
+            $commaCount = substr_count($clean, ',');
+            if ($commaCount > 1) {
+                $clean = str_replace(',', '', $clean);
+            } else {
+                $parts = explode(',', $clean);
+                if (strlen($parts[1]) === 3 && (int)$parts[0] > 0 && !preg_match('/^0/', $parts[0])) {
+                    $clean = str_replace(',', '', $clean);
+                } else {
+                    $clean = str_replace(',', '.', $clean);
+                }
+            }
+        } elseif ($hasDot) {
+            $dotCount = substr_count($clean, '.');
+            if ($dotCount > 1) {
+                $clean = str_replace('.', '', $clean);
+            } else {
+                $parts = explode('.', $clean);
+                if (strlen($parts[1]) === 3 && (int)$parts[0] > 0 && !preg_match('/^0/', $parts[0])) {
+                    $clean = str_replace('.', '', $clean);
+                }
+            }
         }
         
         return is_numeric($clean) ? (float) $clean : 0.0;

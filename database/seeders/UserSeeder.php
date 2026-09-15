@@ -12,24 +12,12 @@ class UserSeeder extends Seeder
     {
         // Super Admin
         User::updateOrCreate(
-            ['email' => 'lekleksyahrul@gmail.com'],
+            ['email' => 'iyainajadeh95@gmail.com'],
             [
-                'username' => 'superadmin',
-                'name' => 'Super Admin KAI Daop 4',
+                'username' => 'rafi superadmin',
+                'name' => 'Haidar Rafi',
                 'password' => Hash::make('superadmin123'),
                 'role' => 'superadmin',
-                'is_active' => true,
-            ]
-        );
-
-        // Admin
-        User::updateOrCreate(
-            ['email' => 'admin@kai-daop4.id'],
-            [
-                'username' => 'admin.daop4',
-                'name' => 'Admin KAI Daop 4',
-                'password' => Hash::make('admin123'),
-                'role' => 'admin',
                 'is_active' => true,
             ]
         );

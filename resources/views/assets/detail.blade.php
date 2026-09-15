@@ -96,14 +96,31 @@
                 </div>
 
                 {{-- FOTO UTAMA --}}
+                @php
+                    $rawImages   = $asset->images ?? collect();
+                    // Guard: pastikan $allImages selalu Collection (bukan string/array dari kolom lama)
+                    $allImages   = ($rawImages instanceof \Illuminate\Support\Collection)
+                                    ? $rawImages
+                                    : collect();
+                    $primaryImg  = $allImages->where('is_primary', true)->first() ?? $allImages->first();
+                    $otherImages = $allImages->where('is_primary', false)->take(3);
+                @endphp
                 <div class="flex h-[180px] sm:h-[256px] w-full items-center justify-center overflow-hidden rounded-xl bg-[#d8d8d8] dark:bg-[#34383D] transition-colors">
-                    <div class="text-xs sm:text-[13px] text-gray-500 dark:text-[#9AA0A6]">Foto Aset</div>
+                    @if($primaryImg)
+                        <img src="{{ $primaryImg->image_path }}" alt="Foto Utama Aset" class="w-full h-full object-cover">
+                    @else
+                        <div class="text-xs sm:text-[13px] text-gray-500 dark:text-[#9AA0A6]">Foto Aset</div>
+                    @endif
                 </div>
 
                 {{-- THUMBNAIL --}}
                 <div class="mt-2.5 sm:mt-3 grid grid-cols-3 gap-2">
                     @for($i = 0; $i < 3; $i++)
-                        <div class="flex h-[65px] sm:h-[96px] items-center justify-center overflow-hidden rounded-xl bg-[#d8d8d8] dark:bg-[#34383D] transition-colors"></div>
+                        <div class="flex h-[65px] sm:h-[96px] items-center justify-center overflow-hidden rounded-xl bg-[#d8d8d8] dark:bg-[#34383D] transition-colors">
+                            @if($otherImages->get($i))
+                                <img src="{{ $otherImages->get($i)->image_path }}" alt="Foto Aset {{ $i+1 }}" class="w-full h-full object-cover">
+                            @endif
+                        </div>
                     @endfor
                 </div>
 
@@ -368,13 +385,20 @@
     @auth
     <div id="drawer-edit-backdrop" class="opacity-0 pointer-events-none fixed inset-0 z-[130] bg-black/40 backdrop-blur-xs transition-opacity duration-300" onclick="closeEditDrawer()"></div>
 
-    <div id="drawer-edit" class="fixed right-0 sm:right-8 lg:right-10 top-0 sm:top-[90px] bottom-0 sm:bottom-8 z-[135] w-full sm:w-[420px] max-w-full sm:max-w-[calc(100vw-40px)] rounded-none sm:rounded-2xl bg-white dark:bg-[#1F2123] border-l sm:border border-gray-100 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.18)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.7)] p-4 sm:p-6 flex flex-col justify-between overflow-hidden transform translate-x-[120%] transition-transform duration-300 ease-in-out pb-6 sm:pb-6">
+    <div id="drawer-edit" class="fixed inset-x-0 bottom-0 sm:inset-x-auto sm:right-8 lg:right-10 sm:top-[90px] sm:bottom-8 z-[135] w-full sm:w-[420px] max-w-full sm:max-w-[calc(100vw-40px)] max-h-[92vh] sm:max-h-none rounded-t-[36px] sm:rounded-2xl bg-white dark:bg-[#1F2123] border-t sm:border border-gray-100 dark:border-white/10 shadow-[0_-16px_50px_rgba(0,0,0,0.25)] sm:shadow-[0_20px_60px_rgba(0,0,0,0.18)] dark:shadow-[0_-16px_50px_rgba(0,0,0,0.85)] dark:sm:shadow-[0_20px_60px_rgba(0,0,0,0.7)] p-4 sm:p-6 flex flex-col justify-between overflow-hidden transform translate-y-full sm:translate-y-0 sm:translate-x-[120%] transition-transform duration-300 ease-in-out pb-6 sm:pb-6">
         
-        {{-- TABS ATAS --}}
-        <div class="flex items-center border-b border-gray-100 dark:border-white/10 pb-2.5 sm:pb-3 gap-3.5 sm:gap-6 text-xs sm:text-[13px] shrink-0">
-            <button type="button" id="tab-btn-info" onclick="switchEditTab('info')" class="font-medium text-[#0066FF] dark:text-[#3B82F6] border-b-2 border-[#0066FF] dark:border-[#3B82F6] pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer">Informasi Aset</button>
-            <button type="button" id="tab-btn-admin" onclick="switchEditTab('admin')" class="font-medium text-gray-500 dark:text-white hover:text-gray-800 dark:hover:text-white pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer">Data Administratif</button>
-            <button type="button" id="tab-btn-finansial" onclick="switchEditTab('finansial')" class="font-medium text-gray-500 dark:text-white hover:text-gray-800 dark:hover:text-white pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer">Data Finansial</button>
+        {{-- TABS ATAS & TOMBOL TUTUP --}}
+        <div class="flex items-center justify-between border-b border-gray-100 dark:border-white/10 pb-2.5 sm:pb-3 shrink-0 mb-1">
+            <div class="flex items-center gap-3 sm:gap-6 text-xs sm:text-[13px] overflow-x-auto">
+                <button type="button" id="tab-btn-info" onclick="switchEditTab('info')" class="font-medium text-[#0066FF] dark:text-[#3B82F6] border-b-2 border-[#0066FF] dark:border-[#3B82F6] pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer whitespace-nowrap">Informasi Aset</button>
+                <button type="button" id="tab-btn-admin" onclick="switchEditTab('admin')" class="font-medium text-gray-500 dark:text-white hover:text-gray-800 dark:hover:text-white pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer whitespace-nowrap">Data Administratif</button>
+                <button type="button" id="tab-btn-finansial" onclick="switchEditTab('finansial')" class="font-medium text-gray-500 dark:text-white hover:text-gray-800 dark:hover:text-white pb-2 -mb-2.5 sm:-mb-3 transition cursor-pointer whitespace-nowrap">Data Finansial</button>
+            </div>
+            <button type="button" onclick="closeEditDrawer()" class="sm:hidden w-7 h-7 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-white transition -mr-1" aria-label="Tutup">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
 
         {{-- FORM EDIT DRAWER --}}
@@ -1065,35 +1089,50 @@
 
 
     {{-- POPUP CALENDAR PICKER (Dropdown Style) --}}
-    <div id="popup-calendar-picker" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
-        {{-- Header: < [Jun v] [2025 v] > --}}
-        <div class="flex items-center justify-between mb-3.5">
-            <button type="button" onclick="calPrevMonth()" class="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
+    <div id="popup-calendar-picker" onclick="event.stopPropagation()" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
+
+        {{-- Header: < [Jun ⌵] [2025 ⌵] > --}}
+        <div id="cal-header" class="flex items-center justify-between mb-3.5">
+            <button type="button" onclick="calPrev()" class="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
             <div class="flex items-center gap-2">
-                <div class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white">
+                <button type="button" onclick="calShowMonthPicker()" class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white hover:border-blue-400 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer">
                     <span id="cal-month-name">Jun</span>
                     <svg class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
-                <div class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white">
-                    <span id="cal-year-val">2025</span>
+                </button>
+                <button type="button" onclick="calShowYearPicker()" class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white hover:border-blue-400 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer">
+                    <span id="cal-year-val">2026</span>
                     <svg class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
+                </button>
             </div>
-            <button type="button" onclick="calNextMonth()" class="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
+            <button type="button" onclick="calNext()" class="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
             </button>
         </div>
 
-        {{-- Weekdays header: Ming Sen Sel Rab Kam Jum Sa --}}
-        <div class="grid grid-cols-7 text-center text-xs font-semibold text-slate-500 dark:text-[#9AA0A6] mb-2">
-            <div>Ming</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sa</div>
+        {{-- Panel: Days (default) --}}
+        <div id="cal-days-panel">
+            <div class="grid grid-cols-7 text-center text-xs font-semibold text-slate-500 dark:text-[#9AA0A6] mb-2">
+                <div>Ming</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sa</div>
+            </div>
+            <div id="cal-days-grid" class="grid grid-cols-7 text-center text-xs font-medium gap-y-1">
+                {{-- Rendered via JS --}}
+            </div>
         </div>
 
-        {{-- Days grid --}}
-        <div id="cal-days-grid" class="grid grid-cols-7 text-center text-xs font-medium gap-y-1">
-            {{-- Rendered via JS --}}
+        {{-- Panel: Month Picker --}}
+        <div id="cal-month-panel" class="hidden">
+            <div id="cal-month-grid" class="grid grid-cols-3 gap-2">
+                {{-- Rendered via JS --}}
+            </div>
+        </div>
+
+        {{-- Panel: Year Picker --}}
+        <div id="cal-year-panel" class="hidden">
+            <div id="cal-year-grid" class="grid grid-cols-3 gap-2">
+                {{-- Rendered via JS --}}
+            </div>
         </div>
     </div>
 
@@ -1176,8 +1215,13 @@
             goToInfoStep(1);
             backdrop.classList.remove('opacity-0', 'pointer-events-none');
             backdrop.classList.add('opacity-100');
-            drawer.classList.remove('translate-x-[120%]');
-            drawer.classList.add('translate-x-0');
+            if (window.innerWidth < 640) {
+                drawer.classList.remove('translate-y-full');
+                drawer.classList.add('translate-y-0');
+            } else {
+                drawer.classList.remove('translate-x-[120%]');
+                drawer.classList.add('translate-x-0');
+            }
             initDragAndDrop();
             renderImageList();
         }
@@ -1187,8 +1231,13 @@
             const backdrop = document.getElementById('drawer-edit-backdrop');
             
             closeCalendarPicker();
-            drawer.classList.remove('translate-x-0');
-            drawer.classList.add('translate-x-[120%]');
+            if (window.innerWidth < 640) {
+                drawer.classList.remove('translate-y-0');
+                drawer.classList.add('translate-y-full');
+            } else {
+                drawer.classList.remove('translate-x-0');
+                drawer.classList.add('translate-x-[120%]');
+            }
             backdrop.classList.remove('opacity-100');
             backdrop.classList.add('opacity-0', 'pointer-events-none');
         }
@@ -1588,6 +1637,17 @@
 
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
+        // calView: 'days' | 'months' | 'years'
+        let calView = 'days';
+        let calYearRangeStart = Math.floor(new Date().getFullYear() / 12) * 12;
+
+        function calShowPanel(view) {
+            calView = view;
+            document.getElementById('cal-days-panel').classList.toggle('hidden', view !== 'days');
+            document.getElementById('cal-month-panel').classList.toggle('hidden', view !== 'months');
+            document.getElementById('cal-year-panel').classList.toggle('hidden', view !== 'years');
+        }
+
         function renderCalendar() {
             const monthNameEl = document.getElementById('cal-month-name');
             const yearValEl = document.getElementById('cal-year-val');
@@ -1604,16 +1664,13 @@
             const totalDaysInMonth = new Date(calCurrentYear, calCurrentMonth + 1, 0).getDate();
             const prevMonthTotalDays = new Date(calCurrentYear, calCurrentMonth, 0).getDate();
 
-            // Previous month overflow days
             for (let i = firstDayIndex - 1; i >= 0; i--) {
-                const dayNum = prevMonthTotalDays - i;
                 const cell = document.createElement('div');
                 cell.className = 'py-1 text-gray-400 dark:text-gray-600 text-center pointer-events-none select-none';
-                cell.textContent = dayNum;
+                cell.textContent = prevMonthTotalDays - i;
                 daysGridEl.appendChild(cell);
             }
 
-            // Current month days
             for (let d = 1; d <= totalDaysInMonth; d++) {
                 const cell = document.createElement('button');
                 cell.type = 'button';
@@ -1628,27 +1685,22 @@
                             const selM = parseInt(parts[1], 10) - 1;
                             let selY = parseInt(parts[2], 10);
                             if (selY < 100) selY += 2000;
-                            if (selD === d && selM === calCurrentMonth && selY === calCurrentYear) {
-                                isSelected = true;
-                            }
+                            if (selD === d && selM === calCurrentMonth && selY === calCurrentYear) isSelected = true;
                         }
                     }
                 }
 
-                if (isSelected) {
-                    cell.className = 'h-7 w-7 mx-auto flex items-center justify-center rounded-full bg-[#0066FF] text-white font-semibold shadow-xs cursor-pointer';
-                } else {
-                    cell.className = 'h-7 w-7 mx-auto flex items-center justify-center rounded-full text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] font-medium transition cursor-pointer';
-                }
-
+                cell.className = isSelected
+                    ? 'h-7 w-7 mx-auto flex items-center justify-center rounded-full bg-[#0066FF] text-white font-semibold shadow-xs cursor-pointer'
+                    : 'h-7 w-7 mx-auto flex items-center justify-center rounded-full text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] font-medium transition cursor-pointer';
                 cell.textContent = d;
-                cell.onclick = function () {
+                cell.onclick = function (e) {
+                    e.stopPropagation();
                     selectCalendarDate(d, calCurrentMonth, calCurrentYear);
                 };
                 daysGridEl.appendChild(cell);
             }
 
-            // Next month overflow days to complete rows (up to 35 or 42 cells)
             const totalRendered = firstDayIndex + totalDaysInMonth;
             const remainingCells = (totalRendered % 7 === 0) ? 0 : 7 - (totalRendered % 7);
             for (let n = 1; n <= remainingCells; n++) {
@@ -1659,23 +1711,97 @@
             }
         }
 
-        function calPrevMonth() {
-            calCurrentMonth--;
-            if (calCurrentMonth < 0) {
-                calCurrentMonth = 11;
-                calCurrentYear--;
+        function renderMonthPicker() {
+            const grid = document.getElementById('cal-month-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            monthNames.forEach((name, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = name;
+                btn.className = idx === calCurrentMonth
+                    ? 'py-1.5 rounded-xl text-xs font-bold bg-[#0066FF] text-white cursor-pointer'
+                    : 'py-1.5 rounded-xl text-xs font-semibold text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer';
+                btn.onclick = function (e) {
+                    e.stopPropagation();
+                    calSelectMonth(idx);
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function renderYearPicker() {
+            const grid = document.getElementById('cal-year-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            for (let y = calYearRangeStart; y < calYearRangeStart + 12; y++) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = y;
+                btn.className = y === calCurrentYear
+                    ? 'py-1.5 rounded-xl text-xs font-bold bg-[#0066FF] text-white cursor-pointer'
+                    : 'py-1.5 rounded-xl text-xs font-semibold text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer';
+                btn.onclick = function (e) {
+                    e.stopPropagation();
+                    calSelectYear(y);
+                };
+                grid.appendChild(btn);
             }
+            const yearValEl = document.getElementById('cal-year-val');
+            if (yearValEl) yearValEl.textContent = calYearRangeStart + ' – ' + (calYearRangeStart + 11);
+        }
+
+        function calShowMonthPicker() {
+            calShowPanel('months');
+            renderMonthPicker();
+            document.getElementById('cal-header').querySelector('button:first-child').classList.add('invisible');
+            document.getElementById('cal-header').querySelector('button:last-child').classList.add('invisible');
+        }
+
+        function calShowYearPicker() {
+            calYearRangeStart = Math.floor(calCurrentYear / 12) * 12;
+            calShowPanel('years');
+            renderYearPicker();
+        }
+
+        function calSelectMonth(monthIdx) {
+            calCurrentMonth = monthIdx;
+            calShowPanel('days');
+            renderCalendar();
+            document.getElementById('cal-header').querySelector('button:first-child').classList.remove('invisible');
+            document.getElementById('cal-header').querySelector('button:last-child').classList.remove('invisible');
+        }
+
+        function calSelectYear(year) {
+            calCurrentYear = year;
+            calShowPanel('days');
             renderCalendar();
         }
 
-        function calNextMonth() {
-            calCurrentMonth++;
-            if (calCurrentMonth > 11) {
-                calCurrentMonth = 0;
-                calCurrentYear++;
+        function calPrev() {
+            if (calView === 'days') {
+                calCurrentMonth--;
+                if (calCurrentMonth < 0) { calCurrentMonth = 11; calCurrentYear--; }
+                renderCalendar();
+            } else if (calView === 'years') {
+                calYearRangeStart -= 12;
+                renderYearPicker();
             }
-            renderCalendar();
         }
+
+        function calNext() {
+            if (calView === 'days') {
+                calCurrentMonth++;
+                if (calCurrentMonth > 11) { calCurrentMonth = 0; calCurrentYear++; }
+                renderCalendar();
+            } else if (calView === 'years') {
+                calYearRangeStart += 12;
+                renderYearPicker();
+            }
+        }
+
+        function calPrevMonth() { calPrev(); }
+        function calNextMonth() { calNext(); }
 
         function openCalendarPicker(e, targetInputId) {
             e.stopPropagation();
@@ -1685,6 +1811,12 @@
             const container = targetBtn.closest('.relative') || targetBtn.parentElement;
 
             renderCalendar();
+
+            // Reset ke tampilan hari
+            calShowPanel('days');
+            const headerBtns = document.getElementById('cal-header').querySelectorAll('button');
+            headerBtns[0].classList.remove('invisible');
+            headerBtns[headerBtns.length - 1].classList.remove('invisible');
 
             // Pindahkan picker langsung ke dalam container input (.relative) agar menempel persis seperti dropdown
             container.appendChild(picker);

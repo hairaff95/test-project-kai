@@ -145,7 +145,7 @@ class PasswordResetRequestController extends Controller
         session(['pending_reset_user_id' => $user->id]);
 
         $remaining = PasswordResetRequest::MAX_REQUESTS_PER_CYCLE - 1;
-        $msg = 'Request berhasil dikirim. Menunggu persetujuan Super Admin... (Sisa kesempatan request: ' . $remaining . 'x)';
+        $msg = 'Request berhasil dikirim. Menunggu persetujuan Super Admin.';
 
         return redirect()->route('password.request.status', ['email' => $user->email])
             ->with('success', $msg);

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Str;
-use Pdo\Mysql;
 
 return [
 
@@ -52,7 +51,7 @@ return [
             // menghindari replication lag yang membingungkan.
             // ponytail: single-host fallback ke DB_HOST lokal jika DB_READ_HOST/DB_WRITE_HOST tidak diset.
             'read' => [
-                'host' => [env('DB_READ_HOST', env('DB_HOST', '127.0.0.1'))],
+                'host' => array_values(array_filter(array_map('trim', explode(',', (string) env('DB_READ_HOST', env('DB_HOST', '127.0.0.1')))))),
             ],
             'write' => [
                 'host' => [env('DB_WRITE_HOST', env('DB_HOST', '127.0.0.1'))],
@@ -70,7 +69,8 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA', base_path('isrgrootx1.pem')),
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
             ]) : [],
         ],
 
@@ -90,7 +90,7 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                (defined('Pdo\Mysql::ATTR_SSL_CA') ? Pdo\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 
