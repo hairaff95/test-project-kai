@@ -382,7 +382,7 @@
             @foreach($contracts as $item)
             routes['detail_{{ $item->contract_number }}'] = '{{ route('asset.detail', $item->contract_number) }}';
             routes['edit_{{ $item->contract_number }}']   = '{{ route('contracts.edit', $item->contract_number) }}';
-            routes['delete_{{ $item->contract_number }}'] = '{{ route('admin.assets.destroy', $item->contract_number) }}';
+            routes['delete_{{ $item->contract_number }}'] = '{{ route('contracts.destroy', $item->contract_number) }}';
             @endforeach
 
             document.addEventListener('click', function (e) {

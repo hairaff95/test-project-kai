@@ -202,6 +202,8 @@
                 }
             }
         }
+    </script>
+
     {{-- Global Toast Notification --}}
     <x-toast />
 </body>

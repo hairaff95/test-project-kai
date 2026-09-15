@@ -20,54 +20,18 @@
     {{-- Leaflet JS & CSS for Google Maps Interactive Preview --}}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<style>
-    @media (max-width: 1023.98px) {
-        .mobile-dropup-sheet {
-            animation: slideUpEditSheet 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-    }
-    @keyframes slideUpEditSheet {
-        from {
-            transform: translateY(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-</style>
 </head>
 
 <body class="min-h-screen bg-[#F6F7F9] dark:bg-[#282A2C] font-sans antialiased text-gray-900 dark:text-gray-100 selection:bg-blue-100 selection:text-blue-600 flex flex-col justify-between transition-colors duration-200">
 
-    {{-- Top Navbar (Desktop Only on Edit Page) --}}
-    <div class="hidden lg:block">
-        <x-navbar active="contracts" />
-    </div>
+    {{-- Top Navbar --}}
+    <x-navbar active="contracts" />
 
-    {{-- Mobile Sheet Backdrop Overlay --}}
-    <div class="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 lg:hidden" onclick="window.location.href='{{ route('contracts.index') }}'"></div>
+    {{-- Main Content --}}
+    <main class="w-full flex-1 max-w-[1600px] mx-auto px-3.5 sm:px-8 lg:px-10 pt-3 sm:pt-6 pb-36 sm:pb-36 lg:pb-12 flex flex-col gap-4 sm:gap-6">
 
-    {{-- Main Content / Mobile Dropup Bottom Sheet Panel --}}
-    <main class="mobile-dropup-sheet fixed inset-x-0 bottom-0 z-50 h-[90dvh] max-h-[90dvh] flex flex-col bg-white dark:bg-[#1F2123] rounded-t-[36px] sm:rounded-t-[40px] shadow-[0_-16px_50px_rgba(0,0,0,0.25)] dark:shadow-[0_-16px_50px_rgba(0,0,0,0.85)] border-t border-x border-gray-100 dark:border-white/10 overflow-hidden lg:static lg:h-auto lg:max-h-none lg:rounded-none lg:bg-transparent lg:shadow-none lg:border-none lg:overflow-visible w-full flex-1 max-w-[1600px] mx-auto lg:px-10 lg:pt-6 lg:pb-10 transition-all duration-300" style="padding-bottom: 0 !important;">
-
-        {{-- Mobile Dropup Sheet Header (Persis Desain Filter Peta) --}}
-        <div class="px-5 pt-5 pb-3.5 flex items-center justify-between border-b border-gray-100 dark:border-white/10 shrink-0 lg:hidden">
-            <div class="flex items-center gap-2">
-                <h2 class="text-base font-bold text-gray-950 dark:text-white tracking-tight">
-                    Edit Daftar Kontrak
-                </h2>
-            </div>
-            <a href="{{ route('contracts.index') }}" class="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 transition cursor-pointer" aria-label="Tutup">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </a>
-        </div>
-
-        {{-- Desktop Page Header & Breadcrumbs & Action Buttons --}}
-        <div class="hidden lg:flex items-center justify-between gap-3 shrink-0 mb-6">
+        {{-- Page Header & Breadcrumbs & Action Buttons --}}
+        <div class="flex items-center justify-between gap-3 shrink-0">
             <div>
                 <h1 class="text-lg sm:text-[26px] font-bold tracking-tight text-gray-950 dark:text-white">
                     Edit Daftar Kontrak
@@ -85,7 +49,7 @@
                     type="submit"
                     form="form-edit-contract"
                     onclick="if(window.setPendingToast) window.setPendingToast('Sukses update data kontrak terbaru!', 'success');"
-                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#0066FF] hover:bg-blue-700 px-3.5 sm:px-5 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition active:scale-95 cursor-pointer"
+                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#0066FF] hover:bg-blue-700 px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
                 >
                     <svg class="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="20 6 9 17 4 12"/>
@@ -95,7 +59,7 @@
 
                 <a
                     href="{{ route('contracts.index') }}"
-                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#E60000] hover:bg-red-700 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-xs transition active:scale-95 cursor-pointer"
+                    class="inline-flex items-center gap-1.5 rounded-lg bg-[#E60000] hover:bg-red-700 px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-medium text-white shadow-xs transition active:scale-95 cursor-pointer"
                 >
                     <svg class="h-3.5 w-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -106,12 +70,10 @@
             </div>
         </div>
 
-        {{-- Scrollable Form Wrapper for Mobile & Full Layout for Desktop --}}
-        <div class="overflow-y-auto min-h-0 flex-1 px-4 py-4 sm:px-6 lg:px-0 lg:py-0 lg:overflow-visible lg:flex-none flex flex-col gap-4 sm:gap-6 pb-8 lg:pb-0">
-            {{-- Form & Grid Container --}}
-            <form id="form-edit-contract" action="{{ route('contracts.update', $contract->contract_number) }}" method="POST" onsubmit="if(window.setPendingToast) window.setPendingToast('Sukses update data kontrak terbaru!', 'success');" class="w-full">
-                @csrf
-                @method('PUT')
+        {{-- Form & Grid Container --}}
+        <form id="form-edit-contract" action="{{ route('contracts.update', $contract->contract_number) }}" method="POST" enctype="multipart/form-data" onsubmit="if(window.setPendingToast) window.setPendingToast('Sukses update data kontrak terbaru!', 'success');" class="w-full">
+            @csrf
+            @method('PUT')
 
             <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px] gap-3.5 sm:gap-6 items-start">
 
@@ -344,52 +306,105 @@
                 </div>
 
             </div>
-            </form>
-        </div>
 
-        {{-- Mobile Dropup Sheet Footer (Sticky Bottom Action Bar) --}}
-        <div class="px-6 pt-3.5 pb-3 flex items-center justify-between shrink-0 border-t border-gray-100 dark:border-white/10 bg-white dark:bg-[#1F2123] lg:hidden z-20" style="padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));">
-            <a href="{{ route('contracts.index') }}" class="text-sm font-semibold text-[#0066FF] dark:text-[#3B82F6] hover:underline cursor-pointer select-none transition py-2 px-1">
-                Batal
-            </a>
-            <button type="submit" form="form-edit-contract" onclick="if(window.setPendingToast) window.setPendingToast('Sukses update data kontrak terbaru!', 'success');" class="h-[46px] min-h-[46px] px-6 rounded-[14px] bg-[#0066FF] hover:bg-blue-700 text-sm font-semibold text-white transition shadow-sm cursor-pointer select-none flex items-center justify-center shrink-0">
-                Simpan
-            </button>
-        </div>
+            {{-- CARD EDIT FOTO ASET --}}
+            <div class="rounded-xl sm:rounded-2xl border border-gray-100 dark:border-white/10 bg-white dark:bg-[#1F2123] p-4 sm:p-6 shadow-[0_4px_25px_rgba(0,0,0,0.03)] transition-colors">
+                <div class="flex items-center justify-between mb-3.5 sm:mb-4 border-b border-gray-100 dark:border-white/10 pb-2.5">
+                    <h2 class="text-xs sm:text-sm font-bold text-gray-950 dark:text-white">Foto Aset</h2>
+                </div>
+
+                <div class="space-y-4">
+                    {{-- Foto yang sudah ada --}}
+                    @php $existingImages = $contract->asset?->images ?? collect(); @endphp
+                    @if($existingImages->count() > 0)
+                        <div>
+                            <p class="text-xs font-medium text-gray-600 dark:text-[#9AA0A6] mb-2">Foto saat ini (centang untuk hapus):</p>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                @foreach($existingImages as $img)
+                                    <div class="relative group rounded-xl overflow-hidden border border-gray-200 dark:border-white/10">
+                                        <img src="{{ $img->image_path }}" alt="Foto Aset" class="w-full h-[90px] object-cover">
+                                        @if($img->is_primary)
+                                            <span class="absolute top-1 left-1 bg-blue-600 text-white text-[9px] px-1.5 py-0.5 rounded-full font-semibold">Utama</span>
+                                        @endif
+                                        <label class="absolute top-1 right-1 cursor-pointer">
+                                            <input type="checkbox" name="delete_images[]" value="{{ $img->id }}" class="w-4 h-4 accent-red-500">
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <p class="text-[11px] text-red-400 mt-1">Centang foto di atas untuk menghapusnya saat simpan.</p>
+                        </div>
+                    @else
+                        <p class="text-xs text-gray-400 dark:text-[#9AA0A6]">Belum ada foto untuk aset ini.</p>
+                    @endif
+
+                    {{-- Upload foto baru --}}
+                    <div>
+                        <p class="text-xs font-medium text-gray-600 dark:text-[#9AA0A6] mb-2">Tambah foto baru:</p>
+                        <div onclick="document.getElementById('edit-file-upload-input').click()"
+                             class="rounded-2xl border-2 border-dashed border-gray-300 dark:border-white/20 bg-transparent hover:bg-gray-50/70 dark:hover:bg-white/5 py-6 px-5 flex flex-col items-center justify-center text-center transition cursor-pointer">
+                            <input type="file" name="asset_images[]" id="edit-file-upload-input" class="hidden" accept="image/jpeg,image/png,image/webp,image/jpg" multiple
+                                onchange="previewEditImages(event)">
+                            <svg class="w-8 h-8 text-gray-400 dark:text-[#9AA0A6] mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <p class="text-xs font-medium text-gray-700 dark:text-gray-200"><span class="text-[#0066FF] font-semibold">Klik untuk upload</span> atau drag & drop</p>
+                            <p class="text-[10px] text-gray-400 mt-0.5">JPEG, PNG, WEBP (maks. 10MB per file)</p>
+                        </div>
+                        {{-- Preview foto baru yang dipilih --}}
+                        <div id="edit-image-preview" class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
 
     </main>
 
 
     {{-- POPUP CALENDAR PICKER (Dropdown Style) --}}
-    <div id="popup-calendar-picker" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
-        {{-- Header: < [Jun Γî╡] [2025 Γî╡] > --}}
-        <div class="flex items-center justify-between mb-3.5">
-            <button type="button" onclick="calPrevMonth()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
+    <div id="popup-calendar-picker" onclick="event.stopPropagation()" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
+
+        {{-- Header: < [Jun ⌵] [2025 ⌵] > --}}
+        <div id="cal-header" class="flex items-center justify-between mb-3.5">
+            <button type="button" onclick="calPrev()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
             <div class="flex items-center gap-2">
-                <div class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white">
+                <button type="button" onclick="calShowMonthPicker()" class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white hover:border-blue-400 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer">
                     <span id="cal-month-name">Jun</span>
                     <svg class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
-                <div class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white">
-                    <span id="cal-year-val">2025</span>
+                </button>
+                <button type="button" onclick="calShowYearPicker()" class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white hover:border-blue-400 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer">
+                    <span id="cal-year-val">2026</span>
                     <svg class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
+                </button>
             </div>
-            <button type="button" onclick="calNextMonth()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
+            <button type="button" onclick="calNext()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
             </button>
         </div>
 
-        {{-- Weekdays header: Ming Sen Sel Rab Kam Jum Sa --}}
-        <div class="grid grid-cols-7 text-center text-xs font-semibold text-slate-500 dark:text-[#9AA0A6] mb-2">
-            <div>Ming</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sa</div>
+        {{-- Panel: Days (default) --}}
+        <div id="cal-days-panel">
+            <div class="grid grid-cols-7 text-center text-xs font-semibold text-slate-500 dark:text-[#9AA0A6] mb-2">
+                <div>Ming</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sa</div>
+            </div>
+            <div id="cal-days-grid" class="grid grid-cols-7 text-center text-xs font-medium gap-y-1">
+                {{-- Rendered via JS --}}
+            </div>
         </div>
 
-        {{-- Days grid --}}
-        <div id="cal-days-grid" class="grid grid-cols-7 text-center text-xs font-medium gap-y-1">
-            {{-- Rendered via JS --}}
+        {{-- Panel: Month Picker --}}
+        <div id="cal-month-panel" class="hidden">
+            <div id="cal-month-grid" class="grid grid-cols-3 gap-2">
+                {{-- Rendered via JS --}}
+            </div>
+        </div>
+
+        {{-- Panel: Year Picker --}}
+        <div id="cal-year-panel" class="hidden">
+            <div id="cal-year-grid" class="grid grid-cols-3 gap-2">
+                {{-- Rendered via JS --}}
+            </div>
         </div>
     </div>
 
@@ -504,6 +519,17 @@
 
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
+        // calView: 'days' | 'months' | 'years'
+        let calView = 'days';
+        let calYearRangeStart = Math.floor(new Date().getFullYear() / 12) * 12;
+
+        function calShowPanel(view) {
+            calView = view;
+            document.getElementById('cal-days-panel').classList.toggle('hidden', view !== 'days');
+            document.getElementById('cal-month-panel').classList.toggle('hidden', view !== 'months');
+            document.getElementById('cal-year-panel').classList.toggle('hidden', view !== 'years');
+        }
+
         function renderCalendar() {
             const monthNameEl = document.getElementById('cal-month-name');
             const yearValEl = document.getElementById('cal-year-val');
@@ -520,16 +546,13 @@
             const totalDaysInMonth = new Date(calCurrentYear, calCurrentMonth + 1, 0).getDate();
             const prevMonthTotalDays = new Date(calCurrentYear, calCurrentMonth, 0).getDate();
 
-            // Previous month overflow days
             for (let i = firstDayIndex - 1; i >= 0; i--) {
-                const dayNum = prevMonthTotalDays - i;
                 const cell = document.createElement('div');
                 cell.className = 'py-1 text-gray-400 dark:text-gray-600 text-center pointer-events-none select-none';
-                cell.textContent = dayNum;
+                cell.textContent = prevMonthTotalDays - i;
                 daysGridEl.appendChild(cell);
             }
 
-            // Current month days
             for (let d = 1; d <= totalDaysInMonth; d++) {
                 const cell = document.createElement('button');
                 cell.type = 'button';
@@ -544,27 +567,22 @@
                             const selM = parseInt(parts[1], 10) - 1;
                             let selY = parseInt(parts[2], 10);
                             if (selY < 100) selY += 2000;
-                            if (selD === d && selM === calCurrentMonth && selY === calCurrentYear) {
-                                isSelected = true;
-                            }
+                            if (selD === d && selM === calCurrentMonth && selY === calCurrentYear) isSelected = true;
                         }
                     }
                 }
 
-                if (isSelected) {
-                    cell.className = 'h-7 w-7 mx-auto flex items-center justify-center rounded-full bg-[#0066FF] text-white font-semibold shadow-xs cursor-pointer';
-                } else {
-                    cell.className = 'h-7 w-7 mx-auto flex items-center justify-center rounded-full text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] font-medium transition cursor-pointer';
-                }
-
+                cell.className = isSelected
+                    ? 'h-7 w-7 mx-auto flex items-center justify-center rounded-full bg-[#0066FF] text-white font-semibold shadow-xs cursor-pointer'
+                    : 'h-7 w-7 mx-auto flex items-center justify-center rounded-full text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] font-medium transition cursor-pointer';
                 cell.textContent = d;
-                cell.onclick = function () {
+                cell.onclick = function (e) {
+                    e.stopPropagation();
                     selectCalendarDate(d, calCurrentMonth, calCurrentYear);
                 };
                 daysGridEl.appendChild(cell);
             }
 
-            // Next month overflow days to complete rows (up to 35 or 42 cells)
             const totalRendered = firstDayIndex + totalDaysInMonth;
             const remainingCells = (totalRendered % 7 === 0) ? 0 : 7 - (totalRendered % 7);
             for (let n = 1; n <= remainingCells; n++) {
@@ -575,23 +593,97 @@
             }
         }
 
-        function calPrevMonth() {
-            calCurrentMonth--;
-            if (calCurrentMonth < 0) {
-                calCurrentMonth = 11;
-                calCurrentYear--;
+        function renderMonthPicker() {
+            const grid = document.getElementById('cal-month-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            monthNames.forEach((name, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = name;
+                btn.className = idx === calCurrentMonth
+                    ? 'py-1.5 rounded-xl text-xs font-bold bg-[#0066FF] text-white cursor-pointer'
+                    : 'py-1.5 rounded-xl text-xs font-semibold text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer';
+                btn.onclick = function (e) {
+                    e.stopPropagation();
+                    calSelectMonth(idx);
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function renderYearPicker() {
+            const grid = document.getElementById('cal-year-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            for (let y = calYearRangeStart; y < calYearRangeStart + 12; y++) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = y;
+                btn.className = y === calCurrentYear
+                    ? 'py-1.5 rounded-xl text-xs font-bold bg-[#0066FF] text-white cursor-pointer'
+                    : 'py-1.5 rounded-xl text-xs font-semibold text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer';
+                btn.onclick = function (e) {
+                    e.stopPropagation();
+                    calSelectYear(y);
+                };
+                grid.appendChild(btn);
             }
+            const yearValEl = document.getElementById('cal-year-val');
+            if (yearValEl) yearValEl.textContent = calYearRangeStart + ' – ' + (calYearRangeStart + 11);
+        }
+
+        function calShowMonthPicker() {
+            calShowPanel('months');
+            renderMonthPicker();
+            document.getElementById('cal-header').querySelector('button:first-child').classList.add('invisible');
+            document.getElementById('cal-header').querySelector('button:last-child').classList.add('invisible');
+        }
+
+        function calShowYearPicker() {
+            calYearRangeStart = Math.floor(calCurrentYear / 12) * 12;
+            calShowPanel('years');
+            renderYearPicker();
+        }
+
+        function calSelectMonth(monthIdx) {
+            calCurrentMonth = monthIdx;
+            calShowPanel('days');
+            renderCalendar();
+            document.getElementById('cal-header').querySelector('button:first-child').classList.remove('invisible');
+            document.getElementById('cal-header').querySelector('button:last-child').classList.remove('invisible');
+        }
+
+        function calSelectYear(year) {
+            calCurrentYear = year;
+            calShowPanel('days');
             renderCalendar();
         }
 
-        function calNextMonth() {
-            calCurrentMonth++;
-            if (calCurrentMonth > 11) {
-                calCurrentMonth = 0;
-                calCurrentYear++;
+        function calPrev() {
+            if (calView === 'days') {
+                calCurrentMonth--;
+                if (calCurrentMonth < 0) { calCurrentMonth = 11; calCurrentYear--; }
+                renderCalendar();
+            } else if (calView === 'years') {
+                calYearRangeStart -= 12;
+                renderYearPicker();
             }
-            renderCalendar();
         }
+
+        function calNext() {
+            if (calView === 'days') {
+                calCurrentMonth++;
+                if (calCurrentMonth > 11) { calCurrentMonth = 0; calCurrentYear++; }
+                renderCalendar();
+            } else if (calView === 'years') {
+                calYearRangeStart += 12;
+                renderYearPicker();
+            }
+        }
+
+        function calPrevMonth() { calPrev(); }
+        function calNextMonth() { calNext(); }
 
         function openCalendarPicker(e, targetInputId) {
             e.stopPropagation();
@@ -601,6 +693,12 @@
             const container = targetBtn.closest('.relative') || targetBtn.parentElement;
 
             renderCalendar();
+
+            // Reset ke tampilan hari
+            calShowPanel('days');
+            const headerBtns = document.getElementById('cal-header').querySelectorAll('button');
+            headerBtns[0].classList.remove('invisible');
+            headerBtns[headerBtns.length - 1].classList.remove('invisible');
 
             // Pindahkan picker langsung ke dalam container input (.relative) agar menempel persis seperti dropdown
             container.appendChild(picker);
@@ -666,6 +764,24 @@
                 closeCalendarPicker();
             }
         });
+
+        // Preview foto baru yang dipilih di form edit
+        function previewEditImages(event) {
+            const container = document.getElementById('edit-image-preview');
+            container.innerHTML = '';
+            const files = event.target.files;
+            Array.from(files).forEach((file, i) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    container.innerHTML += `
+                        <div class="relative rounded-xl overflow-hidden border border-gray-200 dark:border-white/10">
+                            <img src="${e.target.result}" class="w-full h-[90px] object-cover">
+                            ${i === 0 ? '<span class="absolute top-1 left-1 bg-blue-600 text-white text-[9px] px-1.5 py-0.5 rounded-full font-semibold">Utama</span>' : ''}
+                        </div>`;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
     </script>
 <x-temp-password-guard />
 </body>

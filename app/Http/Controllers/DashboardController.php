@@ -23,10 +23,15 @@ class DashboardController extends Controller
         // ── 1. Statistik 4 Kartu Utama ──────────────────────────────────
         // Di-cache bersama karena semua ini dihitung dari query ringan yang saling berkaitan
         $stats = Cache::remember('dashboard_stats', self::CACHE_STATS_TTL, function () {
-            $totalContracts      = KaiContract::count();
-            $totalContractPrice  = (float) KaiContract::sum('price');
-            $totalAssets         = KaiContract::where('jenis_kontrak', 'like', '%sewa%')->count() ?: KaiContract::count();
-            $avgArea             = round((float) KaiAsset::avg('size_area'));
+            // Gabungkan count + sum dalam 1 query ke tabel contracts
+            $contractAgg = DB::table('contracts')->selectRaw(
+                'COUNT(*) AS total_contracts, SUM(price) AS total_price, COUNT(CASE WHEN jenis_kontrak LIKE "%sewa%" THEN 1 END) AS sewa_count'
+            )->first();
+
+            $totalContracts     = (int) ($contractAgg->total_contracts ?? 0);
+            $totalContractPrice = (float) ($contractAgg->total_price ?? 0);
+            $totalAssets        = (int) ($contractAgg->sewa_count ?? 0) ?: $totalContracts;
+            $avgArea            = round((float) KaiAsset::avg('size_area'));
 
             if ($totalContractPrice >= 1_000_000_000) {
                 $totalNilaiKontrakFormatted = 'Rp ' . number_format($totalContractPrice / 1_000_000_000, 1, ',', '.') . ' M';
@@ -42,19 +47,35 @@ class DashboardController extends Controller
         // ── 2. Data Bulanan untuk Chart ──────────────────────────────────
         // Di-cache terpisah karena query ini 12x SUM ke monthly_schedules (cukup berat)
         $chartData = Cache::remember('dashboard_chart_monthly', self::CACHE_STATS_TTL, function () {
+            // 1 query untuk semua 12 bulan, bukan 12 query terpisah
+            $sums = DB::table('monthly_schedules')->selectRaw('
+                SUM(januari)   AS jan,
+                SUM(febuari)   AS feb,
+                SUM(maret)     AS mar,
+                SUM(april)     AS apr,
+                SUM(mei)       AS mei,
+                SUM(juni)      AS jun,
+                SUM(juli)      AS jul,
+                SUM(agustus)   AS agu,
+                SUM(september) AS sep,
+                SUM(oktober)   AS okt,
+                SUM(november)  AS nov,
+                SUM(desember)  AS des
+            ')->first();
+
             $monthlyRaw = [
-                ['key' => 'Jan', 'val' => (float) MonthlySchedule::sum('januari')],
-                ['key' => 'Feb', 'val' => (float) MonthlySchedule::sum('febuari')],
-                ['key' => 'Mar', 'val' => (float) MonthlySchedule::sum('maret')],
-                ['key' => 'Apr', 'val' => (float) MonthlySchedule::sum('april')],
-                ['key' => 'Mei', 'val' => (float) MonthlySchedule::sum('mei')],
-                ['key' => 'Jun', 'val' => (float) MonthlySchedule::sum('juni')],
-                ['key' => 'Jul', 'val' => (float) MonthlySchedule::sum('juli')],
-                ['key' => 'Agu', 'val' => (float) MonthlySchedule::sum('agustus')],
-                ['key' => 'Sep', 'val' => (float) MonthlySchedule::sum('september')],
-                ['key' => 'Okt', 'val' => (float) MonthlySchedule::sum('oktober')],
-                ['key' => 'Nov', 'val' => (float) MonthlySchedule::sum('november')],
-                ['key' => 'Des', 'val' => (float) MonthlySchedule::sum('desember')],
+                ['key' => 'Jan', 'val' => (float) ($sums->jan ?? 0)],
+                ['key' => 'Feb', 'val' => (float) ($sums->feb ?? 0)],
+                ['key' => 'Mar', 'val' => (float) ($sums->mar ?? 0)],
+                ['key' => 'Apr', 'val' => (float) ($sums->apr ?? 0)],
+                ['key' => 'Mei', 'val' => (float) ($sums->mei ?? 0)],
+                ['key' => 'Jun', 'val' => (float) ($sums->jun ?? 0)],
+                ['key' => 'Jul', 'val' => (float) ($sums->jul ?? 0)],
+                ['key' => 'Agu', 'val' => (float) ($sums->agu ?? 0)],
+                ['key' => 'Sep', 'val' => (float) ($sums->sep ?? 0)],
+                ['key' => 'Okt', 'val' => (float) ($sums->okt ?? 0)],
+                ['key' => 'Nov', 'val' => (float) ($sums->nov ?? 0)],
+                ['key' => 'Des', 'val' => (float) ($sums->des ?? 0)],
             ];
 
             $vals   = array_column($monthlyRaw, 'val');
@@ -172,13 +193,22 @@ class DashboardController extends Controller
 
             $rawTotalRevenue = (float) ContractFinancial::sum('nilai_2026');
             $totalRevenue    = $rawTotalRevenue > 0 ? $rawTotalRevenue : 1.0;
-            $breakdown       = [];
 
+            // Ambil semua data financial sekali, proses di PHP — hindari 10 query terpisah
+            $allFinancials = DB::table('contract_financials')
+                ->selectRaw('jenis_pendapatan, SUM(nilai_2026) AS total_nilai, AVG(persentase) AS avg_pct')
+                ->groupBy('jenis_pendapatan')
+                ->get();
+
+            $breakdown = [];
             foreach ($revenueCategories as $cat) {
-                $catSum = (float) ContractFinancial::where('jenis_pendapatan', 'like', "%{$cat['sub']}%")->sum('nilai_2026');
-                $pct    = $rawTotalRevenue > 0 ? round(($catSum / $totalRevenue) * 100) : 0;
+                $keyword = $cat['sub'];
+                $matched = $allFinancials->filter(fn($f) => str_contains(strtolower($f->jenis_pendapatan ?? ''), $keyword));
 
-                $rawPct = (float) ContractFinancial::where('jenis_pendapatan', 'like', "%{$cat['sub']}%")->avg('persentase');
+                $catSum  = $matched->sum('total_nilai');
+                $rawPct  = $matched->avg('avg_pct') ?? 0;
+                $pct     = $rawTotalRevenue > 0 ? round(($catSum / $totalRevenue) * 100) : 0;
+
                 if ($rawPct <= 0) $rawPct = 0.9;
                 $pencapaianVal       = $rawPct <= 2.0 ? round($rawPct * 100, 1) : round($rawPct, 1);
                 $pencapaianFormatted = number_format($pencapaianVal, 1, ',', '.') . '%';

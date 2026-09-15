@@ -16,6 +16,45 @@ use Illuminate\Support\Facades\Cache;
 class ExcelImportController extends Controller
 {
     /**
+     * Debug: tampilkan hasil parsing file tanpa insert ke DB
+     */
+    public function debugParse(Request $request)
+    {
+        if (!$request->hasFile('excel_file')) {
+            return response()->json(['error' => 'No file']);
+        }
+
+        $file = $request->file('excel_file');
+        $ext  = strtolower($file->getClientOriginalExtension());
+        $rows = $this->parseFileRows($file, $ext);
+
+        if (empty($rows)) {
+            return response()->json(['error' => 'Empty file']);
+        }
+
+        $headerRow = $rows[0];
+        $dataRow   = $rows[1] ?? [];
+
+        $normalizedHeaders = array_map(fn($h) => $this->normalizeHeaderName($h), $headerRow);
+
+        $mapped = [];
+        foreach ($normalizedHeaders as $i => $key) {
+            $mapped[$i] = [
+                'col'    => $i,
+                'header' => $headerRow[$i],
+                'norm'   => $key,
+                'value'  => $dataRow[$i] ?? null,
+            ];
+        }
+
+        return response()->json([
+            'total_rows' => count($rows),
+            'header_count' => count($headerRow),
+            'mapping' => $mapped,
+        ]);
+    }
+
+    /**
      * Handle Import Excel / CSV
      */
     public function import(Request $request)
@@ -57,6 +96,11 @@ class ExcelImportController extends Controller
             $seenInThisImport = [];
 
             DB::beginTransaction();
+
+            // Pre-load data yang sudah ada untuk mengurangi query N+1
+            $existingTenants   = Penyewa::pluck('id', 'fullname')->toArray();
+            $existingAssets    = KaiAsset::pluck('asset_number', 'asset_number')->toArray();
+            $existingContracts = KaiContract::pluck('contract_number', 'contract_number')->toArray();
 
             $lastContractNumber = null;
             $lastAssetNumber = null;
@@ -156,31 +200,23 @@ class ExcelImportController extends Controller
                 $rawJenisPerusahaan = $this->extractField($data, ['jenis_perusahaan', 'badan_usaha', 'bentuk_usaha', 'tipe_perusahaan']);
                 $jenisPerusahaan = ($rawJenisPerusahaan !== null && trim($rawJenisPerusahaan) !== '') ? trim($rawJenisPerusahaan) : '-';
 
-                $tenant = Penyewa::firstOrCreate(
-                    ['fullname' => $fullname],
-                    [
+                $tenant = null;
+                $tenantChanged = false;
+
+                if (isset($existingTenants[$fullname])) {
+                    $tenant = Penyewa::find($existingTenants[$fullname]);
+                    if ($brand !== null && $tenant->brand !== $brand) { $tenant->brand = $brand; $tenantChanged = true; }
+                    if ($statusCustomer !== null && $tenant->status_customer !== $statusCustomer) { $tenant->status_customer = $statusCustomer; $tenantChanged = true; }
+                    if ($jenisPerusahaan !== null && $tenant->jenis_perusahaan !== $jenisPerusahaan) { $tenant->jenis_perusahaan = $jenisPerusahaan; $tenantChanged = true; }
+                    if ($tenantChanged) $tenant->save();
+                } else {
+                    $tenant = Penyewa::create([
+                        'fullname'         => $fullname,
                         'brand'            => $brand,
                         'status_customer'  => $statusCustomer,
                         'jenis_perusahaan' => $jenisPerusahaan,
-                        'created_at'       => now(),
-                    ]
-                );
-
-                $tenantChanged = false;
-                if ($brand !== null && $tenant->brand !== $brand) {
-                    $tenant->brand = $brand;
-                    $tenantChanged = true;
-                }
-                if ($statusCustomer !== null && $tenant->status_customer !== $statusCustomer) {
-                    $tenant->status_customer = $statusCustomer;
-                    $tenantChanged = true;
-                }
-                if ($jenisPerusahaan !== null && $tenant->jenis_perusahaan !== $jenisPerusahaan) {
-                    $tenant->jenis_perusahaan = $jenisPerusahaan;
-                    $tenantChanged = true;
-                }
-                if ($tenantChanged) {
-                    $tenant->save();
+                    ]);
+                    $existingTenants[$fullname] = $tenant->id;
                 }
 
                 $tenantId = $tenant->id;
@@ -209,7 +245,6 @@ class ExcelImportController extends Controller
                 $latitude  = $rawLat ?: null;
                 $longitude = $rawLng ?: null;
 
-                $existingAsset = KaiAsset::where('asset_number', $assetNumber)->first();
                 $assetPayload = [
                     'asset_block_name' => $assetBlockName,
                     'sub_title'        => $subTitle,
@@ -223,13 +258,11 @@ class ExcelImportController extends Controller
                     'longitude'        => $longitude,
                 ];
 
-                if ($existingAsset) {
-                    $existingAsset->update($assetPayload);
+                if (isset($existingAssets[$assetNumber])) {
+                    KaiAsset::where('asset_number', $assetNumber)->update($assetPayload);
                 } else {
-                    KaiAsset::create(array_merge([
-                        'asset_number' => $assetNumber,
-                        'created_at'   => now(),
-                    ], $assetPayload));
+                    KaiAsset::create(array_merge(['asset_number' => $assetNumber], $assetPayload));
+                    $existingAssets[$assetNumber] = $assetNumber;
                 }
 
                 // ── 4. KONTRAK (contracts) ────────────────────────────────
@@ -273,8 +306,20 @@ class ExcelImportController extends Controller
                 $rawRka        = $this->extractField($data, ['form_rka', 'kode_rka', 'no_rka']);
                 $formRka       = ($rawRka !== null && trim($rawRka) !== '') ? trim($rawRka) : null;
 
-                $rawTahunRka   = $this->extractField($data, ['tahun_rka', 'thn_rka', 'tahun']);
-                $tahunRka      = ($rawTahunRka !== null && trim((string)$rawTahunRka) !== '' && is_numeric(trim((string)$rawTahunRka))) ? (int) trim((string)$rawTahunRka) : 0;
+                $rawTahunRka   = $this->extractField($data, ['tahun_rka', 'thn_rka', 'tahun_rka_']);
+                // Jika tidak ketemu dari key spesifik, coba 'tahun' tapi hanya jika nilainya 4 digit angka
+                if ($rawTahunRka === null) {
+                    $rawTahunRka = $this->extractField($data, ['tahun']);
+                    if ($rawTahunRka !== null && !preg_match('/^\d{4}$/', trim((string)$rawTahunRka))) {
+                        $rawTahunRka = null; // abaikan jika bukan 4 digit angka
+                    }
+                }
+                // Handle float Excel (2026.0 → 2026)
+                $tahunRka = 0;
+                if ($rawTahunRka !== null && trim((string)$rawTahunRka) !== '') {
+                    $parsed = (int) round((float) trim((string)$rawTahunRka));
+                    $tahunRka = ($parsed >= 2000 && $parsed <= 2100) ? $parsed : 0;
+                }
                 
                 $rawPendapatan = $this->extractField($data, ['jenis_pendapatan', 'pendapatan', 'kategori_pendapatan']);
                 $jenisPendapatan = ($rawPendapatan !== null && trim($rawPendapatan) !== '') ? trim($rawPendapatan) : null;
@@ -311,11 +356,9 @@ class ExcelImportController extends Controller
                     $targetContractNumber = $baseContractNumber . ' (' . $seenInThisImport[$baseContractNumber] . ')';
                 }
 
-                $existingContract = KaiContract::with(['financial', 'monthlySchedules'])
-                    ->where('contract_number', $targetContractNumber)
-                    ->first();
-
-                $isNewContract = !$existingContract;
+                $isNewContract = !isset($existingContracts[$targetContractNumber]);
+                $existingContract = $isNewContract ? null : KaiContract::with(['financial', 'monthlySchedules'])
+                    ->where('contract_number', $targetContractNumber)->first();
 
                 $contractPayload = [
                     'tenant_id'            => $tenantId,
@@ -385,6 +428,7 @@ class ExcelImportController extends Controller
                         'tahun'           => $tahunRka ?: 2026,
                     ], $schedPayload));
 
+                    $existingContracts[$targetContractNumber] = $targetContractNumber;
                     $importedCount++;
                 } else {
                     // Cek apakah ada perubahan data dari data yang sudah ada
@@ -533,6 +577,8 @@ class ExcelImportController extends Controller
             'JENIS_ASET',
             'STASIUN',
             'WILAYAH_ASET',
+            'latitude',
+            'longitude',
             'start_datetime',
             'end_datetime',
             'start_datetime_baru',
@@ -588,6 +634,8 @@ class ExcelImportController extends Controller
             'Tanah',
             'Pekalongan',
             'Daop 4 Semarang',
+            '-6.888700',
+            '109.673800',
             '01/01/2016',
             '12/31/2017',
             '01/01/2018',
@@ -656,13 +704,9 @@ class ExcelImportController extends Controller
                 fclose($handle);
             }
         } elseif (in_array($ext, ['xlsx', 'xls'])) {
-            if (class_exists(\PhpOffice\PhpSpreadsheet\IOFactory::class)) {
-                $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
-                $worksheet   = $spreadsheet->getActiveSheet();
-                $rows        = $worksheet->toArray();
-            } else {
-                $rows = $this->parseXlsxXmlFallback($path);
-            }
+            // Bypass PhpSpreadsheet (terlalu lambat/berat untuk serverless).
+            // Gunakan XML fallback langsung yang membaca zip XLSX tanpa load seluruh workbook.
+            $rows = $this->parseXlsxXmlFallback($path);
         }
 
         return $rows;

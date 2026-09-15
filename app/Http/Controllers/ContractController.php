@@ -6,6 +6,8 @@ use App\Models\KaiContract;
 use App\Models\KaiAsset;
 use App\Models\ContractFinancial;
 use App\Models\Penyewa;
+use App\Models\AssetImage;
+use Cloudinary\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -94,6 +96,7 @@ class ContractController extends Controller
 
     public function store(Request $request)
     {
+        try {
         if (!$request->filled('contract_number') || trim((string)$request->contract_number) === '') {
             return back()->with('warning', 'Field Nomor Kontrak wajib diisi dan tidak boleh kosong!')->withInput();
         }
@@ -103,19 +106,18 @@ class ContractController extends Controller
 
         $request->validate([
             'contract_number' => 'required|string|unique:contracts,contract_number',
-            'nama_penyewa'    => 'required|string',
+            'fullname'        => 'required|string',
             'asset_number'    => 'required|string',
         ]);
 
         // 1. Create or Find Tenant
         $brandInput = trim((string)$request->brand);
         $tenant = Penyewa::firstOrCreate(
-            ['fullname' => $request->nama_penyewa],
+            ['fullname' => $request->fullname],
             [
                 'status_customer' => $request->status_customer ?? 'Swasta',
                 'jenis_perusahaan'=> $request->jenis_perusahaan ?? '-',
                 'brand'           => ($brandInput === '' || strtolower($brandInput) === 'kosong') ? '(kosong)' : $brandInput,
-                'alamat'          => $request->alamat ?? '',
             ]
         );
 
@@ -123,7 +125,7 @@ class ContractController extends Controller
         $asset = KaiAsset::firstOrCreate(
             ['asset_number' => $request->asset_number],
             [
-                'asset_block_name' => $request->asset_block_name ?? $request->nama_penyewa,
+                'asset_block_name' => $request->asset_block_name ?? $request->fullname,
                 'jenis_asset'      => $request->jenis_asset ?? 'Tanah',
                 'size_area'        => (float) str_replace(',', '.', preg_replace('/[^\d.,]/', '', $request->size_area ?? '0')),
                 'stasiun'          => $request->stasiun ?? 'Semarang',
@@ -182,7 +184,7 @@ class ContractController extends Controller
             'end_datetime_baru'   => $endDateBaru,
             'price'               => $cleanedPrice,
             'spv'                 => $request->spv ?? 'PIC Daop 4',
-            'asset_block_name'    => $request->asset_block_name ?? $request->nama_penyewa,
+            'asset_block_name'    => $request->asset_block_name ?? $request->fullname,
             'size_area'           => $cleanSizeArea,
             'peruntukan'          => $request->peruntukan ?? '',
             'keterangan'          => $request->keterangan ?? 'RKA',
@@ -264,10 +266,68 @@ class ContractController extends Controller
         // Invalidasi cache setelah kontrak/aset baru dibuat
         self::forgetContractCache();
 
+        // 6. Upload Foto Aset ke Cloudinary
+        if ($request->hasFile('asset_images')) {
+            $cloudinary = new Cloudinary(
+                'cloudinary://' . env('CLOUDINARY_API_KEY') . ':' . env('CLOUDINARY_API_SECRET') . '@' . env('CLOUDINARY_CLOUD_NAME')
+            );
+
+            $images = $request->file('asset_images');
+            $uploadErrors = [];
+
+            foreach ($images as $index => $file) {
+                try {
+                    $uploaded = $cloudinary->uploadApi()->upload($file->getRealPath(), [
+                        'folder'        => 'kai-assets',
+                        'resource_type' => 'image',
+                    ]);
+
+                    AssetImage::create([
+                        'asset_id'   => $asset->asset_number,
+                        'image_path' => $uploaded['secure_url'],
+                        'caption'    => $asset->asset_number,
+                        'is_primary' => $index === 0 ? 1 : 0,
+                    ]);
+                } catch (\Exception $e) {
+                    \Log::error('Cloudinary upload failed: ' . $e->getMessage());
+                    $uploadErrors[] = $file->getClientOriginalName() . ': ' . $e->getMessage();
+                }
+            }
+
+            if (!empty($uploadErrors)) {
+                return redirect()->route('contracts.index')
+                    ->with('success', 'Aset dan kontrak baru berhasil ditambahkan!')
+                    ->with('warning', 'Beberapa foto gagal diupload: ' . implode(', ', $uploadErrors))
+                    ->with('created_asset_number', $asset->asset_number)
+                    ->with('created_asset_url', route('asset.detail', urlencode($asset->asset_number)));
+            }
+        }
+
         return redirect()->route('contracts.index')
             ->with('success', 'Aset dan kontrak baru berhasil ditambahkan!')
             ->with('created_asset_number', $asset->asset_number)
             ->with('created_asset_url', route('asset.detail', urlencode($asset->asset_number)));
+
+        } catch (\Throwable $e) {
+            \Log::error('ContractController@store FAILED: ' . $e->getMessage() . ' | ' . $e->getFile() . ':' . $e->getLine() . ' | ' . $e->getTraceAsString());
+            return back()->with('error', 'Gagal menyimpan: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    public function destroy($identifier)
+    {
+        $contract = KaiContract::where('contract_number', $identifier)
+            ->orWhere('asset_number', $identifier)
+            ->firstOrFail();
+
+        // Hapus data terkait
+        \App\Models\ContractFinancial::where('contract_number', $contract->contract_number)->delete();
+        \App\Models\MonthlySchedule::where('contract_number', $contract->contract_number)->delete();
+        $contract->delete();
+
+        self::forgetContractCache();
+
+        return redirect()->route('contracts.index')->with('success', 'Data kontrak berhasil dihapus.');
     }
 
     /**
@@ -286,12 +346,12 @@ class ContractController extends Controller
 
     public function edit($identifier)
     {
-        $contract = KaiContract::with(['tenant', 'asset', 'financial'])
+        $contract = KaiContract::with(['tenant', 'asset.images', 'financial'])
             ->where('contract_number', $identifier)
             ->first();
 
         if (!$contract) {
-            $contract = KaiContract::with(['tenant', 'asset', 'financial'])
+            $contract = KaiContract::with(['tenant', 'asset.images', 'financial'])
                 ->where('asset_number', $identifier)
                 ->firstOrFail();
         }
@@ -395,6 +455,46 @@ class ContractController extends Controller
         }
 
         $contract->save();
+
+        // Hapus foto yang dicentang user
+        if ($request->has('delete_images')) {
+            AssetImage::whereIn('id', $request->delete_images)
+                ->where('asset_id', $contract->asset_number)
+                ->delete();
+        }
+
+        // Upload foto baru ke Cloudinary
+        if ($request->hasFile('asset_images') && $contract->asset) {
+            $cloudinary = new Cloudinary(
+                'cloudinary://' . env('CLOUDINARY_API_KEY') . ':' . env('CLOUDINARY_API_SECRET') . '@' . env('CLOUDINARY_CLOUD_NAME')
+            );
+
+            $existingCount = AssetImage::where('asset_id', $contract->asset_number)->count();
+            $uploadErrors = [];
+
+            foreach ($request->file('asset_images') as $index => $file) {
+                try {
+                    $uploaded = $cloudinary->uploadApi()->upload($file->getRealPath(), [
+                        'folder'        => 'kai-assets',
+                        'resource_type' => 'image',
+                    ]);
+                    AssetImage::create([
+                        'asset_id'   => $contract->asset_number,
+                        'image_path' => $uploaded['secure_url'],
+                        'caption'    => $contract->asset_number,
+                        'is_primary' => ($existingCount === 0 && $index === 0) ? 1 : 0,
+                    ]);
+                } catch (\Exception $e) {
+                    $uploadErrors[] = $file->getClientOriginalName() . ': ' . $e->getMessage();
+                }
+            }
+
+            if (!empty($uploadErrors)) {
+                return redirect()->route('contracts.index')
+                    ->with('success', 'Sukses update data kontrak!')
+                    ->with('warning', 'Foto gagal: ' . implode(' | ', $uploadErrors));
+            }
+        }
 
         // Invalidasi cache setelah data kontrak diperbarui
         self::forgetContractCache();

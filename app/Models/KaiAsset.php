@@ -49,6 +49,31 @@ class KaiAsset extends Model
         return $this->hasMany(KaiContract::class, 'asset_number', 'asset_number');
     }
 
+    public function images(): HasMany
+    {
+        return $this->hasMany(\App\Models\AssetImage::class, 'asset_id', 'asset_number');
+    }
+
+    public function getPrimaryImageUrlAttribute(): string
+    {
+        // Guard: relasi images bisa saja belum di-load atau kolom lama bernilai string
+        $imgs = ($this->relationLoaded('images') && $this->getRelation('images') instanceof \Illuminate\Support\Collection)
+            ? $this->getRelation('images')
+            : collect();
+
+        $primary = $imgs->where('is_primary', true)->first() ?? $imgs->first();
+
+        if (!$primary) {
+            return asset('images/placeholder.png');
+        }
+
+        if (str_starts_with($primary->image_path, 'http')) {
+            return $primary->image_path;
+        }
+
+        return asset('storage/' . $primary->image_path);
+    }
+
     // Accessor: format luas area
     public function getSizeAreaFormattedAttribute(): string
     {

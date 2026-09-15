@@ -139,9 +139,9 @@
                         </label>
                         <input
                             type="text"
-                            name="nama_penyewa"
-                            value="{{ old('nama_penyewa') }}"
-                            placeholder="Contoh: ARIF KHUZAINI / MARDIYAH"
+                            name="fullname"
+                            value="{{ old('fullname') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
@@ -157,7 +157,7 @@
                             name="status_customer"
                             id="input_status_customer"
                             list="list_status_customer"
-                            value="{{ old('status_customer', 'Swasta') }}"
+                            value="{{ old('status_customer') }}"
                             placeholder="Pilih atau ketik status..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
@@ -180,7 +180,7 @@
                             name="jenis_perusahaan"
                             list="list_jenis_perusahaan"
                             value="{{ old('jenis_perusahaan', '-') }}"
-                            placeholder="Contoh: - / PT / CV"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                         <datalist id="list_jenis_perusahaan">
@@ -203,7 +203,7 @@
                             type="text"
                             name="brand"
                             value="{{ old('brand') }}"
-                            placeholder="Jika kosong, sistem akan otomatis mencatat (kosong)"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -228,7 +228,7 @@
                             type="text"
                             name="asset_number"
                             value="{{ old('asset_number') }}"
-                            placeholder="Contoh: 04.01.00764"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
@@ -244,7 +244,7 @@
                             name="jenis_asset"
                             id="input_jenis_asset"
                             list="list_jenis_asset"
-                            value="{{ old('jenis_asset', 'Tanah') }}"
+                            value="{{ old('jenis_asset') }}"
                             placeholder="Pilih atau ketik jenis aset..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
@@ -265,8 +265,8 @@
                         <input
                             type="text"
                             name="size_area"
-                            value="{{ old('size_area', '43.5') }}"
-                            placeholder="Contoh: 42 / 43.5"
+                            value="{{ old('size_area') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -282,7 +282,7 @@
                             id="input_peruntukan"
                             list="list_peruntukan"
                             value="{{ old('peruntukan', 'RUMAH TINGGAL') }}"
-                            placeholder="Contoh: RUMAH TINGGAL / -"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                         <datalist id="list_peruntukan">
@@ -305,7 +305,7 @@
                             name="stasiun"
                             id="input_stasiun"
                             list="list_stasiun"
-                            value="{{ old('stasiun', 'Pekalongan') }}"
+                            value="{{ old('stasiun') }}"
                             placeholder="Pilih atau ketik stasiun..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
@@ -328,7 +328,7 @@
                             name="wilayah_asset"
                             id="input_wilayah_asset"
                             list="list_wilayah"
-                            value="{{ old('wilayah_asset', 'Daop 4 Semarang') }}"
+                            value="{{ old('wilayah_asset') }}"
                             placeholder="Pilih atau ketik wilayah..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
@@ -343,7 +343,7 @@
                             type="text"
                             name="asset_block_name"
                             value="{{ old('asset_block_name') }}"
-                            placeholder="Contoh: SEKITAR KM. 2+533 S.D KM. 3+533 KEL. PRINGREJO KEC. PEKALONGAN BARAT"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
@@ -401,9 +401,9 @@
                                         type="text"
                                         id="input-edit-latitude"
                                         name="latitude"
-                                        value="{{ old('latitude', '-6.8887') }}"
+                                        value="{{ old('latitude') }}"
                                         oninput="handleCoordinateInputChange()"
-                                        placeholder="-6.8887"
+                                        placeholder="...."
                                         class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
@@ -413,9 +413,9 @@
                                         type="text"
                                         id="input-edit-longitude"
                                         name="longitude"
-                                        value="{{ old('longitude', '109.6738') }}"
+                                        value="{{ old('longitude') }}"
                                         oninput="handleCoordinateInputChange()"
-                                        placeholder="109.6738"
+                                        placeholder="...."
                                         class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3.5 py-2 text-xs sm:text-sm text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                     >
                                 </div>
@@ -443,7 +443,7 @@
                             type="text"
                             name="contract_number"
                             value="{{ old('contract_number') }}"
-                            placeholder="Contoh: 0004/51116/D.4/941/PK/TN/XI/2016"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
@@ -459,7 +459,7 @@
                             name="jenis_kontrak"
                             id="input_jenis_kontrak"
                             list="list_jenis_kontrak"
-                            value="{{ old('jenis_kontrak', 'Kontrak Sewa') }}"
+                            value="{{ old('jenis_kontrak') }}"
                             placeholder="Pilih atau ketik jenis kontrak..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
@@ -483,7 +483,7 @@
                             name="area_kontrak"
                             id="input_area_kontrak"
                             list="list_wilayah"
-                            value="{{ old('area_kontrak', 'Daop 4 Semarang') }}"
+                            value="{{ old('area_kontrak') }}"
                             placeholder="Pilih atau ketik area..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
@@ -500,7 +500,7 @@
                             id="input-price-main"
                             oninput="syncPriceToRevenue(this.value)"
                             value="{{ old('price') }}"
-                            placeholder="Contoh: 1.887.604"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             required
                         >
@@ -511,23 +511,14 @@
                         <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-1">
                             Tanggal Kontrak
                         </label>
-                        <div class="relative">
-                            <button
-                                type="button"
-                                onclick="openCalendarPicker(event, 'input-contract-date')"
-                                class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 transition cursor-pointer z-10"
-                            >
-                                <x-icon name="icon-calendar" class="h-3.5 w-3.5 text-[#0066FF] dark:text-[#3B82F6]" />
-                            </button>
-                            <input
-                                type="text"
-                                id="input-contract-date"
-                                name="contract_date"
-                                value="{{ old('contract_date', date('d/m/y')) }}"
-                                placeholder="DD/MM/YY"
-                                class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                            >
-                        </div>
+                        <input
+                            type="text"
+                            id="input-contract-date"
+                            name="contract_date"
+                            value="{{ old('contract_date')}}"
+                            placeholder="...."
+                            class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                        >
                     </div>
 
                     {{-- PIC / SPV --}}
@@ -538,7 +529,7 @@
                         <input
                             type="text"
                             name="spv"
-                            value="{{ old('spv', 'PIC Daop 4 Semarang') }}"
+                            value="{{ old('spv') }}"
                             placeholder="Nama SPV"
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
@@ -553,8 +544,8 @@
                             type="text"
                             name="keterangan"
                             list="list_keterangan"
-                            value="{{ old('keterangan', 'RKA') }}"
-                            placeholder="Contoh: RKA / Non RKA"
+                            value="{{ old('keterangan') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                         <datalist id="list_keterangan">
@@ -580,7 +571,7 @@
                                 type="text"
                                 id="input-start-date"
                                 name="start_datetime"
-                                value="{{ old('start_datetime', '01/01/' . date('y')) }}"
+                                value="{{ old('start_datetime')}}"
                                 placeholder="DD/MM/YY"
                                 class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                             >
@@ -604,7 +595,7 @@
                                 type="text"
                                 id="input-end-date"
                                 name="end_datetime"
-                                value="{{ old('end_datetime', '31/12/' . date('y')) }}"
+                                value="{{ old('end_datetime')}}"
                                 placeholder="DD/MM/YY"
                                 class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] pl-8 pr-2.5 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                 required
@@ -681,7 +672,7 @@
                             name="jenis_pendapatan"
                             id="input_jenis_pendapatan"
                             list="list_jenis_pendapatan"
-                            value="{{ old('jenis_pendapatan', 'Non Row') }}"
+                            value="{{ old('jenis_pendapatan') }}"
                             placeholder="Pilih atau ketik jenis..."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
@@ -702,8 +693,8 @@
                         <input
                             type="text"
                             name="akun_gl"
-                            value="{{ old('akun_gl', '3421190010') }}"
-                            placeholder="Contoh: 3421190010"
+                            value="{{ old('akun_gl') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -716,8 +707,8 @@
                         <input
                             type="text"
                             name="form_rka"
-                            value="{{ old('form_rka', '-') }}"
-                            placeholder="Contoh: - / RKA 2026"
+                            value="{{ old('form_rka') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -730,8 +721,8 @@
                         <input
                             type="text"
                             name="tahun_rka"
-                            value="{{ old('tahun_rka', '0') }}"
-                            placeholder="Contoh: 0 / 1 / 2026"
+                            value="{{ old('tahun_rka') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -746,7 +737,7 @@
                             name="nilai_2026"
                             id="input-nilai-2026"
                             value="{{ old('nilai_2026') }}"
-                            placeholder="Contoh: 781.151"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -759,7 +750,7 @@
                         <input
                             type="text"
                             name="persentase"
-                            value="{{ old('persentase', '0.9') }}"
+                            value="{{ old('persentase') }}"
                             placeholder="Contoh: 0.9 / 90%"
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
@@ -773,8 +764,8 @@
                         <input
                             type="text"
                             name="nilai_backlog"
-                            value="{{ old('nilai_backlog', '0') }}"
-                            placeholder="0"
+                            value="{{ old('nilai_backlog') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -787,8 +778,8 @@
                         <input
                             type="text"
                             name="nilai_backlog2"
-                            value="{{ old('nilai_backlog2', '0') }}"
-                            placeholder="0"
+                            value="{{ old('nilai_backlog2') }}"
+                            placeholder="...."
                             class="w-full h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-3 text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                         >
                     </div>
@@ -860,35 +851,50 @@
     </main>
 
     {{-- POPUP CALENDAR PICKER (Dropdown Style) --}}
-    <div id="popup-calendar-picker" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
+    <div id="popup-calendar-picker" onclick="event.stopPropagation()" class="hidden absolute z-[150] w-[290px] rounded-2xl bg-white dark:bg-[#1F2123] border border-gray-100 dark:border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.16)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.7)] p-4 select-none">
+
         {{-- Header: < [Jun ⌵] [2025 ⌵] > --}}
-        <div class="flex items-center justify-between mb-3.5">
-            <button type="button" onclick="calPrevMonth()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
+        <div id="cal-header" class="flex items-center justify-between mb-3.5">
+            <button type="button" onclick="calPrev()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
             <div class="flex items-center gap-2">
-                <div class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white">
+                <button type="button" onclick="calShowMonthPicker()" class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white hover:border-blue-400 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer">
                     <span id="cal-month-name">Jun</span>
                     <svg class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
-                <div class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white">
+                </button>
+                <button type="button" onclick="calShowYearPicker()" class="inline-flex items-center gap-1 border border-gray-200 dark:border-white/10 rounded-xl px-2.5 py-1 text-xs sm:text-sm font-semibold text-gray-800 dark:text-white hover:border-blue-400 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer">
                     <span id="cal-year-val">2026</span>
                     <svg class="h-3.5 w-3.5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                </div>
+                </button>
             </div>
-            <button type="button" onclick="calNextMonth()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
+            <button type="button" onclick="calNext()" class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition cursor-pointer">
                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
             </button>
         </div>
 
-        {{-- Weekdays header: Ming Sen Sel Rab Kam Jum Sa --}}
-        <div class="grid grid-cols-7 text-center text-xs font-semibold text-slate-500 dark:text-[#9AA0A6] mb-2">
-            <div>Ming</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sa</div>
+        {{-- Panel: Days (default) --}}
+        <div id="cal-days-panel">
+            <div class="grid grid-cols-7 text-center text-xs font-semibold text-slate-500 dark:text-[#9AA0A6] mb-2">
+                <div>Ming</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sa</div>
+            </div>
+            <div id="cal-days-grid" class="grid grid-cols-7 text-center text-xs font-medium gap-y-1">
+                {{-- Rendered via JS --}}
+            </div>
         </div>
 
-        {{-- Days grid --}}
-        <div id="cal-days-grid" class="grid grid-cols-7 text-center text-xs font-medium gap-y-1">
-            {{-- Rendered via JS --}}
+        {{-- Panel: Month Picker --}}
+        <div id="cal-month-panel" class="hidden">
+            <div id="cal-month-grid" class="grid grid-cols-3 gap-2">
+                {{-- Rendered via JS --}}
+            </div>
+        </div>
+
+        {{-- Panel: Year Picker --}}
+        <div id="cal-year-panel" class="hidden">
+            <div id="cal-year-grid" class="grid grid-cols-3 gap-2">
+                {{-- Rendered via JS --}}
+            </div>
         </div>
     </div>
 
@@ -1158,6 +1164,17 @@
 
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
+        // calView: 'days' | 'months' | 'years'
+        let calView = 'days';
+        let calYearRangeStart = Math.floor(new Date().getFullYear() / 12) * 12;
+
+        function calShowPanel(view) {
+            calView = view;
+            document.getElementById('cal-days-panel').classList.toggle('hidden', view !== 'days');
+            document.getElementById('cal-month-panel').classList.toggle('hidden', view !== 'months');
+            document.getElementById('cal-year-panel').classList.toggle('hidden', view !== 'years');
+        }
+
         function renderCalendar() {
             const monthNameEl = document.getElementById('cal-month-name');
             const yearValEl = document.getElementById('cal-year-val');
@@ -1174,16 +1191,13 @@
             const totalDaysInMonth = new Date(calCurrentYear, calCurrentMonth + 1, 0).getDate();
             const prevMonthTotalDays = new Date(calCurrentYear, calCurrentMonth, 0).getDate();
 
-            // Previous month overflow days
             for (let i = firstDayIndex - 1; i >= 0; i--) {
-                const dayNum = prevMonthTotalDays - i;
                 const cell = document.createElement('div');
                 cell.className = 'py-1 text-gray-400 dark:text-gray-600 text-center pointer-events-none select-none';
-                cell.textContent = dayNum;
+                cell.textContent = prevMonthTotalDays - i;
                 daysGridEl.appendChild(cell);
             }
 
-            // Current month days
             for (let d = 1; d <= totalDaysInMonth; d++) {
                 const cell = document.createElement('button');
                 cell.type = 'button';
@@ -1198,27 +1212,22 @@
                             const selM = parseInt(parts[1], 10) - 1;
                             let selY = parseInt(parts[2], 10);
                             if (selY < 100) selY += 2000;
-                            if (selD === d && selM === calCurrentMonth && selY === calCurrentYear) {
-                                isSelected = true;
-                            }
+                            if (selD === d && selM === calCurrentMonth && selY === calCurrentYear) isSelected = true;
                         }
                     }
                 }
 
-                if (isSelected) {
-                    cell.className = 'h-7 w-7 mx-auto flex items-center justify-center rounded-full bg-[#0066FF] text-white font-semibold shadow-xs cursor-pointer';
-                } else {
-                    cell.className = 'h-7 w-7 mx-auto flex items-center justify-center rounded-full text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] font-medium transition cursor-pointer';
-                }
-
+                cell.className = isSelected
+                    ? 'h-7 w-7 mx-auto flex items-center justify-center rounded-full bg-[#0066FF] text-white font-semibold shadow-xs cursor-pointer'
+                    : 'h-7 w-7 mx-auto flex items-center justify-center rounded-full text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] font-medium transition cursor-pointer';
                 cell.textContent = d;
-                cell.onclick = function () {
+                cell.onclick = function (e) {
+                    e.stopPropagation();
                     selectCalendarDate(d, calCurrentMonth, calCurrentYear);
                 };
                 daysGridEl.appendChild(cell);
             }
 
-            // Next month overflow days
             const totalRendered = firstDayIndex + totalDaysInMonth;
             const remainingCells = (totalRendered % 7 === 0) ? 0 : 7 - (totalRendered % 7);
             for (let n = 1; n <= remainingCells; n++) {
@@ -1229,23 +1238,101 @@
             }
         }
 
-        function calPrevMonth() {
-            calCurrentMonth--;
-            if (calCurrentMonth < 0) {
-                calCurrentMonth = 11;
-                calCurrentYear--;
+        function renderMonthPicker() {
+            const grid = document.getElementById('cal-month-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            monthNames.forEach((name, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = name;
+                btn.className = idx === calCurrentMonth
+                    ? 'py-1.5 rounded-xl text-xs font-bold bg-[#0066FF] text-white cursor-pointer'
+                    : 'py-1.5 rounded-xl text-xs font-semibold text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer';
+                btn.onclick = function (e) {
+                    e.stopPropagation();
+                    calSelectMonth(idx);
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function renderYearPicker() {
+            const grid = document.getElementById('cal-year-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            for (let y = calYearRangeStart; y < calYearRangeStart + 12; y++) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = y;
+                btn.className = y === calCurrentYear
+                    ? 'py-1.5 rounded-xl text-xs font-bold bg-[#0066FF] text-white cursor-pointer'
+                    : 'py-1.5 rounded-xl text-xs font-semibold text-gray-800 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 hover:text-[#0066FF] dark:hover:text-[#3B82F6] transition cursor-pointer';
+                btn.onclick = function (e) {
+                    e.stopPropagation();
+                    calSelectYear(y);
+                };
+                grid.appendChild(btn);
             }
+            // update header label to show year range
+            const yearValEl = document.getElementById('cal-year-val');
+            if (yearValEl) yearValEl.textContent = calYearRangeStart + ' – ' + (calYearRangeStart + 11);
+        }
+
+        function calShowMonthPicker() {
+            calShowPanel('months');
+            renderMonthPicker();
+            // header panah navigasi tidak relevan di mode bulan, sembunyikan
+            document.getElementById('cal-header').querySelector('button:first-child').classList.add('invisible');
+            document.getElementById('cal-header').querySelector('button:last-child').classList.add('invisible');
+        }
+
+        function calShowYearPicker() {
+            calYearRangeStart = Math.floor(calCurrentYear / 12) * 12;
+            calShowPanel('years');
+            renderYearPicker();
+        }
+
+        function calSelectMonth(monthIdx) {
+            calCurrentMonth = monthIdx;
+            calShowPanel('days');
+            renderCalendar();
+            document.getElementById('cal-header').querySelector('button:first-child').classList.remove('invisible');
+            document.getElementById('cal-header').querySelector('button:last-child').classList.remove('invisible');
+        }
+
+        function calSelectYear(year) {
+            calCurrentYear = year;
+            calShowPanel('days');
             renderCalendar();
         }
 
-        function calNextMonth() {
-            calCurrentMonth++;
-            if (calCurrentMonth > 11) {
-                calCurrentMonth = 0;
-                calCurrentYear++;
+        // Tombol < > navigasi — perilaku berbeda tiap view
+        function calPrev() {
+            if (calView === 'days') {
+                calCurrentMonth--;
+                if (calCurrentMonth < 0) { calCurrentMonth = 11; calCurrentYear--; }
+                renderCalendar();
+            } else if (calView === 'years') {
+                calYearRangeStart -= 12;
+                renderYearPicker();
             }
-            renderCalendar();
         }
+
+        function calNext() {
+            if (calView === 'days') {
+                calCurrentMonth++;
+                if (calCurrentMonth > 11) { calCurrentMonth = 0; calCurrentYear++; }
+                renderCalendar();
+            } else if (calView === 'years') {
+                calYearRangeStart += 12;
+                renderYearPicker();
+            }
+        }
+
+        // Alias lama agar tidak error jika masih ada referensi
+        function calPrevMonth() { calPrev(); }
+        function calNextMonth() { calNext(); }
 
         function openCalendarPicker(e, targetInputId) {
             e.stopPropagation();
@@ -1270,6 +1357,12 @@
             }
 
             renderCalendar();
+
+            // Reset ke tampilan hari, pastikan panah navigasi visible
+            calShowPanel('days');
+            const headerBtns = document.getElementById('cal-header').querySelectorAll('button');
+            headerBtns[0].classList.remove('invisible');
+            headerBtns[headerBtns.length - 1].classList.remove('invisible');
 
             // Pindahkan picker langsung ke dalam container input (.relative) agar menempel persis seperti dropdown
             container.appendChild(picker);

@@ -27,7 +27,6 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Set timezone ke WIB agar semua Carbon/datetime konsisten dengan data di database
-        // Data di DB tersimpan dalam WIB, sehingga app timezone harus sama
         date_default_timezone_set('Asia/Jakarta');
         \Carbon\Carbon::setLocale('id');
     }

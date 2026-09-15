@@ -166,6 +166,70 @@ class AuthController extends Controller
     }
 
     /**
+     * Handle the reset password form submission.
+     */
+    public function resetPassword(Request $request)
+    {
+        if (!session('otp_verified')) {
+            return redirect()->route('password.verify')
+                ->with('error', 'Silakan verifikasi OTP terlebih dahulu.');
+        }
+
+        $request->validate([
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                \Illuminate\Validation\Rules\Password::min(8)
+                    ->numbers()
+                    ->mixedCase()
+                    ->symbols(),
+            ],
+        ], [
+            'password.required'  => 'Kata sandi wajib diisi.',
+            'password.min'       => 'Kata sandi minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+        ]);
+
+        $userId = session('pending_reset_user_id');
+
+        if (!$userId) {
+            return redirect()->route('password.request')
+                ->with('error', 'Sesi tidak valid. Silakan mulai ulang proses reset.');
+        }
+
+        $user = User::find($userId);
+
+        if (!$user) {
+            return redirect()->route('password.request')
+                ->with('error', 'Pengguna tidak ditemukan.');
+        }
+
+        $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        $user->save();
+
+        // Tandai request sebagai selesai
+        \App\Models\PasswordResetRequest::where('user_id', $userId)
+            ->whereIn('status', ['pending', 'approved'])
+            ->update(['status' => 'completed']);
+
+        // Hapus semua session reset
+        session()->forget([
+            'otp_verified',
+            'reset_request_id',
+            'pending_reset_user_id',
+            'otp_session_expires_at',
+            'is_using_temp_password',
+            'temp_password_expires_at',
+            'temp_password_request_id',
+        ]);
+
+        return redirect()->route('login')
+            ->with('success', 'Kata sandi berhasil diubah. Silakan login dengan kata sandi baru Anda.');
+    }
+
+    /**
      * Handle logout.
      */
     public function logout(Request $request)

@@ -35,6 +35,7 @@ Route::get('/verifikasi-kode', [AuthController::class, 'showVerifyCode'])->name(
 Route::post('/verifikasi-kode', [PasswordResetRequestController::class, 'verifyOtp'])->name('password.verify.post');
 Route::post('/verifikasi-kode/kirim-ulang', [PasswordResetRequestController::class, 'resendOtp'])->name('password.resend-otp');
 Route::get('/ubah-kata-sandi', [AuthController::class, 'showResetPassword'])->name('password.reset');
+Route::post('/ubah-kata-sandi', [AuthController::class, 'resetPassword'])->name('password.reset.post');
 
 // ================= PENGATURAN =================
 Route::get('/pengaturan', [SuperAdminController::class, 'settingsIndex'])->middleware(['auth', 'temp_pwd_expiry'])->name('settings.index');
@@ -82,6 +83,7 @@ Route::get('/asset/{asset_number}', [AssetController::class, 'showKai'])->middle
 Route::middleware(['auth', 'temp_pwd_expiry'])->group(function () {
     // Import Excel
     Route::post('/pengaturan/import-excel', [ExcelImportController::class, 'import'])->name('settings.import-excel');
+    Route::post('/pengaturan/debug-parse', [ExcelImportController::class, 'debugParse'])->name('settings.debug-parse');
     Route::get('/pengaturan/download-template', [ExcelImportController::class, 'downloadTemplate'])->name('settings.download-template');
 
     // Kontrak / Tambah Aset
@@ -107,10 +109,13 @@ Route::middleware(['auth', 'temp_pwd_expiry'])->group(function () {
     Route::put('/asset/{asset_number}', [AssetController::class, 'update'])->name('assets.update')->where('asset_number', '.*');
     Route::post('/asset/{asset_number}/edit', [AssetController::class, 'update'])->name('assets.update.post')->where('asset_number', '.*');
 
+    // Hapus Kontrak
+    Route::delete('/daftar-kontrak/{identifier}', [ContractController::class, 'destroy'])->name('contracts.destroy')->where('identifier', '.*');
+
     // Hapus Aset / Kontrak
     Route::delete('/asset/{asset_number}', [AssetController::class, 'destroy'])->name('admin.assets.destroy')->where('asset_number', '.*');
     Route::delete('/assets/{asset_number}', [AssetController::class, 'destroy'])->name('assets.destroy')->where('asset_number', '.*');
 });
 
 // ================= NOTIFIKASI =================
-Route::get('/api/notifications/new-assets', [NotificationController::class, 'newAssets'])->name('notifications.new-assets');
+Route::get('/notifications/new-assets', [NotificationController::class, 'newAssets'])->name('notifications.new-assets');
