@@ -205,16 +205,16 @@
                                 </div>
                             </div>
 
-                            {{-- Nilai Backlog & Nilai Backlog2 --}}
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                            {{-- Nilai 2026, Nilai Backlog & Nilai Backlog2 --}}
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
                                 <div class="flex flex-col w-full">
                                     <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-0.5 sm:mb-1">
-                                        Nilai Backlog<span class="text-red-500">*</span>
+                                        Nilai 2026<span class="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="text"
-                                        name="nilai_backlog"
-                                        value="{{ old('nilai_backlog', $financial->nilai_backlog ? number_format((float)$financial->nilai_backlog, 1, '.', '.') : '906.378.0') }}"
+                                        name="nilai_2026"
+                                        value="{{ old('nilai_2026', $financial && $financial->nilai_2026 ? number_format((float)$financial->nilai_2026, 0, ',', '.') : '0') }}"
                                         class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
@@ -222,12 +222,25 @@
 
                                 <div class="flex flex-col w-full">
                                     <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-0.5 sm:mb-1">
-                                        Nilai Backlog2<span class="text-red-500">*</span>
+                                        Nilai Backlog<span class="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="nilai_backlog"
+                                        value="{{ old('nilai_backlog', $financial && $financial->nilai_backlog ? number_format((float)$financial->nilai_backlog, 0, ',', '.') : '0') }}"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="flex flex-col w-full">
+                                    <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-0.5 sm:mb-1">
+                                        Nilai Backlog 2<span class="text-red-500">*</span>
                                     </label>
                                     <input
                                         type="text"
                                         name="nilai_backlog2"
-                                        value="{{ old('nilai_backlog2', ($financial->nilai_backlog2 ?? $financial->sisa_piutang) ? number_format((float)($financial->nilai_backlog2 ?? $financial->sisa_piutang), 1, '.', '.') : '940.281.9') }}"
+                                        value="{{ old('nilai_backlog2', ($financial && ($financial->nilai_backlog2 ?? $financial->sisa_piutang)) ? number_format((float)($financial->nilai_backlog2 ?? $financial->sisa_piutang), 0, ',', '.') : '0') }}"
                                         class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
@@ -243,7 +256,7 @@
                                     <input
                                         type="text"
                                         name="gl_account"
-                                        value="{{ old('gl_account', $financial->gl_account ?? '940.281.9') }}"
+                                        value="{{ old('gl_account', $financial->gl_account ?? '-') }}"
                                         class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
                                         required
                                     >
@@ -263,18 +276,32 @@
                                 </div>
                             </div>
 
-                            {{-- Nilai Perhari --}}
-                            <div class="flex flex-col w-full">
-                                <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-0.5 sm:mb-1">
-                                    Nilai Perhari<span class="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    name="nilai_perhari"
-                                    value="{{ old('nilai_perhari', $financial->nilai_per_hari ? number_format((float)$financial->nilai_per_hari, 0, ',', '.') : '3.102') }}"
-                                    class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
-                                    required
-                                >
+                            {{-- Jumlah Hari & Nilai Perhari --}}
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                                <div class="flex flex-col w-full">
+                                    <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-0.5 sm:mb-1">
+                                        Jumlah Hari
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="jumlah_hari"
+                                        value="{{ old('jumlah_hari', $financial->jumlah_hari ?? '') }}"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                    >
+                                </div>
+
+                                <div class="flex flex-col w-full">
+                                    <label class="block text-[10.5px] sm:text-xs font-semibold text-gray-700 dark:text-white mb-0.5 sm:mb-1">
+                                        Nilai Perhari<span class="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="nilai_perhari"
+                                        value="{{ old('nilai_perhari', $financial->nilai_per_hari ? number_format((float)$financial->nilai_per_hari, 0, ',', '.') : '0') }}"
+                                        class="w-full h-[32px] sm:h-[36px] rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-[#282A2C] px-2.5 sm:px-3 text-[11px] sm:text-xs text-gray-800 dark:text-white focus:border-[#0066FF] focus:outline-none transition font-normal"
+                                        required
+                                    >
+                                </div>
                             </div>
                         </div>
                     </div>

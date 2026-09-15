@@ -23,15 +23,10 @@ class DashboardController extends Controller
         // ── 1. Statistik 4 Kartu Utama ──────────────────────────────────
         // Di-cache bersama karena semua ini dihitung dari query ringan yang saling berkaitan
         $stats = Cache::remember('dashboard_stats', self::CACHE_STATS_TTL, function () {
-            // Gabungkan count + sum dalam 1 query ke tabel contracts
-            $contractAgg = DB::table('contracts')->selectRaw(
-                'COUNT(*) AS total_contracts, SUM(price) AS total_price, COUNT(CASE WHEN jenis_kontrak LIKE "%sewa%" THEN 1 END) AS sewa_count'
-            )->first();
-
-            $totalContracts     = (int) ($contractAgg->total_contracts ?? 0);
-            $totalContractPrice = (float) ($contractAgg->total_price ?? 0);
-            $totalAssets        = (int) ($contractAgg->sewa_count ?? 0) ?: $totalContracts;
-            $avgArea            = round((float) KaiAsset::avg('size_area'));
+            $totalContracts      = KaiContract::count();
+            $totalContractPrice  = (float) KaiContract::sum('price');
+            $totalAssets         = KaiContract::where('jenis_kontrak', 'like', '%sewa%')->count() ?: KaiContract::count();
+            $avgArea             = round((float) KaiAsset::avg('size_area'));
 
             if ($totalContractPrice >= 1_000_000_000) {
                 $totalNilaiKontrakFormatted = 'Rp ' . number_format($totalContractPrice / 1_000_000_000, 1, ',', '.') . ' M';
@@ -45,22 +40,21 @@ class DashboardController extends Controller
         });
 
         // ── 2. Data Bulanan untuk Chart ──────────────────────────────────
-        // Di-cache terpisah karena query ini 12x SUM ke monthly_schedules (cukup berat)
+        // Di-cache terpisah — dihitung dalam 1 query agregat cepat
         $chartData = Cache::remember('dashboard_chart_monthly', self::CACHE_STATS_TTL, function () {
-            // 1 query untuk semua 12 bulan, bukan 12 query terpisah
-            $sums = DB::table('monthly_schedules')->selectRaw('
-                SUM(januari)   AS jan,
-                SUM(febuari)   AS feb,
-                SUM(maret)     AS mar,
-                SUM(april)     AS apr,
-                SUM(mei)       AS mei,
-                SUM(juni)      AS jun,
-                SUM(juli)      AS jul,
-                SUM(agustus)   AS agu,
-                SUM(september) AS sep,
-                SUM(oktober)   AS okt,
-                SUM(november)  AS nov,
-                SUM(desember)  AS des
+            $sums = MonthlySchedule::selectRaw('
+                COALESCE(SUM(januari), 0) as jan,
+                COALESCE(SUM(febuari), 0) as feb,
+                COALESCE(SUM(maret), 0) as mar,
+                COALESCE(SUM(april), 0) as apr,
+                COALESCE(SUM(mei), 0) as mei,
+                COALESCE(SUM(juni), 0) as jun,
+                COALESCE(SUM(juli), 0) as jul,
+                COALESCE(SUM(agustus), 0) as agu,
+                COALESCE(SUM(september), 0) as sep,
+                COALESCE(SUM(oktober), 0) as okt,
+                COALESCE(SUM(november), 0) as nov,
+                COALESCE(SUM(desember), 0) as des
             ')->first();
 
             $monthlyRaw = [
@@ -184,40 +178,93 @@ class DashboardController extends Controller
         // ── 4. Revenue Breakdown & Persentase Pencapaian ─────────────────
         $revenueBreakdown = Cache::remember('dashboard_revenue_breakdown', self::CACHE_STATS_TTL, function () {
             $revenueCategories = [
-                ['name' => 'Row',                 'color' => '#0D63E5', 'sub' => 'row'],
-                ['name' => 'Non Row',             'color' => '#94B4FF', 'sub' => 'non row'],
-                ['name' => 'Rumah Perusahaan',    'color' => '#EB4D4B', 'sub' => 'rumah'],
-                ['name' => 'Utilitas Pengawasan', 'color' => '#F99827', 'sub' => 'pengawasan'],
-                ['name' => 'Iklan / Lainnya',     'color' => '#00C49F', 'sub' => 'iklan'],
+                [
+                    'name'   => 'Row',
+                    'color'  => '#0D63E5',
+                    'filter' => fn($q) => $q->where('jenis_pendapatan', 'Row')->orWhere(function($sq) {
+                        $sq->where('jenis_pendapatan', 'like', '%row%')->where('jenis_pendapatan', 'not like', '%non%');
+                    }),
+                ],
+                [
+                    'name'   => 'Non Row',
+                    'color'  => '#94B4FF',
+                    'filter' => fn($q) => $q->where('jenis_pendapatan', 'like', '%non%'),
+                ],
+                [
+                    'name'   => 'Rumah Perusahaan',
+                    'color'  => '#EB4D4B',
+                    'filter' => fn($q) => $q->where('jenis_pendapatan', 'like', '%rumah%'),
+                ],
+                [
+                    'name'   => 'Utilitas Pengawasan',
+                    'color'  => '#F99827',
+                    'filter' => fn($q) => $q->where('jenis_pendapatan', 'like', '%utilitas%'),
+                ],
+                [
+                    'name'   => 'Iklan / Lainnya',
+                    'color'  => '#00C49F',
+                    'filter' => fn($q) => $q->where(function($sq) {
+                        $sq->where('jenis_pendapatan', 'like', '%iklan%')
+                           ->orWhere('jenis_pendapatan', 'like', '%stasiun%')
+                           ->orWhereNull('jenis_pendapatan')
+                           ->orWhere(function($sq2) {
+                               $sq2->where('jenis_pendapatan', 'not like', '%row%')
+                                   ->where('jenis_pendapatan', 'not like', '%rumah%')
+                                   ->where('jenis_pendapatan', 'not like', '%utilitas%');
+                           });
+                    }),
+                ],
             ];
 
-            $rawTotalRevenue = (float) ContractFinancial::sum('nilai_2026');
-            $totalRevenue    = $rawTotalRevenue > 0 ? $rawTotalRevenue : 1.0;
+            $categorySums = [];
+            $categoryPcts = [];
 
-            // Ambil semua data financial sekali, proses di PHP — hindari 10 query terpisah
-            $allFinancials = DB::table('contract_financials')
-                ->selectRaw('jenis_pendapatan, SUM(nilai_2026) AS total_nilai, AVG(persentase) AS avg_pct')
-                ->groupBy('jenis_pendapatan')
-                ->get();
+            foreach ($revenueCategories as $idx => $cat) {
+                $q = ContractFinancial::query();
+                ($cat['filter'])($q);
+
+                $sum = (float) $q->sum('nilai_2026');
+                $categorySums[$idx] = $sum;
+
+                $rawAvgPct = (float) $q->avg(DB::raw('COALESCE(pencapaian, persentase)'));
+                if ($rawAvgPct <= 0) $rawAvgPct = 0.9;
+                $pencapaianVal = $rawAvgPct <= 2.0 ? round($rawAvgPct * 100, 1) : round($rawAvgPct, 1);
+                $categoryPcts[$idx] = ($pencapaianVal == (int)$pencapaianVal ? (int)$pencapaianVal : number_format($pencapaianVal, 1, ',', '.')) . '%';
+            }
+
+            // Hitung persentase pembagian (Largest Remainder Method agar total tepat 100%)
+            $totalSum = array_sum($categorySums);
+            $distributedPcts = [];
+
+            if ($totalSum > 0) {
+                $floors = [];
+                $remainders = [];
+                foreach ($categorySums as $i => $val) {
+                    $exact = ($val / $totalSum) * 100;
+                    $floors[$i] = (int) floor($exact);
+                    $remainders[$i] = $exact - $floors[$i];
+                }
+                $diff = 100 - array_sum($floors);
+                arsort($remainders);
+                foreach ($remainders as $i => $rem) {
+                    if ($diff <= 0) break;
+                    $floors[$i]++;
+                    $diff--;
+                }
+                ksort($floors);
+                $distributedPcts = $floors;
+            } else {
+                $distributedPcts = [20, 20, 20, 20, 20];
+            }
 
             $breakdown = [];
-            foreach ($revenueCategories as $cat) {
-                $keyword = $cat['sub'];
-                $matched = $allFinancials->filter(fn($f) => str_contains(strtolower($f->jenis_pendapatan ?? ''), $keyword));
-
-                $catSum  = $matched->sum('total_nilai');
-                $rawPct  = $matched->avg('avg_pct') ?? 0;
-                $pct     = $rawTotalRevenue > 0 ? round(($catSum / $totalRevenue) * 100) : 0;
-
-                if ($rawPct <= 0) $rawPct = 0.9;
-                $pencapaianVal       = $rawPct <= 2.0 ? round($rawPct * 100, 1) : round($rawPct, 1);
-                $pencapaianFormatted = number_format($pencapaianVal, 1, ',', '.') . '%';
-
+            foreach ($revenueCategories as $idx => $cat) {
                 $breakdown[] = [
-                    'name'       => $cat['name'],
-                    'color'      => $cat['color'],
-                    'percentage' => max(8, min(80, $pct ?: 15)),
-                    'pencapaian' => $pencapaianFormatted,
+                    'name'             => $cat['name'],
+                    'color'            => $cat['color'],
+                    'percentage'       => $distributedPcts[$idx] ?? 0,
+                    'exact_percentage' => $totalSum > 0 ? round(($categorySums[$idx] / $totalSum) * 100, 1) : 0,
+                    'pencapaian'       => $categoryPcts[$idx] ?? '0%',
                 ];
             }
 

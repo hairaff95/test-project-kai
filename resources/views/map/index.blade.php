@@ -1060,6 +1060,8 @@
         });
 
         let assetMarkerInstances = [];
+        let currentOpenedMarker = null;
+        let isClosingAnimation = false;
 
         function getActiveMarkerIcon() {
             return map.getZoom() >= 9.6 ? redPinIcon : redDotIcon;
@@ -1523,20 +1525,47 @@
                         className: 'custom-asset-leaflet-popup'
                     });
 
+                    // Lepas listener click bawaan Leaflet agar kontrol buka/tutup 100% dikendalikan oleh handler kita tanpa konflik
+                    marker.off('click');
+
                     marker.on('click', function (e) {
                         L.DomEvent.stopPropagation(e);
 
                         if (isMobile()) {
+                            const sheet = document.getElementById('mobileAssetBottomSheet');
+                            if (sheet && !sheet.classList.contains('translate-y-full') && !sheet.classList.contains('invisible') && currentOpenedMarker === marker) {
+                                currentOpenedMarker = null;
+                                closeMobileAssetBottomSheet();
+                                return;
+                            }
+                            currentOpenedMarker = marker;
                             map.closePopup();
                             closeFilterModal();
                             openMobileAssetBottomSheet(asset, id, [lat, lng]);
                         } else {
+                            // Jika marker ini yang sedang aktif terbuka, klik ulang akan menutup popup dan mereset view peta ke Jawa Tengah
+                            if (currentOpenedMarker === marker) {
+                                currentOpenedMarker = null;
+                                isClosingAnimation = true;
+                                marker.closePopup();
+                                fitJatengBounds();
+                                setTimeout(() => { isClosingAnimation = false; }, 400);
+                                return;
+                            }
+
+                            currentOpenedMarker = marker;
                             closeMobileAssetBottomSheet();
                             const baseZoom = baseJatengZoom || map.getMinZoom() || 8.5;
                             const pointZoomLevel = Math.max(baseZoom + 1.5, 10.5);
 
                             const projected = map.project([lat, lng], pointZoomLevel);
-                            const yOffset = 170;
+                            // Hitung offset vertikal agar popup kartu (tinggi ~440px) berada di bawah toolbar header tools
+                            const popupHeight = 440;
+                            const headerSpace = 160;
+                            const desiredMarkerScreenY = headerSpace + popupHeight;
+                            const calculatedYOffset = Math.round(desiredMarkerScreenY - (window.innerHeight / 2));
+                            const yOffset = Math.max(255, calculatedYOffset);
+
                             const targetCenter = map.unproject(projected.subtract([0, yOffset]), pointZoomLevel);
 
                             const currentCenter = map.getCenter();
@@ -1548,7 +1577,9 @@
                                 marker.openPopup();
                             } else {
                                 map.once('moveend', function () {
-                                    marker.openPopup();
+                                    if (currentOpenedMarker === marker) {
+                                        marker.openPopup();
+                                    }
                                 });
                                 map.flyTo(targetCenter, pointZoomLevel, {
                                     duration: 0.45,
@@ -1562,7 +1593,8 @@
         }
 
         map.on('popupclose', function () {
-            if (!isMobile()) {
+            currentOpenedMarker = null;
+            if (!isMobile() && !isClosingAnimation) {
                 fitJatengBounds();
             }
         });

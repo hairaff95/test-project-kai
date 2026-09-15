@@ -16,49 +16,15 @@ use Illuminate\Support\Facades\Cache;
 class ExcelImportController extends Controller
 {
     /**
-     * Debug: tampilkan hasil parsing file tanpa insert ke DB
-     */
-    public function debugParse(Request $request)
-    {
-        if (!$request->hasFile('excel_file')) {
-            return response()->json(['error' => 'No file']);
-        }
-
-        $file = $request->file('excel_file');
-        $ext  = strtolower($file->getClientOriginalExtension());
-        $rows = $this->parseFileRows($file, $ext);
-
-        if (empty($rows)) {
-            return response()->json(['error' => 'Empty file']);
-        }
-
-        $headerRow = $rows[0];
-        $dataRow   = $rows[1] ?? [];
-
-        $normalizedHeaders = array_map(fn($h) => $this->normalizeHeaderName($h), $headerRow);
-
-        $mapped = [];
-        foreach ($normalizedHeaders as $i => $key) {
-            $mapped[$i] = [
-                'col'    => $i,
-                'header' => $headerRow[$i],
-                'norm'   => $key,
-                'value'  => $dataRow[$i] ?? null,
-            ];
-        }
-
-        return response()->json([
-            'total_rows' => count($rows),
-            'header_count' => count($headerRow),
-            'mapping' => $mapped,
-        ]);
-    }
-
-    /**
      * Handle Import Excel / CSV
      */
     public function import(Request $request)
     {
+        // Berikan batas waktu eksekusi 5 menit dan memori 512MB untuk proses import batch besar
+        @set_time_limit(300);
+        @ini_set('max_execution_time', '300');
+        @ini_set('memory_limit', '512M');
+
         $request->validate([
             'excel_file' => 'required|file|max:30720', // max 30MB
         ], [
@@ -81,11 +47,103 @@ class ExcelImportController extends Controller
                 return back()->with('error', 'File tidak memiliki baris data atau kosong.');
             }
 
-            // Normalisasi header (baris pertama)
+            // Temukan baris header yang sesungguhnya (bukan baris judul atau baris kosong)
+            $headerRowIndex = null;
+            foreach ($rows as $rIdx => $r) {
+                if (empty(array_filter($r, fn($v) => $v !== null && trim((string)$v) !== ''))) {
+                    continue;
+                }
+                
+                $matchedKeywords = 0;
+                foreach ($r as $cell) {
+                    $norm = $this->normalizeHeaderName($cell);
+                    if ($norm !== '' && (
+                        str_contains($norm, 'kontrak') || 
+                        str_contains($norm, 'penyewa') || 
+                        str_contains($norm, 'aset') || 
+                        str_contains($norm, 'asset') || 
+                        str_contains($norm, 'stasiun') || 
+                        str_contains($norm, 'backlog') || 
+                        str_contains($norm, 'invoice') || 
+                        str_contains($norm, '2026') || 
+                        str_contains($norm, '2_026') ||
+                        str_contains($norm, 'januari') ||
+                        str_contains($norm, 'gl')
+                    )) {
+                        $matchedKeywords++;
+                    }
+                }
+                
+                if ($matchedKeywords >= 2) {
+                    $headerRowIndex = $rIdx;
+                    break;
+                }
+            }
+
+            if ($headerRowIndex === null) {
+                $headerRowIndex = 0;
+            }
+
+            // Buang baris-baris sebelum header dan ambil header row
+            for ($i = 0; $i < $headerRowIndex; $i++) {
+                array_shift($rows);
+            }
             $headerRow = array_shift($rows);
             $normalizedHeaders = array_map(function ($h) {
                 return $this->normalizeHeaderName($h);
             }, $headerRow);
+
+            // Deteksi index kolom penting secara presisi
+            $colIdxHari2026 = null;
+            $colIdxJanuari  = null;
+            $colIdx2026     = null;
+            $colIdxJanDes   = null;
+            $colIdxBacklog  = null;
+            $colIdxBacklog2 = null;
+
+            foreach ($headerRow as $cIdx => $rawHeader) {
+                $norm = $this->normalizeHeaderName($rawHeader);
+                $rawTrim = strtolower(trim((string)$rawHeader));
+                
+                // Cek kolom nilai 2026
+                if (
+                    $norm === '2_026' || $norm === '2026' || 
+                    $rawTrim === '2,026' || $rawTrim === '2026' || $rawTrim === '2.026' || $rawTrim === '2 026' ||
+                    $norm === 'nilai_2026' || $norm === 'nilai_2_026' || $norm === 'nilai2026' ||
+                    (str_contains($norm, '2026') && !str_contains($norm, 'hari') && !str_contains($norm, 'rka') && !str_contains($norm, 'thn'))
+                ) {
+                    $colIdx2026 = $cIdx;
+                }
+
+                if (str_contains($norm, 'hari') && (str_contains($norm, '2026') || str_contains($norm, '2_026'))) {
+                    $colIdxHari2026 = $cIdx;
+                }
+
+                if ($norm === 'januari' || $norm === 'jan') {
+                    $colIdxJanuari = $cIdx;
+                }
+
+                if ($norm === 'jan_des' || $norm === 'jandes' || str_contains($norm, 'jan_des') || str_contains($norm, 'jan-des')) {
+                    $colIdxJanDes = $cIdx;
+                }
+
+                if ($norm === 'nilai_backlog' || $norm === 'backlog' || $norm === 'backlog_1' || $norm === 'nilai_backlog_1') {
+                    $colIdxBacklog = $cIdx;
+                }
+
+                if ($norm === 'nilai_backlog2' || $norm === 'backlog2' || $norm === 'backlog_2' || $norm === 'nilai_backlog_2') {
+                    $colIdxBacklog2 = $cIdx;
+                }
+            }
+
+            // Fallback letak posisi kolom 2026 (berada di antara HARI 2026 dan JANUARI)
+            if ($colIdx2026 === null) {
+                if ($colIdxHari2026 !== null && ($colIdxJanuari === null || $colIdxHari2026 < $colIdxJanuari)) {
+                    $colIdx2026 = $colIdxHari2026 + 1;
+                } elseif ($colIdxJanuari !== null && $colIdxJanuari > 0) {
+                    $colIdx2026 = $colIdxJanuari - 1;
+                }
+            }
 
             $importedCount  = 0;
             $updatedCount   = 0;
@@ -95,15 +153,21 @@ class ExcelImportController extends Controller
             $internalDuplicates = [];
             $seenInThisImport = [];
 
-            DB::beginTransaction();
-
-            // Pre-load data yang sudah ada untuk mengurangi query N+1
-            $existingTenants   = Penyewa::pluck('id', 'fullname')->toArray();
-            $existingAssets    = KaiAsset::pluck('asset_number', 'asset_number')->toArray();
-            $existingContracts = KaiContract::pluck('contract_number', 'contract_number')->toArray();
+            // Preload database lookup maps ke memory agar tidak melakukan query SELECT individual
+            $tenantsMap = Penyewa::all()->keyBy(fn($t) => trim((string)$t->fullname));
+            $assetsMap = KaiAsset::all()->keyBy(fn($a) => trim((string)$a->asset_number));
+            $contractsMap = KaiContract::with(['financial', 'monthlySchedules'])->get()->keyBy(fn($c) => trim((string)$c->contract_number));
 
             $lastContractNumber = null;
             $lastAssetNumber = null;
+
+            // Arrays untuk menampung data yang akan diproses secara batch/bulk
+            $newTenantsToCreate = [];
+            $assetsToUpsert = [];
+            $contractsToProcess = [];
+            $financialsToInsert = [];
+            $schedulesToInsert = [];
+            $importedContractNumbers = [];
 
             foreach ($rows as $rowIndex => $row) {
                 // Baris Excel aktual (baris 1 adalah header)
@@ -117,8 +181,6 @@ class ExcelImportController extends Controller
                     ];
                     continue;
                 }
-
-                $rowNum = $rowIndex + 1;
 
                 // Map header -> value
                 $data = [];
@@ -161,32 +223,13 @@ class ExcelImportController extends Controller
                     'blok', 'lokasi_aset', 'lokasi', 'nama_aset', 'alamat_aset', 'alamat'
                 ]);
 
-                // Jika contractNumber masih kosong tetapi baris memiliki data lain (misal: cell merge di Excel), warisi dari baris sebelumnya
-                if (!$contractNumber && !$assetNumber) {
-                    if ($lastContractNumber) {
-                        $contractNumber = $lastContractNumber;
-                        $assetNumber = $lastAssetNumber ?: $lastContractNumber;
-                    } elseif ($fullname) {
-                        $contractNumber = 'KTR-' . strtoupper(substr(md5($fullname . '_' . $excelActualRow), 0, 8));
-                        $assetNumber = $contractNumber;
-                    } else {
-                        $skippedRows[] = [
-                            'row' => $excelActualRow,
-                            'reason' => 'Kolom Nomor Kontrak & Nomor Aset kosong',
-                        ];
-                        continue;
-                    }
+                if (!$contractNumber) {
+                    $skippedRows[] = [
+                        'row' => $excelActualRow,
+                        'reason' => 'Nomor Kontrak kosong',
+                    ];
+                    continue;
                 }
-
-                if (!$contractNumber && $assetNumber) {
-                    $contractNumber = $assetNumber;
-                }
-                if (!$assetNumber && $contractNumber) {
-                    $assetNumber = $contractNumber;
-                }
-
-                $lastContractNumber = $contractNumber;
-                $lastAssetNumber = $assetNumber;
 
                 // ── 2. PENYEWA (tenants) ──────────────────────────────────
                 $fullname = ($fullname !== null && trim($fullname) !== '') ? trim($fullname) : '-';
@@ -200,26 +243,15 @@ class ExcelImportController extends Controller
                 $rawJenisPerusahaan = $this->extractField($data, ['jenis_perusahaan', 'badan_usaha', 'bentuk_usaha', 'tipe_perusahaan']);
                 $jenisPerusahaan = ($rawJenisPerusahaan !== null && trim($rawJenisPerusahaan) !== '') ? trim($rawJenisPerusahaan) : '-';
 
-                $tenant = null;
-                $tenantChanged = false;
-
-                if (isset($existingTenants[$fullname])) {
-                    $tenant = Penyewa::find($existingTenants[$fullname]);
-                    if ($brand !== null && $tenant->brand !== $brand) { $tenant->brand = $brand; $tenantChanged = true; }
-                    if ($statusCustomer !== null && $tenant->status_customer !== $statusCustomer) { $tenant->status_customer = $statusCustomer; $tenantChanged = true; }
-                    if ($jenisPerusahaan !== null && $tenant->jenis_perusahaan !== $jenisPerusahaan) { $tenant->jenis_perusahaan = $jenisPerusahaan; $tenantChanged = true; }
-                    if ($tenantChanged) $tenant->save();
-                } else {
-                    $tenant = Penyewa::create([
+                if (!$tenantsMap->has($fullname) && !isset($newTenantsToCreate[$fullname])) {
+                    $newTenantsToCreate[$fullname] = [
                         'fullname'         => $fullname,
                         'brand'            => $brand,
                         'status_customer'  => $statusCustomer,
                         'jenis_perusahaan' => $jenisPerusahaan,
-                    ]);
-                    $existingTenants[$fullname] = $tenant->id;
+                        'created_at'       => now()->toDateTimeString(),
+                    ];
                 }
-
-                $tenantId = $tenant->id;
 
                 // ── 3. ASET (assets) ──────────────────────────────────────
                 $assetBlockName = $rawAssetBlock ?: null;
@@ -242,27 +274,23 @@ class ExcelImportController extends Controller
 
                 $rawLat = $this->parseCoordinate($this->extractField($data, ['latitude', 'lat', 'lintang', 'titik_koordinat_lat']));
                 $rawLng = $this->parseCoordinate($this->extractField($data, ['longitude', 'long', 'lng', 'bujur', 'titik_koordinat_long']));
-                $latitude  = $rawLat ?: null;
-                $longitude = $rawLng ?: null;
+                [$latitude, $longitude] = $this->resolveCoordinates($rawLat, $rawLng, $stasiun, $wilayahAsset, $rowIndex);
 
-                $assetPayload = [
-                    'asset_block_name' => $assetBlockName,
-                    'sub_title'        => $subTitle,
-                    'description'      => $description,
-                    'peruntukan'       => $peruntukan,
-                    'jenis_asset'      => $jenisAsset,
-                    'stasiun'          => $stasiun,
-                    'wilayah_asset'    => $wilayahAsset,
-                    'size_area'        => $sizeArea,
-                    'latitude'         => $latitude,
-                    'longitude'        => $longitude,
-                ];
-
-                if (isset($existingAssets[$assetNumber])) {
-                    KaiAsset::where('asset_number', $assetNumber)->update($assetPayload);
-                } else {
-                    KaiAsset::create(array_merge(['asset_number' => $assetNumber], $assetPayload));
-                    $existingAssets[$assetNumber] = $assetNumber;
+                if ($assetNumber) {
+                    $assetsToUpsert[$assetNumber] = [
+                        'asset_number'     => $assetNumber,
+                        'asset_block_name' => $assetBlockName,
+                        'sub_title'        => $subTitle,
+                        'description'      => $description,
+                        'peruntukan'       => $peruntukan,
+                        'jenis_asset'      => $jenisAsset,
+                        'stasiun'          => $stasiun,
+                        'wilayah_asset'    => $wilayahAsset,
+                        'size_area'        => $sizeArea,
+                        'latitude'         => $latitude,
+                        'longitude'        => $longitude,
+                        'created_at'       => now()->toDateTimeString(),
+                    ];
                 }
 
                 // ── 4. KONTRAK (contracts) ────────────────────────────────
@@ -277,8 +305,8 @@ class ExcelImportController extends Controller
 
                 $startDate     = $this->parseDate($this->extractField($data, ['start_datetime', 'jangka_waktu_mulai', 'awal_sewa', 'tgl_mulai', 'tanggal_mulai', 'mulai', 'awal_kontrak']));
                 $endDate       = $this->parseDate($this->extractField($data, ['end_datetime', 'jangka_waktu_akhir', 'akhir_sewa', 'tgl_akhir', 'tanggal_akhir', 'selesai_kontrak', 'jatuh_tempo', 'tgl_selesai', 'akhir_kontrak', 'selesai']));
-                $startDateBaru = $this->parseDate($this->extractField($data, ['start_datetime_baru', 'awal_baru'])) ?: $startDate;
-                $endDateBaru   = $this->parseDate($this->extractField($data, ['end_datetime_baru', 'akhir_baru', 'selesai_kontrak_baru'])) ?: $endDate;
+                $startDateBaru = $this->parseDate($this->extractField($data, ['start_datetime_baru', 'awal_baru']));
+                $endDateBaru   = $this->parseDate($this->extractField($data, ['end_datetime_baru', 'akhir_baru', 'selesai_kontrak_baru']));
 
                 $price      = $this->parseNumber($this->extractField($data, ['price', 'nilai_perjanjian', 'total_biaya', 'nilai_kontrak', 'harga', 'nilai_sewa', 'tarif', 'jumlah_biaya', 'total_nilai', 'nilai'])) ?: 0.0;
                 
@@ -289,16 +317,70 @@ class ExcelImportController extends Controller
                 $keterangan = ($rawKet !== null && trim($rawKet) !== '') ? trim($rawKet) : null;
 
                 // ── 5. FINANSIAL KONTRAK (contract_financials) ────────────
-                $jumlahHari    = $this->parseNumber($this->extractField($data, ['jumlah_hari', 'hari', 'durasi_hari'])) ?: 0;
+                $jumlahHari    = (int) ($this->parseNumber($this->extractField($data, ['jumlah_hari', 'hari', 'durasi_hari'])) ?: 0);
                 $nilaiPerHari  = $this->parseNumber($this->extractField($data, ['nilai_per_hari', 'nilai_perhari', 'tarif_harian'])) ?: 0.0;
                 
-                $rawAwalFin    = $this->parseDate($this->extractField($data, ['awal', 'awal_finansial'])) ?: $startDateBaru;
-                $rawAkhirFin   = $this->parseDate($this->extractField($data, ['akhir', 'akhir_finansial'])) ?: $endDateBaru;
+                $rawAwalFin    = $this->parseDate($this->extractField($data, ['awal', 'awal_finansial']));
+                $rawAkhirFin   = $this->parseDate($this->extractField($data, ['akhir', 'akhir_finansial']));
                 
-                $hari2026      = $this->parseNumber($this->extractField($data, ['hari_2026', 'hari2026', 'hari_tahun_berjalan'])) ?: 0;
-                $nilai2026     = $this->parseNumber($this->extractField($data, ['2_026', '2026', 'nilai_2026', 'nilai2026'])) ?: 0.0;
-                $nilaiBacklog  = $this->parseNumber($this->extractField($data, ['nilai_backlog', 'backlog', 'backlog_1', 'nilai_backlog_1'])) ?: 0.0;
-                $nilaiBacklog2 = $this->parseNumber($this->extractField($data, ['nilai_backlog2', 'backlog2', 'backlog_2', 'nilai_backlog_2'])) ?: 0.0;
+                $rawHari2026 = null;
+                if ($colIdxHari2026 !== null && isset($row[$colIdxHari2026]) && trim((string)$row[$colIdxHari2026]) !== '') {
+                    $rawHari2026 = trim((string)$row[$colIdxHari2026]);
+                } else {
+                    $rawHari2026 = $this->extractField($data, ['hari_2026', 'hari2026', 'hari_2_026', 'hari_2.026', 'hari_tahun_berjalan']);
+                }
+                $hari2026 = (int) ($this->parseNumber($rawHari2026) ?: 0);
+                
+                // Ekstraksi nilai 2026 secara presisi
+                $rawNilai2026 = null;
+                if ($colIdx2026 !== null && isset($row[$colIdx2026]) && trim((string)$row[$colIdx2026]) !== '') {
+                    $rawNilai2026 = trim((string)$row[$colIdx2026]);
+                }
+                if ($rawNilai2026 === null) {
+                    $rawNilai2026 = $this->extractField($data, [
+                        '2_026', '2026', '2,026', '2.026', '2 026',
+                        'nilai_2026', 'nilai2026', 'nilai_2_026', 'nilai_2,026', 'nilai_2.026',
+                        'nilai_tahun_2026', 'pendapatan_2026', 'target_2026'
+                    ]);
+                }
+
+                // Fallback: cari key yang memiliki pola 2026 tanpa kata hari atau rka
+                if ($rawNilai2026 === null) {
+                    foreach ($data as $dKey => $dVal) {
+                        if ($dVal !== null && trim((string)$dVal) !== '') {
+                            if (preg_match('/^2[._,\s]?026$/', $dKey) || (str_contains($dKey, '2026') && !str_contains($dKey, 'hari') && !str_contains($dKey, 'rka') && !str_contains($dKey, 'thn'))) {
+                                $rawNilai2026 = $dVal;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Fallback posisi relatif jika kolom 2026 berada tepat setelah hari 2026 atau sebelum januari
+                if ($rawNilai2026 === null && $colIdxHari2026 !== null && isset($row[$colIdxHari2026 + 1]) && trim((string)$row[$colIdxHari2026 + 1]) !== '') {
+                    $rawNilai2026 = trim((string)$row[$colIdxHari2026 + 1]);
+                }
+                if ($rawNilai2026 === null && $colIdxJanuari !== null && $colIdxJanuari > 0 && isset($row[$colIdxJanuari - 1]) && trim((string)$row[$colIdxJanuari - 1]) !== '') {
+                    $rawNilai2026 = trim((string)$row[$colIdxJanuari - 1]);
+                }
+
+                $nilai2026 = $this->parseNumber($rawNilai2026) ?: 0.0;
+
+                $rawBacklog = null;
+                if ($colIdxBacklog !== null && isset($row[$colIdxBacklog]) && trim((string)$row[$colIdxBacklog]) !== '') {
+                    $rawBacklog = trim((string)$row[$colIdxBacklog]);
+                } else {
+                    $rawBacklog = $this->extractField($data, ['nilai_backlog', 'backlog', 'backlog_1', 'nilai_backlog_1']);
+                }
+                $nilaiBacklog = $this->parseNumber($rawBacklog) ?: 0.0;
+
+                $rawBacklog2 = null;
+                if ($colIdxBacklog2 !== null && isset($row[$colIdxBacklog2]) && trim((string)$row[$colIdxBacklog2]) !== '') {
+                    $rawBacklog2 = trim((string)$row[$colIdxBacklog2]);
+                } else {
+                    $rawBacklog2 = $this->extractField($data, ['nilai_backlog2', 'backlog2', 'backlog_2', 'nilai_backlog_2']);
+                }
+                $nilaiBacklog2 = $this->parseNumber($rawBacklog2) ?: 0.0;
                 
                 $rawGl         = $this->extractField($data, ['gl_acount', 'gl_account', 'akun_gl', 'no_gl', 'gl', 'rekening_gl']);
                 $glAccount     = ($rawGl !== null && trim($rawGl) !== '') ? trim($rawGl) : null;
@@ -306,25 +388,15 @@ class ExcelImportController extends Controller
                 $rawRka        = $this->extractField($data, ['form_rka', 'kode_rka', 'no_rka']);
                 $formRka       = ($rawRka !== null && trim($rawRka) !== '') ? trim($rawRka) : null;
 
-                $rawTahunRka   = $this->extractField($data, ['tahun_rka', 'thn_rka', 'tahun_rka_']);
-                // Jika tidak ketemu dari key spesifik, coba 'tahun' tapi hanya jika nilainya 4 digit angka
-                if ($rawTahunRka === null) {
-                    $rawTahunRka = $this->extractField($data, ['tahun']);
-                    if ($rawTahunRka !== null && !preg_match('/^\d{4}$/', trim((string)$rawTahunRka))) {
-                        $rawTahunRka = null; // abaikan jika bukan 4 digit angka
-                    }
-                }
-                // Handle float Excel (2026.0 → 2026)
-                $tahunRka = 0;
-                if ($rawTahunRka !== null && trim((string)$rawTahunRka) !== '') {
-                    $parsed = (int) round((float) trim((string)$rawTahunRka));
-                    $tahunRka = ($parsed >= 2000 && $parsed <= 2100) ? $parsed : 0;
-                }
+                $rawTahunRka   = $this->extractField($data, ['tahun_rka', 'thn_rka', 'tahun']);
+                $tahunRka      = ($rawTahunRka !== null && trim((string)$rawTahunRka) !== '' && is_numeric(trim((string)$rawTahunRka))) ? (int) trim((string)$rawTahunRka) : null;
                 
                 $rawPendapatan = $this->extractField($data, ['jenis_pendapatan', 'pendapatan', 'kategori_pendapatan']);
                 $jenisPendapatan = ($rawPendapatan !== null && trim($rawPendapatan) !== '') ? trim($rawPendapatan) : null;
 
-                $persentase    = $this->parseNumber($this->extractField($data, ['persentase_pncapaian', 'persentase', 'persentase_pencapaian', 'pencapaian'])) ?: 0.0;
+                $persentase    = $this->parseNumber($this->extractField($data, ['persentase_pncapaian', 'persentase', 'persentase_pencapaian'])) ?: 0.0;
+                $rawPencapaian = $this->parseNumber($this->extractField($data, ['pencapaian', 'capaian', 'nilai_pencapaian']));
+                $pencapaian    = $rawPencapaian !== null ? $rawPencapaian : $persentase;
                 $rawKetFin     = $this->extractField($data, ['ket', 'keterangan_pendapatan', 'keterangan_finansial', 'status_finansial']);
                 $ketFin        = ($rawKetFin !== null && trim($rawKetFin) !== '') ? trim($rawKetFin) : null;
 
@@ -344,7 +416,7 @@ class ExcelImportController extends Controller
                 $okt     = $this->parseNumber($this->extractField($data, ['oktober', 'okt', 'oct'])) ?: 0.0;
                 $nov     = $this->parseNumber($this->extractField($data, ['november', 'nov'])) ?: 0.0;
                 $des     = $this->parseNumber($this->extractField($data, ['desember', 'des', 'dec'])) ?: 0.0;
-                $janDes  = $this->parseNumber($this->extractField($data, ['jan_des', 'jan-des', 'total_jan_des', 'jan_sd_des', 'total'])) ?: ($jan + $feb + $mar + $apr + $mei + $jun + $jul + $agu + $sep + $okt + $nov + $des);
+                $janDes  = $this->parseNumber($this->extractField($data, ['jan_des', 'jan-des', 'total_jan_des', 'jan_sd_des', 'total'])) ?: 0.0;
 
                 // ── 7. PENOMORAN KONTRAK 1:1 SETIAP BARIS EXCEL ───────────
                 $baseContractNumber = trim((string)$contractNumber);
@@ -356,12 +428,12 @@ class ExcelImportController extends Controller
                     $targetContractNumber = $baseContractNumber . ' (' . $seenInThisImport[$baseContractNumber] . ')';
                 }
 
-                $isNewContract = !isset($existingContracts[$targetContractNumber]);
-                $existingContract = $isNewContract ? null : KaiContract::with(['financial', 'monthlySchedules'])
-                    ->where('contract_number', $targetContractNumber)->first();
+                $existingContract = $contractsMap->get($targetContractNumber);
+                $isNewContract = !$existingContract;
 
                 $contractPayload = [
-                    'tenant_id'            => $tenantId,
+                    'contract_number'      => $targetContractNumber,
+                    'tenant_name'          => $fullname,
                     'asset_number'         => $assetNumber,
                     'contract_date'        => $contractDate,
                     'jenis_kontrak'        => $jenisKontrak,
@@ -376,9 +448,11 @@ class ExcelImportController extends Controller
                     'size_area'            => $sizeArea,
                     'peruntukan'           => $peruntukan,
                     'keterangan'           => $keterangan,
+                    'created_at'           => now()->toDateTimeString(),
                 ];
 
                 $finPayload = [
+                    'contract_number'  => $targetContractNumber,
                     'jumlah_hari'      => $jumlahHari,
                     'nilai_per_hari'   => $nilaiPerHari,
                     'awal'             => $rawAwalFin,
@@ -392,100 +466,149 @@ class ExcelImportController extends Controller
                     'tahun_rka'        => $tahunRka,
                     'jenis_pendapatan' => $jenisPendapatan,
                     'persentase'       => $persentase,
-                    'pencapaian'       => $persentase,
+                    'pencapaian'       => $pencapaian,
                     'ket'              => $ketFin,
                 ];
 
                 $schedPayload = [
-                    'invoice'   => $invoice,
-                    'januari'   => $jan,
-                    'febuari'   => $feb,
-                    'maret'     => $mar,
-                    'april'     => $apr,
-                    'mei'       => $mei,
-                    'juni'      => $jun,
-                    'juli'      => $jul,
-                    'agustus'   => $agu,
-                    'september' => $sep,
-                    'oktober'   => $okt,
-                    'november'  => $nov,
-                    'desember'  => $des,
-                    'jan_des'   => $janDes,
+                    'contract_number' => $targetContractNumber,
+                    'tahun'           => $tahunRka,
+                    'invoice'         => $invoice,
+                    'januari'         => $jan,
+                    'febuari'         => $feb,
+                    'maret'           => $mar,
+                    'april'           => $apr,
+                    'mei'             => $mei,
+                    'juni'            => $jun,
+                    'juli'            => $jul,
+                    'agustus'         => $agu,
+                    'september'       => $sep,
+                    'oktober'         => $okt,
+                    'november'        => $nov,
+                    'desember'        => $des,
+                    'jan_des'         => $janDes,
                 ];
 
                 if ($isNewContract) {
-                    KaiContract::create(array_merge([
-                        'contract_number' => $targetContractNumber,
-                        'created_at'      => now(),
-                    ], $contractPayload));
-
-                    ContractFinancial::create(array_merge([
-                        'contract_number' => $targetContractNumber,
-                    ], $finPayload));
-
-                    MonthlySchedule::create(array_merge([
-                        'contract_number' => $targetContractNumber,
-                        'tahun'           => $tahunRka ?: 2026,
-                    ], $schedPayload));
-
-                    $existingContracts[$targetContractNumber] = $targetContractNumber;
                     $importedCount++;
                 } else {
-                    // Cek apakah ada perubahan data dari data yang sudah ada
-                    $hasContractChanges = false;
-                    foreach ($contractPayload as $k => $v) {
-                        if (!$this->isFieldEqual($existingContract->$k, $v)) {
-                            $hasContractChanges = true;
+                    $hasChanges = false;
+
+                    // 1. Cek perubahan di data kontrak
+                    foreach (['contract_date', 'jenis_kontrak', 'area_kontrak', 'start_datetime', 'end_datetime', 'start_datetime_baru', 'end_datetime_baru', 'price', 'spv', 'asset_block_name', 'size_area', 'peruntukan', 'keterangan'] as $k) {
+                        if (!$this->isFieldEqual($existingContract->$k, $contractPayload[$k])) {
+                            $hasChanges = true;
                             break;
                         }
                     }
 
-                    $existingFin = $existingContract->financial;
-                    $hasFinChanges = false;
-                    if (!$existingFin) {
-                        $hasFinChanges = true;
-                    } else {
-                        foreach ($finPayload as $k => $v) {
-                            if (!$this->isFieldEqual($existingFin->$k, $v)) {
-                                $hasFinChanges = true;
+                    // 2. Cek perubahan di data finansial (termasuk nilai_2026, hari_2026, backlog, dll)
+                    if (!$hasChanges) {
+                        $exFin = $existingContract->financial;
+                        if (!$exFin) {
+                            $hasChanges = true;
+                        } else {
+                            foreach (['jumlah_hari', 'nilai_per_hari', 'awal', 'akhir', 'hari_2026', 'nilai_2026', 'nilai_backlog', 'nilai_backlog2', 'gl_account', 'form_rka', 'tahun_rka', 'jenis_pendapatan', 'persentase', 'pencapaian', 'ket'] as $fk) {
+                                if (!$this->isFieldEqual($exFin->$fk, $finPayload[$fk])) {
+                                    $hasChanges = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    // 3. Cek perubahan di data jadwal bulanan & invoice
+                    if (!$hasChanges) {
+                        $exSched = $existingContract->monthlySchedules->first();
+                        if (!$exSched) {
+                            $hasChanges = true;
+                        } else {
+                            foreach (['invoice', 'januari', 'febuari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'jan_des'] as $sk) {
+                                if (!$this->isFieldEqual($exSched->$sk, $schedPayload[$sk])) {
+                                    $hasChanges = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    // 4. Cek perubahan di data aset
+                    if (!$hasChanges && $assetNumber && $assetsMap->has($assetNumber)) {
+                        $exAsset = $assetsMap->get($assetNumber);
+                        foreach (['asset_block_name', 'peruntukan', 'jenis_asset', 'stasiun', 'wilayah_asset', 'size_area', 'latitude', 'longitude'] as $ak) {
+                            if (isset($assetsToUpsert[$assetNumber][$ak]) && !$this->isFieldEqual($exAsset->$ak, $assetsToUpsert[$assetNumber][$ak])) {
+                                $hasChanges = true;
                                 break;
                             }
                         }
                     }
 
-                    $existingSched = $existingContract->monthlySchedules->first();
-                    $hasSchedChanges = false;
-                    if (!$existingSched) {
-                        $hasSchedChanges = true;
-                    } else {
-                        foreach ($schedPayload as $k => $v) {
-                            if (!$this->isFieldEqual($existingSched->$k, $v)) {
-                                $hasSchedChanges = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if ($hasContractChanges || $hasFinChanges || $hasSchedChanges || $tenantChanged) {
-                        $existingContract->update($contractPayload);
-
-                        ContractFinancial::updateOrCreate(
-                            ['contract_number' => $targetContractNumber],
-                            $finPayload
-                        );
-
-                        MonthlySchedule::updateOrCreate(
-                            [
-                                'contract_number' => $targetContractNumber,
-                                'tahun'           => $tahunRka ?: 2026,
-                            ],
-                            $schedPayload
-                        );
-
+                    if ($hasChanges) {
                         $updatedCount++;
                     } else {
                         $identicalCount++;
                     }
+                }
+
+                $contractsToProcess[$targetContractNumber] = $contractPayload;
+                $financialsToInsert[] = $finPayload;
+                $schedulesToInsert[] = $schedPayload;
+                $importedContractNumbers[] = $targetContractNumber;
+            }
+
+            // ── EKSEKUSI BATCH BULK TRANSAKSI (Hanya beberapa query cepat) ────────
+            DB::beginTransaction();
+
+            // 1. Bulk Insert Tenants Baru jika ada
+            if (!empty($newTenantsToCreate)) {
+                Penyewa::insert(array_values($newTenantsToCreate));
+                $tenantsMap = Penyewa::all()->keyBy(fn($t) => trim((string)$t->fullname));
+            }
+
+            // 2. Bulk Upsert Assets (Chunk 300)
+            if (!empty($assetsToUpsert)) {
+                foreach (array_chunk(array_values($assetsToUpsert), 300) as $chunk) {
+                    KaiAsset::upsert(
+                        $chunk,
+                        ['asset_number'],
+                        ['asset_block_name', 'sub_title', 'description', 'peruntukan', 'jenis_asset', 'stasiun', 'wilayah_asset', 'size_area', 'latitude', 'longitude']
+                    );
+                }
+            }
+
+            // 3. Bulk Upsert Contracts (Chunk 300)
+            if (!empty($contractsToProcess)) {
+                $finalContracts = [];
+                foreach ($contractsToProcess as $num => $c) {
+                    $tenantName = $c['tenant_name'];
+                    unset($c['tenant_name']);
+                    $c['tenant_id'] = $tenantsMap->get($tenantName)?->id ?: 1;
+                    $finalContracts[] = $c;
+                }
+
+                foreach (array_chunk($finalContracts, 300) as $chunk) {
+                    KaiContract::upsert(
+                        $chunk,
+                        ['contract_number'],
+                        ['tenant_id', 'asset_number', 'contract_date', 'jenis_kontrak', 'area_kontrak', 'start_datetime', 'end_datetime', 'start_datetime_baru', 'end_datetime_baru', 'price', 'spv', 'asset_block_name', 'size_area', 'peruntukan', 'keterangan']
+                    );
+                }
+            }
+
+            // 4. Bulk Replace Financials & Monthly Schedules (Chunk 300)
+            if (!empty($importedContractNumbers)) {
+                $uniqueContractNumbers = array_values(array_unique($importedContractNumbers));
+                foreach (array_chunk($uniqueContractNumbers, 300) as $chunkIds) {
+                    ContractFinancial::whereIn('contract_number', $chunkIds)->delete();
+                    MonthlySchedule::whereIn('contract_number', $chunkIds)->delete();
+                }
+
+                foreach (array_chunk($financialsToInsert, 300) as $chunkFin) {
+                    ContractFinancial::insert($chunkFin);
+                }
+
+                foreach (array_chunk($schedulesToInsert, 300) as $chunkSched) {
+                    MonthlySchedule::insert($chunkSched);
                 }
             }
 
@@ -498,6 +621,7 @@ class ExcelImportController extends Controller
             Cache::forget('dropdown_stasiun');
             Cache::forget('dropdown_jenis_pendapatan');
             DashboardController::forgetDashboardCache();
+            ContractController::forgetContractCache();
 
             // Susun rincian diagnostik jika ada data duplikat/dilewati
             $diagnostics = [];
@@ -577,8 +701,6 @@ class ExcelImportController extends Controller
             'JENIS_ASET',
             'STASIUN',
             'WILAYAH_ASET',
-            'latitude',
-            'longitude',
             'start_datetime',
             'end_datetime',
             'start_datetime_baru',
@@ -634,8 +756,6 @@ class ExcelImportController extends Controller
             'Tanah',
             'Pekalongan',
             'Daop 4 Semarang',
-            '-6.888700',
-            '109.673800',
             '01/01/2016',
             '12/31/2017',
             '01/01/2018',
@@ -704,9 +824,13 @@ class ExcelImportController extends Controller
                 fclose($handle);
             }
         } elseif (in_array($ext, ['xlsx', 'xls'])) {
-            // Bypass PhpSpreadsheet (terlalu lambat/berat untuk serverless).
-            // Gunakan XML fallback langsung yang membaca zip XLSX tanpa load seluruh workbook.
-            $rows = $this->parseXlsxXmlFallback($path);
+            if (class_exists(\PhpOffice\PhpSpreadsheet\IOFactory::class)) {
+                $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+                $worksheet   = $spreadsheet->getActiveSheet();
+                $rows        = $worksheet->toArray();
+            } else {
+                $rows = $this->parseXlsxXmlFallback($path);
+            }
         }
 
         return $rows;
@@ -822,16 +946,45 @@ class ExcelImportController extends Controller
         if (strtolower($val) === 'kosong' || strtolower($val) === '-') return 0.0;
 
         $val = str_replace(['Rp', 'rp', 'RP', ' ', '%'], '', $val);
+        if ($val === '') return null;
 
-        // Kasus format Indonesia: ribuan titik "2.264.394" atau "105.775" atau "3.102"
-        // Jika ada koma, misal "0,9" atau "1.234,56"
-        if (strpos($val, ',') !== false) {
-            $val = str_replace('.', '', $val);
-            $val = str_replace(',', '.', $val);
-        } else {
-            // Jika ada titik tapi format ribuan Indonesia (misal: 2.264.394 atau 105.775)
-            if (preg_match('/\.\d{3}(\.\d{3})*$/', $val)) {
+        $hasComma = strpos($val, ',') !== false;
+        $hasDot = strpos($val, '.') !== false;
+
+        if ($hasComma && $hasDot) {
+            $lastComma = strrpos($val, ',');
+            $lastDot = strrpos($val, '.');
+            if ($lastComma > $lastDot) {
+                // Format Indonesia: 1.234.567,89
                 $val = str_replace('.', '', $val);
+                $val = str_replace(',', '.', $val);
+            } else {
+                // Format US: 1,234,567.89
+                $val = str_replace(',', '', $val);
+            }
+        } elseif ($hasComma) {
+            $commaCount = substr_count($val, ',');
+            if ($commaCount > 1) {
+                // US thousand separator e.g. "1,132,197"
+                $val = str_replace(',', '', $val);
+            } else {
+                $parts = explode(',', $val);
+                if (strlen($parts[1]) === 3 && (int)$parts[0] > 0 && !preg_match('/^0/', $parts[0])) {
+                    $val = str_replace(',', '', $val);
+                } else {
+                    $val = str_replace(',', '.', $val);
+                }
+            }
+        } elseif ($hasDot) {
+            $dotCount = substr_count($val, '.');
+            if ($dotCount > 1) {
+                // Indonesian thousand separator e.g. "1.132.197"
+                $val = str_replace('.', '', $val);
+            } else {
+                $parts = explode('.', $val);
+                if (strlen($parts[1]) === 3 && (int)$parts[0] > 0 && !preg_match('/^0/', $parts[0])) {
+                    $val = str_replace('.', '', $val);
+                }
             }
         }
 
